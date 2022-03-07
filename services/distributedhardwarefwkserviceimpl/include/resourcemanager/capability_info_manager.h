@@ -88,8 +88,6 @@ public:
     void RemoveManualSyncCount(const std::string &deviceId);
     /* Actively synchronizes data */
     int32_t ManualSync(const std::string &networkId);
-    /* Manual sync notify */
-    void NotifySyncCompleted();
     /* Database data changes callback */
     virtual void OnChange(const DistributedKv::ChangeNotification &changeNotification) override;
     virtual void OnChange(const DistributedKv::ChangeNotification &changeNotification,
@@ -105,8 +103,6 @@ private:
 
 private:
     mutable std::mutex capInfoMgrMutex_;
-    int32_t manualSyncResult_;
-    std::condition_variable manualSyncCondVar_;
     std::shared_ptr<DBAdapter> dbAdapterPtr_;
     CapabilityInfoMap globalCapInfoMap_;
 };

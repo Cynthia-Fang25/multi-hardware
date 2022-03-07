@@ -40,8 +40,7 @@ namespace DistributedHardware {
 #undef DH_LOG_TAG
 #define DH_LOG_TAG "CapabilityInfoManager"
 
-CapabilityInfoManager::CapabilityInfoManager()
-    : manualSyncResult_(ERR_DH_FWK_RESOURCE_DB_MANUAL_SYNC_FAIL), dbAdapterPtr_(nullptr)
+CapabilityInfoManager::CapabilityInfoManager() : dbAdapterPtr_(nullptr)
 {}
 
 CapabilityInfoManager::~CapabilityInfoManager()
@@ -301,22 +300,11 @@ int32_t CapabilityInfoManager::ManualSync(const std::string &networkId)
         DHLOGE("dbAdapterPtr_ is null");
         return ERR_DH_FWK_RESOURCE_DB_ADAPTER_POINTER_NULL;
     }
-    manualSyncResult_ = ERR_DH_FWK_RESOURCE_DB_MANUAL_SYNC_FAIL;
     if (dbAdapterPtr_->ManualSync(networkId) != DH_FWK_SUCCESS) {
         DHLOGE("ManualSync failed");
         return ERR_DH_FWK_RESOURCE_DB_ADAPTER_OPERATION_FAIL;
     }
-    manualSyncCondVar_.wait_for(lock, std::chrono::seconds(MANUAL_SYNC_TIMEOUT),
-        [this] { return this->manualSyncResult_ == DH_FWK_SUCCESS; });
-    return manualSyncResult_;
-}
-
-void CapabilityInfoManager::NotifySyncCompleted()
-{
-    DHLOGI("CapabilityInfoManager SyncCompleted NotifySyncCompleted");
-    std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
-    manualSyncResult_ = DH_FWK_SUCCESS;
-    manualSyncCondVar_.notify_one();
+    return DH_FWK_SUCCESS;
 }
 
 void CapabilityInfoManager::OnChange(const DistributedKv::ChangeNotification &changeNotification)
@@ -365,13 +353,13 @@ void CapabilityInfoManager::HandleCapabilityAddChange(const std::vector<Entry> &
         const auto keyString = capPtr->GetKey();
         DHLOGI("Add capability key: %s", capPtr->GetAnonymousKey().c_str());
         globalCapInfoMap_[keyString] = capPtr;
-        std::string deviceId = capPtr->GetDeviceId();
-        std::string networkId = DHContext::GetInstance().GetNetworkIdByUUID(deviceId);
+        std::string uuid = DHContext::GetInstance().GetUUIDByDeviceId(capPtr->GetDeviceId());
+        std::string networkId = DHContext::GetInstance().GetNetworkIdByUUID(uuid);
         if (networkId.empty()) {
-            DHLOGI("Find network failed and never enable, deviceId: %s", GetAnonyString(deviceId).c_str());
+            DHLOGI("Find network failed and never enable, deviceId: %s", GetAnonyString(uuid).c_str());
             continue;
         }
-        auto task = TaskFactory::GetInstance().CreateTask(TaskType::ENABLE, networkId, deviceId,
+        auto task = TaskFactory::GetInstance().CreateTask(TaskType::ENABLE, networkId, uuid,
             capPtr->GetDHId(), nullptr);
         TaskExecutor::GetInstance().PushTask(task);
     }

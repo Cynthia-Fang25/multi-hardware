@@ -63,7 +63,7 @@ Status DBAdapter::GetKvStorePtr()
         .createIfMissing = true,
         .encrypt = false,
         .autoSync = true,
-        .securityLevel = DistributedKv::SecurityLevel::S2,
+        .securityLevel = DistributedKv::SecurityLevel::S1,
         .kvStoreType = KvStoreType::SINGLE_VERSION
     };
     return kvDataMgr_.GetSingleKvStore(options, appId_, storeId_, kvStoragePtr_);
@@ -141,7 +141,6 @@ void DBAdapter::SyncCompleted(const std::map<std::string, DistributedKv::Status>
         }
         DHLOGI("ManualSyncCallback::SyncCompleted, retryCount: %d", manualSyncCountMap_[deviceId]);
         if (result.second == DistributedKv::Status::SUCCESS) {
-            CapabilityInfoManager::GetInstance()->NotifySyncCompleted();
             manualSyncCountMap_[deviceId] = 0;
         } else {
             manualSyncCountMap_[deviceId]++;
@@ -350,7 +349,7 @@ void DBAdapter::OnRemoteDied()
         int32_t times = 0;
         while (times < DIED_CHECK_MAX_TIMES) {
             // init kvStore.
-            if (this->ReInit() != DH_FWK_SUCCESS) {
+            if (this->ReInit() == DH_FWK_SUCCESS) {
                 // register data change listener again.
                 this->RegisterChangeListener();
                 this->SyncDBForRecover();
