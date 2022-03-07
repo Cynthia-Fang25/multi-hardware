@@ -89,13 +89,14 @@ std::string GetDeviceIdByUUID(const std::string &uuid)
     constexpr int32_t WIDTH = 4;
     constexpr unsigned char MASK = 0x0F;
     const char* hexCode = "0123456789abcdef";
+    constexpr int32_t DOUBLE_TIMES = 2;
     for (int32_t i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
         unsigned char value = hash[SHA256_DIGEST_LENGTH + i];
         // uint8_t is 2 digits in hexadecimal.
-        hash[i * 2] = hexCode[(value >> WIDTH) & MASK];
-        hash[i * 2 + 1] = hexCode[value & MASK];
+        hash[i * DOUBLE_TIMES] = hexCode[(value >> WIDTH) & MASK];
+        hash[i * DOUBLE_TIMES + 1] = hexCode[value & MASK];
     }
-    hash[SHA256_DIGEST_LENGTH * 2] = 0;
+    hash[SHA256_DIGEST_LENGTH * DOUBLE_TIMES] = 0;
     return reinterpret_cast<char*>(hash);
 }
 

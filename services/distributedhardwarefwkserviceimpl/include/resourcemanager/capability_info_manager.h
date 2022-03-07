@@ -32,8 +32,6 @@
 #include "event_sender.h"
 #include "single_instance.h"
 
-using OHOS::DistributedKv::Entry;
-
 class DBAdapter;
 namespace OHOS {
 namespace DistributedHardware {
@@ -97,9 +95,9 @@ public:
 
 private:
     CapabilityInfoManager();
-    void HandleCapabilityAddChange(const std::vector<Entry> &insertRecords);
-    void HandleCapabilityUpdateChange(const std::vector<Entry> &updateRecords);
-    void HandleCapabilityDeleteChange(const std::vector<Entry> &deleteRecords);
+    void HandleCapabilityAddChange(const std::vector<DistributedKv::Entry> &insertRecords);
+    void HandleCapabilityUpdateChange(const std::vector<DistributedKv::Entry> &updateRecords);
+    void HandleCapabilityDeleteChange(const std::vector<DistributedKv::Entry> &deleteRecords);
 
 private:
     mutable std::mutex capInfoMgrMutex_;
