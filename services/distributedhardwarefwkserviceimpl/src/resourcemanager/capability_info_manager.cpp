@@ -33,8 +33,6 @@
 #include "task_executor.h"
 #include "task_factory.h"
 
-using OHOS::DistributedKv::Entry;
-
 namespace OHOS {
 namespace DistributedHardware {
 #undef DH_LOG_TAG
@@ -340,7 +338,7 @@ void CapabilityInfoManager::OnEvent(CapabilityInfoEvent &ev)
     }
 }
 
-void CapabilityInfoManager::HandleCapabilityAddChange(const std::vector<Entry> &insertRecords)
+void CapabilityInfoManager::HandleCapabilityAddChange(const std::vector<DistributedKv::Entry> &insertRecords)
 {
     std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
     for (const auto &item : insertRecords) {
@@ -365,7 +363,7 @@ void CapabilityInfoManager::HandleCapabilityAddChange(const std::vector<Entry> &
     }
 }
 
-void CapabilityInfoManager::HandleCapabilityUpdateChange(const std::vector<Entry> &updateRecords)
+void CapabilityInfoManager::HandleCapabilityUpdateChange(const std::vector<DistributedKv::Entry> &updateRecords)
 {
     std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
     for (const auto &item : updateRecords) {
@@ -381,7 +379,7 @@ void CapabilityInfoManager::HandleCapabilityUpdateChange(const std::vector<Entry
     }
 }
 
-void CapabilityInfoManager::HandleCapabilityDeleteChange(const std::vector<Entry> &deleteRecords)
+void CapabilityInfoManager::HandleCapabilityDeleteChange(const std::vector<DistributedKv::Entry> &deleteRecords)
 {
     std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
     for (const auto &item : deleteRecords) {
