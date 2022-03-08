@@ -16,6 +16,7 @@ import("//foundation/distributedhardware/distributedhardwarefwk/distributedhardw
 
 ohos_shared_library("distributedhardwareutils") {
   include_dirs = [
+    "//third_party/openssl:libcrypto_static",
     "//utils/native/base/include",
     "//utils/system/safwk/native/include",
     "${common_path}/log/include",
@@ -31,7 +32,10 @@ ohos_shared_library("distributedhardwareutils") {
     "src/dh_utils_tool.cpp"
   ]
 
-  deps = [ "//utils/native/base:utils" ]
+  deps = [
+    "//third_party/openssl:libcrypto_static",
+    "//utils/native/base:utils",
+  ]
 
   defines = [
     "HI_LOG_ENABLE",
