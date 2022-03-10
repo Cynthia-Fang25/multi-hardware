@@ -15,9 +15,6 @@
 
 #include "mock_online_task.h"
 
-#include <chrono>
-#include <thread>
-
 #include "distributed_hardware_log.h"
 #include "mock_task_factory.h"
 #include "task_executor.h"

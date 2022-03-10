@@ -15,9 +15,6 @@
 
 #include "mock_enable_task.h"
 
-#include <chrono>
-#include <thread>
-
 #include "distributed_hardware_errno.h"
 
 namespace OHOS {
