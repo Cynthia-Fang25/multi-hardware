@@ -65,7 +65,7 @@ public:
         if (registrations == nullptr) {
             registrations = new(std::nothrow) EventRegistration::Registrations();
             if (registrations == NULL) {
-                DHLOGE("registrations is null, because applying memory fail!");
+                ULOGE("registrations is null, because applying memory fail!");
                 return nullptr;
             }
             handlers[typeId] = registrations;
@@ -94,7 +94,7 @@ public:
         if (registrations == nullptr) {
             registrations = new(std::nothrow) EventRegistration::Registrations();
             if (registrations == NULL) {
-                DHLOGE("registrations is null, because applying memory fail!");
+                ULOGE("registrations is null, because applying memory fail!");
                 return nullptr;
             }
             handlers[typeId] = registrations;
