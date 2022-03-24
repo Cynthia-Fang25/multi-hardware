@@ -37,16 +37,9 @@ bool AccessManagerFuzzTest(const uint8_t* data, size_t size)
         std::string networkId(reinterpret_cast<const char*>(data), STR_LEN);
         std::string uuid(reinterpret_cast<const char*>(data + STR_LEN), STR_LEN);
 
-        auto ret = DistributedHardwareManagerFactory::GetInstance().SendOnLineEvent(
+        DistributedHardwareManagerFactory::GetInstance().SendOnLineEvent(
             networkId, uuid, TEST_DEV_TYPE_PAD);
-        if (ret != DH_FWK_SUCCESS) {
-            return false;
-        }
-
-        ret = DistributedHardwareManagerFactory::GetInstance().SendOffLineEvent(
-            networkId, uuid, TEST_DEV_TYPE_PAD);
-
-        return (ret == DH_FWK_SUCCESS);
+        return true;
     } else {
         return false;
     }
