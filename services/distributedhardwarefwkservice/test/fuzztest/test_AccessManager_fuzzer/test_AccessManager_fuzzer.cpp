@@ -28,13 +28,12 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-constexpr int32_t INTERVAL_TIME_MS = 100;
 constexpr uint16_t TEST_DEV_TYPE_PAD = 0x11;
 constexpr uint16_t STR_LEN = 32;
 
 bool AccessManagerFuzzTest(const uint8_t* data, size_t size)
 {
-    if (size > sizeof(uint32_t) + STR_LEN * 2) {
+    if (size > (STR_LEN * 2)) {
         std::string networkId(reinterpret_cast<const char*>(data), STR_LEN);
         std::string uuid(reinterpret_cast<const char*>(data + STR_LEN), STR_LEN);
 
@@ -43,8 +42,6 @@ bool AccessManagerFuzzTest(const uint8_t* data, size_t size)
         if (ret != DH_FWK_SUCCESS) {
             return false;
         }
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(INTERVAL_TIME_MS));
 
         ret = DistributedHardwareManagerFactory::GetInstance().SendOffLineEvent(
             networkId, uuid, TEST_DEV_TYPE_PAD);
