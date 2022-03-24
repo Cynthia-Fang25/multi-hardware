@@ -44,12 +44,15 @@ ohos_fuzztest("test_AccessManager_fuzzer") {
     "//foundation/distributedhardware/devicemanager/interfaces/inner_kits/native_cpp:devicemanagersdk",
   ]
 
+<<<<<<< HEAD
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"test_AccessManager_fuzzer\"",
     "LOG_DOMAIN=0xD004100",
   ]
 
+=======
+>>>>>>> 68f0c9aeebaa1d5f12fa6358435c06cf5f4d6174
   external_deps = [
     "bundle_framework:appexecfwk_base",
     "bundle_framework:appexecfwk_core",

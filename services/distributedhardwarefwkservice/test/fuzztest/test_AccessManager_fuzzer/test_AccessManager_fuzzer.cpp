@@ -26,13 +26,22 @@
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_manager_factory.h"
 
+<<<<<<< HEAD
 namespace OHOS {
 namespace DistributedHardware {
+=======
+>>>>>>> 68f0c9aeebaa1d5f12fa6358435c06cf5f4d6174
 constexpr int32_t INTERVAL_TIME_MS = 100;
 constexpr uint16_t TEST_DEV_TYPE_PAD = 0x11;
 constexpr uint16_t STR_LEN = 32;
 
+<<<<<<< HEAD
 bool AccessManagerFuzzTest(const uint8_t* data, size_t size)
+=======
+namespace OHOS {
+namespace DistributedHardware {
+bool SendOnOffLineEvent(const uint8_t* data, size_t size)
+>>>>>>> 68f0c9aeebaa1d5f12fa6358435c06cf5f4d6174
 {
     if (size > sizeof(uint32_t) + STR_LEN * 2) {
         std::string networkId(reinterpret_cast<const char*>(data), STR_LEN);
@@ -50,8 +59,11 @@ bool AccessManagerFuzzTest(const uint8_t* data, size_t size)
             networkId, uuid, TEST_DEV_TYPE_PAD);
 
         return (ret == DH_FWK_SUCCESS);
+<<<<<<< HEAD
     } else {
         return false;
+=======
+>>>>>>> 68f0c9aeebaa1d5f12fa6358435c06cf5f4d6174
     }
 }
 }
@@ -61,7 +73,11 @@ bool AccessManagerFuzzTest(const uint8_t* data, size_t size)
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
 {
     /* Run your code on data */
+<<<<<<< HEAD
     OHOS::DistributedHardware::AccessManagerFuzzTest(data, size);
+=======
+    OHOS::DistributedHardware::SendOnOffLineEvent(data, size);
+>>>>>>> 68f0c9aeebaa1d5f12fa6358435c06cf5f4d6174
     return 0;
 }
 
