@@ -20,7 +20,6 @@ ohos_shared_library("distributedhardwarefwksvr_impl") {
   include_dirs = [
     "//utils/native/base/include",
     "//utils/system/safwk/native/include",
-    "//third_party/json/include",
     "include",
     "include/componentloader",
     "include/versionmanager",
@@ -66,8 +65,10 @@ ohos_shared_library("distributedhardwarefwksvr_impl") {
     "//foundation/aafwk/standard/interfaces/innerkits/ability_manager:ability_manager",
     "//foundation/aafwk/standard/services/abilitymgr:abilityms",
     "//foundation/distributedschedule/safwk/interfaces/innerkits/safwk:system_ability_fwk",
+    "//third_party/json:nlohmann_json_static",
     "//utils/native/base:utils",
   ]
+  ldflags = [ "-Wl,--exclude-libs,libnlohmann_json_static.a" ]
 
   defines = [
     "HI_LOG_ENABLE",
