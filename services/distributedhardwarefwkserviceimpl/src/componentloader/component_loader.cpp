@@ -137,7 +137,7 @@ void *ComponentLoader::GetHandler(const std::string &soName)
     }
     char path[PATH_MAX + 1] = {0x00};
     if (soName.length() == 0 || soName.length() + LIB_LOAD_PATH.length() > PATH_MAX ||
-        realpath(LIB_LOAD_PATH + soName.c_str(), path) == nullptr) {
+        realpath((LIB_LOAD_PATH + soName).c_str(), path) == nullptr) {
         DHLOGE("File canonicalization failed");
         return nullptr;
     }
