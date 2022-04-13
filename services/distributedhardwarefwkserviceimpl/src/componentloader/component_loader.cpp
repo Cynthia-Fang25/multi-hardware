@@ -31,6 +31,12 @@ namespace DistributedHardware {
 #undef DH_LOG_TAG
 #define DH_LOG_TAG "ComponentLoader"
 
+#ifdef __LP64__
+#define LIB_LOAD_PATH = "system/lib64"
+#else
+#define LIB_LOAD_PATH = "system/lib"
+#endif
+
 IMPLEMENT_SINGLE_INSTANCE(ComponentLoader);
 using GetHardwareClass = IHardwareHandler *(*)();
 using GetSourceHardwareClass = IDistributedHardwareSource *(*)();
@@ -131,7 +137,8 @@ void *ComponentLoader::GetHandler(const std::string &soName)
         return nullptr;
     }
     char path[PATH_MAX + 1] = {0x00};
-    if (soName.length() == 0 || soName.length() > PATH_MAX || realpath(soName.c_str(), path) == nullptr) {
+    if (soName.length() == 0 || soName.length() > PATH_MAX ||
+	realpath(LIB_LOAD_PATH + soName.c_str(), path) == nullptr) {
         DHLOGE("File canonicalization failed");
         return nullptr;
     }
