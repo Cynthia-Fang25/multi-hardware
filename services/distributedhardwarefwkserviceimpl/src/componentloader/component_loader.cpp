@@ -31,12 +31,6 @@ namespace DistributedHardware {
 #undef DH_LOG_TAG
 #define DH_LOG_TAG "ComponentLoader"
 
-#ifdef __LP64__
-#define LIB_LOAD_PATH = "system/lib64"
-#else
-#define LIB_LOAD_PATH = "system/lib"
-#endif
-
 IMPLEMENT_SINGLE_INSTANCE(ComponentLoader);
 using GetHardwareClass = IHardwareHandler *(*)();
 using GetSourceHardwareClass = IDistributedHardwareSource *(*)();
@@ -48,6 +42,11 @@ const std::string DEFAULT_SOURCE_LOC = "";
 const std::string DEFAULT_SINK_LOC = "";
 const std::string DEFAULT_TYPE = "UNKNOWN";
 const std::string DEFAULT_VERSION = "1.0";
+#ifdef __LP64__
+const std::string LIB_LOAD_PATH = "system/lib64";
+#else
+const std::string LIB_LOAD_PATH = "system/lib"
+#endif
 }
 std::map<std::string, DHType> g_mapDhTypeName = {
     { "UNKNOWN", DHType::UNKNOWN },
