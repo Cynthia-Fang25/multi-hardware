@@ -43,9 +43,9 @@ const std::string DEFAULT_SINK_LOC = "";
 const std::string DEFAULT_TYPE = "UNKNOWN";
 const std::string DEFAULT_VERSION = "1.0";
 #ifdef __LP64__
-const std::string LIB_LOAD_PATH = "/system/lib64";
+const std::string LIB_LOAD_PATH = "/system/lib64/";
 #else
-const std::string LIB_LOAD_PATH = "/system/lib";
+const std::string LIB_LOAD_PATH = "/system/lib/";
 #endif
 }
 std::map<std::string, DHType> g_mapDhTypeName = {
