@@ -31,7 +31,6 @@ ohos_fuzztest("test_resourcemanager_fuzzer") {
     "${common_path}/utils/include",
     "${common_path}/log/include",
     "//utils/native/base/include",
-    "//third_party/json/include",
     "//utils/native/base/include",
     "//utils/system/safwk/native/include",
   ]
@@ -46,8 +45,10 @@ ohos_fuzztest("test_resourcemanager_fuzzer") {
   deps = [
     "//foundation/distributedhardware/distributedhardwarefwk/services/distributedhardwarefwkserviceimpl:distributedhardwarefwksvr_impl",
     "//foundation/distributedhardware/distributedhardwarefwk/utils:distributedhardwareutils",
+    "//third_party/json:nlohmann_json_static",
     "//utils/native/base:utils",
   ]
+  ldflags = [ "-Wl,--exclude-libs,libnlohmann_json_static.a" ]
 
   defines = [
     "HI_LOG_ENABLE",
