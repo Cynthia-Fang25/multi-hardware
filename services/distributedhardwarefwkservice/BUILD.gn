@@ -39,10 +39,10 @@ ohos_shared_library("distributedhardwarefwksvr") {
   ]
 
   deps = [
+    "${aainnerkits_path}/ability_manager:ability_manager",
+    "${aaservices_path}/abilitymgr:abilityms",
     "${services_path}/distributedhardwarefwkserviceimpl:distributedhardwarefwksvr_impl",
     "${utils_path}:distributedhardwareutils",
-    "//foundation/aafwk/standard/interfaces/innerkits/ability_manager:ability_manager",
-    "//foundation/aafwk/standard/services/abilitymgr:abilityms",
     "//foundation/distributedhardware/devicemanager/interfaces/inner_kits/native_cpp:devicemanagersdk",
     "//utils/native/base:utils",
   ]
