@@ -21,4 +21,7 @@ services_path = "${distributedhardwarefwk_path}/services"
 
 innerkits_path = "${distributedhardwarefwk_path}/interfaces/inner_kits"
 
+aaservices_path = "//foundation/aafwk/standard/services"
+aainnerkits_path = "//foundation/aafwk/standard/interfaces/innerkits"
+
 build_flags = [ "-Werror" ]
