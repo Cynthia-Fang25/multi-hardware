@@ -81,10 +81,10 @@ ohos_shared_library("distributedhardwarefwksvr_impl") {
     "distributeddatamgr:distributeddata_inner",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
+    "init:libbegetutil",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr_standard:samgr_proxy",
-    "init:libbegetutil",
   ]
 
   subsystem_name = "distributedhardware"
