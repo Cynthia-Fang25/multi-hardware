@@ -299,8 +299,8 @@ if (defined(ohos_lite)) {
     ]
 
     deps = [
-      "${aainnerkits_path}/ability_manager:ability_manager",
-      "${aaservices_path}/abilitymgr:abilityms",
+      "${aafwk_inner_api_path}/ability_manager:ability_manager",
+      "${aafwk_services_path}/abilitymgr:abilityms",
       "${innerkits_path}/native_cpp:devicemanagersdk",
       "${utils_path}:devicemanagerutils",
       "//base/security/deviceauth/services:deviceauth_sdk",
