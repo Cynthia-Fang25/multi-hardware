@@ -17,6 +17,9 @@
 
 #include <dlfcn.h>
 #include <memory>
+#include <unistd.h>
+
+#include "hisysevent.h"
 
 #include "anonymous_string.h"
 #include "constants.h"
@@ -24,6 +27,7 @@
 #include "dh_utils_tool.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
+
 
 namespace OHOS {
 namespace DistributedHardware {

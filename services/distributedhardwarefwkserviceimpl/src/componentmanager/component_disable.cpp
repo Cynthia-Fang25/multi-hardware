@@ -15,6 +15,10 @@
 
 #include "component_disable.h"
 
+#include <unistd.h>
+
+#include "hisysevent.h"
+
 #include "anonymous_string.h"
 #include "constants.h"
 #include "distributed_hardware_errno.h"
