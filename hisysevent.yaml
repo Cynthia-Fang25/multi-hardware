@@ -71,18 +71,16 @@ COMP_SO_LOAD_ERROR:
   SONAME: {type: STRING, desc: component so name}
   MSG: {type: STRING, desc: dhfwk component so open failed}
 
-COMP_UNLOAD:
-  __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk component unload}
+COMP_RELEASE:
+  __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk all components release}
   PID: {type: INT32, desc: dhfwk pid}
   UID: {type: INT32, desc: dhfwk uid}
-  DHTYPE: {type: INT32, desc: component dhtype}
-  MSG: {type: STRING, desc: dhfwk component unload}
+  MSG: {type: STRING, desc: dhfwk all components release}
 
 COMP_RELEASE_ERROR:
   __BASE: {type: FAULT, level: CRITICAL, desc: dhfwk component dlclose failed}
   PID: {type: INT32, desc: dhfwk pid}
   UID: {type: INT32, desc: dhfwk uid}
-  DHTYPE: {type: INT32, desc: component dhtype}
   MSG: {type: STRING, desc: dhfwk component dlclose failed}
 
 ON_LINE_TASK:
@@ -134,6 +132,5 @@ DB_DATA_NOTIFY:
   PID: {type: INT32, desc: dhfwk pid}
   UID: {type: INT32, desc: dhfwk uid}
   DEVID: {type: STRING, desc: device id}
-  DHTYPE: {type: INT32, desc: component dhtype}
   DHID: {type: STRING, desc: component id}
   MSG: {type: STRING, desc: dhfwk Sync full remote device info from DB}

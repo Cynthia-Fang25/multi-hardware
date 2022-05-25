@@ -15,6 +15,10 @@
 
 #include "capability_info_manager.h"
 
+#include <unistd.h>
+
+#include "hisysevent.h"
+
 #include "anonymous_string.h"
 #include "capability_info_event.h"
 #include "capability_utils.h"
@@ -142,8 +146,7 @@ int32_t CapabilityInfoManager::SyncRemoteCapabilityInfos()
             "PID", getpid(),
             "UID", getuid(),
             "DEVID", GetAnonyString(capabilityInfo->GetDeviceId()).c_str(),
-            "DHTYPE", capabilityInfo->GetDHType().c_str(),
-            "DHID", capabilityInfo->SetDHId().c_str(),
+            "DHID", capabilityInfo->GetDHId().c_str(),
             "MSG", "Sync full remote device info from DB.");
         if (res != DH_FWK_SUCCESS) {
             DHLOGE("Write HiSysEvent error, res:%d", res);

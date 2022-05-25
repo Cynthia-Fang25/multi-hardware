@@ -313,7 +313,7 @@ int32_t ComponentLoader::UnInit()
         OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
         "PID", getpid(),
         "UID", getuid(),
-        "MSG", "dhfwk component release.");
+        "MSG", "dhfwk all components release.");
     if (res != DH_FWK_SUCCESS) {
         DHLOGE("Write HiSysEvent error, res:%d", res);
     }
@@ -343,7 +343,6 @@ int32_t ComponentLoader::ReleaseHardwareHandler(const DHType dhType)
             OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             "PID", getpid(),
             "UID", getuid(),
-            "DHTYPE", dhType,
             "MSG", "dhfwk release hardware handler failed.");
         if (res != DH_FWK_SUCCESS) {
             DHLOGE("Write HiSysEvent error, res:%d", res);
@@ -366,7 +365,6 @@ int32_t ComponentLoader::ReleaseSource(const DHType dhType)
             OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             "PID", getpid(),
             "UID", getuid(),
-            "DHTYPE", dhType,
             "MSG", "dhfwk release source failed.");
         if (res != DH_FWK_SUCCESS) {
             DHLOGE("Write HiSysEvent error, res:%d", res);
@@ -389,7 +387,6 @@ int32_t ComponentLoader::ReleaseSink(const DHType dhType)
             OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             "PID", getpid(),
             "UID", getuid(),
-            "DHTYPE", dhType,
             "MSG", "dhfwk release sink failed.");
         if (res != DH_FWK_SUCCESS) {
             DHLOGE("Write HiSysEvent error, res:%d", res);
