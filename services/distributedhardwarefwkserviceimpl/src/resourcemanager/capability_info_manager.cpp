@@ -15,8 +15,7 @@
 
 #include "capability_info_manager.h"
 
-#include <hisysevent.h>
-#include <unistd.h>
+#include "hisysevent.h"
 
 #include "anonymous_string.h"
 #include "capability_info_event.h"

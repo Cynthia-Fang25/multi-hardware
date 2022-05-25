@@ -15,9 +15,10 @@
 
 #include "offline_task.h"
 
-#include <hisysevent.h>
 #include <thread>
 #include <unistd.h>
+
+#include "hisysevent.h"
 
 #include "anonymous_string.h"
 #include "capability_info_manager.h"

@@ -16,10 +16,10 @@
 #include "distributed_hardware_manager_factory.h"
 
 #include <dlfcn.h>
-#include <hisysevent.h>
 #include <memory>
 #include <unistd.h>
 
+#include "hisysevent.h"
 
 #include "anonymous_string.h"
 #include "constants.h"
