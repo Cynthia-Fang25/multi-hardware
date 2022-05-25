@@ -18,7 +18,9 @@
 #include <dlfcn.h>
 #include <fstream>
 #include <string>
+#include <unistd.h>
 
+#include "hisysevent.h"
 #include "nlohmann/json.hpp"
 
 #include "constants.h"
