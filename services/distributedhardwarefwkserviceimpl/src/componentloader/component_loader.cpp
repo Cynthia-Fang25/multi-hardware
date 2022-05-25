@@ -242,6 +242,18 @@ int32_t ComponentLoader::ParseConfig()
     std::map<DHType, CompConfig> dhtypeMap;
     int32_t ret;
     DHLOGI("ParseConfig start");
+
+    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
+        OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
+        "COMP_LOAD",
+        OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
+        "PID", getpid(),
+        "UID", getuid(),
+        "MSG", "dhfwk load all components.");
+    if (res != DH_FWK_SUCCESS) {
+        DHLOGE("Write HiSysEvent error, res:%d", res);
+    }
+
     std::string jsonStr = Readfile(COMPONENTSLOAD_PROFILE_PATH);
     if (jsonStr.length() == 0) {
         DHLOGE("profile is empty return");

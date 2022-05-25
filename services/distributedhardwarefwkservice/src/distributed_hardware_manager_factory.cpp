@@ -77,18 +77,6 @@ void DistributedHardwareManagerFactory::CheckExitSAOrNot()
     DeviceManager::GetInstance().GetTrustedDeviceList(DH_FWK_PKG_NAME, "", deviceList);
     if (deviceList.size() == 0) {
         DHLOGI("DM report devices offline, exit sa process");
-
-        int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
-            "DHFWK_SA_STOP",
-            OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
-            "PID", getpid(),
-            "UID", getuid(),
-            "MSG", "dhfwk sa stop on demand.");
-        if (res != DH_FWK_SUCCESS) {
-            DHLOGE("Write HiSysEvent error, res:%d", res);
-        }
-
         exit(0);
     }
 
