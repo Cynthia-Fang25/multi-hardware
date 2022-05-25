@@ -44,3 +44,9 @@ DHFWK_SA_START:
   PID: {type: INT32, desc: dhfwk pid}
   UID: {type: INT32, desc: dhfwk uid}
   MSG: {type: STRING, desc: dhfwk sa start}
+
+DHFWK_SA_STOP:
+  __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk sa stop on demand}
+  PID: {type: INT32, desc: dhfwk pid}
+  UID: {type: INT32, desc: dhfwk uid}
+  MSG: {type: STRING, desc: dhfwk sa stop}
