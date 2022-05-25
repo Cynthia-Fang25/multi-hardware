@@ -15,6 +15,10 @@
 
 #include "distributed_hardware_manager.h"
 
+#include <unistd.h>
+
+#include "hisysevent.h"
+
 #include "anonymous_string.h"
 #include "capability_info_manager.h"
 #include "component_loader.h"
@@ -110,6 +114,18 @@ int32_t DistributedHardwareManager::SendOnLineEvent(const std::string &networkId
     };
     auto task = TaskFactory::GetInstance().CreateTask(TaskType::ON_LINE, taskParam, nullptr);
     TaskExecutor::GetInstance().PushTask(task);
+
+    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
+        OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
+        "ON_LINE_TASK",
+        OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
+        "PID", getpid(),
+        "UID", getuid(),
+        "MSG", "dhfwk create online task.");
+    if (res != DH_FWK_SUCCESS) {
+        DHLOGE("Write HiSysEvent error, res:%d", res);
+    }
+
     DHContext::GetInstance().AddOnlineDevice(uuid, networkId);
     CapabilityInfoManager::GetInstance()->CreateManualSyncCount(GetDeviceIdByUUID(uuid));
 
@@ -150,6 +166,17 @@ int32_t DistributedHardwareManager::SendOffLineEvent(const std::string &networkI
     };
     auto task = TaskFactory::GetInstance().CreateTask(TaskType::OFF_LINE, taskParam, nullptr);
     TaskExecutor::GetInstance().PushTask(task);
+
+    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
+        OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
+        "OFF_LINE_TASK",
+        OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
+        "PID", getpid(),
+        "UID", getuid(),
+        "MSG", "dhfwk create offline task.");
+    if (res != DH_FWK_SUCCESS) {
+        DHLOGE("Write HiSysEvent error, res:%d", res);
+    }
 
     DHContext::GetInstance().RemoveOnlineDevice(realUUID);
     CapabilityInfoManager::GetInstance()->RemoveManualSyncCount(GetDeviceIdByUUID(realUUID));
