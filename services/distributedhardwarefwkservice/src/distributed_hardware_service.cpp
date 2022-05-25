@@ -42,6 +42,7 @@ DistributedHardwareService::DistributedHardwareService(int32_t saId, bool runOnC
 void DistributedHardwareService::OnStart()
 {
     DHLOGI("DistributedHardwareService::OnStart start");
+
     int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
         "DHFWK_SA_START",

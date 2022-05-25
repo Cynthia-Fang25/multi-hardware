@@ -142,6 +142,7 @@ void *ComponentLoader::GetHandler(const std::string &soName)
     if (soName.length() == 0 || (LIB_LOAD_PATH.length() + soName.length()) > PATH_MAX ||
         realpath((LIB_LOAD_PATH + soName).c_str(), path) == nullptr) {
         DHLOGE("File canonicalization failed");
+
         int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
             OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
             "FILE_PARSE_ERROR",
@@ -159,6 +160,7 @@ void *ComponentLoader::GetHandler(const std::string &soName)
     void *pHandler = dlopen(path, RTLD_LAZY | RTLD_NODELETE);
     if (pHandler == nullptr) {
         DHLOGE("%s handler load failed.", path);
+
         int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
             OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
             "COMP_SO_LOAD_ERROR",
@@ -268,6 +270,7 @@ int32_t ComponentLoader::ParseConfig()
     std::map<DHType, CompConfig> dhtypeMap;
     int32_t ret;
     DHLOGI("ParseConfig start");
+
     int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
         "COMP_LOAD",
@@ -307,6 +310,7 @@ int32_t ComponentLoader::ReleaseHandler(void *&handler)
 int32_t ComponentLoader::UnInit()
 {
     DHLOGI("release all handler");
+
     int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
         "COMP_RELEASE",
