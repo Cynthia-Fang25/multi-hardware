@@ -15,9 +15,8 @@
 
 #include "component_enable.h"
 
+#include <hisysevent.h>
 #include <unistd.h>
-
-#include "hisysevent.h"
 
 #include "anonymous_string.h"
 #include "constants.h"

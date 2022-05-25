@@ -17,7 +17,8 @@
 
 #include <unistd.h>
 
-#include "hisysevent.h"
+#include <hisysevent.h>
+
 #include "if_system_ability_manager.h"
 #include "ipc_skeleton.h"
 #include "ipc_types.h"
