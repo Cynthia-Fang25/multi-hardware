@@ -19,6 +19,8 @@
 #include <string>
 #include <unistd.h>
 
+#include "hisysevent.h"
+
 namespace OHOS {
 namespace DistributedHardware {
     constexpr int32_t LOG_MAX_LEN = 4096;
