@@ -57,6 +57,7 @@ ohos_shared_library("distributedhardwarefwksvr") {
     "bundle_framework:appexecfwk_base",
     "bundle_framework:appexecfwk_core",
     "eventhandler:libeventhandler",
+    "hisysevent_native:libhisysevent",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
