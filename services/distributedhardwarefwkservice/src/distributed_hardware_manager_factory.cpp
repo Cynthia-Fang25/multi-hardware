@@ -19,6 +19,8 @@
 #include <memory>
 #include <unistd.h>
 
+#include "hisysevent.h"
+
 #include "anonymous_string.h"
 #include "constants.h"
 #include "device_manager.h"
