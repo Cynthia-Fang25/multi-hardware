@@ -15,6 +15,7 @@
 
 #include "anonymous_string.h"
 #include "distributed_hardware_log.h"
+#include "dh_utils_hisysevent.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -32,5 +33,4 @@ void HiSysEventWrite(std::string eventName, OHOS::HiviewDFX::HiSysEvent::EventTy
     }
 }
 } // namespace DistributedHardware
-} // namespace OHOS
-#endif
+} // namespace OHOS\
