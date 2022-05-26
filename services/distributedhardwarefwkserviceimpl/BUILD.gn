@@ -18,6 +18,7 @@ import(
 
 ohos_shared_library("distributedhardwarefwksvr_impl") {
   include_dirs = [
+    "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
     "//utils/native/base/include",
     "//utils/system/safwk/native/include",
     "//third_party/json/include",
@@ -84,6 +85,7 @@ ohos_shared_library("distributedhardwarefwksvr_impl") {
     "distributeddatamgr:distributeddata_inner",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
+    "hisysevent_native:libhisysevent",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr_standard:samgr_proxy",
