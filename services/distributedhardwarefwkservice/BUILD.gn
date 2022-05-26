@@ -18,6 +18,7 @@ import(
 
 ohos_shared_library("distributedhardwarefwksvr") {
   include_dirs = [
+    "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include"
     "//utils/native/base/include",
     "//utils/system/safwk/native/include",
     "include",
