@@ -14,8 +14,9 @@
  */
 
 #include "anonymous_string.h"
-#include "distributed_hardware_log.h"
 #include "dh_utils_hisysevent.h"
+#include "distributed_hardware_log.h"
+#include "distributed_hardware_errno.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -28,7 +29,7 @@ void HiSysEventWrite(std::string eventName, OHOS::HiviewDFX::HiSysEvent::EventTy
         "PID", getpid(),
         "UID", getuid(),
         "MSG", msg);
-    if (res != SUCCESS) {
+    if (res != DH_FWK_SUCCESS) {
         DHLOGE("Write HiSysEvent error, res:%d", res);
     }
 }
