@@ -17,6 +17,7 @@ import(
 
 ohos_shared_library("distributedhardwareutils") {
   include_dirs = [
+    "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
     "//third_party/openssl:libcrypto_static",
     "//utils/native/base/include",
     "//utils/system/safwk/native/include",
@@ -51,6 +52,7 @@ ohos_shared_library("distributedhardwareutils") {
     "dsoftbus_standard:softbus_client",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
+    "hisysevent_native:libhisysevent",
   ]
 
   subsystem_name = "distributedhardware"
