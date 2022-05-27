@@ -58,7 +58,7 @@ ohos_unittest("DistributedHardwareManagerTest") {
     "bundle_framework:appexecfwk_core",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
-    "dsoftbus_standard:softbus_client",
+    "dsoftbus:softbus_client",
   ]
 }
 
