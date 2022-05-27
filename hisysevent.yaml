@@ -81,6 +81,7 @@ COMP_RELEASE_ERROR:
   __BASE: {type: FAULT, level: CRITICAL, desc: dhfwk component dlclose failed}
   PID: {type: INT32, desc: dhfwk pid}
   UID: {type: INT32, desc: dhfwk uid}
+  DHTYPE: {type: UINT32, desc: dhtype}
   RESULT: {type: INT32, desc: dlclose failed result}
   MSG: {type: STRING, desc: dhfwk component dlclose failed}
 

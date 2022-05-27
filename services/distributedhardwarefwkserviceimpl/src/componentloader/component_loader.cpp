@@ -347,6 +347,7 @@ int32_t ComponentLoader::ReleaseHardwareHandler(const DHType dhType)
             OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             "PID", getpid(),
             "UID", getuid(),
+            "DHTYPE", (uint32_t)dhType,
             "RESULT", ret,
             "MSG", "dhfwk release hardware handler failed.");
         if (res != DH_FWK_SUCCESS) {
