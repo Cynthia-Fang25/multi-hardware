@@ -341,6 +341,7 @@ int32_t ComponentLoader::ReleaseHardwareHandler(const DHType dhType)
     int32_t ret = ReleaseHandler(compHandlerMap_[dhType].hardwareHandler);
     if (ret) {
         DHLOGE("fail, dhType: %#X", dhType);
+
         int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
             OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
             "COMP_RELEASE_ERROR",
