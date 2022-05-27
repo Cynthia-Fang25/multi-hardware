@@ -107,7 +107,7 @@ void OffLineTask::CreateDisableTask()
 
         int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
             OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
-            "DISENABLE_TASK",
+            "DISABLE_TASK",
             OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
             "PID", getpid(),
             "UID", getuid(),

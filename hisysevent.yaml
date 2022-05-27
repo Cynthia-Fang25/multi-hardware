@@ -81,18 +81,21 @@ COMP_RELEASE_ERROR:
   __BASE: {type: FAULT, level: CRITICAL, desc: dhfwk component dlclose failed}
   PID: {type: INT32, desc: dhfwk pid}
   UID: {type: INT32, desc: dhfwk uid}
+  RESULT: {type: INT32, desc: dlclose failed result}
   MSG: {type: STRING, desc: dhfwk component dlclose failed}
 
 ON_LINE_TASK:
   __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk create online task}
   PID: {type: INT32, desc: dhfwk pid}
   UID: {type: INT32, desc: dhfwk uid}
+  DEVID: {type: STRING, desc: device id}
   MSG: {type: STRING, desc: dhfwk create online task}
 
 OFF_LINE_TASK:
   __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk create offline task}
   PID: {type: INT32, desc: dhfwk pid}
   UID: {type: INT32, desc: dhfwk uid}
+  DEVID: {type: STRING, desc: device id}
   MSG: {type: STRING, desc: dhfwk create offline task}
 
 ENABLE_TASK:
@@ -103,7 +106,7 @@ ENABLE_TASK:
   DHID: {type: STRING, desc: component id}
   MSG: {type: STRING, desc: dhfwk create enable task}
 
-DISENABLE_TASK:
+DISABLE_TASK:
   __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk create disable task}
   PID: {type: INT32, desc: dhfwk pid}
   UID: {type: INT32, desc: dhfwk uid}

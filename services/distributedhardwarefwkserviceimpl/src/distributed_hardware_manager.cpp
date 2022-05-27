@@ -121,6 +121,7 @@ int32_t DistributedHardwareManager::SendOnLineEvent(const std::string &networkId
         OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
         "PID", getpid(),
         "UID", getuid(),
+        "DEVID", GetAnonyString(GetDeviceIdByUUID(GetUUID())).c_str(),
         "MSG", "dhfwk create online task.");
     if (res != DH_FWK_SUCCESS) {
         DHLOGE("Write HiSysEvent error, res:%d", res);
@@ -173,6 +174,7 @@ int32_t DistributedHardwareManager::SendOffLineEvent(const std::string &networkI
         OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
         "PID", getpid(),
         "UID", getuid(),
+        "DEVID", GetAnonyString(GetDeviceIdByUUID(GetUUID())).c_str(),
         "MSG", "dhfwk create offline task.");
     if (res != DH_FWK_SUCCESS) {
         DHLOGE("Write HiSysEvent error, res:%d", res);
