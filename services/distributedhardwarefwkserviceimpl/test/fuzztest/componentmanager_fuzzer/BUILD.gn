@@ -51,7 +51,10 @@ ohos_fuzztest("ComponentmanagerFuzzTest") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  external_deps = [ "ipc:ipc_core" ]
+  external_deps = [ 
+    "hisysevent_native:libhisysevent",
+    "ipc:ipc_core",
+  ]
 }
 
 ###############################################################################
