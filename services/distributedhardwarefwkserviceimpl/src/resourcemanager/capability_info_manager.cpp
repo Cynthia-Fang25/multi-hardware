@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -321,10 +321,6 @@ void CapabilityInfoManager::OnChange(const DistributedKv::ChangeNotification &ch
     }
 }
 
-void CapabilityInfoManager::OnChange(const DistributedKv::ChangeNotification &changeNotification,
-    std::shared_ptr<DistributedKv::KvStoreSnapshot> snapshot)
-{}
-
 void CapabilityInfoManager::OnEvent(CapabilityInfoEvent &ev)
 {
     switch (ev.GetAction()) {
@@ -534,6 +530,14 @@ int32_t CapabilityInfoManager::GetDataByKeyPrefix(const std::string &keyPrefix, 
         capabilityMap[capabilityInfo->GetKey()] = capabilityInfo;
     }
     return DH_FWK_SUCCESS;
+}
+
+void CapabilityInfoManager::DumpCapabilityInfos(std::vector<CapabilityInfo> &capInfos)
+{
+    for (auto info : globalCapInfoMap_) {
+        CapabilityInfo capInfo = *(info.second);
+        capInfos.emplace_back(capInfo);
+    }
 }
 } // namespace DistributedHardware
 } // namespace OHOS

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -88,10 +88,10 @@ public:
     int32_t ManualSync(const std::string &networkId);
     /* Database data changes callback */
     virtual void OnChange(const DistributedKv::ChangeNotification &changeNotification) override;
-    virtual void OnChange(const DistributedKv::ChangeNotification &changeNotification,
-        std::shared_ptr<DistributedKv::KvStoreSnapshot> snapshot) override;
     /* EventBus async processing callback */
     void OnEvent(CapabilityInfoEvent &e) override;
+
+    void DumpCapabilityInfos(std::vector<CapabilityInfo> &capInfos);
 
 private:
     CapabilityInfoManager();
