@@ -54,6 +54,7 @@ ohos_unittest("ComponentManagerTest") {
 
   external_deps = [
     "ipc:ipc_core",
+    "hisysevent_native:libhisysevent",
   ]
 }
 

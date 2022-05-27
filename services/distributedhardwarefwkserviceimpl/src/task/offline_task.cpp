@@ -16,6 +16,9 @@
 #include "offline_task.h"
 
 #include <thread>
+#include <unistd.h>
+
+#include "hisysevent.h"
 
 #include "anonymous_string.h"
 #include "capability_info_manager.h"
@@ -101,6 +104,19 @@ void OffLineTask::CreateDisableTask()
         };
         auto task = TaskFactory::GetInstance().CreateTask(TaskType::DISABLE, taskParam, shared_from_this());
         TaskExecutor::GetInstance().PushTask(task);
+
+        int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
+            OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
+            "DISENABLE_TASK",
+            OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
+            "PID", getpid(),
+            "UID", getuid(),
+            "DEVID", GetAnonyString(GetDeviceIdByUUID(GetUUID())).c_str(),
+            "DHID", (iter->GetDHId()).c_str(),
+            "MSG", "dhfwk dhfwk create disable task.");
+        if (res != DH_FWK_SUCCESS) {
+            DHLOGE("Write HiSysEvent error, res:%d", res);
+        }
     }
 }
 

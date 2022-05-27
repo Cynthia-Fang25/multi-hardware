@@ -44,6 +44,8 @@ ohos_unittest("ComponentLoaderTest") {
     "//foundation/distributedhardware/distributedhardwarefwk/services/distributedhardwarefwkserviceimpl:distributedhardwarefwksvr_impl"
   ]
 
+  external_deps = [ "hisysevent_native:libhisysevent" ]
+
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"ComponentLoaderTest\"",

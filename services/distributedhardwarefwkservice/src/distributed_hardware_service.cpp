@@ -15,9 +15,7 @@
 
 #include "distributed_hardware_service.h"
 
-
 #include <unistd.h>
-
 
 #include "hisysevent.h"
 #include "if_system_ability_manager.h"
@@ -30,8 +28,6 @@
 #include "access_manager.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
-// #include "dh_utils_hisysevent.h"
-
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -45,8 +41,6 @@ DistributedHardwareService::DistributedHardwareService(int32_t saId, bool runOnC
 void DistributedHardwareService::OnStart()
 {
     DHLOGI("DistributedHardwareService::OnStart start");
-
-    // HiSysEventWrite("DHFWK_SA_START", OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR, "dhfwk sa start on demand.");
 
     int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
