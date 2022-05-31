@@ -18,13 +18,11 @@
 #include <dlfcn.h>
 #include <memory>
 #include <thread>
-#include <unistd.h>
-
-#include "hisysevent.h"
 
 #include "anonymous_string.h"
 #include "constants.h"
 #include "device_manager.h"
+#include "dh_utils_hisysevent.h"
 #include "dh_utils_tool.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
@@ -78,17 +76,8 @@ void DistributedHardwareManagerFactory::CheckExitSAOrNot()
     DeviceManager::GetInstance().GetTrustedDeviceList(DH_FWK_PKG_NAME, "", deviceList);
     if (deviceList.size() == 0) {
         DHLOGI("DM report devices offline, exit sa process");
-
-        int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
-            "DHFWK_SA_STOP",
-            OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
-            "PID", getpid(),
-            "UID", getuid(),
-            "MSG", "dhfwk sa stop on demand.");
-        if (res != DH_FWK_SUCCESS) {
-            DHLOGE("Write HiSysEvent error, res:%d", res);
-        }
+        HiSysEventWriteMsg(DHFWK_SA_STOP, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
+            "dhfwk sa stop on demand.");
 
         exit(0);
     }

@@ -18,13 +18,12 @@
 #include <dlfcn.h>
 #include <fstream>
 #include <string>
-#include <unistd.h>
 
-#include "hisysevent.h"
 #include "nlohmann/json.hpp"
 
 #include "constants.h"
 #include "distributed_hardware_log.h"
+#include "dh_utils_hisysevent.h"
 #include "hidump_helper.h"
 
 using nlohmann::json;
@@ -142,36 +141,16 @@ void *ComponentLoader::GetHandler(const std::string &soName)
     if (soName.length() == 0 || (LIB_LOAD_PATH.length() + soName.length()) > PATH_MAX ||
         realpath((LIB_LOAD_PATH + soName).c_str(), path) == nullptr) {
         DHLOGE("File canonicalization failed");
-
-        int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
-            "FILE_PARSE_ERROR",
-            OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-            "PID", getpid(),
-            "UID", getuid(),
-            "SONAME", soName.c_str(),
-            "MSG", "dhfwk component so config file canonicalization failed.");
-        if (res != DH_FWK_SUCCESS) {
-            DHLOGE("Write HiSysEvent error, res:%d", res);
-        }
+        HiSysEventWriteCompLoadMsg(FILE_PARSE_ERROR, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+            soName, "dhfwk component so config file canonicalization failed.");
 
         return nullptr;
     }
     void *pHandler = dlopen(path, RTLD_LAZY | RTLD_NODELETE);
     if (pHandler == nullptr) {
         DHLOGE("%s handler load failed.", path);
-
-        int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
-            "COMP_SO_LOAD_ERROR",
-            OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-            "PID", getpid(),
-            "UID", getuid(),
-            "SONAME", soName.c_str(),
-            "MSG", "dhfwk component so open failed.");
-        if (res != DH_FWK_SUCCESS) {
-            DHLOGE("Write HiSysEvent error, res:%d", res);
-        }
+        HiSysEventWriteCompLoadMsg(COMP_SO_LOAD_ERROR, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+            soName, "dhfwk component so open failed.");
 
         return nullptr;
     }
@@ -270,17 +249,8 @@ int32_t ComponentLoader::ParseConfig()
     std::map<DHType, CompConfig> dhtypeMap;
     int32_t ret;
     DHLOGI("ParseConfig start");
-
-    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-        OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
-        "COMP_LOAD",
-        OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
-        "PID", getpid(),
-        "UID", getuid(),
-        "MSG", "dhfwk load all components.");
-    if (res != DH_FWK_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%d", res);
-    }
+    HiSysEventWriteMsg(COMP_LOAD, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
+        "dhfwk load all components.");
 
     std::string jsonStr = Readfile(COMPONENTSLOAD_PROFILE_PATH);
     if (jsonStr.length() == 0) {
@@ -310,17 +280,8 @@ int32_t ComponentLoader::ReleaseHandler(void *&handler)
 int32_t ComponentLoader::UnInit()
 {
     DHLOGI("release all handler");
-
-    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-        OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
-        "COMP_RELEASE",
-        OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
-        "PID", getpid(),
-        "UID", getuid(),
-        "MSG", "dhfwk all components release.");
-    if (res != DH_FWK_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%d", res);
-    }
+    HiSysEventWriteMsg(COMP_RELEASE, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
+        "dhfwk all components release.");
 
     int32_t ret = DH_FWK_SUCCESS;
     for (std::map<DHType, CompHandler>::iterator iter = compHandlerMap_.begin();
@@ -341,19 +302,8 @@ int32_t ComponentLoader::ReleaseHardwareHandler(const DHType dhType)
     int32_t ret = ReleaseHandler(compHandlerMap_[dhType].hardwareHandler);
     if (ret) {
         DHLOGE("fail, dhType: %#X", dhType);
-
-        int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
-            "COMP_RELEASE_ERROR",
-            OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-            "PID", getpid(),
-            "UID", getuid(),
-            "DHTYPE", (uint32_t)dhType,
-            "RESULT", ret,
-            "MSG", "dhfwk release hardware handler failed.");
-        if (res != DH_FWK_SUCCESS) {
-            DHLOGE("Write HiSysEvent error, res:%d", res);
-        }
+        HiSysEventWriteCompReleaseMsg(COMP_RELEASE_ERROR, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+            dhType, ret, "dhfwk release hardware handler failed.");
     }
     return ret;
 }
@@ -366,16 +316,8 @@ int32_t ComponentLoader::ReleaseSource(const DHType dhType)
     int32_t ret = ReleaseHandler(compHandlerMap_[dhType].sourceHandler);
     if (ret) {
         DHLOGE("fail, dhType: %#X", dhType);
-        int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
-            "COMP_RELEASE_ERROR",
-            OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-            "PID", getpid(),
-            "UID", getuid(),
-            "MSG", "dhfwk release source failed.");
-        if (res != DH_FWK_SUCCESS) {
-            DHLOGE("Write HiSysEvent error, res:%d", res);
-        }
+        HiSysEventWriteCompReleaseMsg(COMP_RELEASE_ERROR, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+            dhType, ret, "dhfwk release source failed.");
     }
     return ret;
 }
@@ -388,16 +330,8 @@ int32_t ComponentLoader::ReleaseSink(const DHType dhType)
     int32_t ret = ReleaseHandler(compHandlerMap_[dhType].sinkHandler);
     if (ret) {
         DHLOGE("fail, dhType: %#X", dhType);
-        int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
-            "COMP_RELEASE_ERROR",
-            OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-            "PID", getpid(),
-            "UID", getuid(),
-            "MSG", "dhfwk release sink failed.");
-        if (res != DH_FWK_SUCCESS) {
-            DHLOGE("Write HiSysEvent error, res:%d", res);
-        }
+        HiSysEventWriteCompReleaseMsg(COMP_RELEASE_ERROR, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+            dhType, ret, "dhfwk release sink failed.");
     }
     return ret;
 }

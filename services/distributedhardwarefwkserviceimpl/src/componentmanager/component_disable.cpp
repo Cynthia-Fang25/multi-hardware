@@ -15,10 +15,9 @@
 
 #include "component_disable.h"
 
-#include "hisysevent.h"
-
 #include "anonymous_string.h"
 #include "constants.h"
+#include "dh_utils_hisysevent.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
 
@@ -45,20 +44,8 @@ int32_t ComponentDisable::Disable(const std::string &networkId, const std::strin
     if (ret != DH_FWK_SUCCESS) {
         DHLOGE("UnregisterDistributedHardware failed, networkId = %s dhId = %s.", GetAnonyString(networkId).c_str(),
             GetAnonyString(dhId).c_str());
-
-        int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
-            "DISABLE_FAILED",
-            OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-            "PID", getpid(),
-            "UID", getuid(),
-            "DHID", GetAnonyString(dhId).c_str(),
-            "RESULT", ret,
-            "MSG", "dhfwk unregister distributed hardware failed.");
-        if (res != DH_FWK_SUCCESS) {
-            DHLOGE("Write HiSysEvent error, res:%d", res);
-        }
-
+        HiSysEventWriteAbleFailedMsg(DISABLE_FAILED, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+            GetAnonyString(dhId).c_str(), ret, "dhfwk unregister distributed hardware failed.");
         return ERR_DH_FWK_COMPONENT_UNREGISTER_FAILED;
     }
 
@@ -69,20 +56,9 @@ int32_t ComponentDisable::Disable(const std::string &networkId, const std::strin
     if (!waitStatus) {
         DHLOGE("disable timeout, networkId = %s dhId = %s.", GetAnonyString(networkId).c_str(),
             GetAnonyString(dhId).c_str());
-
-        int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
-            "DISABLE_FAILED",
-            OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-            "PID", getpid(),
-            "UID", getuid(),
-            "DHID", GetAnonyString(dhId).c_str(),
-            "RESULT", ERR_DH_FWK_COMPONENT_DISABLE_TIMEOUT,
-            "MSG", "dhfwk distributed hardware disable timeout.");
-        if (res != DH_FWK_SUCCESS) {
-            DHLOGE("Write HiSysEvent error, res:%d", res);
-        }
-
+        HiSysEventWriteAbleFailedMsg(DISABLE_FAILED, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+            GetAnonyString(dhId).c_str(), ERR_DH_FWK_COMPONENT_DISABLE_TIMEOUT,
+            "dhfwk distributed hardware disable timeout.");
         return ERR_DH_FWK_COMPONENT_DISABLE_TIMEOUT;
     }
     return (status_ == DH_FWK_SUCCESS) ? DH_FWK_SUCCESS : ERR_DH_FWK_COMPONENT_DISABLE_FAILED;
