@@ -136,7 +136,7 @@ int32_t CapabilityInfoManager::SyncRemoteCapabilityInfos()
         }
         globalCapInfoMap_[capabilityInfo->GetKey()] = capabilityInfo;
 
-        HiSysEventWriteAbleTaskMsg(DB_DATA_NOTIFY, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
+        HiSysEventWriteDBDataNotifyMsg(DB_DATA_NOTIFY, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
             GetAnonyString(capabilityInfo->GetDeviceId()), GetAnonyString(capabilityInfo->GetDHId()),
             "Sync full remote device info from DB.");
     }
