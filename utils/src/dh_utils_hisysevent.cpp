@@ -75,7 +75,7 @@ void HiSysEventWriteCompReleaseMsg(const std::string &status, const OHOS::Hiview
         eventType,
         "DHTYPE", (g_mapDhTypeName[dhType]).c_str(),
         "RESULT", ret,
-        "MSG", (g_mapDhTypeName[dhType] + msg).c_str());
+        "MSG", msg.c_str());
     if (res != DH_FWK_SUCCESS) {
         DHLOGE("Write HiSysEvent error, res:%d", res);
     }
