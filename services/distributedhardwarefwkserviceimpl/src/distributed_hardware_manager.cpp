@@ -154,6 +154,7 @@ int32_t DistributedHardwareManager::SendOffLineEvent(const std::string &networkI
     };
     auto task = TaskFactory::GetInstance().CreateTask(TaskType::OFF_LINE, taskParam, nullptr);
     TaskExecutor::GetInstance().PushTask(task);
+
     DHContext::GetInstance().RemoveOnlineDevice(realUUID);
     CapabilityInfoManager::GetInstance()->RemoveManualSyncCount(GetDeviceIdByUUID(realUUID));
 

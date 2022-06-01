@@ -23,22 +23,6 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-namespace {
-std::unordered_map<DHType, std::string> g_mapDhTypeName = {
-    { DHType::UNKNOWN, "UNKNOWN" },
-    { DHType::CAMERA, "CAMERA" },
-    { DHType::MIC, "MIC" },
-    { DHType::SPEAKER, "SPEAKER" },
-    { DHType::DISPLAY, "DISPLAY" },
-    { DHType::GPS, "GPS" },
-    { DHType::BUTTON, "BUTTON" },
-    { DHType::HFP, "HFP" },
-    { DHType::A2D, "A2D" },
-    { DHType::VIRMODEM_MIC, "VIRMODEM_MIC" },
-    { DHType::VIRMODEM_SPEAKER, "VIRMODEM_SPEAKER" },
-};
-}
-
 void HiSysEventWriteMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const std::string &msg)
 {
@@ -69,11 +53,17 @@ void HiSysEventWriteCompLoadMsg(const std::string &status, const OHOS::HiviewDFX
 void HiSysEventWriteCompReleaseMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const DHType dhType, int32_t ret, const std::string &msg)
 {
+    std::string dhTypeStr = "UNKNOWN";
+    auto it = DHTypeStrMap.find(dhType);
+    if (it != DHTypeStrMap.end()) {
+        dhTypeStr = it->second;
+    }
+
     int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
         status.c_str(),
         eventType,
-        "DHTYPE", (g_mapDhTypeName[dhType]).c_str(),
+        "DHTYPE", dhTypeStr.c_str(),
         "RESULT", ret,
         "MSG", msg.c_str());
     if (res != DH_FWK_SUCCESS) {
