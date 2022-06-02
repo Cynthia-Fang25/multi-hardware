@@ -22,7 +22,7 @@ IMPLEMENT_SINGLE_INSTANCE(EnabledCompsDump);
 
 void EnabledCompsDump::DumpEnabledComp(const std::string &uuid, const DHType dhType, const std::string &dhId)
 {
-    HidumpCompInfo info (GetDeviceIdByUUID(uuid), dhType, dhId);
+    HidumpCompInfo info(GetDeviceIdByUUID(uuid), dhType, dhId);
 
     std::lock_guard<std::mutex> lock(compInfosMutex_);
     compInfoSet_.emplace(info);
@@ -30,7 +30,7 @@ void EnabledCompsDump::DumpEnabledComp(const std::string &uuid, const DHType dhT
 
 void EnabledCompsDump::DumpDisabledComp(const std::string &uuid, const DHType dhType, const std::string &dhId)
 {
-    HidumpCompInfo info (GetDeviceIdByUUID(uuid), dhType, dhId);
+    HidumpCompInfo info(GetDeviceIdByUUID(uuid), dhType, dhId);
 
     std::lock_guard<std::mutex> lock(compInfosMutex_);
     auto it = compInfoSet_.find(info);

@@ -20,7 +20,6 @@
 #include "capability_utils.h"
 #include "constants.h"
 #include "dh_context.h"
-#include "dh_utils_hisysevent.h"
 #include "dh_utils_tool.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
@@ -135,10 +134,6 @@ int32_t CapabilityInfoManager::SyncRemoteCapabilityInfos()
             continue;
         }
         globalCapInfoMap_[capabilityInfo->GetKey()] = capabilityInfo;
-
-        HiSysEventWriteDBDataNotifyMsg(DB_DATA_NOTIFY, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
-            GetAnonyString(capabilityInfo->GetDeviceId()), GetAnonyString(capabilityInfo->GetDHId()),
-            "Sync full remote device info from DB.");
     }
     return DH_FWK_SUCCESS;
 }

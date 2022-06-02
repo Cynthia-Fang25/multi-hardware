@@ -103,7 +103,7 @@ void OffLineTask::CreateDisableTask()
         auto task = TaskFactory::GetInstance().CreateTask(TaskType::DISABLE, taskParam, shared_from_this());
         TaskExecutor::GetInstance().PushTask(task);
 
-        HiSysEventWriteAbleTaskMsg(DISABLE_TASK, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
+        HiSysEventWriteAbleTaskMsg(DHFWK_DEV_DISABLE, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
             GetAnonyString(GetDeviceIdByUUID(GetUUID())), GetAnonyString(iter->GetDHId()),
             "dhfwk create disable task.");
     }

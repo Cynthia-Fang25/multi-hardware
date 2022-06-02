@@ -39,76 +39,58 @@
 
 domain: DHFWK
 
-DHFWK_SA_START:
-  __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk sa start on demand}
-  MSG: {type: STRING, desc: dhfwk sa start}
+DHFWK_INIT_BEGIN:
+  __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk sa start on demand and init}
+  MSG: {type: STRING, desc: dhfwk sa start init}
 
-DHFWK_SA_STOP:
+DHFWK_INIT_END:
+  __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk sa init end}
+  MSG: {type: STRING, desc: dhfwk sa init end}
+
+DHFWK_INIT_FAIL:
+  __BASE: {type: FAULT, level: CRITICAL, desc: dhfwk sa init failed}
+  ERR_CODE: {type: INT32, desc: dhfwk sa init failed result}
+  MSG: {type: STRING, desc: dhfwk sa init failed}
+
+DHFWK_EXIT_BEGIN:
   __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk sa stop on demand}
   MSG: {type: STRING, desc: dhfwk sa stop}
 
-COMP_LOAD:
-  __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk load all components}
-  MSG: {type: STRING, desc: dhfwk load all components}
+DHFWK_EXIT_END:
+  __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk sa stop on demand}
+  MSG: {type: STRING, desc: dhfwk sa stop}
 
-FILE_PARSE_ERROR:
-  __BASE: {type: FAULT, level: CRITICAL, desc: dhfwk component load error occured}
-  SONAME: {type: STRING, desc: component so name}
-  MSG: {type: STRING, desc: dhfwk component so config file canonicalization failed}
-
-COMP_SO_LOAD_ERROR:
+DHFWK_COMP_LOAD_FAIL:
   __BASE: {type: FAULT, level: CRITICAL, desc: dhfwk component load error occured}
   SONAME: {type: STRING, desc: component so name}
   MSG: {type: STRING, desc: dhfwk component so open failed}
 
-COMP_RELEASE:
-  __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk all components release}
-  MSG: {type: STRING, desc: dhfwk all components release}
-
-COMP_RELEASE_ERROR:
+DHFWK_COMP_RELEASE_FAIL:
   __BASE: {type: FAULT, level: CRITICAL, desc: dhfwk component dlclose failed}
   DHTYPE: {type: STRING, desc: dhtype}
   RESULT: {type: INT32, desc: dlclose failed result}
   MSG: {type: STRING, desc: dhfwk component dlclose failed}
 
-ON_LINE_TASK:
-  __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk create online task}
-  DEVID: {type: STRING, desc: device id}
-  UUID: {type: STRING, desc: uuid}
-  MSG: {type: STRING, desc: dhfwk create online task}
-
-OFF_LINE_TASK:
-  __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk create offline task}
-  DEVID: {type: STRING, desc: device id}
-  UUID: {type: STRING, desc: uuid}
-  MSG: {type: STRING, desc: dhfwk create offline task}
-
-ENABLE_TASK:
+DHFWK_DEV_ENABLE:
   __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk create enable task}
   DEVID: {type: STRING, desc: device id}
   DHID: {type: STRING, desc: component id}
   MSG: {type: STRING, desc: dhfwk create enable task}
 
-DISABLE_TASK:
+DHFWK_DEV_DISABLE:
   __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk create disable task}
   DEVID: {type: STRING, desc: device id}
   DHID: {type: STRING, desc: component id}
   MSG: {type: STRING, desc: dhfwk create disable task}
 
-ENABLE_FAILED:
+DHFWK_DH_REGISTER_FAIL:
   __BASE: {type: FAULT, level: CRITICAL, desc: dhfwk distributed hardware enable failed}
   DHID: {type: STRING, desc: component id}
-  RESULT: {type: INT32, desc: dhfwk distributed hardware enable result}
+  RESULT: {type: INT32, desc: dhfwk distributed hardware enable failed result}
   MSG: {type: STRING, desc: dhfwk distributed hardware enable failed}
 
-DISABLE_FAILED:
+DHFWK_DH_UNREGISTER_FAIL:
   __BASE: {type: FAULT, level: CRITICAL, desc: dhfwk distributed hardware disable failed}
   DHID: {type: STRING, desc: component id}
   RESULT: {type: INT32, desc: dhfwk distributed hardware disable result}
   MSG: {type: STRING, desc: dhfwk distributed hardware disable failed}
-
-DB_DATA_NOTIFY:
-  __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk Sync full remote device info from DB}
-  DEVID: {type: STRING, desc: device id}
-  DHID: {type: STRING, desc: component id}
-  MSG: {type: STRING, desc: dhfwk Sync full remote device info from DB}

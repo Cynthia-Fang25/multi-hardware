@@ -26,13 +26,13 @@ namespace DistributedHardware {
 void HiSysEventWriteMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const std::string &msg)
 {
-    int32_t ret = OHOS::HiviewDFX::HiSysEvent::Write(
+    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
         status.c_str(),
         eventType,
         "MSG", msg.c_str());
-    if (ret != DH_FWK_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, ret:%d", ret);
+    if (res != DH_FWK_SUCCESS) {
+        DHLOGE("Write HiSysEvent error, res:%d", res);
     }
 }
 
@@ -71,20 +71,6 @@ void HiSysEventWriteCompReleaseMsg(const std::string &status, const OHOS::Hiview
     }
 }
 
-void HiSysEventWriteOnOffLineMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
-    const std::string &anonyDevid, const std::string &anonyUUID, const std::string &msg)
-{
-    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-        OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
-        status.c_str(),
-        eventType,
-        "DEVID", anonyDevid.c_str(),
-        "UUID", anonyUUID.c_str(),
-        "MSG", msg.c_str());
-    if (res != DH_FWK_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%d", res);
-    }
-}
 
 void HiSysEventWriteAbleTaskMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const std::string &anonyDevid, const std::string &anonyDHId, const std::string &msg)

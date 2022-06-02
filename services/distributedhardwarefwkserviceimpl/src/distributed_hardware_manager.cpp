@@ -114,9 +114,6 @@ int32_t DistributedHardwareManager::SendOnLineEvent(const std::string &networkId
     DHContext::GetInstance().AddOnlineDevice(uuid, networkId);
     CapabilityInfoManager::GetInstance()->CreateManualSyncCount(GetDeviceIdByUUID(uuid));
 
-    HiSysEventWriteOnOffLineMsg(ON_LINE_TASK, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
-        GetAnonyString(GetDeviceIdByUUID(uuid)), GetAnonyString(uuid), "dhfwk create online task.");
-
     return DH_FWK_SUCCESS;
 }
 
@@ -157,9 +154,6 @@ int32_t DistributedHardwareManager::SendOffLineEvent(const std::string &networkI
 
     DHContext::GetInstance().RemoveOnlineDevice(realUUID);
     CapabilityInfoManager::GetInstance()->RemoveManualSyncCount(GetDeviceIdByUUID(realUUID));
-
-    HiSysEventWriteOnOffLineMsg(OFF_LINE_TASK, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
-        GetAnonyString(GetDeviceIdByUUID(realUUID)), GetAnonyString(realUUID), "dhfwk create offline task.");
 
     return DH_FWK_SUCCESS;
 }

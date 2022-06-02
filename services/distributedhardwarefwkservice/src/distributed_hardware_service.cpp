@@ -39,7 +39,8 @@ DistributedHardwareService::DistributedHardwareService(int32_t saId, bool runOnC
 void DistributedHardwareService::OnStart()
 {
     DHLOGI("DistributedHardwareService::OnStart start");
-    HiSysEventWriteMsg(DHFWK_SA_START, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR, "dhfwk sa start on demand.");
+    HiSysEventWriteMsg(DHFWK_INIT_BEGIN, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
+        "dhfwk sa start on demand.");
 
     if (state_ == ServiceRunningState::STATE_RUNNING) {
         DHLOGI("DistributedHardwareService has already started.");
@@ -67,9 +68,13 @@ bool DistributedHardwareService::Init()
     auto ret = AccessManager::GetInstance()->Init();
     if (ret != DH_FWK_SUCCESS) {
         DHLOGI("DistributedHardwareService::Init failed.");
+        HiSysEventWriteMsg(DHFWK_INIT_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+        ret, "dhfwk sa init fail.");
         return false;
     }
     DHLOGI("DistributedHardwareService::Init init success.");
+    HiSysEventWriteMsg(DHFWK_INIT_END, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
+        "dhfwk sa init end.");
     return true;
 }
 

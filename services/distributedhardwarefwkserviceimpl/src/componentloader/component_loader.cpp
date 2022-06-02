@@ -141,15 +141,13 @@ void *ComponentLoader::GetHandler(const std::string &soName)
     if (soName.length() == 0 || (LIB_LOAD_PATH.length() + soName.length()) > PATH_MAX ||
         realpath((LIB_LOAD_PATH + soName).c_str(), path) == nullptr) {
         DHLOGE("File canonicalization failed");
-        HiSysEventWriteCompLoadMsg(FILE_PARSE_ERROR, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-            soName, "dhfwk component so config file canonicalization failed.");
 
         return nullptr;
     }
     void *pHandler = dlopen(path, RTLD_LAZY | RTLD_NODELETE);
     if (pHandler == nullptr) {
         DHLOGE("%s handler load failed.", path);
-        HiSysEventWriteCompLoadMsg(COMP_SO_LOAD_ERROR, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+        HiSysEventWriteCompLoadMsg(DHFWK_COMP_LOAD_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             soName, "dhfwk component so open failed.");
 
         return nullptr;
@@ -249,8 +247,6 @@ int32_t ComponentLoader::ParseConfig()
     std::map<DHType, CompConfig> dhtypeMap;
     int32_t ret;
     DHLOGI("ParseConfig start");
-    HiSysEventWriteMsg(COMP_LOAD, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
-        "dhfwk load all components.");
 
     std::string jsonStr = Readfile(COMPONENTSLOAD_PROFILE_PATH);
     if (jsonStr.length() == 0) {
@@ -280,8 +276,6 @@ int32_t ComponentLoader::ReleaseHandler(void *&handler)
 int32_t ComponentLoader::UnInit()
 {
     DHLOGI("release all handler");
-    HiSysEventWriteMsg(COMP_RELEASE, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
-        "dhfwk all components release.");
 
     int32_t ret = DH_FWK_SUCCESS;
     for (std::map<DHType, CompHandler>::iterator iter = compHandlerMap_.begin();
@@ -302,7 +296,7 @@ int32_t ComponentLoader::ReleaseHardwareHandler(const DHType dhType)
     int32_t ret = ReleaseHandler(compHandlerMap_[dhType].hardwareHandler);
     if (ret) {
         DHLOGE("fail, dhType: %#X", dhType);
-        HiSysEventWriteCompReleaseMsg(COMP_RELEASE_ERROR, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+        HiSysEventWriteCompReleaseMsg(DHFWK_COMP_RELEASE_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             dhType, ret, "dhfwk release hardware handler failed.");
     }
     return ret;
@@ -316,7 +310,7 @@ int32_t ComponentLoader::ReleaseSource(const DHType dhType)
     int32_t ret = ReleaseHandler(compHandlerMap_[dhType].sourceHandler);
     if (ret) {
         DHLOGE("fail, dhType: %#X", dhType);
-        HiSysEventWriteCompReleaseMsg(COMP_RELEASE_ERROR, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+        HiSysEventWriteCompReleaseMsg(DHFWK_COMP_RELEASE_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             dhType, ret, "dhfwk release source failed.");
     }
     return ret;
@@ -330,7 +324,7 @@ int32_t ComponentLoader::ReleaseSink(const DHType dhType)
     int32_t ret = ReleaseHandler(compHandlerMap_[dhType].sinkHandler);
     if (ret) {
         DHLOGE("fail, dhType: %#X", dhType);
-        HiSysEventWriteCompReleaseMsg(COMP_RELEASE_ERROR, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+        HiSysEventWriteCompReleaseMsg(DHFWK_COMP_RELEASE_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             dhType, ret, "dhfwk release sink failed.");
     }
     return ret;

@@ -24,20 +24,19 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-const std::string DHFWK_SA_START = "DHFWK_SA_START";
-const std::string DHFWK_SA_STOP = "DHFWK_SA_STOP";
+const std::string DHFWK_INIT_BEGIN = "DHFWK_INIT_BEGIN";
+const std::string DHFWK_INIT_END = "DHFWK_INIT_END";
+const std::string DHFWK_INIT_FAIL ="DHFWK_INIT_FAIL";
+const std::string DHFWK_EXIT_BEGIN = "DHFWK_EXIT_BEGIN";
+const std::string DHFWK_EXIT_END = "DHFWK_EXIT_END";
 const std::string COMP_LOAD = "COMP_LOAD";
-const std::string FILE_PARSE_ERROR = "FILE_PARSE_ERROR";
-const std::string COMP_SO_LOAD_ERROR = "COMP_SO_LOAD_ERROR";
+const std::string DHFWK_COMP_LOAD_FAIL = "DHFWK_COMP_LOAD_FAIL";
 const std::string COMP_RELEASE = "COMP_RELEASE";
-const std::string COMP_RELEASE_ERROR = "COMP_RELEASE_ERROR";
-const std::string ON_LINE_TASK = "ON_LINE_TASK";
-const std::string OFF_LINE_TASK = "OFF_LINE_TASK";
-const std::string ENABLE_TASK = "ENABLE_TASK";
-const std::string DISABLE_TASK = "DISABLE_TASK";
-const std::string ENABLE_FAILED = "ENABLE_FAILED";
-const std::string DISABLE_FAILED = "DISABLE_FAILED";
-const std::string DB_DATA_NOTIFY = "DB_DATA_NOTIFY";
+const std::string DHFWK_COMP_RELEASE_FAIL = "DHFWK_COMP_RELEASE_FAIL";
+const std::string DHFWK_DEV_ENABLE = "DHFWK_DEV_ENABLE";
+const std::string DHFWK_DEV_DISABLE = "DHFWK_DEV_DISABLE";
+const std::string DHFWK_DH_REGISTER_FAIL = "DHFWK_DH_REGISTER_FAIL";
+const std::string DHFWK_DH_UNREGISTER_FAIL = "DHFWK_DH_UNREGISTER_FAIL";
 
 void HiSysEventWriteMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const std::string &msg);
@@ -45,14 +44,10 @@ void HiSysEventWriteCompLoadMsg(const std::string &status, const OHOS::HiviewDFX
     const std::string &soName, const std::string &msg);
 void HiSysEventWriteCompReleaseMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const DHType dhType, int32_t ret, const std::string &msg);
-void HiSysEventWriteOnOffLineMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
-    const std::string &anonyDevid, const std::string &anonyUUID, const std::string &msg);
 void HiSysEventWriteAbleTaskMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const std::string &anonyDevid, const std::string &anonyDHId, const std::string &msg);
 void HiSysEventWriteAbleFailedMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const std::string &anonyDHId, int32_t ret,  const std::string &msg);
-void HiSysEventWriteDBDataNotifyMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
-    const std::string &anonyDevid, const std::string &anonyDHId, const std::string &msg);
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif
