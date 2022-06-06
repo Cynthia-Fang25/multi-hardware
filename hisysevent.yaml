@@ -60,11 +60,6 @@ DHFWK_EXIT_END:
   __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk sa stop on demand}
   MSG: {type: STRING, desc: dhfwk sa stop}
 
-DHFWK_COMP_LOAD_FAIL:
-  __BASE: {type: FAULT, level: CRITICAL, desc: dhfwk component load error occured}
-  SONAME: {type: STRING, desc: component so name}
-  MSG: {type: STRING, desc: dhfwk component so open failed}
-
 DHFWK_COMP_RELEASE_FAIL:
   __BASE: {type: FAULT, level: CRITICAL, desc: dhfwk component dlclose failed}
   DHTYPE: {type: STRING, desc: dhtype}
