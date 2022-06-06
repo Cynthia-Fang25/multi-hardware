@@ -71,7 +71,6 @@ void HiSysEventWriteCompReleaseMsg(const std::string &status, const OHOS::Hiview
     }
 }
 
-
 void HiSysEventWriteCompOfflineMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const std::string &anonyDevid, const std::string &msg)
 {
