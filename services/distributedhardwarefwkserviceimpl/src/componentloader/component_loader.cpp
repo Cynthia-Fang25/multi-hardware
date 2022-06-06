@@ -141,7 +141,6 @@ void *ComponentLoader::GetHandler(const std::string &soName)
     if (soName.length() == 0 || (LIB_LOAD_PATH.length() + soName.length()) > PATH_MAX ||
         realpath((LIB_LOAD_PATH + soName).c_str(), path) == nullptr) {
         DHLOGE("File canonicalization failed");
-
         return nullptr;
     }
     void *pHandler = dlopen(path, RTLD_LAZY | RTLD_NODELETE);
@@ -246,7 +245,6 @@ int32_t ComponentLoader::ParseConfig()
     std::map<DHType, CompConfig> dhtypeMap;
     int32_t ret;
     DHLOGI("ParseConfig start");
-
     std::string jsonStr = Readfile(COMPONENTSLOAD_PROFILE_PATH);
     if (jsonStr.length() == 0) {
         DHLOGE("profile is empty return");
@@ -275,7 +273,6 @@ int32_t ComponentLoader::ReleaseHandler(void *&handler)
 int32_t ComponentLoader::UnInit()
 {
     DHLOGI("release all handler");
-
     int32_t ret = DH_FWK_SUCCESS;
     for (std::map<DHType, CompHandler>::iterator iter = compHandlerMap_.begin();
         iter != compHandlerMap_.end(); iter++) {

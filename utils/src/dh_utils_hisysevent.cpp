@@ -50,20 +50,6 @@ void HiSysEventWriteErrCodeMsg(const std::string &status, const OHOS::HiviewDFX:
     }
 }
 
-// void HiSysEventWriteCompLoadMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
-//     const std::string &soName, const std::string &msg)
-// {
-//     int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-//         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
-//         status.c_str(),
-//         eventType,
-//         "SONAME", soName.c_str(),
-//         "MSG", msg.c_str());
-//     if (res != DH_FWK_SUCCESS) {
-//         DHLOGE("Write HiSysEvent error, res:%d", res);
-//     }
-// }
-
 void HiSysEventWriteCompReleaseMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const DHType dhType, int32_t errCode, const std::string &msg)
 {
