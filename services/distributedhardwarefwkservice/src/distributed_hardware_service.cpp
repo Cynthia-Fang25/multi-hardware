@@ -61,6 +61,8 @@ bool DistributedHardwareService::Init()
         bool ret = Publish(this);
         if (!ret) {
             DHLOGE("DistributedHardwareService::Init Publish failed!");
+            HiSysEventWriteMsg(DHFWK_INIT_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+                "dhfwk sa init publish failed.");
             return false;
         }
         registerToService_ = true;
@@ -68,13 +70,13 @@ bool DistributedHardwareService::Init()
     auto ret = AccessManager::GetInstance()->Init();
     if (ret != DH_FWK_SUCCESS) {
         DHLOGI("DistributedHardwareService::Init failed.");
-        HiSysEventWriteFailedMsg(DHFWK_INIT_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-            ret, "dhfwk sa init fail.");
+        HiSysEventWriteErrCodeMsg(DHFWK_INIT_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+            ret, "dhfwk sa AccessManager init fail.");
         return false;
     }
     DHLOGI("DistributedHardwareService::Init init success.");
     HiSysEventWriteMsg(DHFWK_INIT_END, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
-        "dhfwk sa init end.");
+        "dhfwk sa init success.");
     return true;
 }
 

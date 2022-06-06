@@ -26,28 +26,22 @@ namespace OHOS {
 namespace DistributedHardware {
 const std::string DHFWK_INIT_BEGIN = "DHFWK_INIT_BEGIN";
 const std::string DHFWK_INIT_END = "DHFWK_INIT_END";
-const std::string DHFWK_INIT_FAIL ="DHFWK_INIT_FAIL";
+const std::string DHFWK_INIT_FAIL = "DHFWK_INIT_FAIL";
 const std::string DHFWK_EXIT_BEGIN = "DHFWK_EXIT_BEGIN";
 const std::string DHFWK_EXIT_END = "DHFWK_EXIT_END";
-const std::string COMP_LOAD = "COMP_LOAD";
-const std::string DHFWK_COMP_LOAD_FAIL = "DHFWK_COMP_LOAD_FAIL";
-const std::string COMP_RELEASE = "COMP_RELEASE";
+const std::string DHFWK_DEV_OFFLINE = "DHFWK_DEV_OFFLINE";
 const std::string DHFWK_COMP_RELEASE_FAIL = "DHFWK_COMP_RELEASE_FAIL";
-const std::string DHFWK_DEV_ENABLE = "DHFWK_DEV_ENABLE";
-const std::string DHFWK_DEV_DISABLE = "DHFWK_DEV_DISABLE";
 const std::string DHFWK_DH_REGISTER_FAIL = "DHFWK_DH_REGISTER_FAIL";
 const std::string DHFWK_DH_UNREGISTER_FAIL = "DHFWK_DH_UNREGISTER_FAIL";
 
 void HiSysEventWriteMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const std::string &msg);
-void HiSysEventWriteFailedMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
+void HiSysEventWriteErrCodeMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     int32_t errCode, const std::string &msg);
-void HiSysEventWriteCompLoadMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
-    const std::string &soName, const std::string &msg);
 void HiSysEventWriteCompReleaseMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const DHType dhType, int32_t errCode, const std::string &msg);
-void HiSysEventWriteCompAbleMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
-    const std::string &anonyDevid, const std::string &anonyDHId, const std::string &msg);
+void HiSysEventWriteCompOfflineMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
+    const std::string &anonyDevid, const std::string &msg);
 void HiSysEventWriteCompAbleFailedMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const std::string &anonyDHId, int32_t errCode, const std::string &msg);
 } // namespace DistributedHardware

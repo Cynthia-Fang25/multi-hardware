@@ -36,33 +36,33 @@ void HiSysEventWriteMsg(const std::string &status, const OHOS::HiviewDFX::HiSysE
     }
 }
 
-void HiSysEventWriteFailedMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
+void HiSysEventWriteErrCodeMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     int32_t errCode, const std::string &msg)
 {
     int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
         status.c_str(),
         eventType,
-        "ERR_CODE", errCode
+        "ERR_CODE", errCode,
         "MSG", msg.c_str());
     if (res != DH_FWK_SUCCESS) {
         DHLOGE("Write HiSysEvent error, res:%d", res);
     }
 }
 
-void HiSysEventWriteCompLoadMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
-    const std::string &soName, const std::string &msg)
-{
-    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-        OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
-        status.c_str(),
-        eventType,
-        "SONAME", soName.c_str(),
-        "MSG", msg.c_str());
-    if (res != DH_FWK_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%d", res);
-    }
-}
+// void HiSysEventWriteCompLoadMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
+//     const std::string &soName, const std::string &msg)
+// {
+//     int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
+//         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
+//         status.c_str(),
+//         eventType,
+//         "SONAME", soName.c_str(),
+//         "MSG", msg.c_str());
+//     if (res != DH_FWK_SUCCESS) {
+//         DHLOGE("Write HiSysEvent error, res:%d", res);
+//     }
+// }
 
 void HiSysEventWriteCompReleaseMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const DHType dhType, int32_t errCode, const std::string &msg)
@@ -86,22 +86,21 @@ void HiSysEventWriteCompReleaseMsg(const std::string &status, const OHOS::Hiview
 }
 
 
-void HiSysEventWriteCompAbleMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
-    const std::string &anonyDevid, const std::string &anonyDHId, const std::string &msg)
+void HiSysEventWriteCompOfflineMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
+    const std::string &anonyDevid, const std::string &msg)
 {
     int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
         status.c_str(),
         eventType,
         "DEVID", anonyDevid.c_str(),
-        "DHID", anonyDHId.c_str(),
         "MSG", msg.c_str());
     if (res != DH_FWK_SUCCESS) {
         DHLOGE("Write HiSysEvent error, res:%d", res);
     }
 }
 
-void HiSysEventWriteAbleFailedMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
+void HiSysEventWriteCompAbleFailedMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const std::string &anonyDHId, int32_t errCode,  const std::string &msg)
 {
     int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(

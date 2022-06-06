@@ -147,9 +147,8 @@ void *ComponentLoader::GetHandler(const std::string &soName)
     void *pHandler = dlopen(path, RTLD_LAZY | RTLD_NODELETE);
     if (pHandler == nullptr) {
         DHLOGE("%s handler load failed.", path);
-        HiSysEventWriteCompLoadMsg(DHFWK_COMP_LOAD_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-            soName, "dhfwk component so open failed.");
-
+        HiSysEventWriteMsg(DHFWK_INIT_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+            "dhfwk so open failed, soname : " + soName);
         return nullptr;
     }
     return pHandler;

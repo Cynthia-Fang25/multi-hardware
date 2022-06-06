@@ -63,7 +63,7 @@ void DistributedHardwareManagerFactory::UnInit()
 {
     DHLOGI("start");
     HiSysEventWriteMsg(DHFWK_EXIT_BEGIN, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
-            "dhfwk sa exit begin.");
+        "dhfwk sa exit begin.");
 
     // release all the resources synchronously
     distributedHardwareMgrPtr_->Release();

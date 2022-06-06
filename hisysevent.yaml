@@ -71,13 +71,7 @@ DHFWK_COMP_RELEASE_FAIL:
   RESULT: {type: INT32, desc: dlclose failed result}
   MSG: {type: STRING, desc: dhfwk component dlclose failed}
 
-DHFWK_DEV_ENABLE:
-  __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk create enable task}
-  DEVID: {type: STRING, desc: device id}
-  DHID: {type: STRING, desc: component id}
-  MSG: {type: STRING, desc: dhfwk create enable task}
-
-DHFWK_DEV_DISABLE:
+DHFWK_DEV_OFFLINE:
   __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk create disable task}
   DEVID: {type: STRING, desc: device id}
   DHID: {type: STRING, desc: component id}

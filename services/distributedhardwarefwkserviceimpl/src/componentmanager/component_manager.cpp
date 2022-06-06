@@ -25,6 +25,7 @@
 #include "component_loader.h"
 #include "constants.h"
 #include "dh_context.h"
+#include "dh_utils_hisysevent.h"
 #include "dh_utils_tool.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
@@ -70,9 +71,13 @@ int32_t ComponentManager::Init()
 
     if (!WaitForResult(Action::START_SOURCE, sourceResult)) {
         DHLOGE("StartSource failed, some virtual components maybe cannot work, but want to continue");
+        HiSysEventWriteMsg(DHFWK_INIT_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+            "dhfwk start source failed.");
     }
     if (!WaitForResult(Action::START_SINK, sinkResult)) {
         DHLOGE("StartSink failed, some virtual components maybe cannot work, but want to continue");
+        HiSysEventWriteMsg(DHFWK_INIT_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+            "dhfwk start sink failed.");
     }
 
     DHLOGI("Init component success");

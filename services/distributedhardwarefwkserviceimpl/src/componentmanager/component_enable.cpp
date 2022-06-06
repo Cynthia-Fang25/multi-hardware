@@ -44,7 +44,7 @@ int32_t ComponentEnable::Enable(const std::string &networkId, const std::string 
     if (ret != DH_FWK_SUCCESS) {
         DHLOGE("RegisterDistributedHardware failed, networkId = %s dhId = %s.", GetAnonyString(networkId).c_str(),
             GetAnonyString(dhId).c_str());
-        HiSysEventWriteAbleFailedMsg(DHFWK_DH_REGISTER_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+        HiSysEventWriteCompAbleFailedMsg(DHFWK_DH_REGISTER_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             GetAnonyString(dhId).c_str(), ret, "dhfwk register distributed hardware failed.");
         return ERR_DH_FWK_COMPONENT_REGISTER_FAILED;
     }
@@ -56,7 +56,7 @@ int32_t ComponentEnable::Enable(const std::string &networkId, const std::string 
     if (!waitStatus) {
         DHLOGE("enable timeout, networkId = %s dhId = %s", GetAnonyString(networkId).c_str(),
             GetAnonyString(dhId).c_str());
-        HiSysEventWriteAbleFailedMsg(DHFWK_DH_REGISTER_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+        HiSysEventWriteCompAbleFailedMsg(DHFWK_DH_REGISTER_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             GetAnonyString(dhId).c_str(), ERR_DH_FWK_COMPONENT_ENABLE_TIMEOUT,
             "dhfwk distributed hardware enable timeout.");
         return ERR_DH_FWK_COMPONENT_ENABLE_TIMEOUT;
