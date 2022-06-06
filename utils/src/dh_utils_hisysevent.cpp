@@ -36,6 +36,20 @@ void HiSysEventWriteMsg(const std::string &status, const OHOS::HiviewDFX::HiSysE
     }
 }
 
+void HiSysEventWriteFailedMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
+    int32_t errCode, const std::string &msg)
+{
+    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
+        OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
+        status.c_str(),
+        eventType,
+        "ERR_CODE", errCode
+        "MSG", msg.c_str());
+    if (res != DH_FWK_SUCCESS) {
+        DHLOGE("Write HiSysEvent error, res:%d", res);
+    }
+}
+
 void HiSysEventWriteCompLoadMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const std::string &soName, const std::string &msg)
 {
@@ -51,7 +65,7 @@ void HiSysEventWriteCompLoadMsg(const std::string &status, const OHOS::HiviewDFX
 }
 
 void HiSysEventWriteCompReleaseMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
-    const DHType dhType, int32_t ret, const std::string &msg)
+    const DHType dhType, int32_t errCode, const std::string &msg)
 {
     std::string dhTypeStr = "UNKNOWN";
     auto it = DHTypeStrMap.find(dhType);
@@ -64,7 +78,7 @@ void HiSysEventWriteCompReleaseMsg(const std::string &status, const OHOS::Hiview
         status.c_str(),
         eventType,
         "DHTYPE", dhTypeStr.c_str(),
-        "RESULT", ret,
+        "RESULT", errCode,
         "MSG", msg.c_str());
     if (res != DH_FWK_SUCCESS) {
         DHLOGE("Write HiSysEvent error, res:%d", res);
@@ -72,7 +86,7 @@ void HiSysEventWriteCompReleaseMsg(const std::string &status, const OHOS::Hiview
 }
 
 
-void HiSysEventWriteAbleTaskMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
+void HiSysEventWriteCompAbleMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const std::string &anonyDevid, const std::string &anonyDHId, const std::string &msg)
 {
     int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
@@ -88,29 +102,14 @@ void HiSysEventWriteAbleTaskMsg(const std::string &status, const OHOS::HiviewDFX
 }
 
 void HiSysEventWriteAbleFailedMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
-    const std::string &anonyDHId, int32_t ret,  const std::string &msg)
+    const std::string &anonyDHId, int32_t errCode,  const std::string &msg)
 {
     int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
         status.c_str(),
         eventType,
         "DHID", anonyDHId.c_str(),
-        "RESULT", ret,
-        "MSG", msg.c_str());
-    if (res != DH_FWK_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%d", res);
-    }
-}
-
-void HiSysEventWriteDBDataNotifyMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
-    const std::string &anonyDevid, const std::string &anonyDHId, const std::string &msg)
-{
-    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-        OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
-        status.c_str(),
-        eventType,
-        "DEVID", anonyDevid.c_str(),
-        "DHID", anonyDHId.c_str(),
+        "RESULT", errCode,
         "MSG", msg.c_str());
     if (res != DH_FWK_SUCCESS) {
         DHLOGE("Write HiSysEvent error, res:%d", res);

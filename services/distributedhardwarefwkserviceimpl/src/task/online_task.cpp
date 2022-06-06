@@ -104,7 +104,7 @@ void OnLineTask::CreateEnableTask()
         auto task = TaskFactory::GetInstance().CreateTask(TaskType::ENABLE, taskParam, shared_from_this());
         TaskExecutor::GetInstance().PushTask(task);
 
-        HiSysEventWriteAbleTaskMsg(DHFWK_DEV_ENABLE, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
+        HiSysEventWriteCompAbleMsg(DHFWK_DEV_ENABLE, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
             GetAnonyString(GetDeviceIdByUUID(GetUUID())), GetAnonyString(iter->GetDHId()),
             "dhfwk create enable task.");
     }
