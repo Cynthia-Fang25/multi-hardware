@@ -248,8 +248,6 @@ int32_t HidumpHelper::ShowAllCapabilityInfos(std::string &result)
     }
 
     for (auto info : capInfos) {
-        std::string uuid = DHContext::GetInstance().GetUUIDByDeviceId(info.GetDeviceId());
-        std::string networkId = DHContext::GetInstance().GetNetworkIdByUUID(uuid);
         std::string dhTypeStr = "UNKNOWN";
         auto it = DHTypeStrMap.find(info.GetDHType());
         if (it != DHTypeStrMap.end()) {
@@ -259,7 +257,7 @@ int32_t HidumpHelper::ShowAllCapabilityInfos(std::string &result)
         result.append("\n    DeviceName     : ");
         result.append(GetAnonyString(info.GetDeviceName()));
         result.append("\n    NetworkId      : ");
-        result.append(GetAnonyString(networkId));
+        result.append(GetAnonyString(info.GetDeviceId()));
         result.append("\n    DeviceType     : ");
         result.append(std::to_string(info.GetDeviceType()));
         result.append("\n    DHType         : ");
