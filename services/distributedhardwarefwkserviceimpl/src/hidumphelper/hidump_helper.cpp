@@ -19,6 +19,7 @@
 
 #include "capability_info_manager.h"
 #include "component_manager.h"
+#include "dh_context.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
 #include "task_board.h"
@@ -182,7 +183,7 @@ int32_t HidumpHelper::ShowAllEnabledComps(std::string &result)
     for (auto info : compInfoSet) {
         result.append("\n{");
         result.append("\n    NetworkId      : ");
-        result.append(GetAnonyString(info.uuId_));
+        result.append(GetAnonyString(info.networkId_));
         result.append("\n    DHType         : ");
         result.append(g_mapDhTypeName[info.dhType_]);
         result.append("\n    DHId           : ");
