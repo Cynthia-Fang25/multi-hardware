@@ -30,7 +30,7 @@ const std::string DHFWK_INIT_FAIL = "DHFWK_INIT_FAIL";
 const std::string DHFWK_EXIT_BEGIN = "DHFWK_EXIT_BEGIN";
 const std::string DHFWK_EXIT_END = "DHFWK_EXIT_END";
 const std::string DHFWK_DEV_OFFLINE = "DHFWK_DEV_OFFLINE";
-const std::string DHFWK_COMP_RELEASE_FAIL = "DHFWK_COMP_RELEASE_FAIL";
+const std::string DHFWK_RELEASE_FAIL = "DHFWK_RELEASE_FAIL";
 const std::string DHFWK_DH_REGISTER_FAIL = "DHFWK_DH_REGISTER_FAIL";
 const std::string DHFWK_DH_UNREGISTER_FAIL = "DHFWK_DH_UNREGISTER_FAIL";
 
@@ -38,11 +38,11 @@ void HiSysEventWriteMsg(const std::string &status, const OHOS::HiviewDFX::HiSysE
     const std::string &msg);
 void HiSysEventWriteErrCodeMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     int32_t errCode, const std::string &msg);
-void HiSysEventWriteCompReleaseMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
+void HiSysEventWriteReleaseMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const DHType dhType, int32_t errCode, const std::string &msg);
 void HiSysEventWriteCompOfflineMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const std::string &anonyDevid, const std::string &msg);
-void HiSysEventWriteCompAbleFailedMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
+void HiSysEventWriteCompMgrFailedMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const std::string &anonyDHId, int32_t errCode, const std::string &msg);
 } // namespace DistributedHardware
 } // namespace OHOS

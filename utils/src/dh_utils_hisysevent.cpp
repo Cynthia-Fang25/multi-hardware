@@ -44,13 +44,13 @@ void HiSysEventWriteErrCodeMsg(const std::string &status, const OHOS::HiviewDFX:
         status.c_str(),
         eventType,
         "ERR_CODE", errCode,
-        "MSG", msg.c_str());
+        "ERR_MSG", msg.c_str());
     if (res != DH_FWK_SUCCESS) {
         DHLOGE("Write HiSysEvent error, res:%d", res);
     }
 }
 
-void HiSysEventWriteCompReleaseMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
+void HiSysEventWriteReleaseMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const DHType dhType, int32_t errCode, const std::string &msg)
 {
     std::string dhTypeStr = "UNKNOWN";
@@ -64,37 +64,38 @@ void HiSysEventWriteCompReleaseMsg(const std::string &status, const OHOS::Hiview
         status.c_str(),
         eventType,
         "DHTYPE", dhTypeStr.c_str(),
-        "RESULT", errCode,
-        "MSG", msg.c_str());
+        "ERR_CODE", errCode,
+        "ERR_MSG", msg.c_str());
     if (res != DH_FWK_SUCCESS) {
         DHLOGE("Write HiSysEvent error, res:%d", res);
     }
 }
 
 void HiSysEventWriteCompOfflineMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
-    const std::string &anonyDevid, const std::string &msg)
+    const std::string &anonyNetworkId, const std::string &msg)
 {
     int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
         status.c_str(),
         eventType,
-        "DEVID", anonyDevid.c_str(),
+        "NETWORKID", anonyNetworkId.c_str(),
         "MSG", msg.c_str());
     if (res != DH_FWK_SUCCESS) {
         DHLOGE("Write HiSysEvent error, res:%d", res);
     }
 }
 
-void HiSysEventWriteCompAbleFailedMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
-    const std::string &anonyDHId, int32_t errCode,  const std::string &msg)
+void HiSysEventWriteCompMgrFailedMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
+    const std::string &anonyNetworkId, const std::string &anonyDHId, int32_t errCode,  const std::string &msg)
 {
     int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
         status.c_str(),
         eventType,
+        "NETWORKID", anonyNetworkId.c_str(),
         "DHID", anonyDHId.c_str(),
-        "RESULT", errCode,
-        "MSG", msg.c_str());
+        "ERR_CODE", errCode,
+        "ERR_MSG", msg.c_str());
     if (res != DH_FWK_SUCCESS) {
         DHLOGE("Write HiSysEvent error, res:%d", res);
     }

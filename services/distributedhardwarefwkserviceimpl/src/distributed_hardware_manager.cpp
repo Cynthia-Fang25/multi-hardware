@@ -156,7 +156,7 @@ int32_t DistributedHardwareManager::SendOffLineEvent(const std::string &networkI
     CapabilityInfoManager::GetInstance()->RemoveManualSyncCount(GetDeviceIdByUUID(realUUID));
 
     HiSysEventWriteCompOfflineMsg(DHFWK_DEV_OFFLINE, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
-        GetAnonyString(GetDeviceIdByUUID(realUUID)), "dhfwk device offline event.");
+        GetAnonyString(networkId), "dhfwk device offline event.");
 
     return DH_FWK_SUCCESS;
 }

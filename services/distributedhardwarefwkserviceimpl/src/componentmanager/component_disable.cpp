@@ -44,8 +44,8 @@ int32_t ComponentDisable::Disable(const std::string &networkId, const std::strin
     if (ret != DH_FWK_SUCCESS) {
         DHLOGE("UnregisterDistributedHardware failed, networkId = %s dhId = %s.", GetAnonyString(networkId).c_str(),
             GetAnonyString(dhId).c_str());
-        HiSysEventWriteCompAbleFailedMsg(DHFWK_DH_UNREGISTER_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-            GetAnonyString(dhId).c_str(), ret, "dhfwk unregister distributed hardware failed.");
+        HiSysEventWriteCompMgrFailedMsg(DHFWK_DH_UNREGISTER_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+            GetAnonyString(networkId), GetAnonyString(dhId), ret, "dhfwk unregister distributed hardware failed.");
         return ERR_DH_FWK_COMPONENT_UNREGISTER_FAILED;
     }
 
@@ -56,8 +56,8 @@ int32_t ComponentDisable::Disable(const std::string &networkId, const std::strin
     if (!waitStatus) {
         DHLOGE("disable timeout, networkId = %s dhId = %s.", GetAnonyString(networkId).c_str(),
             GetAnonyString(dhId).c_str());
-        HiSysEventWriteCompAbleFailedMsg(DHFWK_DH_UNREGISTER_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-            GetAnonyString(dhId).c_str(), ERR_DH_FWK_COMPONENT_DISABLE_TIMEOUT,
+        HiSysEventWriteCompMgrFailedMsg(DHFWK_DH_UNREGISTER_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+            GetAnonyString(networkId), GetAnonyString(dhId), ERR_DH_FWK_COMPONENT_DISABLE_TIMEOUT,
             "dhfwk distributed hardware disable timeout.");
         return ERR_DH_FWK_COMPONENT_DISABLE_TIMEOUT;
     }

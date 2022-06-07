@@ -292,7 +292,7 @@ int32_t ComponentLoader::ReleaseHardwareHandler(const DHType dhType)
     int32_t ret = ReleaseHandler(compHandlerMap_[dhType].hardwareHandler);
     if (ret) {
         DHLOGE("fail, dhType: %#X", dhType);
-        HiSysEventWriteCompReleaseMsg(DHFWK_COMP_RELEASE_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+        HiSysEventWriteReleaseMsg(DHFWK_RELEASE_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             dhType, ret, "dhfwk release hardware handler failed.");
     }
     return ret;
@@ -306,7 +306,7 @@ int32_t ComponentLoader::ReleaseSource(const DHType dhType)
     int32_t ret = ReleaseHandler(compHandlerMap_[dhType].sourceHandler);
     if (ret) {
         DHLOGE("fail, dhType: %#X", dhType);
-        HiSysEventWriteCompReleaseMsg(DHFWK_COMP_RELEASE_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+        HiSysEventWriteReleaseMsg(DHFWK_RELEASE_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             dhType, ret, "dhfwk release source failed.");
     }
     return ret;
@@ -320,7 +320,7 @@ int32_t ComponentLoader::ReleaseSink(const DHType dhType)
     int32_t ret = ReleaseHandler(compHandlerMap_[dhType].sinkHandler);
     if (ret) {
         DHLOGE("fail, dhType: %#X", dhType);
-        HiSysEventWriteCompReleaseMsg(DHFWK_COMP_RELEASE_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+        HiSysEventWriteReleaseMsg(DHFWK_RELEASE_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             dhType, ret, "dhfwk release sink failed.");
     }
     return ret;

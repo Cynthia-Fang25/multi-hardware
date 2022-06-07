@@ -181,11 +181,11 @@ int32_t HidumpHelper::ShowAllEnabledComps(std::string &result)
 
     for (auto info : compInfoSet) {
         result.append("\n{");
-        result.append("\n    DeviceId : ");
-        result.append(GetAnonyString(info.deviceId_));
-        result.append("\n    DHType   : ");
+        result.append("\n    NetworkId      : ");
+        result.append(GetAnonyString(info.uuId_));
+        result.append("\n    DHType         : ");
         result.append(g_mapDhTypeName[info.dhType_]);
-        result.append("\n    DHId     : ");
+        result.append("\n    DHId           : ");
         result.append(GetAnonyString(info.dhId_));
         result.append("\n},");
     }
@@ -241,11 +241,13 @@ int32_t HidumpHelper::ShowAllCapabilityInfos(std::string &result)
     }
 
     for (auto info : capInfos) {
+        std::string uuid = DHContext::GetInstance().GetUUIDByDeviceId(info.GetDeviceId());
+        std::string networkId = DHContext::GetInstance().GetNetworkIdByUUID(uuid);
         result.append("\n{");
         result.append("\n    DeviceName     : ");
         result.append(GetAnonyString(info.GetDeviceName()));
-        result.append("\n    DeviceId       : ");
-        result.append(GetAnonyString(info.GetDeviceId()));
+        result.append("\n    NetworkId      : ");
+        result.append(GetAnonyString(networkId));
         result.append("\n    DeviceType     : ");
         result.append(std::to_string(info.GetDeviceType()));
         result.append("\n    DHType         : ");

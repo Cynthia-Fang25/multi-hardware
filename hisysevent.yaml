@@ -50,36 +50,37 @@ DHFWK_INIT_END:
 DHFWK_INIT_FAIL:
   __BASE: {type: FAULT, level: CRITICAL, desc: dhfwk sa init failed}
   ERR_CODE: {type: INT32, desc: dhfwk sa init failed result}
-  MSG: {type: STRING, desc: dhfwk sa init failed}
+  ERR_MSG: {type: STRING, desc: dhfwk sa init failed}
 
 DHFWK_EXIT_BEGIN:
-  __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk sa stop on demand}
+  __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk sa start exit on demand}
   MSG: {type: STRING, desc: dhfwk sa stop}
 
 DHFWK_EXIT_END:
-  __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk sa stop on demand}
+  __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk sa finish exit on demand}
   MSG: {type: STRING, desc: dhfwk sa stop}
 
-DHFWK_COMP_RELEASE_FAIL:
+DHFWK_RELEASE_FAIL:
   __BASE: {type: FAULT, level: CRITICAL, desc: dhfwk component dlclose failed}
   DHTYPE: {type: STRING, desc: dhtype}
-  RESULT: {type: INT32, desc: dlclose failed result}
-  MSG: {type: STRING, desc: dhfwk component dlclose failed}
+  ERR_CODE: {type: INT32, desc: dlclose failed result}
+  ERR_MSG: {type: STRING, desc: dhfwk component dlclose failed}
 
 DHFWK_DEV_OFFLINE:
   __BASE: {type: BEHAVIOR, level: CRITICAL, desc: dhfwk create disable task}
-  DEVID: {type: STRING, desc: device id}
-  DHID: {type: STRING, desc: component id}
+  NETWORKID: {type: STRING, desc: network id}
   MSG: {type: STRING, desc: dhfwk create disable task}
 
 DHFWK_DH_REGISTER_FAIL:
   __BASE: {type: FAULT, level: CRITICAL, desc: dhfwk distributed hardware enable failed}
+  NETWORKID: {type: STRING, desc: network id}
   DHID: {type: STRING, desc: component id}
-  RESULT: {type: INT32, desc: dhfwk distributed hardware enable failed result}
-  MSG: {type: STRING, desc: dhfwk distributed hardware enable failed}
+  ERR_CODE: {type: INT32, desc: dhfwk distributed hardware enable failed result}
+  ERR_MSG: {type: STRING, desc: dhfwk distributed hardware enable failed}
 
 DHFWK_DH_UNREGISTER_FAIL:
   __BASE: {type: FAULT, level: CRITICAL, desc: dhfwk distributed hardware disable failed}
+  NETWORKID: {type: STRING, desc: network id}
   DHID: {type: STRING, desc: component id}
-  RESULT: {type: INT32, desc: dhfwk distributed hardware disable result}
-  MSG: {type: STRING, desc: dhfwk distributed hardware disable failed}
+  ERR_CODE: {type: INT32, desc: dhfwk distributed hardware disable result}
+  ERR_MSG: {type: STRING, desc: dhfwk distributed hardware disable failed}
