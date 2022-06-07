@@ -41,7 +41,7 @@ void HiSysEventWriteErrCodeMsg(const std::string &status, const OHOS::HiviewDFX:
 void HiSysEventWriteReleaseMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const DHType dhType, int32_t errCode, const std::string &msg);
 void HiSysEventWriteCompOfflineMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
-    const std::string &anonyDevid, const std::string &msg);
+    const std::string &anonyNetworkId, const std::string &msg);
 void HiSysEventWriteCompMgrFailedMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
     const std::string &anonyDHId, int32_t errCode, const std::string &msg);
 } // namespace DistributedHardware

@@ -256,7 +256,7 @@ int32_t HidumpHelper::ShowAllCapabilityInfos(std::string &result)
         result.append("\n{");
         result.append("\n    DeviceName     : ");
         result.append(GetAnonyString(info.GetDeviceName()));
-        result.append("\n    NetworkId      : ");
+        result.append("\n    DeviceId       : ");
         result.append(GetAnonyString(info.GetDeviceId()));
         result.append("\n    DeviceType     : ");
         result.append(std::to_string(info.GetDeviceType()));
