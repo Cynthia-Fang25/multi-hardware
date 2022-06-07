@@ -86,13 +86,12 @@ void HiSysEventWriteCompOfflineMsg(const std::string &status, const OHOS::Hiview
 }
 
 void HiSysEventWriteCompMgrFailedMsg(const std::string &status, const OHOS::HiviewDFX::HiSysEvent::EventType eventType,
-    const std::string &anonyNetworkId, const std::string &anonyDHId, int32_t errCode,  const std::string &msg)
+    const std::string &anonyDHId, int32_t errCode, const std::string &msg)
 {
     int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_HARDWARE_FWK,
         status.c_str(),
         eventType,
-        "NETWORKID", anonyNetworkId.c_str(),
         "DHID", anonyDHId.c_str(),
         "ERR_CODE", errCode,
         "ERR_MSG", msg.c_str());
