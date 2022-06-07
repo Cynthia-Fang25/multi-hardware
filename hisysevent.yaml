@@ -73,14 +73,12 @@ DHFWK_DEV_OFFLINE:
 
 DHFWK_DH_REGISTER_FAIL:
   __BASE: {type: FAULT, level: CRITICAL, desc: dhfwk distributed hardware enable failed}
-  NETWORKID: {type: STRING, desc: network id}
   DHID: {type: STRING, desc: component id}
   ERR_CODE: {type: INT32, desc: dhfwk distributed hardware enable failed result}
   ERR_MSG: {type: STRING, desc: dhfwk distributed hardware enable failed}
 
 DHFWK_DH_UNREGISTER_FAIL:
   __BASE: {type: FAULT, level: CRITICAL, desc: dhfwk distributed hardware disable failed}
-  NETWORKID: {type: STRING, desc: network id}
   DHID: {type: STRING, desc: component id}
   ERR_CODE: {type: INT32, desc: dhfwk distributed hardware disable result}
   ERR_MSG: {type: STRING, desc: dhfwk distributed hardware disable failed}
