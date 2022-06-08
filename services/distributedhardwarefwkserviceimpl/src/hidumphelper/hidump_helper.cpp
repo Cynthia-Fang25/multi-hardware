@@ -19,6 +19,7 @@
 
 #include "capability_info_manager.h"
 #include "component_manager.h"
+#include "dh_context.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
 #include "task_board.h"
