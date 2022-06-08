@@ -117,10 +117,10 @@ void AccessManager::OnRemoteDied()
 void AccessManager::OnDeviceOnline(const DmDeviceInfo &deviceInfo)
 {
     std::lock_guard<std::mutex> lock(accessMutex_);
-    DHLOGI("start, networkId = %s, deviceName = %s, deviceTypeId = %d", GetAnonyString(deviceInfo.deviceId).c_str(),
+    DHLOGI("start, networkId = %s, deviceName = %s, deviceTypeId = %d", GetAnonyString(deviceInfo.networkId).c_str(),
         GetAnonyString(deviceInfo.deviceName).c_str(), deviceInfo.deviceTypeId);
 
-    auto networkId = std::string(deviceInfo.deviceId); // deviceId of DM actually is networkId
+    auto networkId = std::string(deviceInfo.networkId);
     auto uuid = GetUUIDBySoftBus(networkId);
     auto ret =
         DistributedHardwareManagerFactory::GetInstance().SendOnLineEvent(networkId, uuid, deviceInfo.deviceTypeId);
