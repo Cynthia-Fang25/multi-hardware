@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,6 +23,7 @@
 #include "system_ability_definition.h"
 
 #include "access_manager.h"
+#include "dh_utils_hisysevent.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
 
@@ -38,6 +39,9 @@ DistributedHardwareService::DistributedHardwareService(int32_t saId, bool runOnC
 void DistributedHardwareService::OnStart()
 {
     DHLOGI("DistributedHardwareService::OnStart start");
+    HiSysEventWriteMsg(DHFWK_INIT_BEGIN, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
+        "dhfwk sa start on demand.");
+
     if (state_ == ServiceRunningState::STATE_RUNNING) {
         DHLOGI("DistributedHardwareService has already started.");
         return;
@@ -57,6 +61,8 @@ bool DistributedHardwareService::Init()
         bool ret = Publish(this);
         if (!ret) {
             DHLOGE("DistributedHardwareService::Init Publish failed!");
+            HiSysEventWriteMsg(DHFWK_INIT_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+                "dhfwk sa init publish failed.");
             return false;
         }
         registerToService_ = true;
@@ -64,9 +70,13 @@ bool DistributedHardwareService::Init()
     auto ret = AccessManager::GetInstance()->Init();
     if (ret != DH_FWK_SUCCESS) {
         DHLOGI("DistributedHardwareService::Init failed.");
+        HiSysEventWriteErrCodeMsg(DHFWK_INIT_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+            ret, "dhfwk sa AccessManager init fail.");
         return false;
     }
     DHLOGI("DistributedHardwareService::Init init success.");
+    HiSysEventWriteMsg(DHFWK_INIT_END, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
+        "dhfwk sa init success.");
     return true;
 }
 
@@ -81,6 +91,29 @@ int32_t DistributedHardwareService::QuerySinkVersion(std::unordered_map<DHType, 
 {
     (void)versionMap;
     return 0;
+}
+
+int DistributedHardwareService::Dump(int32_t fd, const std::vector<std::u16string>& args)
+{
+    DHLOGI("DistributedHardwareService  Dump.");
+    
+    std::vector<std::string> argsStr {};
+    for (auto item : args) {
+        argsStr.emplace_back(Str16ToStr8(item));
+    }
+
+    std::string result("");
+    int ret = AccessManager::GetInstance()->Dump(argsStr, result);
+    if (ret != DH_FWK_SUCCESS) {
+        DHLOGE("Dump error, ret = %d", ret);
+    }
+
+    if (dprintf(fd, "%s\n", result.c_str()) < 0) {
+        DHLOGE("Hidump dprintf error");
+        ret = ERR_DH_FWK_HIDUMP_DPRINTF_ERROR;
+    }
+
+    return ret;
 }
 } // namespace DistributedHardware
 } // namespace OHOS

@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Copyright (c) 2021-2022 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -15,12 +15,12 @@
 import("//build/config/features.gni")
 import("//build/test.gni")
 import(
-    "//foundation/distributedhardware/distributedhardwarefwk/distributedhardwarefwk.gni")
+    "//foundation/distributedhardware/distributed_hardware_fwk/distributedhardwarefwk.gni")
 
 ##############################fuzztest##########################################
 ohos_fuzztest("ComponentmanagerFuzzTest") {
   module_out_path = "distributed_hardware_fwk/componentmanager"
-  fuzz_config_file = "//foundation/distributedhardware/distributedhardwarefwk/services/distributedhardwarefwkserviceimpl/test/fuzztest/componentmanager_fuzzer"
+  fuzz_config_file = "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkserviceimpl/test/fuzztest/componentmanager_fuzzer"
 
   include_dirs = [
     "${utils_path}/include",
@@ -41,8 +41,8 @@ ohos_fuzztest("ComponentmanagerFuzzTest") {
   sources = [ "componentmanager_fuzzer.cpp" ]
 
   deps = [
-    "//foundation/distributedhardware/distributedhardwarefwk/services/distributedhardwarefwkserviceimpl:distributedhardwarefwksvr_impl",
-    "//foundation/distributedhardware/distributedhardwarefwk/utils:distributedhardwareutils",
+    "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkserviceimpl:distributedhardwarefwksvr_impl",
+    "//foundation/distributedhardware/distributed_hardware_fwk/utils:distributedhardwareutils",
   ]
 
   defines = [
@@ -51,7 +51,10 @@ ohos_fuzztest("ComponentmanagerFuzzTest") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  external_deps = [ "ipc:ipc_core" ]
+  external_deps = [
+    "hisysevent_native:libhisysevent",
+    "ipc:ipc_core",
+  ]
 }
 
 ###############################################################################

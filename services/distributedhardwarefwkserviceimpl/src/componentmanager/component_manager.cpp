@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -25,9 +25,11 @@
 #include "component_loader.h"
 #include "constants.h"
 #include "dh_context.h"
+#include "dh_utils_hisysevent.h"
 #include "dh_utils_tool.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
+#include "enabled_comps_dump.h"
 #include "ipc_object_stub.h"
 #include "iservice_registry.h"
 #include "system_ability_definition.h"
@@ -69,9 +71,13 @@ int32_t ComponentManager::Init()
 
     if (!WaitForResult(Action::START_SOURCE, sourceResult)) {
         DHLOGE("StartSource failed, some virtual components maybe cannot work, but want to continue");
+        HiSysEventWriteMsg(DHFWK_INIT_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+            "dhfwk start source failed.");
     }
     if (!WaitForResult(Action::START_SINK, sinkResult)) {
         DHLOGE("StartSink failed, some virtual components maybe cannot work, but want to continue");
+        HiSysEventWriteMsg(DHFWK_INIT_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+            "dhfwk start sink failed.");
     }
 
     DHLOGI("Init component success");
@@ -257,6 +263,7 @@ int32_t ComponentManager::Enable(const std::string &networkId, const std::string
             }
             if (compEnable->Enable(networkId, dhId, param, find->second) == DH_FWK_SUCCESS) {
                 DHLOGE("enable success, retryCount = %d", retryCount);
+                EnabledCompsDump::GetInstance().DumpEnabledComp(networkId, dhType, dhId);
                 return DH_FWK_SUCCESS;
             }
             DHLOGE("enable failed, retryCount = %d", retryCount);
@@ -265,6 +272,7 @@ int32_t ComponentManager::Enable(const std::string &networkId, const std::string
     }
     DHLOGI("enable result is %d, uuid = %s, dhId = %s", result, GetAnonyString(uuid).c_str(),
         GetAnonyString(dhId).c_str());
+    EnabledCompsDump::GetInstance().DumpEnabledComp(networkId, dhType, dhId);
     return result;
 }
 
@@ -286,6 +294,7 @@ int32_t ComponentManager::Disable(const std::string &networkId, const std::strin
             }
             if (compDisable->Disable(networkId, dhId, find->second) == DH_FWK_SUCCESS) {
                 DHLOGE("disable success, retryCount = %d", retryCount);
+                EnabledCompsDump::GetInstance().DumpDisabledComp(networkId, dhType, dhId);
                 return DH_FWK_SUCCESS;
             }
             DHLOGE("disable failed, retryCount = %d", retryCount);
@@ -294,6 +303,7 @@ int32_t ComponentManager::Disable(const std::string &networkId, const std::strin
     }
     DHLOGI("disable result is %d, uuid = %s, dhId = %s", result, GetAnonyString(uuid).c_str(),
         GetAnonyString(dhId).c_str());
+    EnabledCompsDump::GetInstance().DumpDisabledComp(networkId, dhType, dhId);
     return result;
 }
 
@@ -411,6 +421,16 @@ sptr<IDistributedHardware> ComponentManager::GetRemoteDHMS(const std::string &ne
         return nullptr;
     }
     return iface_cast<IDistributedHardware>(object);
+}
+
+void ComponentManager::DumpLoadedComps(std::set<DHType> &compSourceType, std::set<DHType> &compSinkType)
+{
+    for (auto compSource : compSource_) {
+        compSourceType.emplace(compSource.first);
+    }
+    for (auto compSink : compSink_) {
+        compSinkType.emplace(compSink.first);
+    }
 }
 } // namespace DistributedHardware
 } // namespace OHOS
