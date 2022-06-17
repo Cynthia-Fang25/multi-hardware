@@ -34,6 +34,11 @@ const std::string ENABLED_COMP_LIST = "-e";
 const std::string TASK_LIST = "-t";
 const std::string CAPABILITY_LIST = "-c";
 
+enum CompRole : uint8_t {
+    SOURCE = 0,
+    SINK = 1,
+};
+
 const std::unordered_map<std::string, HidumpFlag> MAP_ARGS = {
     { ARGS_HELP, HidumpFlag::GET_HELP },
     { LOADED_COMP_LIST, HidumpFlag::GET_LOADED_COMP_LIST },
@@ -125,29 +130,37 @@ int32_t HidumpHelper::ProcessDump(const HidumpFlag &flag, std::string &result)
 int32_t HidumpHelper::ShowAllLoadedComps(std::string &result)
 {
     DHLOGI("Dump all loaded compTypes.");
+    DHVersion dhVersion;
+    ComponentLoader::GetInstance().GetLocalDHVersion(dhVersion);
     std::set<DHType> loadedCompSource {};
     std::set<DHType> loadedCompSink {};
     ComponentManager::GetInstance().DumpLoadedComps(loadedCompSource, loadedCompSink);
-    DHVersion dhVersion;
-    ComponentLoader::GetInstance().GetLocalDHVersion(dhVersion);
+
+    auto addCompInfo = [&result, dhVersion](const DHType compType, const CompRole role) {
+        std::string dhTypeStr = "UNKNOWN";
+        auto it = DHTypeStrMap.find(compType);
+        if (it != DHTypeStrMap.end()) {
+            dhTypeStr = it->second;
+        }
+        std::string version = "";
+        auto iter = dhVersion.compVersions.find(compType);
+        if (iter != dhVersion.compVersions.end()) {
+            if (role == CompRole::SOURCE) {
+                version = iter->second.sourceVersion;
+            } else {
+                version = iter->second.sinkVersion;
+            }
+        }
+        result.append("\n{\n    DHType         : ").append(dhTypeStr);
+        result.append("\n    Version        : ").append(version);
+        result.append("\n},");
+    };
 
     result.append("Local loaded components:");
     result.append("\nSource:");
     if (!loadedCompSource.empty()) {
         for (auto compSource : loadedCompSource) {
-            std::string dhTypeStr = "UNKNOWN";
-            auto it = DHTypeStrMap.find(compSource);
-            if (it != DHTypeStrMap.end()) {
-                dhTypeStr = it->second;
-            }
-            std::string sourceVersion = "";
-            auto iter = dhVersion.compVersions.find(compSource);
-            if (iter != dhVersion.compVersions.end()) {
-                sourceVersion = iter->second.sourceVersion;
-            }
-            result.append("\n{\n    DHType         : ").append(dhTypeStr);
-            result.append("\n    Version        : ").append(sourceVersion);
-            result.append("\n},");
+            addCompInfo(compSource, CompRole::SOURCE);
         }
         result.replace(result.size() - 1, 1, "\n");
     }
@@ -155,19 +168,7 @@ int32_t HidumpHelper::ShowAllLoadedComps(std::string &result)
     result.append("\nSink:");
     if (!loadedCompSink.empty()) {
         for (auto compSink : loadedCompSink) {
-            std::string dhTypeStr = "UNKNOWN";
-            auto it = DHTypeStrMap.find(compSink);
-            if (it != DHTypeStrMap.end()) {
-                dhTypeStr = it->second;
-            }
-            std::string sinkVersion = "";
-            auto iter = dhVersion.compVersions.find(compSink);
-            if (iter != dhVersion.compVersions.end()) {
-                sinkVersion = iter->second.sinkVersion;
-            }
-            result.append("\n{\n    DHType         : ").append(dhTypeStr);
-            result.append("\n    Version        : ").append(sinkVersion);
-            result.append("\n},");
+            addCompInfo(compSink, CompRole::SINK);
         }
         result.replace(result.size() - 1, 1, "\n");
     }
@@ -226,6 +227,8 @@ int32_t HidumpHelper::ShowAllTaskInfos(std::string &result)
         result.append(taskInfo.id);
         result.append("\n    TaskType   : ");
         result.append(g_mapTaskType[taskInfo.taskType]);
+        result.append("\n    NetworkId  : ");
+        result.append(GetAnonyString(taskInfo.taskParm.networkId));
         result.append("\n    DHType     : ");
         result.append(dhTypeStr);
         result.append("\n    DHId       : ");
