@@ -241,15 +241,19 @@ int32_t ComponentManager::Enable(const std::string &networkId, const std::string
     EnableParam param;
     auto ret = GetEnableParam(networkId, uuid, dhId, dhType, param);
     if (ret != DH_FWK_SUCCESS) {
-        DHLOGE("GetEnableParam failed, uuid = %s, dhId = %s, errCode = %d", GetAnonyString(uuid).c_str(),
-            GetAnonyString(dhId).c_str(), ret);
+        DHLOGE("GetEnableParam failed, try to GetEnableParam again in %d times, uuid = %s, dhId = %s, errCode = %d",
+		ENABLE_RETRY_MAX_TIMES,
+                GetAnonyString(uuid).c_str(),
+		GetAnonyString(dhId).c_str(),
+		ret);
         for (int32_t retryCount = 0; retryCount < ENABLE_RETRY_MAX_TIMES; retryCount++) {
             if (!DHContext::GetInstance().IsDeviceOnline(uuid)) {
                 DHLOGE("device is already offline, no need try GetEnableParam, uuid = %s",
                     GetAnonyString(uuid).c_str());
                 return ret;
             }
-            if (GetEnableParam(networkId, uuid, dhId, dhType, param) == DH_FWK_SUCCESS) {
+            ret = GetEnableParam(networkId, uuid, dhId, dhType, param);
+            if (ret == DH_FWK_SUCCESS) {
                 DHLOGE("GetEnableParam success, retryCount = %d", retryCount);
                 break;
             }
@@ -258,7 +262,22 @@ int32_t ComponentManager::Enable(const std::string &networkId, const std::string
         }
     }
 
+    if (ret != DH_FWK_SUCCESS)
+    {
+        DHLOGE("GetEnableParam failed after trying %d times, uuid = %s, dhId = %s, errCode = %d",
+                ENABLE_RETRY_MAX_TIMES,
+                GetAnonyString(uuid).c_str(),
+                dhId.c_str(),
+                ret);
+        return ret;
+    }
+
     auto compEnable = std::make_shared<ComponentEnable>();
+    if (!compEnable) {
+        DHLOGE("Getting ComponentEnable ptr failed, return with errCode = %d", ERR_DH_FWK_COMPONENT_ENABLE_FAILED);
+        return ERR_DH_FWK_COMPONENT_ENABLE_FAILED;
+    }
+
     auto result = compEnable->Enable(networkId, dhId, param, find->second);
     if (result != DH_FWK_SUCCESS) {
         for (int32_t retryCount = 0; retryCount < ENABLE_RETRY_MAX_TIMES; retryCount++) {
@@ -266,19 +285,22 @@ int32_t ComponentManager::Enable(const std::string &networkId, const std::string
                 DHLOGE("device is already offline, no need try enable, uuid = %s", GetAnonyString(uuid).c_str());
                 return result;
             }
-            if (compEnable->Enable(networkId, dhId, param, find->second) == DH_FWK_SUCCESS) {
+
+            result = compEnable->Enable(networkId, dhId, param, find->second);
+            if (result == DH_FWK_SUCCESS) {
                 DHLOGE("enable success, retryCount = %d", retryCount);
-                EnabledCompsDump::GetInstance().DumpEnabledComp(networkId, dhType, dhId);
-                return DH_FWK_SUCCESS;
+                break;
             }
             DHLOGE("enable failed, retryCount = %d", retryCount);
         }
-        return result;
     }
+
+    if (result == DH_FWK_SUCCESS) {
+        EnabledCompsDump::GetInstance().DumpEnabledComp(networkId, dhType, dhId);
+    }
+
     DHLOGI("enable result is %d, uuid = %s, dhId = %s", result, GetAnonyString(uuid).c_str(),
         GetAnonyString(dhId).c_str());
-    EnabledCompsDump::GetInstance().DumpEnabledComp(networkId, dhType, dhId);
-
     return result;
 }
 
