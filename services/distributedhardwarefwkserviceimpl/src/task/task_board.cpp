@@ -108,7 +108,7 @@ void TaskBoard::AddEnabledDevice(const std::string &enabledDeviceKey, const Task
     std::lock_guard<std::mutex> lock(enabledDevicesMutex_);
     DHLOGI("enabled device key is %s", GetAnonyString(enabledDeviceKey).c_str());
     if (enabledDevices_.find(enabledDeviceKey) != enabledDevices_.end()) {
-        DHLOGE("enabled device key duplicate, id: %s", GetAnonyString(enabledDeviceKey).c_str());
+        DHLOGE("enabled device key duplicate, key: %s", GetAnonyString(enabledDeviceKey).c_str());
         return;
     }
     enabledDevices_[enabledDeviceKey] = taskParam;
