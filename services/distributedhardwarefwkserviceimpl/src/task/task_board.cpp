@@ -106,22 +106,14 @@ void TaskBoard::DumpAllTasks(std::vector<TaskDump> &taskInfos)
 void TaskBoard::AddEnabledDevice(const std::string &enabledDeviceKey, const TaskParam &taskParam)
 {
     std::lock_guard<std::mutex> lock(enabledDevicesMutex_);
-    DHLOGI("enabled device key is %s", GetAnonyString(enabledDeviceKey).c_str());
-    if (enabledDevices_.find(enabledDeviceKey) != enabledDevices_.end()) {
-        DHLOGE("enabled device key duplicate, key: %s", GetAnonyString(enabledDeviceKey).c_str());
-        return;
-    }
+    DHLOGI("AddEnabledDevice key is %s", GetAnonyString(enabledDeviceKey).c_str());
     enabledDevices_[enabledDeviceKey] = taskParam;
 }
 
 void TaskBoard::RemoveEnabledDevice(const std::string &enabledDeviceKey)
 {
     std::lock_guard<std::mutex> lock(enabledDevicesMutex_);
-    DHLOGI("enabled device key is %s", GetAnonyString(enabledDeviceKey).c_str());
-    if (enabledDevices_.find(enabledDeviceKey) == enabledDevices_.end()) {
-        DHLOGE("Can not find removed task");
-        return;
-    }
+    DHLOGI("RemoveEnabledDevice key is %s", GetAnonyString(enabledDeviceKey).c_str());
     enabledDevices_.erase(enabledDeviceKey);
 }
 

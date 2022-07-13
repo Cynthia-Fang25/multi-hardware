@@ -79,16 +79,15 @@ void MonitorTaskTimer::Execute(const std::shared_ptr<OHOS::AppExecFwk::EventHand
     for (auto item : enabledDevices) {
         capabilityKey = item.first;
         taskParam = item.second;
-        if (taskParam.dhType == DHType::INPUT) {
-            DHLOGI("start, dhType: %#X, key: %s, networkId: %s, dhId: %s", taskParam.dhType,
+        if (taskParam.dhType != DHType::INPUT) {
+            continue;
+        }
+        if (CapabilityInfoManager::GetInstance()->GetDataByKey(capabilityKey, capInfoPtr) != DH_FWK_SUCCESS) {
+            DHLOGI("CapabilityInfoManager can not find this key in DB, key: %s, networkId: %s, uuid: %s, dhId: %s",
                 GetAnonyString(capabilityKey).c_str(), GetAnonyString(taskParam.networkId).c_str(),
-                GetAnonyString(taskParam.dhId).c_str());
-            if (CapabilityInfoManager::GetInstance()->GetDataByKey(capabilityKey, capInfoPtr) != DH_FWK_SUCCESS) {
-                DHLOGI("CapabilityInfoManager can not find this key in DB, key: %s",
-                    GetAnonyString(capabilityKey).c_str());
-                auto task = TaskFactory::GetInstance().CreateTask(TaskType::DISABLE, taskParam, nullptr);
-                TaskExecutor::GetInstance().PushTask(task);
-            }
+                GetAnonyString(taskParam.uuid).c_str(), GetAnonyString(taskParam.dhId).c_str());
+            auto task = TaskFactory::GetInstance().CreateTask(TaskType::DISABLE, taskParam, nullptr);
+            TaskExecutor::GetInstance().PushTask(task);
         }
     }
     auto monitorTaskTimer = [this, eventHandler] {Execute(eventHandler);};
