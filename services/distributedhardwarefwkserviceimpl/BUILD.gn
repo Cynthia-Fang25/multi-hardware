@@ -62,6 +62,7 @@ ohos_shared_library("distributedhardwarefwksvr_impl") {
     "src/task/task_factory.cpp",
     "src/utils/dh_context.cpp",
     "src/versionmanager/version_manager.cpp",
+    "src/task/monitor_task_timer.cpp",
   ]
 
   deps = [
