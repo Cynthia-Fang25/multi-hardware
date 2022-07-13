@@ -102,5 +102,36 @@ void TaskBoard::DumpAllTasks(std::vector<TaskDump> &taskInfos)
         taskInfos.emplace_back(taskInfo);
     }
 }
+
+void TaskBoard::AddEnabledDevice(const std::string &enabledDeviceKey, const TaskParam &taskParam)
+{
+    std::lock_guard<std::mutex> lock(enabledDevicesMutex_);
+    DHLOGI("enabled device key is %s", GetAnonyString(enabledDeviceKey).c_str());
+    if (enabledDevices_.find(enabledDeviceKey) != enabledDevices_.end()) {
+        DHLOGE("enabled device key duplicate, id: %s", GetAnonyString(enabledDeviceKey).c_str());
+        return;
+    }
+    enabledDevices_[enabledDeviceKey] = taskParam;
+}
+
+void TaskBoard::RemoveEnabledDevice(const std::string &enabledDeviceKey)
+{
+    std::lock_guard<std::mutex> lock(enabledDevicesMutex_);
+    DHLOGI("enabled device key is %s", GetAnonyString(enabledDeviceKey).c_str());
+    if (enabledDevices_.find(enabledDeviceKey) == enabledDevices_.end()) {
+        DHLOGE("Can not find removed task");
+        return;
+    }
+    enabledDevices_.erase(enabledDeviceKey);
+}
+
+const std::unordered_map<std::string, TaskParam>& TaskBoard::GetEnabledDevice()
+{
+    std::lock_guard<std::mutex> lock(enabledDevicesMutex_);
+    if (enabledDevices_.empty()) {
+        DHLOGI("enabledDevices is empty!");
+    }
+    return enabledDevices_;
+}
 } // namespace DistributedHardware
 } // namespace OHOS
