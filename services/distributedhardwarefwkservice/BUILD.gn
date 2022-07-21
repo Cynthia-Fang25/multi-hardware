@@ -63,7 +63,7 @@ ohos_shared_library("distributedhardwarefwksvr") {
     "init:libbegetutil",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
-    "samgr_standard:samgr_proxy",
+    "samgr:samgr_proxy",
   ]
 
   subsystem_name = "distributedhardware"
