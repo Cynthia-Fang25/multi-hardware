@@ -52,7 +52,7 @@ DistributedKv::Status DBAdapter::GetKvStorePtr()
         .autoSync = true,
         .securityLevel = DistributedKv::SecurityLevel::S1,
         .kvStoreType = DistributedKv::KvStoreType::SINGLE_VERSION,
-        .area = EL1,
+        .area = DistributedKv::EL1,
         .baseDir = std::string("/data/service/el1/public/database/") + appId_.appId
     };
     return kvDataMgr_.GetSingleKvStore(options, appId_, storeId_, kvStoragePtr_);
