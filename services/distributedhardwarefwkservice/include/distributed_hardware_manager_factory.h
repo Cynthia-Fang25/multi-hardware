@@ -40,14 +40,10 @@ public:
 private:
     bool Init();
     void UnInit();
-    int32_t LoadLibrary();
-    void CloseLibrary();
     void CheckExitSAOrNot();
 
 private:
-    void *handler_ { nullptr };
-    IDistributedHardwareManager *distributedHardwareMgrPtr_ { nullptr };
-    std::mutex mutex_;
+    std::atomic<bool> isInit = false;
 };
 } // namespace DistributedHardware
 } // namespace OHOS
