@@ -21,7 +21,6 @@
 #include <unordered_map>
 
 #include "device_type.h"
-#include "idistributed_hardware_manager.h"
 #include "single_instance.h"
 
 namespace OHOS {

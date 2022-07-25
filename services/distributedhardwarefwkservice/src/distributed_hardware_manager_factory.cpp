@@ -32,7 +32,7 @@
 #include "dh_utils_tool.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
-#include "idistributed_hardware_manager.h"
+#include "distributed_hardware_manager.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -156,10 +156,6 @@ int32_t DistributedHardwareManagerFactory::GetComponentVersion(std::unordered_ma
 
 int32_t DistributedHardwareManagerFactory::Dump(const std::vector<std::string> &argsStr, std::string &result)
 {
-    if (distributedHardwareMgrPtr_ == nullptr) {
-        DHLOGE("distributedHardwareMgr is null");
-        return ERR_DH_FWK_HIDUMP_ERROR;
-    }
     return DistributedHardwareManager::GetInstance().Dump(argsStr, result);
 }
 } // namespace DistributedHardware
