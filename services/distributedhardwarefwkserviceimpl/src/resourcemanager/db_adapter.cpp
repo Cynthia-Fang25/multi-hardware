@@ -31,7 +31,7 @@ namespace DistributedHardware {
 #define DH_LOG_TAG "DBAdapter"
 
 namespace {
-const std::string DATABASE = "/data/service/el1/public/database/";
+const std::string DATABASE_DIR = "/data/service/el1/public/database/";
 }
 
 DBAdapter::DBAdapter(const std::string &appId, const std::string &storeId,
@@ -57,7 +57,7 @@ DistributedKv::Status DBAdapter::GetKvStorePtr()
         .securityLevel = DistributedKv::SecurityLevel::S1,
         .kvStoreType = DistributedKv::KvStoreType::SINGLE_VERSION,
         .area = DistributedKv::EL1,
-        .baseDir = DATABASE + appId_.appId
+        .baseDir = DATABASE_DIR + appId_.appId
     };
     return kvDataMgr_.GetSingleKvStore(options, appId_, storeId_, kvStoragePtr_);
 }
