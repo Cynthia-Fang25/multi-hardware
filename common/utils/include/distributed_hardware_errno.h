@@ -44,6 +44,7 @@ namespace DistributedHardware {
     constexpr int32_t ERR_DH_FWK_COMPONENT_UNREGISTER_FAILED = -10007;
     constexpr int32_t ERR_DH_FWK_COMPONENT_GET_REMOTE_SA_FAILED = -10008;
     constexpr int32_t ERR_DH_FWK_COMPONENT_GET_SINK_VERSION_FAILED = -10009;
+    constexpr int32_t ERR_DH_FWK_COMPONENT_DHTYPE_NOT_FOUND = -10010;
 
     /* ResourceManager errno, range: [-10400, -10499] */
     constexpr int32_t ERR_DH_FWK_RESOURCE_DB_ADAPTER_POINTER_NULL = -10400;
@@ -57,14 +58,13 @@ namespace DistributedHardware {
     constexpr int32_t ERR_DH_FWK_RESOURCE_REGISTER_DB_FAILED = -10408;
     constexpr int32_t ERR_DH_FWK_RESOURCE_UNREGISTER_DB_FAILED = -10409;
     constexpr int32_t ERR_DH_FWK_RESOURCE_KEY_IS_EMPTY = -10410;
+    constexpr int32_t ERR_DH_FWK_RESOURCE_SYNC_VERSIONINFO_FAIL = -10411;
+    constexpr int32_t ERR_DH_FWK_RESOURCE_DEVICE_ID_NOT_EXIST = -10412;
 
     /* DistributedHardwareManager errno, range: [-10500, -10599] */
     constexpr int32_t ERR_DH_FWK_HARDWARE_MANAGER_DEVICE_REPEAT_ONLINE = -10500;
     constexpr int32_t ERR_DH_FWK_HARDWARE_MANAGER_DEVICE_REPEAT_OFFLINE = -10501;
-    constexpr int32_t ERR_DH_FWK_HARDWARE_MANAGER_LOAD_IMPL_FAILED = -10502;
-    constexpr int32_t ERR_DH_FWK_HARDWARE_MANAGER_LIB_IMPL_OPEN_FAILED = -10503;
-    constexpr int32_t ERR_DH_FWK_HARDWARE_MANAGER_LIB_IMPL_GET_INSTANCE_FAILED = -10504;
-    constexpr int32_t ERR_DH_FWK_HARDWARE_MANAGER_LIB_IMPL_IS_NULL = -10505;
+    constexpr int32_t ERR_DH_FWK_HARDWARE_MANAGER_INIT_FAILED = -10502;
 
     /* ComponentLoader errno, range: [-10600, -10699] */
     constexpr int32_t ERR_DH_FWK_LOADER_HANDLER_IS_NULL = -10600;
