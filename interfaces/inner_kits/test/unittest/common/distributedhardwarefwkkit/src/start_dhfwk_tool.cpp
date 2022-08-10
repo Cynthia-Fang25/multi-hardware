@@ -71,7 +71,7 @@ void StartDHFWKTool::KillProcess(const char *processname)
     }
 
     char cmd[128] = "";
-    int32_t ret = sprintf(cmd, "kill -9 $(pidof %s)", processname);
+    int32_t ret = sprintf_s(cmd, sizeof(cmd), "kill -9 $(pidof %s)", processname);
     if (ret < 0) {
         DHLOGE("Kill Process error, cmd: %s, ret: " PRId32, cmd, ret);
         return;
