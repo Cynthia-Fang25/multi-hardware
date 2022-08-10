@@ -18,6 +18,7 @@
 #include <cstdint>
 #include <cinttypes>
 #include <cstdio>
+#include <securec.h>
 #include <sys/types.h>
 #include <unistd.h>
 
