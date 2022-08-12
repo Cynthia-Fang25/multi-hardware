@@ -19,5 +19,7 @@ group("fuzztest") {
     "componentmanager_fuzzer:fuzztest",
     "resourcemanager_fuzzer:fuzztest",
     "componentloader_fuzzer:fuzztest",
+    "versioninfomanager_fuzzer:fuzztest",
+    "task_fuzzer:fuzztest",
   ]
 }
