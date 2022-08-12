@@ -29,21 +29,56 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace {
-    constexpr uint16_t TEST_DEV_TYPE_PAD = 0x11;
     constexpr uint32_t SLEEP_TIME_US = 10 * 1000;
+    const uint32_t DH_TYPE_SIZE = 10;
+    const DHType dhTypeFuzz[DH_TYPE_SIZE] = {
+        DHType::CAMERA, DHType::MIC, DHType::SPEAKER, DHType::DISPLAY, DHType::VIRMODEM_MIC,
+        DHType::INPUT, DHType::A2D, DHType::GPS, DHType::HFP, DHType::VIRMODEM_SPEAKER
+    };
 }
+/*
+struct VersionInfo {
+    std::string deviceId;
+    std::string dhVersion;
+    std::unordered_map<DHType, CompVersion> compVersions;
 
-void AccessManagerFuzzTest(const uint8_t* data, size_t size)
+    void FromJsonString(const std::string &jsonStr);
+    std::string ToJsonString() const;
+};
+struct CompVersion {
+    std::string name;
+    DHType dhType;
+    std::string handlerVersion;
+    std::string sourceVersion;
+    std::string sinkVersion;
+};
+*/
+void VersioninfoManagerFuzzTest(const uint8_t* data, size_t size)
 {
     if ((data == nullptr) || (size <= 0)) {
         return;
     }
 
-    std::string networkId(reinterpret_cast<const char*>(data), size);
-    std::string uuid(reinterpret_cast<const char*>(data), size);
+    VersionInfo versionInfo;
+    versionInfo.deviceId = std::string(reinterpret_cast<const char*>(data), size);
+    versionInfo.dhVersion = std::string(reinterpret_cast<const char*>(data), size);
 
-    DistributedHardwareManagerFactory::GetInstance().SendOnLineEvent(
-        networkId, uuid, TEST_DEV_TYPE_PAD);
+    CompVersion compVer;
+    compVer.dhType = dhTypeFuzz[data[0] % DH_TYPE_SIZE];
+    compVer.name = std::string(reinterpret_cast<const char*>(data), size);
+    compVer.handlerVersion = std::string(reinterpret_cast<const char*>(data), size);
+    compVer.sourceVersion = std::string(reinterpret_cast<const char*>(data), size);
+    compVer.sinkVersion = std::string(reinterpret_cast<const char*>(data), size);
+    versionInfo.compVersions.insert(std::pair<DHType, CompVersion>(compVer.dhType, compVer));
+
+    VersionInfo info;
+    VersionInfoManager::GetInstance()->Init();
+    VersionInfoManager::GetInstance()->AddVersion(versionInfo);
+    VersionInfoManager::GetInstance()->GetVersionInfoByDeviceId(versionInfo.deviceId, info);
+    VersionInfoManager::GetInstance()->SyncVersionInfoFromDB(versionInfo.deviceId);
+    VersionInfoManager::GetInstance()->RemoveVersionInfoByDeviceId(versionInfo.deviceId);
+    VersionInfoManager::GetInstance()->UnInit();
+
     usleep(SLEEP_TIME_US);
 }
 }
@@ -53,7 +88,7 @@ void AccessManagerFuzzTest(const uint8_t* data, size_t size)
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
 {
     /* Run your code on data */ 
-    OHOS::DistributedHardware::AccessManagerFuzzTest(data, size);
+    OHOS::DistributedHardware::VersioninfoManagerFuzzTest(data, size);
     return 0;
 }
 

@@ -18,9 +18,9 @@ import(
     "//foundation/distributedhardware/distributed_hardware_fwk/distributedhardwarefwk.gni")
 
 ##############################fuzztest##########################################
-ohos_fuzztest("AccessmanagerFuzzTest") {
-  module_out_path = "distributed_hardware_fwk/accessmanager"
-  fuzz_config_file = "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice/test/fuzztest/accessmanager_fuzzer"
+ohos_fuzztest("VersioninfoManagerFuzzTest") {
+  module_out_path = "distributed_hardware_fwk/versioninfomanager"
+  fuzz_config_file = "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice/test/fuzztest/versioninfomanager_fuzzer"
 
   include_dirs = [
     "//commonlibrary/c_utils/base/include",
@@ -32,7 +32,7 @@ ohos_fuzztest("AccessmanagerFuzzTest") {
     "${common_path}/utils/include",
     "${common_path}/log/include",
     "${services_path}/distributedhardwarefwkservice/include",
-    "${services_path}/distributedhardwarefwkservice/include/accessmanager",
+    "${services_path}/distributedhardwarefwkservice/include/resourcemanager",
   ]
   cflags = [
     "-g",
@@ -40,7 +40,7 @@ ohos_fuzztest("AccessmanagerFuzzTest") {
     "-Wno-unused-variable",
     "-fno-omit-frame-pointer",
   ]
-  sources = [ "accessmanager_fuzzer.cpp" ]
+  sources = [ "versioninfomanager_fuzzer.cpp" ]
 
   deps = [
     "${utils_path}:distributedhardwareutils",
@@ -51,7 +51,7 @@ ohos_fuzztest("AccessmanagerFuzzTest") {
 
   defines = [
     "HI_LOG_ENABLE",
-    "DH_LOG_TAG=\"AccessmanagerFuzzTest\"",
+    "DH_LOG_TAG=\"VersioninfoManagerFuzzTest\"",
     "LOG_DOMAIN=0xD004100",
   ]
 
@@ -70,6 +70,6 @@ ohos_fuzztest("AccessmanagerFuzzTest") {
 group("fuzztest") {
   testonly = true
 
-  deps = [ ":AccessmanagerFuzzTest" ]
+  deps = [ ":VersioninfoManagerFuzzTest" ]
 }
 ###############################################################################
