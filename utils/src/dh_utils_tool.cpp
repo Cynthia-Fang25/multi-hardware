@@ -116,7 +116,6 @@ DeviceInfo GetLocalDeviceInfo()
         DHLOGE("GetLocalNodeDeviceInfo failed, errCode = %d", ret);
         return devInfo;
     }
-
     devInfo.uuid = GetUUIDBySoftBus(info->networkId);
     devInfo.deviceId = GetDeviceIdByUUID(devInfo.uuid);
     devInfo.deviceName = info->deviceName;
