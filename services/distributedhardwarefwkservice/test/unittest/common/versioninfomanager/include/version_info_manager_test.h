@@ -26,6 +26,7 @@ public:
     static void TearDownTestCase(void);
     void SetUp();
     void TearDown();
+    vector<VersionInfo> versionInfos_;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

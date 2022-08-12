@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "versioninfo_manager_test.h"
+#include "version_info_manager_test.h"
 
 #include <cerrno>
 #include <sys/stat.h>
@@ -23,6 +23,7 @@
 #include "version_info.h"
 #define private public
 #include "version_info_manager.h"
+#include "version_manager.h"
 #undef private
 #include "dh_context.h"
 #include "distributed_hardware_errno.h"
@@ -43,8 +44,60 @@ const string DEV_ID_2 = "bb536a637105409e904d4da83790a4a8";
 const string DEV_ID_3 = "bb536a637105409e904d4da83790a4a9";
 const string NAME_SCREEN = "distributed_screen";
 const string NAME_CAMERA = "distributed_camera";
+const string NAME_INPUT = "distributed_input";
 const string VERSION_1 = "1.0";
 const string VERSION_2 = "2.0";
+const string VERSION_3 = "3.0";
+}
+
+vector<VersionInfo> CreatVersionInfos()
+{
+    CompVersion compVersions1 = {
+        .dhType = DHType::CAMERA,
+        .name = NAME_CAMERA,
+        .handlerVersion = VERSION_1,
+        .sinkVersion = VERSION_1,
+        .sourceVersion = VERSION_1
+    };
+
+    CompVersion compVersions2 = {
+        .dhType = DHType::DISPLAY,
+        .name = NAME_CAMERA,
+        .handlerVersion = VERSION_2,
+        .sinkVersion = VERSION_2,
+        .sourceVersion = VERSION_2
+    };
+
+    CompVersion compVersions3 = {
+        .dhType = DHType::INPUT,
+        .name = NAME_INPUT,
+        .handlerVersion = VERSION_3,
+        .sinkVersion = VERSION_3,
+        .sourceVersion = VERSION_3
+    };
+
+    VersionInfo verInfo1;
+    verInfo1.deviceId = DEV_ID_1;
+    verInfo1.dhVersion = VERSION_1;
+    verInfo1.compVersions.insert(std::pair<DHType, CompVersion>(compVersions1.dhType, compVersions1));
+    verInfo1.compVersions.insert(std::pair<DHType, CompVersion>(compVersions1.dhType, compVersions1));
+    verInfo1.compVersions.insert(std::pair<DHType, CompVersion>(compVersions1.dhType, compVersions1));
+
+    VersionInfo verInfo2;
+    verInfo2.deviceId = DEV_ID_2;
+    verInfo1.dhVersion = VERSION_2;
+    verInfo1.compVersions.insert(std::pair<DHType, CompVersion>(compVersions2.dhType, compVersions2));
+    verInfo1.compVersions.insert(std::pair<DHType, CompVersion>(compVersions2.dhType, compVersions2));
+    verInfo1.compVersions.insert(std::pair<DHType, CompVersion>(compVersions2.dhType, compVersions2));
+
+    VersionInfo verInfo3;
+    verInfo3.deviceId = DEV_ID_3;
+    verInfo1.dhVersion = VERSION_3;
+    verInfo1.compVersions.insert(std::pair<DHType, CompVersion>(compVersions3.dhType, compVersions3));
+    verInfo1.compVersions.insert(std::pair<DHType, CompVersion>(compVersions3.dhType, compVersions3));
+    verInfo1.compVersions.insert(std::pair<DHType, CompVersion>(compVersions3.dhType, compVersions3));
+
+    return vector<VersionInfo> { verInfo1, verInfo2, verInfo3 };
 }
 
 void VersionInfoManagerTest::SetUpTestCase(void)
@@ -53,6 +106,8 @@ void VersionInfoManagerTest::SetUpTestCase(void)
     if (ret != 0) {
         DHLOGE("mkdir failed, path: %s, errno : %d", DATABASE_DIR.c_str(), errno);
     }
+
+    versionInfos_ = CreatVersionInfos();
 }
 
 void VersionInfoManagerTest::TearDownTestCase(void)
@@ -65,45 +120,14 @@ void VersionInfoManagerTest::TearDownTestCase(void)
 
 void VersionInfoManagerTest::SetUp()
 {
-    VersionInfo verInfo1;
-    verInfo1.deviceId = DEV_ID_1;
-    CompVersion compVersions;
-    compVersions.dhType = DHType::CAMERA;
-    compVersions.name = NAME_CAMERA;
-    compVersions.handlerVersion = VERSION_1;
-    compVersions.sinkVersion = VERSION_1;
-    compVersions.sourceVersion = VERSION_1;
-    VersionInfoManager::GetInstance()->AddVersion(verInfo1);
-
-    VersionInfo verInfo2;
-    verInfo2.deviceId = DEV_ID_2;
-    compVersions.dhType = DHType::DISPLAY
-    compVersions.name = NAME_CAMERA;
-    compVersions.handlerVersion = VERSION_2;
-    compVersions.sinkVersion = VERSION_2;
-    compVersions.sourceVersion = VERSION_2;
-    VersionInfoManager::GetInstance()->AddVersion(verInfo2);
 }
 
 void VersionInfoManagerTest::TearDown()
 {
-    VersionInfoManager::GetInstance()->RemoveCapabilityInfoByKey(CAP_INFO_0->GetKey());
 }
 
 /**
  * @tc.name:version_info_manager_test_001
- * @tc.desc: Verify the VersionInfoManager UnInit function.
- * @tc.type: FUNC
- * @tc.require: AR000GHSJE
- */
-HWTEST_F(VersionInfoManagerTest, version_info_manager_test_001, TestSize.Level0)
-{
-    EXPECT_EQ(VersionInfoManager::GetInstance()->Init(), DH_FWK_SUCCESS);
-    EXPECT_EQ(VersionInfoManager::GetInstance()->UnInit(), DH_FWK_SUCCESS);
-}
-
-/**
- * @tc.name:version_info_manager_test_002
  * @tc.desc: Verify the VersionInfoManager Init function.
  * @tc.type: FUNC
  * @tc.require: AR000GHSCV
@@ -122,7 +146,6 @@ HWTEST_F(VersionInfoManagerTest, version_info_manager_test_002, TestSize.Level0)
 HWTEST_F(VersionInfoManagerTest, version_info_manager_test_003, TestSize.Level0)
 {
     EXPECT_EQ(VersionInfoManager::GetInstance()->SyncVersionInfoFromDB(DEV_ID_1), DH_FWK_SUCCESS);
-    EXPECT_EQ(VersionInfoManager::GetInstance()->SyncVersionInfoFromDB(DEV_ID_2), DH_FWK_SUCCESS);
 }
 
 /**
@@ -144,15 +167,9 @@ HWTEST_F(VersionInfoManagerTest, version_info_manager_test_004, TestSize.Level0)
  */
 HWTEST_F(VersionInfoManagerTest, version_info_manager_test_005, TestSize.Level0)
 {
-    VersionInfo verInfo;
-    verInfo.deviceId = DEV_ID_3;
-    CompVersion compVersions;
-    compVersions.dhType = DHType::CAMERA;
-    compVersions.name = NAME_CAMERA;
-    compVersions.handlerVersion = VERSION_1;
-    compVersions.sinkVersion = VERSION_1;
-    compVersions.sourceVersion = VERSION_1;
-    EXPECT_EQ(VersionInfoManager::GetInstance()->AddVersion(verInfo), DH_FWK_SUCCESS);
+    for (const auto& verInfo : versionInfos_) {
+        EXPECT_EQ(VersionInfoManager::GetInstance()->>AddVersion(verInfo), DH_FWK_SUCCESS);
+    }
 }
 
 /**
@@ -164,7 +181,10 @@ HWTEST_F(VersionInfoManagerTest, version_info_manager_test_005, TestSize.Level0)
 HWTEST_F(VersionInfoManagerTest, version_info_manager_test_006, TestSize.Level0)
 {
     VersionInfo versionInfo;
-    EXPECT_EQ(VersionInfoManager::GetInstance()->GetVersionInfoByDeviceId(DEV_ID_1, versionInfo), DH_FWK_SUCCESS);
+    for (const auto& verInfo : versionInfos_) {
+        EXPECT_EQ(VersionInfoManager::GetInstance()->GetVersionInfoByDeviceId(verInfo.deviceId, versionInfo),
+            DH_FWK_SUCCESS);
+    }
 }
 
 /**
@@ -179,5 +199,15 @@ HWTEST_F(VersionInfoManagerTest, version_info_manager_test_007, TestSize.Level0)
     EXPECT_EQ(VersionInfoManager::GetInstance()->ManualSync(networkId), DH_FWK_SUCCESS);
 }
 
+/**
+ * @tc.name:version_info_manager_test_0019
+ * @tc.desc: Verify the VersionInfoManager UnInit function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSJE
+ */
+HWTEST_F(VersionInfoManagerTest, version_info_manager_test_019, TestSize.Level0)
+{
+    EXPECT_EQ(VersionInfoManager::GetInstance()->UnInit(), DH_FWK_SUCCESS);
+}
 } // namespace DistributedHardware
 } // namespace OHOS
