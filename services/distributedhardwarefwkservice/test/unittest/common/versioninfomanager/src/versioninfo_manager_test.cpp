@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "resource_manager_test.h"
+#include "versioninfo_manager_test.h"
 
 #include <cerrno>
 #include <sys/stat.h>

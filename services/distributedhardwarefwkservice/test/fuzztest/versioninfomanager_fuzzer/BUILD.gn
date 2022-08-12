@@ -33,6 +33,12 @@ ohos_fuzztest("VersioninfoManagerFuzzTest") {
     "${common_path}/log/include",
     "${services_path}/distributedhardwarefwkservice/include",
     "${services_path}/distributedhardwarefwkservice/include/resourcemanager",
+    "${services_path}/distributedhardwarefwkservice/include/utils",
+    "${common_path}/utils/include",
+    "${common_path}/log/include",
+    "//third_party/json/include",
+    "//commonlibrary/c_utils/base/include",
+    "//utils/system/safwk/native/include",
   ]
   cflags = [
     "-g",
@@ -58,6 +64,7 @@ ohos_fuzztest("VersioninfoManagerFuzzTest") {
   external_deps = [
     "bundle_framework:appexecfwk_base",
     "bundle_framework:appexecfwk_core",
+    "distributeddatamgr:distributeddata_inner",
     "hisysevent_native:libhisysevent",
     "init:libbegetutil",
     "ipc:ipc_core",
