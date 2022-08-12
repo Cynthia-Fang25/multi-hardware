@@ -35,7 +35,7 @@ namespace {
 
     const uint32_t TASK_TYPE_SIZE = 5;
     const TaskType taskTypeFuzz[TASK_TYPE_SIZE] = {
-        TaskType::UNKNOWN = 0, TaskType::ENABLE = 1, TaskType::DISABLE = 2, TaskType::ON_LINE = 3, TaskType::OFF_LINE = 4
+        TaskType::UNKNOWN , TaskType::ENABLE , TaskType::DISABLE , TaskType::ON_LINE , TaskType::OFF_LINE
     };
 }
 
