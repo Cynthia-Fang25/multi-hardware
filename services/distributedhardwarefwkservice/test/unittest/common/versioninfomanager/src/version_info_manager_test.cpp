@@ -48,6 +48,11 @@ const string NAME_INPUT = "distributed_input";
 const string VERSION_1 = "1.0";
 const string VERSION_2 = "2.0";
 const string VERSION_3 = "3.0";
+const std::vector<std::pair<std::string, std::string>> TEST_DEVICES = {
+    { "11111111111111111111111111111111", "22222222222222222222222222222222" },
+    { "33333333333333333333333333333333", "44444444444444444444444444444444" },
+    { "55555555555555555555555555555555", "66666666666666666666666666666666" },
+};
 }
 
 vector<VersionInfo> CreatVersionInfos()
