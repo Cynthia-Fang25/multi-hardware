@@ -167,5 +167,17 @@ HWTEST_F(VersionInfoManagerTest, version_info_manager_test_006, TestSize.Level0)
     EXPECT_EQ(VersionInfoManager::GetInstance()->GetVersionInfoByDeviceId(DEV_ID_1, versionInfo), DH_FWK_SUCCESS);
 }
 
+/**
+ * @tc.name:version_info_manager_test_007
+ * @tc.desc: Verify the VersionInfoManager ManualSync function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSJE
+ */
+HWTEST_F(VersionInfoManagerTest, version_info_manager_test_007, TestSize.Level0)
+{
+    std::string networkId = "00000000000000000000000000000000";
+    EXPECT_EQ(VersionInfoManager::GetInstance()->ManualSync(networkId), DH_FWK_SUCCESS);
+}
+
 } // namespace DistributedHardware
 } // namespace OHOS
