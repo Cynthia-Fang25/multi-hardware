@@ -11,18 +11,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#####################hydra-fuzz###################
-import("//build/config/features.gni")
 import("//build/test.gni")
 import(
     "//foundation/distributedhardware/distributed_hardware_fwk/distributedhardwarefwk.gni")
 
-##############################fuzztest##########################################
-ohos_fuzztest("ResourcemanagerFuzzTest") {
-  module_out_path = "distributed_hardware_fwk/resourcemanager"
-  fuzz_config_file = "${services_path}/distributedhardwarefwkservice/test/fuzztest/resourcemanager_fuzzer"
+module_out_path = "distributed_hardware_fwk/versioninfo_manager_test"
 
+config("module_private_config") {
+  visibility = [ ":*" ]
   include_dirs = [
+    "include",
     "${utils_path}/include",
     "${utils_path}/include/log",
     "${utils_path}/include/eventbus",
@@ -31,27 +29,25 @@ ohos_fuzztest("ResourcemanagerFuzzTest") {
     "${services_path}/distributedhardwarefwkservice/include/utils",
     "${common_path}/utils/include",
     "${common_path}/log/include",
+    "//commonlibrary/c_utils/base/include",
     "//third_party/json/include",
     "//commonlibrary/c_utils/base/include",
     "//utils/system/safwk/native/include",
   ]
-  cflags = [
-    "-g",
-    "-O0",
-    "-Wno-unused-variable",
-    "-fno-omit-frame-pointer",
-  ]
-  sources = [ "resourcemanager_fuzzer.cpp" ]
+}
+
+## UnitTest resource_manager_test
+ohos_unittest("VersioninfoManagerTest") {
+  module_out_path = module_out_path
+
+  sources = [ "src/version_info_manager_test.cpp" ]
+
+  configs = [ ":module_private_config" ]
 
   deps = [
     "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice:distributedhardwarefwksvr",
     "//foundation/distributedhardware/distributed_hardware_fwk/utils:distributedhardwareutils",
-  ]
-
-  defines = [
-    "HI_LOG_ENABLE",
-    "DH_LOG_TAG=\"ResourcemanagerFuzzTest\"",
-    "LOG_DOMAIN=0xD004100",
+    "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
@@ -65,9 +61,7 @@ ohos_fuzztest("ResourcemanagerFuzzTest") {
   ]
 }
 
-###############################################################################
-group("fuzztest") {
+group("resource_manager_test") {
   testonly = true
-  deps = [ ":ResourcemanagerFuzzTest" ]
+  deps = [ ":VersioninfoManagerTest" ]
 }
-###############################################################################

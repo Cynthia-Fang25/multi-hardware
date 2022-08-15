@@ -1,4 +1,4 @@
-# Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+# Copyright (c) 2021 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -18,11 +18,15 @@ import(
     "//foundation/distributedhardware/distributed_hardware_fwk/distributedhardwarefwk.gni")
 
 ##############################fuzztest##########################################
-ohos_fuzztest("ResourcemanagerFuzzTest") {
-  module_out_path = "distributed_hardware_fwk/resourcemanager"
-  fuzz_config_file = "${services_path}/distributedhardwarefwkservice/test/fuzztest/resourcemanager_fuzzer"
+ohos_fuzztest("VersioninfoManagerFuzzTest") {
+  module_out_path = "distributed_hardware_fwk/versioninfomanager"
+  fuzz_config_file = "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice/test/fuzztest/versioninfomanager_fuzzer"
 
   include_dirs = [
+    "//commonlibrary/c_utils/base/include",
+    "//utils/system/safwk/native/include",
+    "//foundation/distributedhardware/device_manager/interfaces/inner_kits/native_cpp/include",
+    "//foundation/distributedhardware/device_manager/common/include",
     "${utils_path}/include",
     "${utils_path}/include/log",
     "${utils_path}/include/eventbus",
@@ -32,8 +36,6 @@ ohos_fuzztest("ResourcemanagerFuzzTest") {
     "${common_path}/utils/include",
     "${common_path}/log/include",
     "//third_party/json/include",
-    "//commonlibrary/c_utils/base/include",
-    "//utils/system/safwk/native/include",
   ]
   cflags = [
     "-g",
@@ -41,33 +43,38 @@ ohos_fuzztest("ResourcemanagerFuzzTest") {
     "-Wno-unused-variable",
     "-fno-omit-frame-pointer",
   ]
-  sources = [ "resourcemanager_fuzzer.cpp" ]
+  sources = [ "versioninfomanager_fuzzer.cpp" ]
 
   deps = [
+    "${utils_path}:distributedhardwareutils",
+    "//foundation/distributedhardware/device_manager/interfaces/inner_kits/native_cpp:devicemanagersdk",
     "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice:distributedhardwarefwksvr",
-    "//foundation/distributedhardware/distributed_hardware_fwk/utils:distributedhardwareutils",
+    "//foundation/systemabilitymgr/safwk/interfaces/innerkits/safwk:system_ability_fwk",
   ]
 
   defines = [
     "HI_LOG_ENABLE",
-    "DH_LOG_TAG=\"ResourcemanagerFuzzTest\"",
+    "DH_LOG_TAG=\"VersioninfoManagerFuzzTest\"",
     "LOG_DOMAIN=0xD004100",
   ]
 
   external_deps = [
+    "eventhandler:libeventhandler",
     "bundle_framework:appexecfwk_base",
     "bundle_framework:appexecfwk_core",
-    "c_utils:utils",
     "distributeddatamgr:distributeddata_inner",
-    "eventhandler:libeventhandler",
     "hisysevent_native:libhisysevent",
-    "hiviewdfx_hilog_native:libhilog",
+    "init:libbegetutil",
+    "ipc:ipc_core",
+    "safwk:system_ability_fwk",
+    "samgr:samgr_proxy",
   ]
 }
 
 ###############################################################################
 group("fuzztest") {
   testonly = true
-  deps = [ ":ResourcemanagerFuzzTest" ]
+
+  deps = [ ":VersioninfoManagerFuzzTest" ]
 }
 ###############################################################################
