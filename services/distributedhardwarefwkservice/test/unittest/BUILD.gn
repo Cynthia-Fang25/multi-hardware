@@ -22,5 +22,7 @@ group("test") {
     "common/resourcemanager:resource_manager_test",
     "common/task:dh_task_test",
     "common/versionmanager:version_manager_test",
+    "common/versioninfomanager:versioninfo_manager_test",
+    "common/localhardwaremanager:local_hardware_manager_test",
   ]
 }
