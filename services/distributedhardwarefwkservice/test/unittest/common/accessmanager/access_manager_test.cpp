@@ -227,27 +227,25 @@ HWTEST_F(AccessManagerTest, SendOffLineEvent_003, TestSize.Level0)
 }
 
 /**
- * @tc.name: AccessManagerInitUnInit
- * @tc.desc: Verify the  Init UnInit function
+ * @tc.name: AccessManagerInit
+ * @tc.desc: Verify the  Init  function
  * @tc.type: FUNC
  * @tc.require: AR000GHSJM
  */
-HWTEST_F(AccessManagerTest, AccessManagerInitUnInit, TestSize.Level0)
+HWTEST_F(AccessManagerTest, AccessManagerInit, TestSize.Level0)
 {
    EXPECT_EQ(DH_FWK_SUCCESS, AccessManager::GetInstance()->Init());
-   EXPECT_EQ(DH_FWK_SUCCESS, AccessManager::GetInstance()->UnInit());
 }
 
 /**
- * @tc.name: OnRemoteDied
+ * @tc.name: AccessManagerUnInit
  * @tc.desc: Verify the  Init UnInit function
  * @tc.type: FUNC
  * @tc.require: AR000GHSJM
  */
-HWTEST_F(AccessManagerTest, OnRemoteDied, TestSize.Level0)
+HWTEST_F(AccessManagerTest, AccessManagerUnInit, TestSize.Level0)
 {
-   EXPECT_EQ(DH_FWK_SUCCESS, AccessManager::GetInstance()->OnRemoteDied());
+   EXPECT_EQ(DH_FWK_SUCCESS, AccessManager::GetInstance()->UnInit());
 }
-
 } // namespace DistributedHardware
 } // namespace OHOS
