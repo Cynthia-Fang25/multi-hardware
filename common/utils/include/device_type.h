@@ -24,7 +24,7 @@ namespace DistributedHardware {
 enum class DHType : uint32_t {
     UNKNOWN = 0x0,            // unknown device
     CAMERA = 0x01,            // Camera
-    AUDIO = 0x02,               // Mic
+    AUDIO = 0x02,             // Mic
     DISPLAY = 0x08,           // Display
     GPS = 0x10,               // GPS
     INPUT = 0x20,             // Key board
