@@ -234,7 +234,7 @@ HWTEST_F(AccessManagerTest, SendOffLineEvent_003, TestSize.Level0)
  */
 HWTEST_F(AccessManagerTest, AccessManagerInit, TestSize.Level0)
 {
-   EXPECT_EQ(DH_FWK_SUCCESS, AccessManager::GetInstance()->Init());
+    EXPECT_EQ(DH_FWK_SUCCESS, AccessManager::GetInstance()->Init());
 }
 
 /**
@@ -245,7 +245,7 @@ HWTEST_F(AccessManagerTest, AccessManagerInit, TestSize.Level0)
  */
 HWTEST_F(AccessManagerTest, AccessManagerUnInit, TestSize.Level0)
 {
-   EXPECT_EQ(DH_FWK_SUCCESS, AccessManager::GetInstance()->UnInit());
+    EXPECT_EQ(DH_FWK_SUCCESS, AccessManager::GetInstance()->UnInit());
 }
 } // namespace DistributedHardware
 } // namespace OHOS

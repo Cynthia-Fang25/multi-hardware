@@ -160,6 +160,5 @@ HWTEST_F(ComponentLoaderTest, component_loader_test_008, TestSize.Level0)
     auto vec = ComponentLoader::GetInstance().GetAllCompTypes();
     EXPECT_EQ(vec.size(), ComponentLoader::GetInstance().compHandlerMap_.size());
 }
-
 } // namespace DistributedHardware
 } // namespace OHOS

@@ -69,7 +69,7 @@ void VersioninfoManagerFuzzTest(const uint8_t* data, size_t size)
 /* Fuzzer entry point */
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
 {
-    /* Run your code on data */ 
+    /* Run your code on data */
     OHOS::DistributedHardware::VersioninfoManagerFuzzTest(data, size);
     return 0;
 }

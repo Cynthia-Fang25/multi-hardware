@@ -64,6 +64,5 @@ HWTEST_F(LocalHardwareManagerTest, local_hardware_manager_test_002, TestSize.Lev
 {
     LocalHardwareManager::GetInstance().UnInit();
 }
-
 } // namespace DistributedHardware
 } // namespace OHOS

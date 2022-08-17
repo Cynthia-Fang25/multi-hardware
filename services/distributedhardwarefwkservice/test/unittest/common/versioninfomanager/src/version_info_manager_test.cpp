@@ -54,17 +54,6 @@ const std::vector<std::pair<std::string, std::string>> TEST_DEVICES = {
 std::vector<VersionInfo> g_versionInfos;
 }
 
-/*
-
-struct CompVersion {
-    std::string name;
-    DHType dhType;
-    std::string handlerVersion;
-    std::string sourceVersion;
-    std::string sinkVersion;
-};
-
-*/
 std::vector<VersionInfo> CreatVersionInfos()
 {
     CompVersion compVersions1 = {
