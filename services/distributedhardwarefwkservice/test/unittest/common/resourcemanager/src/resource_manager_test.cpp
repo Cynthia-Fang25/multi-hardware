@@ -243,7 +243,7 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_008, TestSize.Level0)
     map<CapabilityInfoFilter, string> queryMap10 { { CapabilityInfoFilter::FILTER_DH_TYPE,
         to_string(TEST_DH_TYPE_MIC) } };
     map<CapabilityInfoFilter, string> queryMap11 { { CapabilityInfoFilter::FILTER_DH_TYPE,
-        to_string(TEST_DH_TYPE_SPEAKER) } };
+        to_string(TEST_DH_TYPE_GPS) } };
     map<CapabilityInfoFilter, string> queryMap12 { { CapabilityInfoFilter::FILTER_DH_TYPE,
         to_string(TEST_DH_TYPE_DISPLAY) } };
     map<CapabilityInfoFilter, string> queryMap13 { { CapabilityInfoFilter::FILTER_DH_TYPE,
