@@ -32,7 +32,6 @@
 #include "version_info.h"
 #include "version_info_event.h"
 
-class DBAdapter;
 namespace OHOS {
 namespace DistributedHardware {
 class VersionInfoManager : public std::enable_shared_from_this<VersionInfoManager>,
