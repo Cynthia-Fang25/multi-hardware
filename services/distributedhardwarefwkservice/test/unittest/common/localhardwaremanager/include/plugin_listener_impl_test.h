@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 20212 Huawei Device Co., Ltd.
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,14 +13,18 @@
  * limitations under the License.
  */
 
-#ifndef OHOS_DISTRIBUTED_HARDWARE_COMPONENT_LOADER_TEST_H
-#define OHOS_DISTRIBUTED_HARDWARE_COMPONENT_LOADER_TEST_H
+#ifndef OHOS_DISTRIBUTED_PLUGIN_LISTENER_IMPL_TEST_H
+#define OHOS_DISTRIBUTED_PLUGIN_LISTENER_IMPL_TEST_H
 
 #include <gtest/gtest.h>
 
+#define private public
+#include "plugin_listener_impl.h"
+#undef private
+
 namespace OHOS {
 namespace DistributedHardware {
-class LocalHardwareManagerTest : public testing::Test {
+class PluginListenerImplTest : public testing::Test {
 public:
     static void SetUpTestCase(void);
     static void TearDownTestCase(void);

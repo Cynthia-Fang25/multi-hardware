@@ -39,7 +39,11 @@ config("module_private_config") {
 ohos_unittest("LocalHardwareManagerTest") {
   module_out_path = module_out_path
 
-  sources = [ "src/local_hardware_manager_test.cpp" ]
+  sources = [ 
+    "src/local_hardware_manager_test.cpp",
+    "src/mock_hardware_handler.cpp",
+    "src/plugin_listener_impl_test.cpp"
+  ]
 
   configs = [ ":module_private_config" ]
 
