@@ -66,6 +66,5 @@ int32_t MockHardwareHandler::UnPluginHardware(const std::string &dhId)
     }
     return DH_FWK_SUCCESS;
 }
-
 } // namespace DistributedHardware
 } // namespace OHOS

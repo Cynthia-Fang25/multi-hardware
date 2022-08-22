@@ -21,7 +21,6 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-
 class MockHardwareHandler : public IHardwareHandler {
 public:
     MockHardwareHandler() = default;
