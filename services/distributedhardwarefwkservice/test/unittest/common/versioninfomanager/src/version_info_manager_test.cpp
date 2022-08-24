@@ -65,7 +65,7 @@ std::vector<VersionInfo> CreatVersionInfos()
     };
 
     CompVersion compVersions2 = {
-        .name = NAME_CAMERA,
+        .name = NAME_SCREEN,
         .dhType = DHType::DISPLAY,
         .handlerVersion = VERSION_2,
         .sourceVersion = VERSION_2,
