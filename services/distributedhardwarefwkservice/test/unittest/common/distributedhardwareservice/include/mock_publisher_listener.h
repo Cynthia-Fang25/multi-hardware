@@ -24,7 +24,8 @@ class MockPublisherListener : public IPublisherListener {
 public:
     MockPublisherListener() = default;
     ~MockPublisherListener() = default;
-    void OnMessage(const DHTopic topic, const std::string& message) {
+    void OnMessage(const DHTopic topic, const std::string& message)
+    {
         (void) topic;
         (void) message;
     }
