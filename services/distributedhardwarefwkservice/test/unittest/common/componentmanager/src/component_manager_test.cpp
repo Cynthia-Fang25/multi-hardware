@@ -23,6 +23,7 @@
 
 #include "component_disable.h"
 #include "component_enable.h"
+#include "component_loader.h"
 #define private public
 #include "component_manager.h"
 #undef private
@@ -338,6 +339,34 @@ HWTEST_F(ComponentManagerTest, disable_test_004, TestSize.Level0)
     thread4.join();
     thread5.join();
     thread6.join();
+}
+
+/**
+ * @tc.name: init_compSource_test_001
+ * @tc.desc: Verify the InitCompSource
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSK9
+ */
+HWTEST_F(ComponentManagerTest, init_compSource_test_001, TestSize.Level0)
+{
+    ComponentLoader::GetInstance().Init();
+    ComponentManager::GetInstance().compSource_.clear();
+    auto ret = ComponentManager::GetInstance().InitCompSource();
+    EXPECT_NE(ret, ComponentManager::GetInstance().compSource_.empty());
+}
+
+/**
+ * @tc.name: init_compSink_test_001
+ * @tc.desc: Verify the InitCompSource
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSK9
+ */
+HWTEST_F(ComponentManagerTest, init_compSink_test_001, TestSize.Level0)
+{
+    ComponentLoader::GetInstance().Init();
+    ComponentManager::GetInstance().compSink_.clear();
+    auto ret = ComponentManager::GetInstance().InitCompSink();
+    EXPECT_NE(ret, ComponentManager::GetInstance().compSink_.empty());
 }
 } // namespace DistributedHardware
 } // namespace OHOS
