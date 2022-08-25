@@ -56,9 +56,9 @@ ohos_fuzztest("ComponentloaderFuzzTest") {
   ]
 
   external_deps = [
-    "distributeddatamgr:distributeddata_inner",
     "eventhandler:libeventhandler",
     "hisysevent_native:libhisysevent",
+    "kv_store:distributeddata_inner",
   ]
 }
 
