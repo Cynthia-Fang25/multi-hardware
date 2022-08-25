@@ -23,10 +23,12 @@ config("module_private_config") {
     "include",
     "${utils_path}/include",
     "${utils_path}/include/log",
+    "${utils_path}/include/eventbus",
     "${services_path}/distributedhardwarefwkservice/include",
     "${services_path}/distributedhardwarefwkservice/include/componentloader",
     "${services_path}/distributedhardwarefwkservice/include/componentmanager",
     "${services_path}/distributedhardwarefwkservice/include/resourcemanager",
+    "${services_path}/distributedhardwarefwkservice/include/versionmanager",
     "${services_path}/distributedhardwarefwkservice/include/utils",
     "${common_path}/utils/include",
     "${common_path}/log/include",
@@ -56,8 +58,11 @@ ohos_unittest("ComponentManagerTest") {
   ]
 
   external_deps = [
+    "distributeddatamgr:distributeddata_inner",
     "hisysevent_native:libhisysevent",
     "ipc:ipc_core",
+    "eventhandler:libeventhandler",
+    "hisysevent_native:libhisysevent",
   ]
 }
 

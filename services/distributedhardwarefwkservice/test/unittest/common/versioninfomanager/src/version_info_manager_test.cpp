@@ -49,7 +49,7 @@ const string VERSION_3 = "3.0";
 std::vector<VersionInfo> g_versionInfos;
 }
 
-std::vector<VersionInfo> CreatVersionInfos()
+std::vector<VersionInfo> CreateVersionInfos()
 {
     CompVersion compVersions1 = {
         .name = NAME_CAMERA,
@@ -106,7 +106,7 @@ void VersionInfoManagerTest::SetUpTestCase(void)
         DHLOGE("mkdir failed, path: %s, errno : %d", DATABASE_DIR.c_str(), errno);
     }
 
-    g_versionInfos = CreatVersionInfos();
+    g_versionInfos = CreateVersionInfos();
 }
 
 void VersionInfoManagerTest::TearDownTestCase(void)
