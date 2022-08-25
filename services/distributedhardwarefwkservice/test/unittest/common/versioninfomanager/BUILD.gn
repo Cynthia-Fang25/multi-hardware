@@ -40,9 +40,9 @@ config("module_private_config") {
 ohos_unittest("VersioninfoManagerTest") {
   module_out_path = module_out_path
 
-  sources = [ 
+  sources = [
     "src/version_info_manager_test.cpp",
-    "src/version_info_test.cpp"
+    "src/version_info_test.cpp",
   ]
 
   configs = [ ":module_private_config" ]
