@@ -56,20 +56,6 @@ void DistributedHardwareServiceTest::SetUp() {}
 void DistributedHardwareServiceTest::TearDown() {}
 
 /**
- * @tc.name: onStart_test_001
- * @tc.desc: Verify the OnStart function
- * @tc.type: FUNC
- * @tc.require: AR000GHSJM
- */
-HWTEST_F(DistributedHardwareServiceTest, onStart_test_001, TestSize.Level0)
-{
-    DistributedHardwareService service(ASID, true);
-    service.OnStart();
-
-    EXPECT_EQ(service.state_, ServiceRunningState::STATE_RUNNING);
-}
-
-/**
  * @tc.name: register_publisher_listener_001
  * @tc.desc: Verify the RegisterPublisherListener function
  * @tc.type: FUNC
