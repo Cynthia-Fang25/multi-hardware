@@ -13,6 +13,9 @@
  * limitations under the License.
  */
 
+#ifndef OHOS_DISTRIBUTED_HARDWARE_STUB_H
+#define OHOS_DISTRIBUTED_HARDWARE_STUB_H
+
 #include "iremote_stub.h"
 
 #include "idistributed_hardware.h"
@@ -24,7 +27,12 @@ public:
     int32_t OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply, MessageOption &option) override;
 
 private:
+    int32_t RegisterPublisherListenerInner(MessageParcel &data, MessageParcel &reply);
+    int32_t UnregisterPublisherListenerInner(MessageParcel &data, MessageParcel &reply);
+    int32_t PublishMessageInner(MessageParcel &data, MessageParcel &reply);
+    bool ValidTopic(uint32_t topic);
     std::string ToJson(const std::unordered_map<DHType, std::string> &versionMap) const;
 };
 } // namespace DistributedHardware
 } // namespace OHOS
+#endif // OHOS_DISTRIBUTED_HARDWARE_STUB_H

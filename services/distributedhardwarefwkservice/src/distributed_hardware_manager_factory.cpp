@@ -27,6 +27,7 @@
 #include "anonymous_string.h"
 #include "constants.h"
 #include "device_manager.h"
+#include "dh_context.h"
 #include "dh_utils_hisysevent.h"
 #include "dh_utils_hitrace.h"
 #include "dh_utils_tool.h"
@@ -43,12 +44,12 @@ IMPLEMENT_SINGLE_INSTANCE(DistributedHardwareManagerFactory);
 bool DistributedHardwareManagerFactory::Init()
 {
     DHLOGI("start");
+    isInit = true;
     auto initResult = DistributedHardwareManager::GetInstance().Initialize();
     if (initResult != DH_FWK_SUCCESS) {
         DHLOGE("Initialize failed, errCode = %d", initResult);
         return false;
     }
-    isInit = true;
     DHLOGD("success");
     return true;
 }
@@ -109,6 +110,13 @@ int32_t DistributedHardwareManagerFactory::SendOnLineEvent(const std::string &ne
         return ERR_DH_FWK_REMOTE_DEVICE_ID_IS_EMPTY;
     }
 
+    if (DHContext::GetInstance().IsDeviceOnline(uuid)) {
+        DHLOGW("device is already online, uuid = %s", GetAnonyString(uuid).c_str());
+        return ERR_DH_FWK_HARDWARE_MANAGER_DEVICE_REPEAT_ONLINE;
+    }
+
+    DHContext::GetInstance().AddOnlineDevice(uuid, networkId);
+
     if (!isInit && !Init()) {
         DHLOGE("distributedHardwareMgr is null");
         return ERR_DH_FWK_HARDWARE_MANAGER_INIT_FAILED;
@@ -130,9 +138,20 @@ int32_t DistributedHardwareManagerFactory::SendOffLineEvent(const std::string &n
         return ERR_DH_FWK_REMOTE_NETWORK_ID_IS_EMPTY;
     }
 
+    if (uuid.empty()) {
+        DHLOGE("uuid is empty");
+        return ERR_DH_FWK_REMOTE_DEVICE_ID_IS_EMPTY;
+    }
+
     if (!isInit && !Init()) {
         DHLOGE("distributedHardwareMgr is null");
         return ERR_DH_FWK_HARDWARE_MANAGER_INIT_FAILED;
+    }
+
+    if (!DHContext::GetInstance().IsDeviceOnline(uuid)) {
+        DHLOGE("Device not online, networkId: %s, uuid: %s",
+            GetAnonyString(networkId).c_str(), GetAnonyString(uuid).c_str());
+        return ERR_DH_FWK_HARDWARE_MANAGER_DEVICE_REPEAT_OFFLINE;
     }
 
     auto offlineResult = DistributedHardwareManager::GetInstance().SendOffLineEvent(networkId, uuid, deviceType);
@@ -141,6 +160,7 @@ int32_t DistributedHardwareManagerFactory::SendOffLineEvent(const std::string &n
         return offlineResult;
     }
 
+    DHContext::GetInstance().RemoveOnlineDevice(uuid);
     if (DistributedHardwareManager::GetInstance().GetOnLineCount() == 0) {
         DHLOGI("all devices are offline, start to free the resource");
         UnInit();

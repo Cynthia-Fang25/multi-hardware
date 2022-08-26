@@ -18,7 +18,7 @@ import(
 
 ohos_shared_library("distributedhardwarefwksvr") {
   include_dirs = [
-    "//utils/native/base/include",
+    "//commonlibrary/c_utils/base/include",
     "//utils/system/safwk/native/include",
     "include",
     "include/accessmanager",
@@ -35,8 +35,10 @@ ohos_shared_library("distributedhardwarefwksvr") {
     "include/task",
     "include/utils",
     "include/localhardwaremanager",
+    "include/publisher",
     "include/resourcemanager",
     "include/hidumphelper",
+    "include/ipc",
     "${utils_path}/include/eventbus",
   ]
 
@@ -48,13 +50,15 @@ ohos_shared_library("distributedhardwarefwksvr") {
     "src/componentmanager/component_manager.cpp",
     "src/distributed_hardware_manager.cpp",
     "src/distributed_hardware_manager_factory.cpp",
-    "src/distributed_hardware_proxy.cpp",
     "src/distributed_hardware_service.cpp",
     "src/distributed_hardware_stub.cpp",
     "src/hidumphelper/enabled_comps_dump.cpp",
     "src/hidumphelper/hidump_helper.cpp",
+    "src/ipc/publisher_listener_proxy.cpp",
     "src/localhardwaremanager/local_hardware_manager.cpp",
     "src/localhardwaremanager/plugin_listener_impl.cpp",
+    "src/publisher/publisher.cpp",
+    "src/publisher/publisher_item.cpp",
     "src/resourcemanager/capability_info.cpp",
     "src/resourcemanager/capability_info_manager.cpp",
     "src/resourcemanager/capability_utils.cpp",
@@ -79,8 +83,7 @@ ohos_shared_library("distributedhardwarefwksvr") {
     "//foundation/ability/ability_runtime/interfaces/inner_api/ability_manager:ability_manager",
     "//foundation/ability/ability_runtime/services/abilitymgr:abilityms",
     "//foundation/distributedhardware/device_manager/interfaces/inner_kits/native_cpp:devicemanagersdk",
-    "//foundation/distributedschedule/safwk/interfaces/innerkits/safwk:system_ability_fwk",
-    "//utils/native/base:utils",
+    "//foundation/systemabilitymgr/safwk/interfaces/innerkits/safwk:system_ability_fwk",
   ]
 
   defines = [
@@ -92,15 +95,16 @@ ohos_shared_library("distributedhardwarefwksvr") {
   external_deps = [
     "bundle_framework:appexecfwk_base",
     "bundle_framework:appexecfwk_core",
-    "distributeddatamgr:distributeddata_inner",
+    "c_utils:utils",
     "eventhandler:libeventhandler",
     "hisysevent_native:libhisysevent",
     "hitrace_native:hitrace_meter",
     "hiviewdfx_hilog_native:libhilog",
     "init:libbegetutil",
     "ipc:ipc_core",
+    "kv_store:distributeddata_inner",
     "safwk:system_ability_fwk",
-    "samgr_standard:samgr_proxy",
+    "samgr:samgr_proxy",
   ]
 
   subsystem_name = "distributedhardware"
