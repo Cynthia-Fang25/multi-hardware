@@ -13,33 +13,43 @@
  * limitations under the License.
  */
 
-#ifndef DISTRIBUTED_HARDWARE_FWK_MONITOR_TASK_TIMER_H
-#define DISTRIBUTED_HARDWARE_FWK_MONITOR_TASK_TIMER_H
+#ifndef OHOS_DISTRIBUTED_HARDWARE_VERSION_INFO_EVENT_H
+#define OHOS_DISTRIBUTED_HARDWARE_VERSION_INFO_EVENT_H
 
-#include <cstdint>
-#include <memory>
-#include <mutex>
-#include <thread>
+#include <string>
 
-#include "event_handler.h"
-
-#include "single_instance.h"
+#include "distributed_hardware_log.h"
+#include "event.h"
+#include "event_sender.h"
 
 namespace OHOS {
 namespace DistributedHardware {
-class MonitorTaskTimer {
-DECLARE_SINGLE_INSTANCE_BASE(MonitorTaskTimer);
+class VersionInfoEvent : public Event {
+    TYPEINDENT(VersionInfoEvent)
+
 public:
-    ~MonitorTaskTimer();
-    void StartTimer();
-    void StopTimer();
+    enum class EventType : uint32_t {
+        UNDEFINED = 0,
+        RECOVER = 1,
+    };
+
+public:
+    explicit VersionInfoEvent(EventSender &sender) : Event(sender)
+    {
+        action_ = EventType::UNDEFINED;
+    }
+
+    VersionInfoEvent(EventSender &sender, EventType action) : Event(sender), action_(action) {}
+
+    virtual ~VersionInfoEvent() {}
+
+    EventType GetAction() const
+    {
+        return action_;
+    }
 
 private:
-    MonitorTaskTimer();
-    void Execute(const std::shared_ptr<OHOS::AppExecFwk::EventHandler> eventHandler);
-
-private:
-    std::thread monitorTaskTimerThread_;
+    EventType action_;
 };
 } // namespace DistributedHardware
 } // namespace OHOS
