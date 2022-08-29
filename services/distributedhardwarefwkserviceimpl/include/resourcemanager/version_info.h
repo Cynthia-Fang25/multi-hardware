@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,31 +13,27 @@
  * limitations under the License.
  */
 
-#ifndef OHOS_DISTRIBUTED_HARDWARE_DHUTILS_TOOL_H
-#define OHOS_DISTRIBUTED_HARDWARE_DHUTILS_TOOL_H
+#ifndef OHOS_DISTRIBUTED_HARDWARE_VERSION_INFO_H
+#define OHOS_DISTRIBUTED_HARDWARE_VERSION_INFO_H
 
-#include <cstdint>
+#include "nlohmann/json.hpp"
 
-#include "device_type.h"
+#include "impl_utils.h"
 
 namespace OHOS {
 namespace DistributedHardware {
-/**
- * return current time in millisecond.
- */
-int64_t GetCurrentTime();
+struct VersionInfo {
+    std::string deviceId;
+    std::string dhVersion;
+    std::unordered_map<DHType, CompVersion> compVersions;
 
-/**
- * return a random string id.
- */
-std::string GetRandomID();
+    void FromJsonString(const std::string &jsonStr);
+    std::string ToJsonString() const;
+};
 
-std::string GetUUIDBySoftBus(const std::string &networkId);
-
-DeviceInfo GetLocalDeviceInfo();
-
-/* Convert uuid to deviceId by sha256 encode */
-std::string GetDeviceIdByUUID(const std::string &uuid);
+void ToJson(nlohmann::json &jsonObject, const VersionInfo &versionInfo);
+void FromJson(const nlohmann::json &jsonObject, CompVersion &compVer);
+void FromJson(const nlohmann::json &jsonObject, VersionInfo &versionInfo);
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif
