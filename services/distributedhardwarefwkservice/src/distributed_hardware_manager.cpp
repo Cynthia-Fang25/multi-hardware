@@ -79,6 +79,8 @@ int32_t DistributedHardwareManager::Release()
 
     ComponentLoader::GetInstance().UnInit();
 
+    VersionManager::GetInstance().UnInit();
+
     ComponentManager::GetInstance().UnInit();
 
     CapabilityInfoManager::GetInstance()->UnInit();
