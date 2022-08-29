@@ -36,7 +36,7 @@ config("module_private_config") {
 ohos_unittest("DistributedHardwareFwkKitTest") {
   module_out_path = module_out_path
 
-  sources = [ "src/distributed_hardware_fwk_kit_test.cpp", ]
+  sources = [ "src/distributed_hardware_fwk_kit_test.cpp" ]
 
   configs = [ ":module_private_config" ]
 
