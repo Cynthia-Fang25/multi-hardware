@@ -42,9 +42,7 @@ ohos_fuzztest("AccessmanagerFuzzTest") {
   ]
   sources = [ "accessmanager_fuzzer.cpp" ]
 
-  deps = [
-    "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice:distributedhardwarefwksvr",
-  ]
+  deps = [ "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice:distributedhardwarefwksvr" ]
 
   defines = [
     "HI_LOG_ENABLE",
@@ -52,9 +50,7 @@ ohos_fuzztest("AccessmanagerFuzzTest") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  external_deps = [
-    "init:libbegetutil",
-  ]
+  external_deps = [ "init:libbegetutil" ]
 }
 
 ###############################################################################
