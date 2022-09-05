@@ -20,6 +20,7 @@ module_out_path = "distributed_hardware_fwk/component_manager_test"
 config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
+    "//base/notification/eventhandler/interfaces/inner_api",
     "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
     "//foundation/distributeddatamgr/kv_store/interfaces/innerkits/distributeddata/include",
     "include",
