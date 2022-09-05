@@ -32,8 +32,8 @@ ohos_fuzztest("ResourcemanagerFuzzTest") {
     "${common_path}/utils/include",
     "${common_path}/log/include",
     "//commonlibrary/c_utils/base/include",
+    "//foundation/distributeddatamgr/kv_store/interfaces/innerkits/distributeddata/include",
     "//third_party/json/include",
-    "//commonlibrary/c_utils/base/include",
     "//utils/system/safwk/native/include",
   ]
   cflags = [
