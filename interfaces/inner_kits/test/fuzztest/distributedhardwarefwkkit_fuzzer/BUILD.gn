@@ -43,9 +43,7 @@ ohos_fuzztest("DistributedHardwareFwkKitFuzzTest") {
   ]
   sources = [ "distributedhardwarefwkkit_fuzzer.cpp" ]
 
-  deps = [
-    "${innerkits_path}:libdhfwk_sdk",
-  ]
+  deps = [ "${innerkits_path}:libdhfwk_sdk" ]
 
   defines = [
     "HI_LOG_ENABLE",
