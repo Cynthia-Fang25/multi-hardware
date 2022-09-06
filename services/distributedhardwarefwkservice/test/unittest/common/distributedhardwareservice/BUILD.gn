@@ -31,6 +31,7 @@ config("module_private_config") {
     "${services_path}/distributedhardwarefwkservice/include/utils",
     "//third_party/json/include",
     "//commonlibrary/c_utils/base/include",
+    "//base/notification/eventhandler/interfaces/inner_api",
   ]
 }
 

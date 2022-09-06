@@ -20,6 +20,7 @@ module_out_path = "distributed_hardware_fwk/access_manager_test"
 config("module_private_config") {
   include_dirs = [
     "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
+    "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
     "//base/notification/eventhandler/interfaces/inner_api",
     "//commonlibrary/c_utils/base/include",
     "//utils/system/safwk/native/include",
