@@ -348,6 +348,24 @@ void CapabilityInfoManager::HandleCapabilityAddChange(const std::vector<Distribu
         const auto keyString = capPtr->GetKey();
         DHLOGI("Add capability key: %s", capPtr->GetAnonymousKey().c_str());
         globalCapInfoMap_[keyString] = capPtr;
+        std::string uuid = DHContext::GetInstance().GetUUIDByDeviceId(capPtr->GetDeviceId());
+        if (uuid.empty()) {
+            DHLOGI("Find uuid failed and never enable");
+            continue;
+        }
+        std::string networkId = DHContext::GetInstance().GetNetworkIdByUUID(uuid);
+        if (networkId.empty()) {
+            DHLOGI("Find network failed and never enable, uuid: %s", GetAnonyString(uuid).c_str());
+            continue;
+        }
+        TaskParam taskParam = {
+            .networkId = networkId,
+            .uuid = uuid,
+            .dhId = capPtr->GetDHId(),
+            .dhType = capPtr->GetDHType()
+        };
+        auto task = TaskFactory::GetInstance().CreateTask(TaskType::ENABLE, taskParam, nullptr);
+        TaskExecutor::GetInstance().PushTask(task);
     }
 }
 
