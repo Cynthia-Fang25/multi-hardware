@@ -22,7 +22,6 @@
 #include <vector>
 
 #include "dm_device_info.h"
-#include "hisysevent.h"
 
 #include "anonymous_string.h"
 #include "constants.h"
@@ -77,7 +76,7 @@ void DistributedHardwareManagerFactory::CheckExitSAOrNot()
         HiSysEventWriteMsg(DHFWK_EXIT_END, OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
             "dhfwk sa exit end.");
 
-        exit(0);
+        _Exit(0);
     }
 
     DHLOGI("After uninit, DM report devices online, reinit");

@@ -18,7 +18,10 @@ import(
 
 ohos_shared_library("distributedhardwarefwksvr") {
   include_dirs = [
+    "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
+    "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
     "//commonlibrary/c_utils/base/include",
+    "//foundation/distributeddatamgr/kv_store/interfaces/innerkits/distributeddata/include",
     "//utils/system/safwk/native/include",
     "include",
     "include/accessmanager",
