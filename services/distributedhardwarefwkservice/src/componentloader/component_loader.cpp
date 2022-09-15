@@ -184,7 +184,7 @@ void ComponentLoader::GetAllHandler(std::map<DHType, CompConfig> &dhtypeMap)
         comHandler.hardwareHandler = GetHandler(itor->second.compHandlerLoc);
         comHandler.sinkHandler = GetHandler(itor->second.compSinkLoc);
         comHandler.sourceHandler = GetHandler(itor->second.compSourceLoc);
-        compHandlerMap_.insert(std::pair<DHType, CompHandler>(itor->second.type, comHandler));
+        compHandlerMap_[itor->second.type] = comHandler;
     }
 }
 
