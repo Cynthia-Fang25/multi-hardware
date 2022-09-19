@@ -56,8 +56,8 @@ void PublisherItem::RemoveListener(const sptr<IPublisherListener> &listener)
     }
 
     std::lock_guard<std::mutex> lock(mutex_);
-    auto it = std::find_if(listeners_.begin(), listeners_.end(), [] (const auto &lis) {
-        return (lis->AsObject().GetRefPtr() == listener->AsObject().GetRefPtr())
+    auto it = std::find_if(listeners_.begin(), listeners_.end(), [listener] (const auto &lis) {
+        return (lis->AsObject().GetRefPtr() == listener->AsObject().GetRefPtr());
     });
     if (it != listeners_.end()) {
         listeners_.erase(it);

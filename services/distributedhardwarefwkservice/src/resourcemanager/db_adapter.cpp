@@ -191,8 +191,9 @@ int32_t DBAdapter::GetDataByKeyPrefix(const std::string &keyPrefix, std::vector<
         return ERR_DH_FWK_RESOURCE_KV_STORAGE_OPERATION_FAIL;
     }
 
-    std::transform(allEntries.begin(), allEntries.end(), allEntries.begin(),
-        [&values] (cosnt auto &item){ values.emplace_back(item.value.ToString()); });
+    values.resize(allEntries.size());
+    std::transform(allEntries.begin(), allEntries.end(), values.begin(),
+        [] (const auto &item){ return item.value.ToString(); });
 
     return DH_FWK_SUCCESS;
 }
