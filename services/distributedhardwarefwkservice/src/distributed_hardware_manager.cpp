@@ -38,11 +38,6 @@ namespace DistributedHardware {
 #undef DH_LOG_TAG
 #define DH_LOG_TAG "DistributedHardwareManager"
 
-#ifdef __cplusplus
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
 
 IMPLEMENT_SINGLE_INSTANCE(DistributedHardwareManager);
 
