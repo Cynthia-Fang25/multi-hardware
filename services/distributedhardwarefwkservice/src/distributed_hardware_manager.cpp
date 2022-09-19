@@ -44,11 +44,6 @@ namespace DistributedHardware {
 #define EXTERNC
 #endif
 
-EXTERNC __attribute__((visibility("default"))) IDistributedHardwareManager *GetDistributedHardwareManagerInstance()
-{
-    return &DistributedHardwareManager::GetInstance();
-}
-
 IMPLEMENT_SINGLE_INSTANCE(DistributedHardwareManager);
 
 int32_t DistributedHardwareManager::Initialize()

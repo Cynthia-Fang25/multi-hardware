@@ -15,6 +15,8 @@
 
 #include "distributed_hardware_service.h"
 
+#include <algorithm>
+
 #include "if_system_ability_manager.h"
 #include "ipc_skeleton.h"
 #include "ipc_types.h"
@@ -114,9 +116,8 @@ int DistributedHardwareService::Dump(int32_t fd, const std::vector<std::u16strin
     DHLOGI("DistributedHardwareService  Dump.");
     
     std::vector<std::string> argsStr {};
-    for (auto item : args) {
-        argsStr.emplace_back(Str16ToStr8(item));
-    }
+    std::transform(args.begin(), args.end(), args.begin(),
+        [&argsStr] (const std::u16string &item){ argsStr.emplace_back(Str16ToStr8(item)); });
 
     std::string result("");
     int ret = AccessManager::GetInstance()->Dump(argsStr, result);

@@ -15,6 +15,8 @@
 
 #include "db_adapter.h"
 
+#include <algorithm>
+
 #include "anonymous_string.h"
 #include "capability_info.h"
 #include "capability_info_manager.h"
@@ -188,9 +190,10 @@ int32_t DBAdapter::GetDataByKeyPrefix(const std::string &keyPrefix, std::vector<
             GetAnonyString(keyPrefix).c_str());
         return ERR_DH_FWK_RESOURCE_KV_STORAGE_OPERATION_FAIL;
     }
-    for (const auto& item : allEntries) {
-        values.push_back(item.value.ToString());
-    }
+
+    std::transform(allEntries.begin(), allEntries.end(), allEntries.begin(),
+        [&values] (cosnt auto &item){ values.emplace_back(item.value.ToString()); });
+
     return DH_FWK_SUCCESS;
 }
 
