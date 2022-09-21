@@ -266,9 +266,8 @@ std::map<std::string, std::shared_ptr<CapabilityInfo>> CapabilityInfoManager::Qu
 {
     std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
     std::map<std::string, std::shared_ptr<CapabilityInfo>> capMap;
-    bool isMatch = true;
     for (auto &info : globalCapInfoMap_) {
-        isMatch = true;
+        bool isMatch = true;
         for (auto &filter : filters) {
             if (!IsCapabilityMatchFilter(info.second, filter.first, filter.second)) {
                 isMatch = false;
@@ -516,6 +515,18 @@ int32_t CapabilityInfoManager::GetDataByKey(const std::string &key, std::shared_
         return ERR_DH_FWK_RESOURCE_DB_ADAPTER_OPERATION_FAIL;
     }
     return CapabilityUtils::GetCapabilityByValue(data, capInfoPtr);
+}
+
+int32_t CapabilityInfoManager::GetDataByDHType(const DHType dhType, CapabilityInfoMap &capabilityMap)
+{
+    std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
+    for (const auto &capInfo : globalCapInfoMap_) {
+        if (capInfo.second->GetDHType() != dhType) {
+            continue;
+        }
+        capabilityMap[capInfo.first] = capInfo.second;
+    }
+    return DH_FWK_SUCCESS;
 }
 
 int32_t CapabilityInfoManager::GetDataByKeyPrefix(const std::string &keyPrefix, CapabilityInfoMap &capabilityMap)
