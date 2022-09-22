@@ -72,7 +72,9 @@ public:
     ~EventBus()
     {
         ULOGI("dtor EventBus");
-        eventbusHandler_->GetEventRunner()->Stop();
+        if (!eventbusHandler_) {
+            eventbusHandler_->GetEventRunner()->Stop();
+        }
         eventThread_.join();
         eventbusHandler_ = nullptr;
     }
