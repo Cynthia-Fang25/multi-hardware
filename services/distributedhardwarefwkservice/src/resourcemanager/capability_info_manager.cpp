@@ -149,15 +149,26 @@ int32_t CapabilityInfoManager::AddCapability(const std::vector<std::shared_ptr<C
     }
     std::vector<std::string> keys;
     std::vector<std::string> values;
+    std::string key;
+    std::string data;
     for (auto &resInfo : resInfos) {
         if (!resInfo) {
             continue;
         }
-        const std::string key = resInfo->GetKey();
+        key = resInfo->GetKey();
+        globalCapInfoMap_[key] = resInfo;
+        if (dbAdapterPtr_->GetDataByKey(key, data) == DH_FWK_SUCCESS && CapabilityUtils::IsCapInfoJsonEqual(data,
+            resInfo->ToJsonString())) {
+            DHLOGD("this record is exist, Key: %s", resInfo->GetAnonymousKey().c_str());
+            continue;
+        }
         DHLOGI("AddCapability, Key: %s", resInfo->GetAnonymousKey().c_str());
         keys.push_back(key);
         values.push_back(resInfo->ToJsonString());
-        globalCapInfoMap_[key] = resInfo;
+    }
+    if (keys.empty() || values.empty()) {
+        DHLOGD("Records are empty, No need add data to db!");
+        return DH_FWK_SUCCESS;
     }
     if (dbAdapterPtr_->PutDataBatch(keys, values) != DH_FWK_SUCCESS) {
         DHLOGE("Fail to storage batch to kv");
@@ -255,9 +266,8 @@ std::map<std::string, std::shared_ptr<CapabilityInfo>> CapabilityInfoManager::Qu
 {
     std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
     std::map<std::string, std::shared_ptr<CapabilityInfo>> capMap;
-    bool isMatch = true;
     for (auto &info : globalCapInfoMap_) {
-        isMatch = true;
+        bool isMatch = true;
         for (auto &filter : filters) {
             if (!IsCapabilityMatchFilter(info.second, filter.first, filter.second)) {
                 isMatch = false;
@@ -505,6 +515,18 @@ int32_t CapabilityInfoManager::GetDataByKey(const std::string &key, std::shared_
         return ERR_DH_FWK_RESOURCE_DB_ADAPTER_OPERATION_FAIL;
     }
     return CapabilityUtils::GetCapabilityByValue(data, capInfoPtr);
+}
+
+int32_t CapabilityInfoManager::GetDataByDHType(const DHType dhType, CapabilityInfoMap &capabilityMap)
+{
+    std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
+    for (const auto &capInfo : globalCapInfoMap_) {
+        if (capInfo.second->GetDHType() != dhType) {
+            continue;
+        }
+        capabilityMap[capInfo.first] = capInfo.second;
+    }
+    return DH_FWK_SUCCESS;
 }
 
 int32_t CapabilityInfoManager::GetDataByKeyPrefix(const std::string &keyPrefix, CapabilityInfoMap &capabilityMap)
