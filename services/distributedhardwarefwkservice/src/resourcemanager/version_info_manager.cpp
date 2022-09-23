@@ -305,10 +305,9 @@ void VersionInfoManager::HandleVersionDeleteChange(const std::vector<Distributed
         if (versionInfo.FromJsonString(value) != DH_FWK_SUCCESS) {
             continue;
         }
-        const std::string &deviceId = versionInfo.deviceId;
-        std::string uuid = DHContext::GetInstance().GetUUIDByDeviceId(deviceId);
+        std::string uuid = DHContext::GetInstance().GetUUIDByDeviceId(versionInfo.deviceId);
         if (uuid.empty()) {
-            DHLOGI("Find uuid failed, deviceId: %s", GetAnonyString(deviceId).c_str());
+            DHLOGI("Find uuid failed, deviceId: %s", GetAnonyString(versionInfo.deviceId).c_str());
             continue;
         }
         DHLOGI("Delete version ,uuid: %s", GetAnonyString(uuid).c_str());

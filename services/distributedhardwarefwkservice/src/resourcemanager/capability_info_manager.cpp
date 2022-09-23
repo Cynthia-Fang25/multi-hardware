@@ -437,6 +437,7 @@ bool CapabilityInfoManager::IsCapabilityMatchFilter(const std::shared_ptr<Capabi
     const CapabilityInfoFilter &filter, const std::string &value)
 {
     if (cap == nullptr) {
+        DHLOGE("cap is null");
         return false;
     }
 
