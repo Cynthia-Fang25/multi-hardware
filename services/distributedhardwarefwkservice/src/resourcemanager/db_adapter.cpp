@@ -125,6 +125,10 @@ int32_t DBAdapter::ReInit()
 void DBAdapter::SyncCompleted(const std::map<std::string, DistributedKv::Status> &results)
 {
     DHLOGI("DBAdapter SyncCompleted start");
+    if (results.size() == 0 || results.size() > MAX_DB_DATA_SIZE) {
+        DHLOGE("Results size is invalid!");
+        return;
+    }
     std::lock_guard<std::mutex> lock(dbAdapterMutex_);
     for (const auto &result : results) {
         std::string deviceId = result.first;
@@ -172,6 +176,10 @@ int32_t DBAdapter::GetDataByKey(const std::string &key, std::string &data)
 
 int32_t DBAdapter::GetDataByKeyPrefix(const std::string &keyPrefix, std::vector<std::string> &values)
 {
+    if (keyPrefix.empty() || keyPrefix.size() > MAX_STRING_LEN) {
+        DHLOGI("keyPrefix is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("Get data by key prefix: %s", GetAnonyString(keyPrefix).c_str());
     std::lock_guard<std::mutex> lock(dbAdapterMutex_);
     if (kvStoragePtr_ == nullptr) {
@@ -188,6 +196,10 @@ int32_t DBAdapter::GetDataByKeyPrefix(const std::string &keyPrefix, std::vector<
             GetAnonyString(keyPrefix).c_str());
         return ERR_DH_FWK_RESOURCE_KV_STORAGE_OPERATION_FAIL;
     }
+    if (allEntries.size() == 0 || allEntries.size() > MAX_DB_DATA_SIZE) {
+        DHLOGE("AllEntries size is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     for (const auto& item : allEntries) {
         values.push_back(item.value.ToString());
     }
@@ -196,6 +208,10 @@ int32_t DBAdapter::GetDataByKeyPrefix(const std::string &keyPrefix, std::vector<
 
 int32_t DBAdapter::PutData(const std::string &key, std::string &value)
 {
+    if (key.empty() || key.size() > MAX_STRING_LEN) {
+        DHLOGI("key is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     std::lock_guard<std::mutex> lock(dbAdapterMutex_);
     if (kvStoragePtr_ == nullptr) {
         DHLOGE("kvStoragePtr_ is null");
@@ -218,12 +234,8 @@ int32_t DBAdapter::PutDataBatch(const std::vector<std::string> &keys, const std:
         DHLOGE("kvStoragePtr_ is null");
         return ERR_DH_FWK_RESOURCE_KV_STORAGE_POINTER_NULL;
     }
-    if (keys.size() != values.size()) {
-        DHLOGE("Param invalid");
-        return ERR_DH_FWK_PARA_INVALID;
-    }
-    if (keys.empty() || values.empty()) {
-        DHLOGE("keys or values is empty!");
+    if (keys.size() != values.size() || keys.empty() || values.empty()) {
+        DHLOGE("Param is invalid!");
         return ERR_DH_FWK_PARA_INVALID;
     }
     std::vector<DistributedKv::Entry> entries;

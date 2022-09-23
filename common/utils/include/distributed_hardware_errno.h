@@ -61,6 +61,7 @@ namespace DistributedHardware {
     constexpr int32_t ERR_DH_FWK_RESOURCE_SYNC_VERSIONINFO_FAIL = -10411;
     constexpr int32_t ERR_DH_FWK_RESOURCE_DEVICE_ID_NOT_EXIST = -10412;
     constexpr int32_t ERR_DH_FWK_RESOURCE_UUID_NOT_FOUND = -10413;
+    constexpr int32_t ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID = -10415;
 
     /* DistributedHardwareManager errno, range: [-10500, -10599] */
     constexpr int32_t ERR_DH_FWK_HARDWARE_MANAGER_DEVICE_REPEAT_ONLINE = -10500;
@@ -69,7 +70,7 @@ namespace DistributedHardware {
 
     /* ComponentLoader errno, range: [-10600, -10699] */
     constexpr int32_t ERR_DH_FWK_LOADER_HANDLER_IS_NULL = -10600;
-    constexpr int32_t ERR_DH_FWK_LOADER_COMPONENT_PROFILE_IS_EMPTY = -10601;
+    constexpr int32_t ERR_DH_FWK_LOADER_CONFIG_JSON_INVALID = -10601;
     constexpr int32_t ERR_DH_FWK_LOADER_GET_LOCAL_VERSION_FAIL = -10602;
     constexpr int32_t ERR_DH_FWK_LOADER_DLCLOSE_FAIL = -10603;
 
@@ -85,6 +86,7 @@ namespace DistributedHardware {
     constexpr int32_t ERR_DH_FWK_SERVICE_WRITE_TOKEN_FAIL = -10805;
     constexpr int32_t ERR_DH_FWK_SERVICE_REMOTE_IS_NULL = -10806;
     constexpr int32_t ERR_DH_FWK_SERVICE_WRITE_INFO_FAIL = -10807;
+    constexpr int32_t ERR_DH_FWK_SERVICE_MSG_INVALID = -10809;
 
     /* AccessManager errno, range: [-10900, -10999] */
     constexpr int32_t ERR_DH_FWK_ACCESS_INIT_DM_FAILED = -10900;
@@ -99,6 +101,7 @@ namespace DistributedHardware {
 
     /* DHFWK Publisher errno, range: [-11100, -11199] */
     constexpr int32_t ERR_DH_FWK_PUBLISH_MSG_FAILED = -11100;
+    constexpr uint32_t ERR_DH_FWK_PUBLISH_LISTENER_OVER_SIZE = -11101;
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif // OHOS_DISTRIBUTED_HARDWARE_ERRNO
