@@ -90,9 +90,6 @@ void TaskBoard::DumpAllTasks(std::vector<TaskDump> &taskInfos)
 {
     std::lock_guard<std::mutex> lock(tasksMtx_);
     for (auto t : tasks_) {
-        if (t.second == nullptr) {
-            continue;
-        }
         TaskDump taskInfo = {
             .id = t.second->GetId(),
             .taskType = t.second->GetTaskType(),

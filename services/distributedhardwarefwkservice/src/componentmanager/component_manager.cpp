@@ -548,9 +548,6 @@ void ComponentManager::RecoverDistributedHardware(DHType dhType)
     CapabilityInfoMap capabilityMap;
     CapabilityInfoManager::GetInstance()->GetDataByDHType(dhType, capabilityMap);
     for (const auto &capInfo : capabilityMap) {
-        if (capInfo.second == nullptr) {
-            continue;
-        }
         std::string uuid = DHContext::GetInstance().GetUUIDByDeviceId(capInfo.second->GetDeviceId());
         if (uuid.empty()) {
             DHLOGE("Can not find uuid by capability deviceId: %s",
