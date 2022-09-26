@@ -41,6 +41,10 @@ int32_t DistributedHardwareProxy::RegisterPublisherListener(const DHTopic topic,
         DHLOGE("remote service is null");
         return ERR_DH_FWK_SERVICE_REMOTE_IS_NULL;
     }
+    if (DHTopic::TOPIC_MIN > topic || topic > DHTopic::TOPIC_MAX) {
+        DHLOGE("Topic is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
 
     MessageParcel data;
     MessageParcel reply;
@@ -81,6 +85,10 @@ int32_t DistributedHardwareProxy::UnregisterPublisherListener(const DHTopic topi
         DHLOGE("remote service is null");
         return ERR_DH_FWK_SERVICE_REMOTE_IS_NULL;
     }
+    if (DHTopic::TOPIC_MIN > topic || topic > DHTopic::TOPIC_MAX) {
+        DHLOGE("Topic is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
 
     MessageParcel data;
     MessageParcel reply;
@@ -120,6 +128,14 @@ int32_t DistributedHardwareProxy::PublishMessage(const DHTopic topic, const std:
         DHLOGE("remote service is null");
         return ERR_DH_FWK_SERVICE_REMOTE_IS_NULL;
     }
+    if (DHTopic::TOPIC_MIN > topic || topic > DHTopic::TOPIC_MAX) {
+        DHLOGE("Topic is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
+    if (msg.empty() || msg.size() > MAX_STRING_LEN) {
+        DHLOGE("Msg is invalid");
+        return ERR_DH_FWK_SERVICE_MSG_INVALID;
+    }
 
     MessageParcel data;
     MessageParcel reply;
@@ -150,22 +166,6 @@ int32_t DistributedHardwareProxy::PublishMessage(const DHTopic topic, const std:
     }
 
     return ret;
-}
-
-void from_json(const nlohmann::json &jsonObj, std::unordered_map<DHType, std::string> &versionMap)
-{
-    for (const auto &item : jsonObj.value(DH_COMPONENT_VERSIONS, nlohmann::json {})) {
-        DHType dhType = (DH_TYPE_SET.find(item.value(DH_COMPONENT_TYPE, DHType::UNKNOWN)) != DH_TYPE_SET.end()) ?
-            item.value(DH_COMPONENT_TYPE, DHType::UNKNOWN) :
-            DHType::UNKNOWN;
-        std::string sinkVersion = item.value(DH_COMPONENT_SINK_VER, DH_COMPONENT_DEFAULT_VERSION);
-        versionMap.emplace(std::pair<DHType, std::string>(dhType, sinkVersion));
-    }
-}
-
-std::unordered_map<DHType, std::string> DistributedHardwareProxy::FromJson(const std::string &json) const
-{
-    return nlohmann::json::parse(json).get<std::unordered_map<DHType, std::string>>();
 }
 } // namespace DistributedHardware
 } // namespace OHOS
