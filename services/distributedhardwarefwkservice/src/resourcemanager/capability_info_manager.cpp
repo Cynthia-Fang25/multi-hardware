@@ -204,6 +204,10 @@ int32_t CapabilityInfoManager::AddCapabilityInMem(const std::vector<std::shared_
 
 int32_t CapabilityInfoManager::RemoveCapabilityInfoInDB(const std::string &deviceId)
 {
+    if (deviceId.size() == 0 || deviceId.size() > MAX_ID_LEN) {
+        DHLOGE("DeviceId is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("Remove capability device info, deviceId: %s", GetAnonyString(deviceId).c_str());
     std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
     if (dbAdapterPtr_ == nullptr) {
@@ -319,17 +323,17 @@ void CapabilityInfoManager::OnChange(const DistributedKv::ChangeNotification &ch
 {
     DHLOGI("CapabilityInfoManager: DB data OnChange");
     if (!changeNotification.GetInsertEntries().empty() ||
-        changeNotification.GetInsertEntries().size() > MAX_DB_DATA_SIZE) {
+        changeNotification.GetInsertEntries().size() <= MAX_DB_DATA_SIZE) {
         DHLOGI("Handle capability data add change");
         HandleCapabilityAddChange(changeNotification.GetInsertEntries());
     }
     if (!changeNotification.GetUpdateEntries().empty() ||
-        changeNotification.GetUpdateEntries().size() > MAX_DB_DATA_SIZE) {
+        changeNotification.GetUpdateEntries().size() <= MAX_DB_DATA_SIZE) {
         DHLOGI("Handle capability data update change");
         HandleCapabilityUpdateChange(changeNotification.GetUpdateEntries());
     }
     if (!changeNotification.GetDeleteEntries().empty() ||
-        changeNotification.GetDeleteEntries().size() > MAX_DB_DATA_SIZE) {
+        changeNotification.GetDeleteEntries().size() <= MAX_DB_DATA_SIZE) {
         DHLOGI("Handle capability data delete change");
         HandleCapabilityDeleteChange(changeNotification.GetDeleteEntries());
     }

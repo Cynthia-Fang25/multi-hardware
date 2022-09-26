@@ -176,10 +176,6 @@ int32_t DBAdapter::GetDataByKey(const std::string &key, std::string &data)
 
 int32_t DBAdapter::GetDataByKeyPrefix(const std::string &keyPrefix, std::vector<std::string> &values)
 {
-    if (keyPrefix.empty() || keyPrefix.size() > MAX_STRING_LEN) {
-        DHLOGI("keyPrefix is invalid!");
-        return ERR_DH_FWK_PARA_INVALID;
-    }
     DHLOGI("Get data by key prefix: %s", GetAnonyString(keyPrefix).c_str());
     std::lock_guard<std::mutex> lock(dbAdapterMutex_);
     if (kvStoragePtr_ == nullptr) {
@@ -206,10 +202,10 @@ int32_t DBAdapter::GetDataByKeyPrefix(const std::string &keyPrefix, std::vector<
     return DH_FWK_SUCCESS;
 }
 
-int32_t DBAdapter::PutData(const std::string &key, std::string &value)
+int32_t DBAdapter::PutData(const std::string &key, const std::string &value)
 {
-    if (key.empty() || key.size() > MAX_STRING_LEN) {
-        DHLOGI("key is invalid!");
+    if (key.empty() || key.size() > MAX_STRING_LEN || value.empty() || value.size() > MAX_STRING_LEN) {
+        DHLOGI("Param is invalid!");
         return ERR_DH_FWK_PARA_INVALID;
     }
     std::lock_guard<std::mutex> lock(dbAdapterMutex_);

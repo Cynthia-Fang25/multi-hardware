@@ -256,17 +256,17 @@ void VersionInfoManager::OnChange(const DistributedKv::ChangeNotification &chang
 {
     DHLOGI("DB data OnChange");
     if (!changeNotification.GetInsertEntries().empty() ||
-        changeNotification.GetInsertEntries().size() > MAX_DB_DATA_SIZE) {
+        changeNotification.GetInsertEntries().size() <= MAX_DB_DATA_SIZE) {
         DHLOGI("Handle version data add change");
         HandleVersionAddChange(changeNotification.GetInsertEntries());
     }
     if (!changeNotification.GetUpdateEntries().empty() ||
-        changeNotification.GetUpdateEntries().size() > MAX_DB_DATA_SIZE) {
+        changeNotification.GetUpdateEntries().size() <= MAX_DB_DATA_SIZE) {
         DHLOGI("Handle version data update change");
         HandleVersionUpdateChange(changeNotification.GetUpdateEntries());
     }
     if (!changeNotification.GetDeleteEntries().empty() ||
-        changeNotification.GetDeleteEntries().size() > MAX_DB_DATA_SIZE) {
+        changeNotification.GetDeleteEntries().size() <= MAX_DB_DATA_SIZE) {
         DHLOGI("Handle version data delete change");
         HandleVersionDeleteChange(changeNotification.GetDeleteEntries());
     }

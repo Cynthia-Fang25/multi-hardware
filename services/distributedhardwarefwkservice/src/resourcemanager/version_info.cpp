@@ -67,7 +67,7 @@ void FromJson(const nlohmann::json &jsonObject, CompVersion &compVer)
         compVer.name = jsonObject.at(NAME).get<std::string>();
     }
     if (jsonObject.find(TYPE) != jsonObject.end() && jsonObject[TYPE].is_number_unsigned() &&
-        jsonObject[TYPE] < DHType::MAX_DH) {
+        jsonObject[TYPE] <= DHType::MAX_DH) {
         compVer.dhType = jsonObject.at(TYPE).get<DHType>();
     }
     if (jsonObject.find(HANDLER) != jsonObject.end() && jsonObject[HANDLER].is_string()) {

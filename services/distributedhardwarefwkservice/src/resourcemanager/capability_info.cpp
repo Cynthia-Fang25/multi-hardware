@@ -176,7 +176,7 @@ void FromJson(const nlohmann::json &jsonObject, CapabilityInfo &capability)
         capability.SetDeviceType(jsonObject.at(DEV_TYPE).get<uint16_t>());
     }
     if (jsonObject.find(DH_TYPE) != jsonObject.end() && jsonObject[DEV_TYPE].is_number_unsigned() &&
-        jsonObject[DEV_TYPE] <= UINT32_MAX) {
+        jsonObject[DEV_TYPE] <= DHType::MAX_DH) {
         capability.SetDHType(jsonObject.at(DH_TYPE).get<DHType>());
     }
     if (jsonObject.find(DH_ATTRS) != jsonObject.end() && jsonObject[DH_ATTRS].is_string()) {

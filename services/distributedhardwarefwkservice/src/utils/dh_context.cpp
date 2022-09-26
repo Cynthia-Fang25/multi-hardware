@@ -52,7 +52,7 @@ const DeviceInfo& DHContext::GetDeviceInfo()
 void DHContext::AddOnlineDevice(const std::string &uuid, const std::string &networkId)
 {
     std::unique_lock<std::shared_mutex> lock(onlineDevMutex_);
-    if (onlineDeviceMap_.size() >= MAX_ONLINE_DEVICE_SIZE || deviceIdUUIDMap_.size() >= MAX_ONLINE_DEVICE_SIZE) {
+    if (onlineDeviceMap_.size() > MAX_ONLINE_DEVICE_SIZE || deviceIdUUIDMap_.size() > MAX_ONLINE_DEVICE_SIZE) {
         DHLOGE("OnlineDeviceMap or deviceIdUUIDMap is over size!");
         return;
     }
