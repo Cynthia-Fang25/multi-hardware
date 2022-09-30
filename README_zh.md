@@ -23,13 +23,12 @@
 ## **目录**
 
 ```
-/foundation/distributedhardware/distributed_hardware_fwk
+/foundation/distributedhardware/distributedhardware_distributed_hardware_fwk
 ├── common                                  # 分布式硬件管理框架为各个部件提供的公共接口类
 ├── sa_profile                              # 分布式硬件管理框架的SA配置信息
 ├── services                                # 分布式硬件管理框架的SA具体实现
 │   └── distributedhardwarefwkservice       # 分布式硬件管理框架的服务层
-│       └── accessmanager                   # 硬件接入管理
-│   └── distributedhardwarefwkserviceimpl   # 分布式硬件管理框架的服务实现层
+│       ├── accessmanager                   # 硬件接入管理
 │       ├── resourcemanager                 # 硬件资源管理
 │       ├── componentmanager                # 分布式硬件部件管理
 │       ├── localhardwaremanager            # 本地硬件信息管理
@@ -65,20 +64,20 @@
 
 以分布式相机为例，某设备下线后，分布式硬件管理框架去使能下线设备的相机硬件，本地移除分布式相机驱动并通知到相机框架，此时下线设备的分布式相机不可用。
 
-## **涉及仓**
+## **相关仓**
 ****
 **分布式硬件子系统：**  
 
 设备管理
-[device_manager](https://gitee.com/openharmony/device_manager)
+[distributedhardware_device_manager](https://gitee.com/openharmony/distributedhardware_device_manager)
 
 **分步式硬件管理框架
-[distributed_hardware_fwk](https://gitee.com/openharmony/distributed_hardware_fwk)**
+[distributedhardware_distributed_hardware_fwk](https://gitee.com/openharmony/distributedhardware_distributed_hardware_fwk)**
 
 分布式相机
-[distributed_camera](https://gitee.com/openharmony/distributed_camera)
+[distributedhardware_distributed_camera](https://gitee.com/openharmony/distributedhardware_distributed_camera)
 
 分布式屏幕
-[distributed_screen](https://gitee.com/openharmony/distributed_screen)
+[distributedhardware_distributed_screen](https://gitee.com/openharmony/distributedhardware_distributed_screen)
 
 

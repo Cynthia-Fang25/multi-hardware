@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,6 +20,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <string>
+#include <unistd.h>
 
 #include "access_manager.h"
 #include "distributed_hardware_errno.h"
@@ -27,7 +28,10 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-constexpr uint16_t TEST_DEV_TYPE_PAD = 0x11;
+namespace {
+    constexpr uint16_t TEST_DEV_TYPE_PAD = 0x11;
+    constexpr uint32_t SLEEP_TIME_US = 10 * 1000;
+}
 
 void AccessManagerFuzzTest(const uint8_t* data, size_t size)
 {
@@ -40,6 +44,7 @@ void AccessManagerFuzzTest(const uint8_t* data, size_t size)
 
     DistributedHardwareManagerFactory::GetInstance().SendOnLineEvent(
         networkId, uuid, TEST_DEV_TYPE_PAD);
+    usleep(SLEEP_TIME_US);
 }
 }
 }

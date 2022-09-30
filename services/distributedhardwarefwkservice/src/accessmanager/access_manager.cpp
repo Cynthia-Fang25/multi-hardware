@@ -15,11 +15,15 @@
 
 #include "access_manager.h"
 
+#include <new>
 #include <unistd.h>
 #include <vector>
 
+#include "device_manager.h"
+
 #include "anonymous_string.h"
 #include "constants.h"
+#include "dh_context.h"
 #include "dh_utils_tool.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
@@ -116,16 +120,8 @@ void AccessManager::OnRemoteDied()
 
 void AccessManager::OnDeviceOnline(const DmDeviceInfo &deviceInfo)
 {
-    std::lock_guard<std::mutex> lock(accessMutex_);
-    DHLOGI("start, networkId = %s, deviceName = %s, deviceTypeId = %d", GetAnonyString(deviceInfo.deviceId).c_str(),
-        GetAnonyString(deviceInfo.deviceName).c_str(), deviceInfo.deviceTypeId);
-
-    auto networkId = std::string(deviceInfo.deviceId); // deviceId of DM actually is networkId
-    auto uuid = GetUUIDBySoftBus(networkId);
-    auto ret =
-        DistributedHardwareManagerFactory::GetInstance().SendOnLineEvent(networkId, uuid, deviceInfo.deviceTypeId);
-    DHLOGI("online result = %d, networkId = %s, uuid = %s", ret, GetAnonyString(networkId).c_str(),
-        GetAnonyString(uuid).c_str());
+    (void)deviceInfo;
+    return;
 }
 
 void AccessManager::OnDeviceOffline(const DmDeviceInfo &deviceInfo)
@@ -135,7 +131,20 @@ void AccessManager::OnDeviceOffline(const DmDeviceInfo &deviceInfo)
         GetAnonyString(deviceInfo.deviceName).c_str(), deviceInfo.deviceTypeId);
 
     auto networkId = std::string(deviceInfo.deviceId); // deviceId of DM actually is networkId
+    if (networkId.size() == 0 || networkId.size() > MAX_ID_LEN) {
+        DHLOGE("NetworkId is invalid!");
+        return;
+    }
     auto uuid = GetUUIDBySoftBus(networkId);
+
+    // when other device restart, the device receives online and offline messages in sequence
+    // uuid is empty call by GetUUIDBySoftBus function. So, get uuid by memory cache when other device restart
+    uuid = uuid.empty() ? DHContext::GetInstance().GetUUIDByNetworkId(networkId) : uuid;
+    if (uuid.size() == 0 || uuid.size() > MAX_ID_LEN) {
+        DHLOGE("Uuid is invalid!");
+        return;
+    }
+
     auto ret =
         DistributedHardwareManagerFactory::GetInstance().SendOffLineEvent(networkId, uuid, deviceInfo.deviceTypeId);
     DHLOGI("offline result = %d, networkId = %s, uuid = %s", ret, GetAnonyString(networkId).c_str(),
@@ -144,8 +153,24 @@ void AccessManager::OnDeviceOffline(const DmDeviceInfo &deviceInfo)
 
 void AccessManager::OnDeviceReady(const DmDeviceInfo &deviceInfo)
 {
-    (void)deviceInfo;
-    return;
+    std::lock_guard<std::mutex> lock(accessMutex_);
+    DHLOGI("start, networkId = %s, deviceName = %s, deviceTypeId = %d", GetAnonyString(deviceInfo.deviceId).c_str(),
+        GetAnonyString(deviceInfo.deviceName).c_str(), deviceInfo.deviceTypeId);
+
+    auto networkId = std::string(deviceInfo.deviceId);
+    if (networkId.size() == 0 || networkId.size() > MAX_ID_LEN) {
+        DHLOGE("NetworkId is invalid!");
+        return;
+    }
+    auto uuid = GetUUIDBySoftBus(networkId);
+    if (uuid.size() == 0 || uuid.size() > MAX_ID_LEN) {
+        DHLOGE("Uuid is invalid!");
+        return;
+    }
+    auto ret =
+        DistributedHardwareManagerFactory::GetInstance().SendOnLineEvent(networkId, uuid, deviceInfo.deviceTypeId);
+    DHLOGI("online result = %d, networkId = %s, uuid = %s", ret, GetAnonyString(networkId).c_str(),
+        GetAnonyString(uuid).c_str());
 }
 
 void AccessManager::OnDeviceChanged(const DmDeviceInfo &deviceInfo)
@@ -158,6 +183,10 @@ void AccessManager::SendTrustedDeviceOnline()
 {
     std::vector<DmDeviceInfo> deviceList;
     DeviceManager::GetInstance().GetTrustedDeviceList(DH_FWK_PKG_NAME, "", deviceList);
+    if (deviceList.size() == 0 || deviceList.size() > MAX_ONLINE_DEVICE_SIZE) {
+        DHLOGE("DeviceList size is invalid!");
+        return;
+    }
     for (const auto &deviceInfo : deviceList) {
         const auto networkId = std::string(deviceInfo.deviceId);
         const auto uuid = GetUUIDBySoftBus(networkId);

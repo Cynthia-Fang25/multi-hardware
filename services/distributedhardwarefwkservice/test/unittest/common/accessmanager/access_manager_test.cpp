@@ -104,12 +104,12 @@ HWTEST_F(AccessManagerTest, SendOnLineEvent_002, TestSize.Level1)
 
     auto ret =
         DistributedHardwareManagerFactory::GetInstance().SendOnLineEvent("", TEST_DEVICES[0].second, TEST_DEV_TYPE_PAD);
-    ASSERT_EQ(ERR_DH_FWK_REMOTE_NETWORK_ID_IS_EMPTY, ret);
+    ASSERT_EQ(ERR_DH_FWK_PARA_INVALID, ret);
     ASSERT_TRUE(DistributedHardwareManagerFactory::GetInstance().IsInit());
 
     ret =
         DistributedHardwareManagerFactory::GetInstance().SendOnLineEvent(TEST_DEVICES[0].first, "", TEST_DEV_TYPE_PAD);
-    ASSERT_EQ(ERR_DH_FWK_REMOTE_DEVICE_ID_IS_EMPTY, ret);
+    ASSERT_EQ(ERR_DH_FWK_PARA_INVALID, ret);
     ASSERT_TRUE(DistributedHardwareManagerFactory::GetInstance().IsInit());
 }
 
@@ -150,12 +150,12 @@ HWTEST_F(AccessManagerTest, SendOffLineEvent_002, TestSize.Level1)
 
     auto ret = DistributedHardwareManagerFactory::GetInstance().SendOffLineEvent("", TEST_DEVICES[0].second,
         TEST_DEV_TYPE_PAD);
-    ASSERT_EQ(ERR_DH_FWK_REMOTE_NETWORK_ID_IS_EMPTY, ret);
+    ASSERT_EQ(ERR_DH_FWK_PARA_INVALID, ret);
     ASSERT_TRUE(DistributedHardwareManagerFactory::GetInstance().IsInit());
 
     ret =
         DistributedHardwareManagerFactory::GetInstance().SendOffLineEvent(TEST_DEVICES[0].first, "", TEST_DEV_TYPE_PAD);
-    ASSERT_EQ(ERR_DH_FWK_REMOTE_DEVICE_ID_IS_EMPTY, ret);
+    ASSERT_EQ(ERR_DH_FWK_PARA_INVALID, ret);
     ASSERT_TRUE(DistributedHardwareManagerFactory::GetInstance().IsInit());
 }
 
@@ -224,6 +224,17 @@ HWTEST_F(AccessManagerTest, SendOffLineEvent_003, TestSize.Level0)
         std::thread(handler, Status::DEVICE_OFFLINE, TEST_DEVICES[2].first, TEST_DEVICES[2].second, DH_FWK_SUCCESS));
 
     for_each(threadVec.begin(), threadVec.end(), [](std::thread &t) { t.join(); });
+}
+
+/**
+ * @tc.name: AccessManagerInit
+ * @tc.desc: Verify the  Init function
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSJM
+ */
+HWTEST_F(AccessManagerTest, AccessManagerInit, TestSize.Level0)
+{
+    EXPECT_EQ(DH_FWK_SUCCESS, AccessManager::GetInstance()->Init());
 }
 } // namespace DistributedHardware
 } // namespace OHOS
