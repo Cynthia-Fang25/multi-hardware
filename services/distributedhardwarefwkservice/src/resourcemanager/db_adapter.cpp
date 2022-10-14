@@ -157,7 +157,7 @@ void DBAdapter::SyncCompleted(const std::map<std::string, DistributedKv::Status>
 
 int32_t DBAdapter::GetDataByKey(const std::string &key, std::string &data)
 {
-    DHLOGI("Get data by key: %s", GetAnonyString(key).c_str());
+    DHLOGD("Get data by key: %s", GetAnonyString(key).c_str());
     std::lock_guard<std::mutex> lock(dbAdapterMutex_);
     if (kvStoragePtr_ == nullptr) {
         DHLOGE("kvStoragePtr_ is null");
