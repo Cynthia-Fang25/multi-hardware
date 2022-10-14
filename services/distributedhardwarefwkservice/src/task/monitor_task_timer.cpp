@@ -114,7 +114,7 @@ void MonitorTaskTimer::StopTimer()
 
 void MonitorTaskTimer::Execute(const std::shared_ptr<OHOS::AppExecFwk::EventHandler> eventHandler)
 {
-    DHLOGI("start");
+    DHLOGD("start");
     if (eventHandler == nullptr) {
         DHLOGE("eventHandler is nullptr!");
         return;
@@ -130,7 +130,7 @@ void MonitorTaskTimer::Execute(const std::shared_ptr<OHOS::AppExecFwk::EventHand
             continue;
         }
         if (CapabilityInfoManager::GetInstance()->GetDataByKey(capabilityKey, capInfoPtr) != DH_FWK_SUCCESS) {
-            DHLOGI("CapabilityInfoManager can not find this key in DB, key: %s, networkId: %s, uuid: %s, dhId: %s",
+            DHLOGD("CapabilityInfoManager can not find this key in DB, key: %s, networkId: %s, uuid: %s, dhId: %s",
                 GetAnonyString(capabilityKey).c_str(), GetAnonyString(taskParam.networkId).c_str(),
                 GetAnonyString(taskParam.uuid).c_str(), GetAnonyString(taskParam.dhId).c_str());
             auto task = TaskFactory::GetInstance().CreateTask(TaskType::DISABLE, taskParam, nullptr);

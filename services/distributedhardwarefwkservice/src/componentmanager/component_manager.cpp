@@ -134,7 +134,7 @@ int32_t ComponentManager::UnInit()
         DHLOGE("StopSource failed, but want to continue");
     }
     if (!WaitForResult(Action::STOP_SINK, sinkResult)) {
-        DHLOGE("StopSource failed, but want to continue");
+        DHLOGE("StopSink failed, but want to continue");
     }
 
     compSource_.clear();
