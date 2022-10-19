@@ -15,7 +15,7 @@ import("//build/test.gni")
 import(
     "//foundation/distributedhardware/distributed_hardware_fwk/distributedhardwarefwk.gni")
 
-module_out_path = "distributed_hardware_fwk/access_manager_test"
+module_out_path = "distributed_hardware_fwk/distributed_hardware_manager_factory_test"
 
 config("module_private_config") {
   include_dirs = [
@@ -37,7 +37,7 @@ config("module_private_config") {
   ]
 }
 
-ohos_unittest("AccessManagerTest") {
+ohos_unittest("DistributedHardwareManagerFactoryTest") {
   module_out_path = module_out_path
 
   sources = [
@@ -45,7 +45,7 @@ ohos_unittest("AccessManagerTest") {
     "${services_path}/distributedhardwarefwkservice/src/distributed_hardware_manager_factory.cpp",
   ]
 
-  sources += [ "access_manager_test.cpp" ]
+  sources += [ "distributed_hardware_manager_factory_test.cpp" ]
 
   configs = [ ":module_private_config" ]
 
@@ -64,8 +64,8 @@ ohos_unittest("AccessManagerTest") {
   external_deps = [ "init:libbegetutil" ]
 }
 
-group("access_manager_test") {
+group("distributed_hardware_manager_factory_test") {
   testonly = true
 
-  deps = [ ":AccessManagerTest" ]
+  deps = [ ":DistributedHardwareManagerFactoryTest" ]
 }
