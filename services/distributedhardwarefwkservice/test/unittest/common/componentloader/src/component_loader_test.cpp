@@ -160,5 +160,32 @@ HWTEST_F(ComponentLoaderTest, component_loader_test_008, TestSize.Level0)
     auto vec = ComponentLoader::GetInstance().GetAllCompTypes();
     EXPECT_EQ(vec.size(), ComponentLoader::GetInstance().compHandlerMap_.size());
 }
+
+
+/**
+ * @tc.name: component_loader_test_009
+ * @tc.desc: Verify the GetHandler function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSK3
+ */
+HWTEST_F(ComponentLoaderTest, component_loader_test_009, TestSize.Level0)
+{
+    std::string soNameEmpty = "";
+    auto handler = ComponentLoader::GetInstance().GetHandler();
+    EXPECT_EQ(handler, nullptr);
+}
+
+/**
+ * @tc.name: component_loader_test_010
+ * @tc.desc: Verify the GetHandler function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSK3
+ */
+HWTEST_F(ComponentLoaderTest, component_loader_test_010, TestSize.Level0)
+{
+    std::string soName = "NON_EXISTENT_SO";
+    auto handler = ComponentLoader::GetInstance().GetHandler();
+    EXPECT_EQ(handler, nullptr);
+}
 } // namespace DistributedHardware
 } // namespace OHOS

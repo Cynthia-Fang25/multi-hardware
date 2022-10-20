@@ -225,5 +225,41 @@ HWTEST_F(DistributedHardwareManagerFactoryTest, SendOffLineEvent_003, TestSize.L
 
     for_each(threadVec.begin(), threadVec.end(), [](std::thread &t) { t.join(); });
 }
+
+HWTEST_F(DistributedHardwareManagerFactoryTest, SendOffLineEvent_003, TestSize.Level0)
+{
+    std::string networkIdEmpty = "";
+    std::string uuid = "uu1234567890";
+    auto ret = DistributedHardwareManagerFactory::GetInstance().SendOnLineEvent(networkId, uuid, TEST_DEV_TYPE_PAD);
+    ASSERT_EQ(ERR_DH_FWK_PARA_INVALID, ret);
+
+}
+
+HWTEST_F(DistributedHardwareManagerFactoryTest, SendOffLineEvent_004, TestSize.Level0)
+{
+    std::string networkId = "nt12345678790";
+    std::string uuidEmpty = "";
+    auto ret = DistributedHardwareManagerFactory::GetInstance().SendOnLineEvent(networkId, uuid, TEST_DEV_TYPE_PAD);
+    ASSERT_EQ(ERR_DH_FWK_PARA_INVALID, ret);
+
+}
+
+HWTEST_F(DistributedHardwareManagerFactoryTest, SendOffLineEvent_004, TestSize.Level0)
+{
+    std::string networkIdEmpty = "";
+    std::string uuid = "uu1234567890";
+    auto ret = DistributedHardwareManagerFactory::GetInstance().SendOffLineEvent(networkId, uuid, TEST_DEV_TYPE_PAD);
+    ASSERT_EQ(ERR_DH_FWK_PARA_INVALID, ret);
+
+}
+
+HWTEST_F(DistributedHardwareManagerFactoryTest, SendOffLineEvent_005, TestSize.Level0)
+{
+    std::string networkId = "nt12345678790";
+    std::string uuidEmpty = "";
+    auto ret = DistributedHardwareManagerFactory::GetInstance().SendOffLineEvent(networkId, uuid, TEST_DEV_TYPE_PAD);
+    ASSERT_EQ(ERR_DH_FWK_PARA_INVALID, ret);
+
+}
 } // namespace DistributedHardware
 } // namespace OHOS
