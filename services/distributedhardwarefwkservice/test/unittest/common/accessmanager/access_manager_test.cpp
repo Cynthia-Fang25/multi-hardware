@@ -28,18 +28,6 @@ using namespace testing::ext;
 namespace OHOS {
 namespace DistributedHardware {
 namespace {
-enum class Status : uint32_t {
-    DEVICE_ONLINE = 0,
-    DEVICE_OFFLINE = 1,
-};
-
-/* save networkId and uuid */
-// const std::vector<std::pair<std::string, std::string>> TEST_DEVICES = {
-//     { "11111111111111111111111111111111", "22222222222222222222222222222222" },
-//     { "33333333333333333333333333333333", "44444444444444444444444444444444" },
-//     { "55555555555555555555555555555555", "66666666666666666666666666666666" },
-//     { "77777777777777777777777777777777", "88888888888888888888888888888888" },
-// };
 }
 
 class AccessManagerTest : public testing::Test {
@@ -48,7 +36,6 @@ public:
     static void TearDownTestCase(void);
     void SetUp();
     void TearDown();
-    std::mutex testAccessMutex_;
 };
 
 void AccessManagerTest::SetUp()
