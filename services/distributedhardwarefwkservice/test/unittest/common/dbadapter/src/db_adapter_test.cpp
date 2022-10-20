@@ -126,6 +126,22 @@ HWTEST_F(DbAdapterTest, db_adapter_test_000, TestSize.Level0)
 }
 
 /**
+ * @tc.name: db_adapter_test_011
+ * @tc.desc: Verify the PutDataBatch function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSCV
+ */
+HWTEST_F(DbAdapterTest, db_adapter_test_011, TestSize.Level0)
+{
+    std::string key = TEST_DEV_ID_0;
+    std::string value = TEST_DH_ATTR_0;
+
+    EXPECT_EQ(g_dbAdapterPtr->PutData(key, value), DH_FWK_SUCCESS);
+
+    g_dbAdapterPtr->RemoveDataByKey(key);
+}
+
+/**
  * @tc.name: db_adapter_test_001
  * @tc.desc: Verify the PutDataBatch function.
  * @tc.type: FUNC
@@ -145,6 +161,7 @@ HWTEST_F(DbAdapterTest, db_adapter_test_001, TestSize.Level0)
         values.push_back(resInfo->ToJsonString());
     }
     EXPECT_EQ(g_dbAdapterPtr->PutDataBatch(keys, values), DH_FWK_SUCCESS);
+
     for (auto &resInfo : resInfos) {
         g_dbAdapterPtr->RemoveDataByKey(resInfo->GetKey());
     }
@@ -234,6 +251,20 @@ HWTEST_F(DbAdapterTest, db_adapter_test_007, TestSize.Level0)
     std::vector<std::string> values { TEST_DH_ATTR_0 };
 
     EXPECT_EQ(g_dbAdapterPtr->PutDataBatch(keys, values), ERR_DH_FWK_RESOURCE_KV_STORAGE_POINTER_NULL);
+}
+
+/**
+ * @tc.name: db_adapter_test_008
+ * @tc.desc: Verify the PutDataBatch function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSCV
+ */
+HWTEST_F(DbAdapterTest, db_adapter_test_008, TestSize.Level0)
+{
+    std::string key = std::string(TEST_DEV_ID_1 + TEST_DH_ID_1);
+    std::string value = TEST_DH_ATTR_0;
+
+    EXPECT_EQ(g_dbAdapterPtr->PutData(key, value), ERR_DH_FWK_RESOURCE_KV_STORAGE_POINTER_NULL);
 }
 } // namespace DistributedHardware
 } // namespace OHOS
