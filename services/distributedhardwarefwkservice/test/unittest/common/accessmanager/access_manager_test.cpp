@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -75,8 +75,21 @@ HWTEST_F(AccessManagerTest, AccessManagerInit, TestSize.Level0)
 }
 
 /**
+ * @tc.name: OnDeviceReady
+ * @tc.desc: Verify the  OnDeviceReady function
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSJM
+ */
+HWTEST_F(AccessManagerTest, OnDeviceReady, TestSize.Level0)
+{
+    DmDeviceInfo deviceInfo;
+    AccessManager::GetInstance()->OnDeviceReady(deviceInfo);
+    EXPECT_EQ(DistributedHardwareManagerFactory::GetInstance().IsInit(), false);
+}
+
+/**
  * @tc.name: OnDeviceOffline
- * @tc.desc: Verify the  Init function
+ * @tc.desc: Verify the  OnDeviceOffline function
  * @tc.type: FUNC
  * @tc.require: AR000GHSJM
  */
