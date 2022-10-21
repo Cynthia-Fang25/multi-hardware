@@ -226,7 +226,13 @@ HWTEST_F(DistributedHardwareManagerFactoryTest, SendOffLineEvent_003, TestSize.L
     for_each(threadVec.begin(), threadVec.end(), [](std::thread &t) { t.join(); });
 }
 
-HWTEST_F(DistributedHardwareManagerFactoryTest, SendOffLineEvent_003, TestSize.Level0)
+/**
+ * @tc.name: SendOffLineEvent_004
+ * @tc.desc: Verify the  SendOnLineEvent
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSJM
+ */
+HWTEST_F(DistributedHardwareManagerFactoryTest, SendOffLineEvent_004, TestSize.Level0)
 {
     std::string networkIdEmpty = "";
     std::string uuid = "uu1234567890";
@@ -235,7 +241,13 @@ HWTEST_F(DistributedHardwareManagerFactoryTest, SendOffLineEvent_003, TestSize.L
 
 }
 
-HWTEST_F(DistributedHardwareManagerFactoryTest, SendOffLineEvent_004, TestSize.Level0)
+/**
+ * @tc.name: SendOffLineEvent_005
+ * @tc.desc: Verify the  SendOnLineEvent
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSJM
+ */
+HWTEST_F(DistributedHardwareManagerFactoryTest, SendOffLineEvent_005, TestSize.Level0)
 {
     std::string networkId = "nt12345678790";
     std::string uuidEmpty = "";
@@ -244,7 +256,13 @@ HWTEST_F(DistributedHardwareManagerFactoryTest, SendOffLineEvent_004, TestSize.L
 
 }
 
-HWTEST_F(DistributedHardwareManagerFactoryTest, SendOffLineEvent_004, TestSize.Level0)
+/**
+ * @tc.name: SendOffLineEvent_006
+ * @tc.desc: Verify the  SendOffLineEvent
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSJM
+ */
+HWTEST_F(DistributedHardwareManagerFactoryTest, SendOffLineEvent_006, TestSize.Level0)
 {
     std::string networkIdEmpty = "";
     std::string uuid = "uu1234567890";
@@ -253,7 +271,13 @@ HWTEST_F(DistributedHardwareManagerFactoryTest, SendOffLineEvent_004, TestSize.L
 
 }
 
-HWTEST_F(DistributedHardwareManagerFactoryTest, SendOffLineEvent_005, TestSize.Level0)
+/**
+ * @tc.name: SendOffLineEvent_007
+ * @tc.desc: Verify the  SendOffLineEvent
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSJM
+ */
+HWTEST_F(DistributedHardwareManagerFactoryTest, SendOffLineEvent_007, TestSize.Level0)
 {
     std::string networkId = "nt12345678790";
     std::string uuidEmpty = "";
