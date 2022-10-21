@@ -127,7 +127,7 @@ HWTEST_F(DbAdapterTest, db_adapter_test_000, TestSize.Level0)
 
 /**
  * @tc.name: db_adapter_test_011
- * @tc.desc: Verify the PutDataBatch function.
+ * @tc.desc: Verify the PutData function.
  * @tc.type: FUNC
  * @tc.require: AR000GHSCV
  */
@@ -139,6 +139,47 @@ HWTEST_F(DbAdapterTest, db_adapter_test_011, TestSize.Level0)
     EXPECT_EQ(g_dbAdapterPtr->PutData(key, value), DH_FWK_SUCCESS);
 
     g_dbAdapterPtr->RemoveDataByKey(key);
+}
+
+/**
+ * @tc.name: db_adapter_test_012
+ * @tc.desc: Verify the PutData function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSCV
+ */
+HWTEST_F(DbAdapterTest, db_adapter_test_012, TestSize.Level0)
+{
+    std::string key = "";
+    std::string value = TEST_DH_ATTR_0;
+
+    EXPECT_EQ(g_dbAdapterPtr->PutData(key, value), ERR_DH_FWK_PARA_INVALID);
+}
+
+/**
+ * @tc.name: db_adapter_test_013
+ * @tc.desc: Verify the PutData function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSCV
+ */
+HWTEST_F(DbAdapterTest, db_adapter_test_013, TestSize.Level0)
+{
+    std::string key = "TEST_DEV_ID_0";
+    std::string value = ;
+
+    EXPECT_EQ(g_dbAdapterPtr->PutData(key, value), ERR_DH_FWK_PARA_INVALID);
+}
+
+/**
+ * @tc.name: db_adapter_test_014
+ * @tc.desc: Verify the ManualSync function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSCV
+ */
+HWTEST_F(DbAdapterTest, db_adapter_test_014, TestSize.Level0)
+{
+    std::string networkId = DEV_NETWORK_ID_1;
+
+    EXPECT_EQ(g_dbAdapterPtr->ManualSync(DEV_NETWORK_ID_1), ERR_DH_FWK_RESOURCE_KV_STORAGE_OPERATION_FAIL);
 }
 
 /**
@@ -165,6 +206,76 @@ HWTEST_F(DbAdapterTest, db_adapter_test_001, TestSize.Level0)
     for (auto &resInfo : resInfos) {
         g_dbAdapterPtr->RemoveDataByKey(resInfo->GetKey());
     }
+}
+
+/**
+ * @tc.name: db_adapter_test_101
+ * @tc.desc: Verify the RemoveDeviceData function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSJE
+ */
+HWTEST_F(DbAdapterTest, db_adapter_test_101, TestSize.Level0)
+{
+    vector<shared_ptr<CapabilityInfo>> resInfos { CAP_INFO_0, CAP_INFO_1, CAP_INFO_2, CAP_INFO_3, CAP_INFO_4,
+        CAP_INFO_5, CAP_INFO_6, CAP_INFO_7, CAP_INFO_8, CAP_INFO_9 };
+
+    std::vector<std::string> keys;
+    std::vector<std::string> values;
+    std::string key;
+    for (auto &resInfo : resInfos) {
+        key = resInfo->GetKey();
+        keys.push_back(key);
+        values.push_back(resInfo->ToJsonString());
+    }
+    g_dbAdapterPtr->PutDataBatch(keys, values);
+
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_0->GetDeviceId(), values), DH_FWK_SUCCESS);
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_1->GetDeviceId(), values), DH_FWK_SUCCESS);
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_2->GetDeviceId(), values), DH_FWK_SUCCESS);
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_3->GetDeviceId(), values), DH_FWK_SUCCESS);
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_4->GetDeviceId(), values), DH_FWK_SUCCESS);
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_5->GetDeviceId(), values), DH_FWK_SUCCESS);
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_6->GetDeviceId(), values), DH_FWK_SUCCESS);
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_7->GetDeviceId(), values), DH_FWK_SUCCESS);
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_8->GetDeviceId(), values), DH_FWK_SUCCESS);
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_9->GetDeviceId(), values), DH_FWK_SUCCESS);
+
+    for (auto &resInfo : resInfos) {
+        g_dbAdapterPtr->RemoveDataByKey(resInfo->GetKey());
+    }
+}
+
+/**
+ * @tc.name: db_adapter_test_102
+ * @tc.desc: Verify the RemoveDataByKey function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSJE
+ */
+HWTEST_F(DbAdapterTest, db_adapter_test_102, TestSize.Level0)
+{
+    vector<shared_ptr<CapabilityInfo>> resInfos { CAP_INFO_0, CAP_INFO_1, CAP_INFO_2, CAP_INFO_3, CAP_INFO_4,
+        CAP_INFO_5, CAP_INFO_6, CAP_INFO_7, CAP_INFO_8, CAP_INFO_9 };
+
+    std::vector<std::string> keys;
+    std::vector<std::string> values;
+    std::string key;
+    for (auto &resInfo : resInfos) {
+        key = resInfo->GetKey();
+        keys.push_back(key);
+        values.push_back(resInfo->ToJsonString());
+    }
+    g_dbAdapterPtr->PutDataBatch(keys, values);
+
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDataByKey(CAP_INFO_0->GetKey()), DH_FWK_SUCCESS);
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDataByKey(CAP_INFO_1->GetKey()), DH_FWK_SUCCESS);
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDataByKey(CAP_INFO_2->GetKey()), DH_FWK_SUCCESS);
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDataByKey(CAP_INFO_3->GetKey()), DH_FWK_SUCCESS);
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDataByKey(CAP_INFO_4->GetKey()), DH_FWK_SUCCESS);
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDataByKey(CAP_INFO_5->GetKey()), DH_FWK_SUCCESS);
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDataByKey(CAP_INFO_6->GetKey()), DH_FWK_SUCCESS);
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDataByKey(CAP_INFO_7->GetKey()), DH_FWK_SUCCESS);
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDataByKey(CAP_INFO_8->GetKey()), DH_FWK_SUCCESS);
+    EXPECT_EQ(g_dbAdapterPtr->RemoveDataByKey(CAP_INFO_9->GetKey()), DH_FWK_SUCCESS);
 }
 
 /**
@@ -280,6 +391,18 @@ HWTEST_F(DbAdapterTest, db_adapter_test_006, TestSize.Level0)
 }
 
 /**
+ * @tc.name: db_adapter_test_106
+ * @tc.desc: Verify the UnRegisterChangeListener function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSCV
+ */
+HWTEST_F(DbAdapterTest, db_adapter_test_106, TestSize.Level0)
+{
+
+    EXPECT_EQ(g_dbAdapterPtr->UnRegisterChangeListener(), DH_FWK_SUCCESS);
+}
+
+/**
  * @tc.name: db_adapter_test_007
  * @tc.desc: Verify the PutDataBatch function.
  * @tc.type: FUNC
@@ -296,7 +419,7 @@ HWTEST_F(DbAdapterTest, db_adapter_test_007, TestSize.Level0)
 
 /**
  * @tc.name: db_adapter_test_008
- * @tc.desc: Verify the PutDataBatch function.
+ * @tc.desc: Verify the PutData function.
  * @tc.type: FUNC
  * @tc.require: AR000GHSCV
  */
@@ -304,8 +427,36 @@ HWTEST_F(DbAdapterTest, db_adapter_test_008, TestSize.Level0)
 {
     std::string key = std::string(TEST_DEV_ID_1 + TEST_DH_ID_1);
     std::string value = TEST_DH_ATTR_0;
+    g_dbAdapterPtr->kvStoragePtr_ = nullptr;
 
     EXPECT_EQ(g_dbAdapterPtr->PutData(key, value), ERR_DH_FWK_RESOURCE_KV_STORAGE_POINTER_NULL);
 }
+
+/**
+ * @tc.name: db_adapter_test_009
+ * @tc.desc: Verify the ManualSync function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSCV
+ */
+HWTEST_F(DbAdapterTest, db_adapter_test_009, TestSize.Level0)
+{
+    std::string networkId = DEV_NETWORK_ID_1;
+    g_dbAdapterPtr->kvStoragePtr_ = nullptr;
+
+    EXPECT_EQ(g_dbAdapterPtr->RegisterChangeListener(DEV_NETWORK_ID_1), ERR_DH_FWK_RESOURCE_KV_STORAGE_POINTER_NULL);
+}
+
+/**
+ * @tc.name: db_adapter_test_006
+ * @tc.desc: Verify the UnRegisterChangeListener function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSCV
+ */
+HWTEST_F(DbAdapterTest, db_adapter_test_006, TestSize.Level0)
+{
+    g_dbAdapterPtr->kvStoragePtr_ = nullptr;
+    EXPECT_EQ(g_dbAdapterPtr->UnRegisterChangeListener(), ERR_DH_FWK_RESOURCE_KV_STORAGE_POINTER_NULL);
+}
+
 } // namespace DistributedHardware
 } // namespace OHOS
