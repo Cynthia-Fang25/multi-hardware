@@ -266,7 +266,8 @@ HWTEST_F(DistributedHardwareManagerFactoryTest, SendOffLineEvent_006, TestSize.L
 {
     std::string networkIdEmpty = "";
     std::string uuid = "uu1234567890";
-    auto ret = DistributedHardwareManagerFactory::GetInstance().SendOffLineEvent(networkId, uuid, TEST_DEV_TYPE_PAD);
+    auto ret = DistributedHardwareManagerFactory::GetInstance().SendOffLineEvent(
+        networkIdEmpty, uuid, TEST_DEV_TYPE_PAD);
     ASSERT_EQ(ERR_DH_FWK_PARA_INVALID, ret);
 
 }
@@ -281,7 +282,8 @@ HWTEST_F(DistributedHardwareManagerFactoryTest, SendOffLineEvent_007, TestSize.L
 {
     std::string networkId = "nt12345678790";
     std::string uuidEmpty = "";
-    auto ret = DistributedHardwareManagerFactory::GetInstance().SendOffLineEvent(networkId, uuid, TEST_DEV_TYPE_PAD);
+    auto ret = DistributedHardwareManagerFactory::GetInstance().SendOffLineEvent(
+        networkId, uuid, TEST_DEV_TYPE_PAD);
     ASSERT_EQ(ERR_DH_FWK_PARA_INVALID, ret);
 
 }

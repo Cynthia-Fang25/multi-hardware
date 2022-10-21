@@ -172,19 +172,6 @@ HWTEST_F(DbAdapterTest, db_adapter_test_003, TestSize.Level0)
 
 /**
  * @tc.name: db_adapter_test_004
- * @tc.desc: Verify the ManualSync function.
- * @tc.type: FUNC
- * @tc.require: AR000GHSCV
- */
-HWTEST_F(DbAdapterTest, db_adapter_test_004, TestSize.Level0)
-{
-    std::string networkId = DEV_NETWORK_ID_1;
-
-    EXPECT_EQ(g_dbAdapterPtr->ManualSync(DEV_NETWORK_ID_1), ERR_DH_FWK_RESOURCE_KV_STORAGE_OPERATION_FAIL);
-}
-
-/**
- * @tc.name: db_adapter_test_004
  * @tc.desc: Verify the PutDataBatch function.
  * @tc.type: FUNC
  * @tc.require: AR000GHSJE
@@ -392,23 +379,36 @@ HWTEST_F(DbAdapterTest, db_adapter_test_012, TestSize.Level0)
 
 /**
  * @tc.name: db_adapter_test_013
- * @tc.desc: Verify the UnRegisterChangeListener function.
+ * @tc.desc: Verify the ManualSync function.
  * @tc.type: FUNC
  * @tc.require: AR000GHSCV
  */
 HWTEST_F(DbAdapterTest, db_adapter_test_013, TestSize.Level0)
+{
+    std::string networkId = DEV_NETWORK_ID_1;
+
+    EXPECT_EQ(g_dbAdapterPtr->ManualSync(DEV_NETWORK_ID_1), ERR_DH_FWK_RESOURCE_KV_STORAGE_OPERATION_FAIL);
+}
+
+/**
+ * @tc.name: db_adapter_test_014
+ * @tc.desc: Verify the UnRegisterChangeListener function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSCV
+ */
+HWTEST_F(DbAdapterTest, db_adapter_test_014, TestSize.Level0)
 {
 
     EXPECT_EQ(g_dbAdapterPtr->UnRegisterChangeListener(), DH_FWK_SUCCESS);
 }
 
 /**
- * @tc.name: db_adapter_test_014
+ * @tc.name: db_adapter_test_015
  * @tc.desc: Verify the PutDataBatch function.
  * @tc.type: FUNC
  * @tc.require: AR000GHSCV
  */
-HWTEST_F(DbAdapterTest, db_adapter_test_014, TestSize.Level0)
+HWTEST_F(DbAdapterTest, db_adapter_test_015, TestSize.Level0)
 {
     g_dbAdapterPtr->kvStoragePtr_ = nullptr;
     std::vector<std::string> keys { std::string(TEST_DEV_ID_2 + TEST_DH_ID_0) };
@@ -418,12 +418,12 @@ HWTEST_F(DbAdapterTest, db_adapter_test_014, TestSize.Level0)
 }
 
 /**
- * @tc.name: db_adapter_test_015
+ * @tc.name: db_adapter_test_016
  * @tc.desc: Verify the PutData function.
  * @tc.type: FUNC
  * @tc.require: AR000GHSCV
  */
-HWTEST_F(DbAdapterTest, db_adapter_test_015, TestSize.Level0)
+HWTEST_F(DbAdapterTest, db_adapter_test_016, TestSize.Level0)
 {
     std::string key = std::string(TEST_DEV_ID_1 + TEST_DH_ID_1);
     std::string value = TEST_DH_ATTR_0;
@@ -433,30 +433,29 @@ HWTEST_F(DbAdapterTest, db_adapter_test_015, TestSize.Level0)
 }
 
 /**
- * @tc.name: db_adapter_test_016
- * @tc.desc: Verify the ManualSync function.
- * @tc.type: FUNC
- * @tc.require: AR000GHSCV
- */
-HWTEST_F(DbAdapterTest, db_adapter_test_016, TestSize.Level0)
-{
-    std::string networkId = DEV_NETWORK_ID_1;
-    g_dbAdapterPtr->kvStoragePtr_ = nullptr;
-
-    EXPECT_EQ(g_dbAdapterPtr->RegisterChangeListener(DEV_NETWORK_ID_1), ERR_DH_FWK_RESOURCE_KV_STORAGE_POINTER_NULL);
-}
-
-/**
  * @tc.name: db_adapter_test_017
- * @tc.desc: Verify the UnRegisterChangeListener function.
+ * @tc.desc: Verify the RegisterChangeListener function.
  * @tc.type: FUNC
  * @tc.require: AR000GHSCV
  */
 HWTEST_F(DbAdapterTest, db_adapter_test_017, TestSize.Level0)
 {
+    std::string networkId = DEV_NETWORK_ID_1;
+    g_dbAdapterPtr->kvStoragePtr_ = nullptr;
+
+    EXPECT_EQ(g_dbAdapterPtr->RegisterChangeListener(), ERR_DH_FWK_RESOURCE_KV_STORAGE_POINTER_NULL);
+}
+
+/**
+ * @tc.name: db_adapter_test_018
+ * @tc.desc: Verify the UnRegisterChangeListener function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSCV
+ */
+HWTEST_F(DbAdapterTest, db_adapter_test_018, TestSize.Level0)
+{
     g_dbAdapterPtr->kvStoragePtr_ = nullptr;
     EXPECT_EQ(g_dbAdapterPtr->UnRegisterChangeListener(), ERR_DH_FWK_RESOURCE_KV_STORAGE_POINTER_NULL);
 }
-
 } // namespace DistributedHardware
 } // namespace OHOS

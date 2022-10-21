@@ -161,7 +161,6 @@ HWTEST_F(ComponentLoaderTest, component_loader_test_008, TestSize.Level0)
     EXPECT_EQ(vec.size(), ComponentLoader::GetInstance().compHandlerMap_.size());
 }
 
-
 /**
  * @tc.name: component_loader_test_009
  * @tc.desc: Verify the GetHandler function.
@@ -171,7 +170,7 @@ HWTEST_F(ComponentLoaderTest, component_loader_test_008, TestSize.Level0)
 HWTEST_F(ComponentLoaderTest, component_loader_test_009, TestSize.Level0)
 {
     std::string soNameEmpty = "";
-    auto handler = ComponentLoader::GetInstance().GetHandler();
+    auto handler = ComponentLoader::GetInstance().GetHandler(soNameEmpty);
     EXPECT_EQ(handler, nullptr);
 }
 
@@ -184,7 +183,7 @@ HWTEST_F(ComponentLoaderTest, component_loader_test_009, TestSize.Level0)
 HWTEST_F(ComponentLoaderTest, component_loader_test_010, TestSize.Level0)
 {
     std::string soName = "NON_EXISTENT_SO";
-    auto handler = ComponentLoader::GetInstance().GetHandler();
+    auto handler = ComponentLoader::GetInstance().GetHandler(soName);
     EXPECT_EQ(handler, nullptr);
 }
 } // namespace DistributedHardware
