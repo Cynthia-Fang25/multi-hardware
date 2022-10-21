@@ -278,18 +278,16 @@ HWTEST_F(DbAdapterTest, db_adapter_test_007, TestSize.Level0)
         CAP_INFO_5, CAP_INFO_6, CAP_INFO_7, CAP_INFO_8, CAP_INFO_9 };
 
     std::vector<std::string> keys;
-    std::vector<std::string> values;
+    std::vector<std::string> infos;
     std::string key;
     for (auto &resInfo : resInfos) {
         key = resInfo->GetKey();
         keys.push_back(key);
-        values.push_back(resInfo->ToJsonString());
+        infos.push_back(resInfo->ToJsonString());
     }
-    g_dbAdapterPtr->PutDataBatch(keys, values);
+    g_dbAdapterPtr->PutDataBatch(keys, infos);
 
-    std::string keyPrefix;
     std::vector<std::string> values;
-
     EXPECT_EQ(g_dbAdapterPtr->GetDataByKeyPrefix(CAP_INFO_0->GetDeviceId(), values), DH_FWK_SUCCESS);
     EXPECT_EQ(g_dbAdapterPtr->GetDataByKeyPrefix(CAP_INFO_1->GetDeviceId(), values), DH_FWK_SUCCESS);
     EXPECT_EQ(g_dbAdapterPtr->GetDataByKeyPrefix(CAP_INFO_2->GetDeviceId(), values), DH_FWK_SUCCESS);
