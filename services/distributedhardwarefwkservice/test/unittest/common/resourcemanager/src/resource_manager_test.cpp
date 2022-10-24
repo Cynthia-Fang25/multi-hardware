@@ -374,27 +374,6 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_013, TestSize.Level0)
 }
 
 /**
- * @tc.name: resource_manager_test_014
- * @tc.desc: Verify the CapabilityInfoManager RemoveCapabilityInfoInDB function.
- * @tc.type: FUNC
- * @tc.require: AR000GHSJE
- */
-HWTEST_F(ResourceManagerTest, resource_manager_test_014, TestSize.Level0)
-{
-    EXPECT_EQ(CapabilityInfoManager::GetInstance()->RemoveCapabilityInfoInDB(CAP_INFO_0->GetDeviceId()),
-        DH_FWK_SUCCESS);
-    EXPECT_EQ(CapabilityInfoManager::GetInstance()->RemoveCapabilityInfoInDB(CAP_INFO_1->GetDeviceId()),
-        ERR_DH_FWK_RESOURCE_DB_ADAPTER_OPERATION_FAIL);
-
-    EXPECT_EQ(CapabilityInfoManager::GetInstance()->RemoveCapabilityInfoInDB(CAP_INFO_5->GetDeviceId()),
-        DH_FWK_SUCCESS);
-    EXPECT_EQ(CapabilityInfoManager::GetInstance()->RemoveCapabilityInfoInDB(CAP_INFO_6->GetDeviceId()),
-        ERR_DH_FWK_RESOURCE_DB_ADAPTER_OPERATION_FAIL);
-
-    EXPECT_EQ(CapabilityInfoManager::GetInstance()->globalCapInfoMap_.size(), TEST_SIZE_0);
-}
-
-/**
  * @tc.name: resource_manager_test_015
  * @tc.desc: Verify the CapabilityInfoManager RemoveCapabilityInfoInDB function.
  * @tc.type: FUNC

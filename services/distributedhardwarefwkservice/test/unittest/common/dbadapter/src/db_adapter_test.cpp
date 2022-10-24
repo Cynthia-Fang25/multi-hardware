@@ -197,43 +197,6 @@ HWTEST_F(DbAdapterTest, db_adapter_test_004, TestSize.Level0)
 }
 
 /**
- * @tc.name: db_adapter_test_005
- * @tc.desc: Verify the RemoveDeviceData function.
- * @tc.type: FUNC
- * @tc.require: AR000GHSJE
- */
-HWTEST_F(DbAdapterTest, db_adapter_test_005, TestSize.Level0)
-{
-    vector<shared_ptr<CapabilityInfo>> resInfos { CAP_INFO_0, CAP_INFO_1, CAP_INFO_2, CAP_INFO_3, CAP_INFO_4,
-        CAP_INFO_5, CAP_INFO_6, CAP_INFO_7, CAP_INFO_8, CAP_INFO_9 };
-
-    std::vector<std::string> keys;
-    std::vector<std::string> values;
-    std::string key;
-    for (auto &resInfo : resInfos) {
-        key = resInfo->GetKey();
-        keys.push_back(key);
-        values.push_back(resInfo->ToJsonString());
-    }
-    g_dbAdapterPtr->PutDataBatch(keys, values);
-
-    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_0->GetDeviceId()), DH_FWK_SUCCESS);
-    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_1->GetDeviceId()), DH_FWK_SUCCESS);
-    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_2->GetDeviceId()), DH_FWK_SUCCESS);
-    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_3->GetDeviceId()), DH_FWK_SUCCESS);
-    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_4->GetDeviceId()), DH_FWK_SUCCESS);
-    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_5->GetDeviceId()), DH_FWK_SUCCESS);
-    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_6->GetDeviceId()), DH_FWK_SUCCESS);
-    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_7->GetDeviceId()), DH_FWK_SUCCESS);
-    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_8->GetDeviceId()), DH_FWK_SUCCESS);
-    EXPECT_EQ(g_dbAdapterPtr->RemoveDeviceData(CAP_INFO_9->GetDeviceId()), DH_FWK_SUCCESS);
-
-    for (auto &resInfo : resInfos) {
-        g_dbAdapterPtr->RemoveDataByKey(resInfo->GetKey());
-    }
-}
-
-/**
  * @tc.name: db_adapter_test_006
  * @tc.desc: Verify the RemoveDataByKey function.
  * @tc.type: FUNC
