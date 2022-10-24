@@ -120,5 +120,33 @@ HWTEST_F(UtilsToolTest, utils_tool_test_004, TestSize.Level0)
     ASSERT_STRNE(std::to_string(i4).c_str(), GetAnonyInt32(i4).c_str());
     ASSERT_STRNE(std::to_string(i5).c_str(), GetAnonyInt32(i5).c_str());
 }
+
+/**
+ * @tc.name: utils_tool_test_005
+ * @tc.desc: Verify the GetDeviceIdByUUID function
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSK0
+ */
+HWTEST_F(UtilsToolTest, utils_tool_test_005, TestSize.Level0)
+{
+    // const std::string UUID_TEST = "bb536a637105409e904d4da78290ab1";
+
+    std::string uuidEmpty = "";
+    auto id = GetDeviceIdByUUID(uuidEmpty)
+    ASSERT_EQ(id.size(), 0);
+}
+
+/**
+ * @tc.name: utils_tool_test_006
+ * @tc.desc: Verify the GetDeviceIdByUUID function
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSK0
+ */
+HWTEST_F(UtilsToolTest, utils_tool_test_006, TestSize.Level0)
+{
+    std::string uuid = "bb536a637105409e904d4da78290ab1";
+    auto id = GetDeviceIdByUUID(uuid)
+    ASSERT_NE(id.size(), 0);
+}
 } // namespace DistributedHardware
 } // namespace OHOS
