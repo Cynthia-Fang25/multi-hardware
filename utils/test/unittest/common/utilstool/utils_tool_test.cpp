@@ -132,7 +132,7 @@ HWTEST_F(UtilsToolTest, utils_tool_test_005, TestSize.Level0)
     // const std::string UUID_TEST = "bb536a637105409e904d4da78290ab1";
 
     std::string uuidEmpty = "";
-    auto id = GetDeviceIdByUUID(uuidEmpty)
+    auto id = GetDeviceIdByUUID(uuidEmpty);
     ASSERT_EQ(id.size(), 0);
 }
 
@@ -145,7 +145,7 @@ HWTEST_F(UtilsToolTest, utils_tool_test_005, TestSize.Level0)
 HWTEST_F(UtilsToolTest, utils_tool_test_006, TestSize.Level0)
 {
     std::string uuid = "bb536a637105409e904d4da78290ab1";
-    auto id = GetDeviceIdByUUID(uuid)
+    auto id = GetDeviceIdByUUID(uuid);
     ASSERT_NE(id.size(), 0);
 }
 } // namespace DistributedHardware
