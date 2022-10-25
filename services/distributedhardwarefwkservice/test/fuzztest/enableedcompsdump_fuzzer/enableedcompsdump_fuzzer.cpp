@@ -22,7 +22,6 @@
 #include <string>
 #include <unistd.h>
 
-#include "access_manager.h"
 #include "distributed_hardware_errno.h"
 #include "enabled_comps_dump.h"
 
