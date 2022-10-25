@@ -40,7 +40,7 @@ ohos_fuzztest("PublisherFuzzTest") {
     "-Wno-unused-variable",
     "-fno-omit-frame-pointer",
   ]
-  sources = [ "publisher_fuzzer.cpp" ]
+  sources = [ "publisheritem_fuzzer.cpp" ]
 
   deps = [ "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice:distributedhardwarefwksvr" ]
 
