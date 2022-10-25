@@ -29,6 +29,9 @@ public:
     MockPublisherListener() = default;
     virtual ~MockPublisherListener() = default;
     void OnMessage(const DHTopic topic, const std::string &message);
+
+private:
+    DISALLOW_COPY_AND_MOVE(MockPublisherListener);
 };
 #endif
 

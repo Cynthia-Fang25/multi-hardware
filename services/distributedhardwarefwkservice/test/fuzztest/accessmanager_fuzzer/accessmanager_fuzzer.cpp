@@ -29,9 +29,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace {
-    constexpr uint16_t TEST_DEV_TYPE_PAD = 0x11;
     constexpr uint32_t SLEEP_TIME_US = 10 * 1000;
-    constexpr uint32_t MAX_STR_LEN = 128;
 }
 
 void AccessManagerFuzzTest(const uint8_t* data, size_t size)
