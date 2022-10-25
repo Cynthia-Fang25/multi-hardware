@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "accessmanager_fuzzer.h"
+#include "publisheritem_fuzzer.h"
 
 #include <algorithm>
 #include <chrono>
@@ -22,30 +22,41 @@
 #include <string>
 #include <unistd.h>
 
-#include "access_manager.h"
+#include "publisher.h"
 #include "distributed_hardware_errno.h"
-#include "distributed_hardware_manager_factory.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 namespace {
-    constexpr uint16_t TEST_DEV_TYPE_PAD = 0x11;
     constexpr uint32_t SLEEP_TIME_US = 10 * 1000;
-    constexpr uint32_t MAX_STR_LEN = 128;
+    const uint32_t TOPIC_SIZE = 6;
+    const DHTopic topicFuzz[TOPIC_SIZE] = {
+        DHTopic::TOPIC_MIN, DHTopic::TOPIC_START_DSCREEN, DHTopic::TOPIC_SINK_PROJECT_WINDOW_INFO,
+        DHTopic::TOPIC_STOP_DSCREEN, DHTopic::TOPIC_DEV_OFFLINE, DHTopic::TOPIC_MAX
+    };
 }
 
-void AccessManagerFuzzTest(const uint8_t* data, size_t size)
+void MockPublisherListener::OnMessage(const DHTopic topic, const std::string &message)
 {
-    if ((data == nullptr) || (size <= sizeof(DmDeviceInfo))) {
+    (void)topic;
+    (void)message;
+}
+
+void PublisherItemFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size <= 0)) {
         return;
     }
 
-    
-    AccessManager::GetInstance()->Init();
-    DmDeviceInfo deviceInfo = *(reinterpret_cast<DmDeviceInfo *>(data));
-    AccessManager::GetInstance()->OnDeviceReady(deviceInfo);
+    DHTopic topic = topicFuzz[data[0] % TOPIC_SIZE];
+    sptr<IPublisherListener> listener = new MockPublisherListener();
+    std::string message(reinterpret_cast<const char*>(data), size);
 
-    usleep(SLEEP_TIME_US);
+    PublisherItem publisherItem(topic);
+
+    publisherItem.AddListener(listener);
+    publisherItem.PublishMessage(message);
+    publisherItem.RemoveListener(listener);
 }
 }
 }
@@ -54,7 +65,7 @@ void AccessManagerFuzzTest(const uint8_t* data, size_t size)
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
 {
     /* Run your code on data */
-    OHOS::DistributedHardware::AccessManagerFuzzTest(data, size);
+    OHOS::DistributedHardware::PublisherItemFuzzTest(data, size);
     return 0;
 }
 

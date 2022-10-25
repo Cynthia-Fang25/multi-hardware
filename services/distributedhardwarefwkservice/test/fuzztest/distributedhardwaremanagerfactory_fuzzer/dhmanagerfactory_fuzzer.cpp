@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "accessmanager_fuzzer.h"
+#include "dhmanagerfactory_fuzzer.h"
 
 #include <algorithm>
 #include <chrono>
@@ -31,20 +31,19 @@ namespace DistributedHardware {
 namespace {
     constexpr uint16_t TEST_DEV_TYPE_PAD = 0x11;
     constexpr uint32_t SLEEP_TIME_US = 10 * 1000;
-    constexpr uint32_t MAX_STR_LEN = 128;
 }
 
-void AccessManagerFuzzTest(const uint8_t* data, size_t size)
+void DhManagerFactoryFuzzTest(const uint8_t* data, size_t size)
 {
-    if ((data == nullptr) || (size <= sizeof(DmDeviceInfo))) {
+    if ((data == nullptr) || (size <= 0)) {
         return;
     }
 
-    
-    AccessManager::GetInstance()->Init();
-    DmDeviceInfo deviceInfo = *(reinterpret_cast<DmDeviceInfo *>(data));
-    AccessManager::GetInstance()->OnDeviceReady(deviceInfo);
+    std::string networkId(reinterpret_cast<const char*>(data), size);
+    std::string uuid(reinterpret_cast<const char*>(data), size);
 
+    DistributedHardwareManagerFactory::GetInstance().SendOnLineEvent(
+        networkId, uuid, TEST_DEV_TYPE_PAD);
     usleep(SLEEP_TIME_US);
 }
 }
@@ -54,7 +53,7 @@ void AccessManagerFuzzTest(const uint8_t* data, size_t size)
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
 {
     /* Run your code on data */
-    OHOS::DistributedHardware::AccessManagerFuzzTest(data, size);
+    OHOS::DistributedHardware::DhManagerFactoryFuzzTest(data, size);
     return 0;
 }
 
