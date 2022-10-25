@@ -10,6 +10,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#"publisheritem_fuzzer:fuzztest",
 
 group("fuzztest") {
   testonly = true
@@ -21,7 +22,6 @@ group("fuzztest") {
     "distributedhardwaremanagerfactory_fuzzer:fuzztest",
     "enableedcompsdump_fuzzer:fuzztest",
     "publisher_fuzzer:fuzztest",
-    "publisheritem_fuzzer:fuzztest",
     "resourcemanager_fuzzer:fuzztest",
     "task_fuzzer:fuzztest",
     "versioninfomanager_fuzzer:fuzztest",
