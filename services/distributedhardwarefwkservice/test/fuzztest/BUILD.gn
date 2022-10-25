@@ -11,6 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #"publisheritem_fuzzer:fuzztest",
+#    "publisher_fuzzer:fuzztest",
 
 group("fuzztest") {
   testonly = true
@@ -21,7 +22,6 @@ group("fuzztest") {
     "componentmanager_fuzzer:fuzztest",
     "distributedhardwaremanagerfactory_fuzzer:fuzztest",
     "enableedcompsdump_fuzzer:fuzztest",
-    "publisher_fuzzer:fuzztest",
     "resourcemanager_fuzzer:fuzztest",
     "task_fuzzer:fuzztest",
     "versioninfomanager_fuzzer:fuzztest",
