@@ -24,14 +24,11 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-class MockPublisherListener : public IPublisherListener {
+class MockPublisherListener : public PublisherListenerStub {
 public:
     MockPublisherListener() = default;
     virtual ~MockPublisherListener() = default;
     void OnMessage(const DHTopic topic, const std::string &message);
-
-private:
-    DISALLOW_COPY_AND_MOVE(MockPublisherListener);
 };
 } // namespace DistributedHardware
 } // namespace OHOS

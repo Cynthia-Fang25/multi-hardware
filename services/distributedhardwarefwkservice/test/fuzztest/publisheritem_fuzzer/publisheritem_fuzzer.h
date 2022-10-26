@@ -24,7 +24,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-class MockPublisherListener : public IPublisherListener {
+class MockPublisherListener : public PublisherListenerStub {
 public:
     MockPublisherListener() = default;
     virtual ~MockPublisherListener() = default;
