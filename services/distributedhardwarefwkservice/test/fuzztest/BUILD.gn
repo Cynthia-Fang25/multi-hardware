@@ -18,7 +18,6 @@ group("fuzztest") {
     "accessmanager_fuzzer:fuzztest",
     "componentloader_fuzzer:fuzztest",
     "componentmanager_fuzzer:fuzztest",
-    "enableedcompsdump_fuzzer:fuzztest",
     "publisher_fuzzer:fuzztest",
     "resourcemanager_fuzzer:fuzztest",
     "task_fuzzer:fuzztest",
