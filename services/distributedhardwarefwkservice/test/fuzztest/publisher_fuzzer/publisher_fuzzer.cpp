@@ -54,7 +54,7 @@ void PublisherListenerFuzzTest(const uint8_t* data, size_t size)
 
     Publisher::GetInstance().RegisterListener(topic, listener);
     Publisher::GetInstance().PublishMessage(topic, message);
-    Publisher::GetInstance().UnregisterPublisherListener(topic, listener);
+    Publisher::GetInstance().UnregisterListener(topic, listener);
 }
 }
 }

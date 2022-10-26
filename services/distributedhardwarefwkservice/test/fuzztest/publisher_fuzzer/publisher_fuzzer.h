@@ -20,7 +20,7 @@
 
 #include <string>
 
-#include "ipublisher_listener.h"
+#include "distributed_hardware_stub.h"
 
 namespace OHOS {
 namespace DistributedHardware {
