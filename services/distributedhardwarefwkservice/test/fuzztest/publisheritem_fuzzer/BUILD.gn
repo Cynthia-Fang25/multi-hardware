@@ -18,7 +18,7 @@ import(
     "//foundation/distributedhardware/distributed_hardware_fwk/distributedhardwarefwk.gni")
 
 ##############################fuzztest##########################################
-ohos_fuzztest("PublisherFuzzTest") {
+ohos_fuzztest("PublisherItemFuzzTest") {
   module_out_path = "distributed_hardware_fwk/publisheritem"
   fuzz_config_file = "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice/test/fuzztest/publisheritem_fuzzer"
 
@@ -46,7 +46,7 @@ ohos_fuzztest("PublisherFuzzTest") {
 
   defines = [
     "HI_LOG_ENABLE",
-    "DH_LOG_TAG=\"PublisherFuzzTest\"",
+    "DH_LOG_TAG=\"PublisherItemFuzzTest\"",
     "LOG_DOMAIN=0xD004100",
   ]
 
@@ -60,6 +60,6 @@ ohos_fuzztest("PublisherFuzzTest") {
 group("fuzztest") {
   testonly = true
 
-  deps = [ ":PublisherFuzzTest" ]
+  deps = [ ":PublisherItemFuzzTest" ]
 }
 ###############################################################################
