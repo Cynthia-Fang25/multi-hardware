@@ -31,6 +31,7 @@ ohos_fuzztest("PublisherItemFuzzTest") {
     "${utils_path}/include/log",
     "${common_path}/utils/include",
     "${common_path}/log/include",
+    "${innerkits_path}/include",
     "${common_path}/interfaces/inner_kits/include/ipc",
     "${services_path}/distributedhardwarefwkservice/include",
     "${services_path}/distributedhardwarefwkservice/include/publisher",
@@ -43,7 +44,10 @@ ohos_fuzztest("PublisherItemFuzzTest") {
   ]
   sources = [ "publisheritem_fuzzer.cpp" ]
 
-  deps = [ "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice:distributedhardwarefwksvr" ]
+  deps = [ 
+    "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice:distributedhardwarefwksvr"
+    "${innerkits_path}:libdhfwk_sdk",
+  ]
 
   defines = [
     "HI_LOG_ENABLE",
