@@ -24,11 +24,12 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-class MockPublisherListener : public PublisherListenerStub {
+class MockPublisherListener : public IRemoteStub<IPublisherListener> {
 public:
     MockPublisherListener() = default;
     virtual ~MockPublisherListener() = default;
-    void OnMessage(const DHTopic topic, const std::string &message);
+    void OnMessage(const DHTopic topic, const std::string &message) override;
+    int32_t OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply, MessageOption &option) override;
 };
 } // namespace DistributedHardware
 } // namespace OHOS
