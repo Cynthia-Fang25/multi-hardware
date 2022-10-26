@@ -20,8 +20,17 @@
 
 #include <string>
 
-#include "ipublisher_listener.h"
+#include "distributed_hardware_stub.h"
 
-
+namespace OHOS {
+namespace DistributedHardware {
+class MockPublisherListener : public PublisherListenerStub {
+public:
+    MockPublisherListener() = default;
+    virtual ~MockPublisherListener() = default;
+    void OnMessage(const DHTopic topic, const std::string &message);
+};
+} // namespace DistributedHardware
+} // namespace OHOS
 #endif
 
