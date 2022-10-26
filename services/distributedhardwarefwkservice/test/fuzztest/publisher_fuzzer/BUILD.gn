@@ -47,11 +47,11 @@ ohos_fuzztest("PublisherFuzzTest") {
   sources = [ "publisher_fuzzer.cpp" ]
 
   deps = [
+    "${innerkits_path}:libdhfwk_sdk",
     "${utils_path}:distributedhardwareutils",
     "//foundation/distributedhardware/device_manager/interfaces/inner_kits/native_cpp:devicemanagersdk",
     "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice:distributedhardwarefwksvr",
     "//foundation/systemabilitymgr/safwk/interfaces/innerkits/safwk:system_ability_fwk",
-    "${innerkits_path}:libdhfwk_sdk",
   ]
 
   defines = [
