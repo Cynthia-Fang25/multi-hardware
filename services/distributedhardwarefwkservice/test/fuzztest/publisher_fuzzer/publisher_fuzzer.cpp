@@ -22,8 +22,9 @@
 #include <string>
 #include <unistd.h>
 
-#include "publisher.h"
+#include "single_instance.h"
 #include "distributed_hardware_errno.h"
+#include "publisher.h"
 
 namespace OHOS {
 namespace DistributedHardware {

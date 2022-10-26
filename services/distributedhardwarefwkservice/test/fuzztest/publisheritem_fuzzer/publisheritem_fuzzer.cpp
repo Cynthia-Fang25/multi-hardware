@@ -22,6 +22,7 @@
 #include <string>
 #include <unistd.h>
 
+#include "single_instance.h"
 #include "publisher.h"
 #include "distributed_hardware_errno.h"
 
