@@ -42,6 +42,16 @@ void MockPublisherListener::OnMessage(const DHTopic topic, const std::string &me
     (void)message;
 }
 
+int32_t MockPublisherListener::OnRemoteRequest(
+    uint32_t code, MessageParcel &data, MessageParcel &reply, MessageOption &option)
+{
+    (void)code;
+    (void)data;
+    (void)reply;
+    (void)option;
+    return DH_FWK_SUCCESS;
+}
+
 void PublisherListenerFuzzTest(const uint8_t* data, size_t size)
 {
     if ((data == nullptr) || (size <= 0)) {
@@ -56,8 +66,8 @@ void PublisherListenerFuzzTest(const uint8_t* data, size_t size)
     Publisher::GetInstance().PublishMessage(topic, message);
     Publisher::GetInstance().UnregisterListener(topic, listener);
 }
-}
-}
+} // namespace DistributedHardware
+} // namespace OHOS
 
 /* Fuzzer entry point */
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
