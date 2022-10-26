@@ -45,7 +45,7 @@ ohos_fuzztest("PublisherItemFuzzTest") {
   sources = [ "publisheritem_fuzzer.cpp" ]
 
   deps = [ 
-    "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice:distributedhardwarefwksvr"
+    "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice:distributedhardwarefwksvr",
     "${innerkits_path}:libdhfwk_sdk",
   ]
 
