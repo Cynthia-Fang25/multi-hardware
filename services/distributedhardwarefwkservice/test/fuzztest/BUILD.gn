@@ -22,6 +22,7 @@ group("fuzztest") {
     "componentmanager_fuzzer:fuzztest",
     "distributedhardwaremanagerfactory_fuzzer:fuzztest",
     "enableedcompsdump_fuzzer:fuzztest",
+    "publisher_fuzzer:fuzztest",
     "resourcemanager_fuzzer:fuzztest",
     "task_fuzzer:fuzztest",
     "versioninfomanager_fuzzer:fuzztest",

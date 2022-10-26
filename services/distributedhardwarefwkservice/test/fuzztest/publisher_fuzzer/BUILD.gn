@@ -27,11 +27,13 @@ ohos_fuzztest("PublisherFuzzTest") {
     "//utils/system/safwk/native/include",
     "//foundation/distributedhardware/device_manager/interfaces/inner_kits/native_cpp/include",
     "//foundation/distributedhardware/device_manager/common/include",
+    "//utils/system/safwk/native/include",
     "${utils_path}/include",
     "${utils_path}/include/log",
     "${common_path}/utils/include",
     "${common_path}/log/include",
     "${services_path}/distributedhardwarefwkservice/include",
+    "${services_path}/distributedhardwarefwkservice/include/utils",
     "${services_path}/distributedhardwarefwkservice/include/publisher",
   ]
   cflags = [
@@ -42,7 +44,12 @@ ohos_fuzztest("PublisherFuzzTest") {
   ]
   sources = [ "publisher_fuzzer.cpp" ]
 
-  deps = [ "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice:distributedhardwarefwksvr" ]
+  deps = [
+    "${utils_path}:distributedhardwareutils",
+    "//foundation/distributedhardware/device_manager/interfaces/inner_kits/native_cpp:devicemanagersdk",
+    "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice:distributedhardwarefwksvr",
+    "//foundation/systemabilitymgr/safwk/interfaces/innerkits/safwk:system_ability_fwk",
+  ]
 
   defines = [
     "HI_LOG_ENABLE",
@@ -52,7 +59,12 @@ ohos_fuzztest("PublisherFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
-    "init:libbegetutil"
+    "eventhandler:libeventhandler",
+    "init:libbegetutil",
+    "ipc:ipc_core",
+    "kv_store:distributeddata_inner",
+    "safwk:system_ability_fwk",
+    "samgr:samgr_proxy",
   ]
 }
 
