@@ -57,7 +57,12 @@ ohos_fuzztest("PublisherItemFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
-    "init:libbegetutil"
+    "eventhandler:libeventhandler",
+    "init:libbegetutil",
+    "ipc:ipc_core",
+    "kv_store:distributeddata_inner",
+    "safwk:system_ability_fwk",
+    "samgr:samgr_proxy",
   ]
 }
 
