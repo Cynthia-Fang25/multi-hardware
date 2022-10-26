@@ -30,5 +30,7 @@ public:
     virtual ~MockPublisherListener() = default;
     void OnMessage(const DHTopic topic, const std::string &message);
 };
+} // namespace DistributedHardware
+} // namespace OHOS
 #endif
 

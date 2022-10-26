@@ -33,5 +33,7 @@ public:
 private:
     DISALLOW_COPY_AND_MOVE(MockPublisherListener);
 };
+} // namespace DistributedHardware
+} // namespace OHOS
 #endif
 
