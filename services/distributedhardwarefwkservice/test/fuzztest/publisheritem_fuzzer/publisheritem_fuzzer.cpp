@@ -58,7 +58,7 @@ void PublisherItemFuzzTest(const uint8_t* data, size_t size)
     }
 
     DHTopic topic = topicFuzz[data[0] % TOPIC_SIZE];
-    sptr<IPublisherListener> listener = new MockPublisherListener();
+    sptr<IPublisherListener> listener = new MockPublisherItemListener();
     std::string message(reinterpret_cast<const char*>(data), size);
 
     PublisherItem publisherItem(topic);
