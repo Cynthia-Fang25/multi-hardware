@@ -372,5 +372,19 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_013, TestSize.Level0)
         DH_FWK_SUCCESS);
     EXPECT_EQ(capMap.size(), TEST_SIZE_10);
 }
+
+/**
+ * @tc.name: resource_manager_test_015
+ * @tc.desc: Verify the CapabilityInfoManager RemoveCapabilityInfoInDB function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSJE
+ */
+HWTEST_F(ResourceManagerTest, resource_manager_test_015, TestSize.Level0)
+{
+    std::string deviceIdEmpty = "";
+    EXPECT_EQ(CapabilityInfoManager::GetInstance()->RemoveCapabilityInfoInDB(deviceIdEmpty),
+        ERR_DH_FWK_PARA_INVALID);
+
+}
 } // namespace DistributedHardware
 } // namespace OHOS

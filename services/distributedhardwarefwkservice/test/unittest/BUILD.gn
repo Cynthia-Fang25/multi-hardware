@@ -15,11 +15,12 @@ group("test") {
   testonly = true
 
   deps = [
-    "common/accessmanager:AccessManagerTest",
+    "common/accessmanager:access_manager_test",
     "common/componentloader:component_loader_test",
     "common/componentmanager:component_manager_test",
     "common/dbadapter:db_adapter_test",
     "common/distributedhardwaremanager:distributed_hardware_manager_test",
+    "common/distributedhardwaremanagerfactory:distributed_hardware_manager_factory_test",
     "common/distributedhardwareservice:distributed_hardware_service_test",
     "common/localhardwaremanager:local_hardware_manager_test",
     "common/resourcemanager:resource_manager_test",
