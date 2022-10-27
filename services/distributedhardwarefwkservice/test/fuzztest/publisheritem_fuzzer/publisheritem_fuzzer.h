@@ -23,10 +23,17 @@
 #include "iremote_stub.h"
 
 #include "ipublisher_listener.h"
-#include "single_instance.h"
 
 namespace OHOS {
 namespace DistributedHardware {
+
+#define REMOVE_NO_USE_CONSTRUCTOR(className)            \
+private:                                                \
+    className(const className&) = delete;               \
+    className& operator= (const className&) = delete;   \
+    className(className&&) = delete;                    \
+    className& operator= (className&&) = delete;        \
+
 class MockPublisherItemListener : public IRemoteStub<IPublisherListener> {
 public:
     MockPublisherItemListener() = default;

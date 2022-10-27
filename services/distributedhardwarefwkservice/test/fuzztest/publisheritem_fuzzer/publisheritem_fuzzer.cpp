@@ -28,10 +28,10 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace {
-    const uint32_t TOPIC_SIZE = 6;
+    const uint32_t TOPIC_SIZE = 4;
     const DHTopic topicFuzz[TOPIC_SIZE] = {
-        DHTopic::TOPIC_MIN, DHTopic::TOPIC_START_DSCREEN, DHTopic::TOPIC_SINK_PROJECT_WINDOW_INFO,
-        DHTopic::TOPIC_STOP_DSCREEN, DHTopic::TOPIC_DEV_OFFLINE, DHTopic::TOPIC_MAX
+        DHTopic::TOPIC_START_DSCREEN, DHTopic::TOPIC_SINK_PROJECT_WINDOW_INFO,
+        DHTopic::TOPIC_STOP_DSCREEN, DHTopic::TOPIC_DEV_OFFLINE
     };
 }
 
