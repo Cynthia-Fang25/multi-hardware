@@ -20,9 +20,10 @@
 
 #include <string>
 
-#include "ipublisher_listener.h"
-
 #include "iremote_stub.h"
+
+#include "ipublisher_listener.h"
+#include "single_instance.h"
 
 namespace OHOS {
 namespace DistributedHardware {

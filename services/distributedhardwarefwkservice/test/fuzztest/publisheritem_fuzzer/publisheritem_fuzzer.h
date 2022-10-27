@@ -20,14 +20,17 @@
 
 #include <string>
 
-#include "distributed_hardware_stub.h"
+#include "iremote_stub.h"
+
+#include "ipublisher_listener.h"
+#include "single_instance.h"
 
 namespace OHOS {
 namespace DistributedHardware {
-class MockPublisherListener : public IRemoteStub<IPublisherListener> {
+class MockPublisherItemListener : public IRemoteStub<IPublisherListener> {
 public:
-    MockPublisherListener() = default;
-    virtual ~MockPublisherListener() = default;
+    MockPublisherItemListener() = default;
+    virtual ~MockPublisherItemListener() = default;
     void OnMessage(const DHTopic topic, const std::string &message) override;
     int32_t OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply, MessageOption &option) override;
 };

@@ -22,14 +22,12 @@
 #include <string>
 #include <unistd.h>
 
-#include "single_instance.h"
 #include "distributed_hardware_errno.h"
 #include "publisher.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 namespace {
-    constexpr uint32_t SLEEP_TIME_US = 10 * 1000;
     const uint32_t TOPIC_SIZE = 6;
     const DHTopic topicFuzz[TOPIC_SIZE] = {
         DHTopic::TOPIC_MIN, DHTopic::TOPIC_START_DSCREEN, DHTopic::TOPIC_SINK_PROJECT_WINDOW_INFO,

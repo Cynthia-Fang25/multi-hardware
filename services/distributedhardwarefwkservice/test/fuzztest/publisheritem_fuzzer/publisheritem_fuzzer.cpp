@@ -22,14 +22,12 @@
 #include <string>
 #include <unistd.h>
 
-#include "single_instance.h"
-#include "publisher.h"
+#include "publisher_item.h"
 #include "distributed_hardware_errno.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 namespace {
-    constexpr uint32_t SLEEP_TIME_US = 10 * 1000;
     const uint32_t TOPIC_SIZE = 6;
     const DHTopic topicFuzz[TOPIC_SIZE] = {
         DHTopic::TOPIC_MIN, DHTopic::TOPIC_START_DSCREEN, DHTopic::TOPIC_SINK_PROJECT_WINDOW_INFO,
@@ -37,13 +35,13 @@ namespace {
     };
 }
 
-void MockPublisherListener::OnMessage(const DHTopic topic, const std::string &message)
+void MockPublisherItemListener::OnMessage(const DHTopic topic, const std::string &message)
 {
     (void)topic;
     (void)message;
 }
 
-int32_t MockPublisherListener::OnRemoteRequest(
+int32_t MockPublisherItemListener::OnRemoteRequest(
     uint32_t code, MessageParcel &data, MessageParcel &reply, MessageOption &option)
 {
     (void)code;
