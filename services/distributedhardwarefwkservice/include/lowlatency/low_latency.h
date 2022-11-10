@@ -16,6 +16,7 @@
 #ifndef OHOS_DISTRIBUTED_HARDWARE_LOW_LATENCY_H
 #define OHOS_DISTRIBUTED_HARDWARE_LOW_LATENCY_H
 
+#include <mutex>
 #include <unordered_set>
 
 #include "device_type.h"
@@ -36,6 +37,7 @@ private:
 
 private:
     std::unordered_set<DHType> lowLatencySwitchSet_;
+    std::mutex lowLatencyMutex_;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

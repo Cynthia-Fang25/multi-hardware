@@ -41,6 +41,7 @@ void LowLatency::EnableLowLatency(DHType dhType)
         DHLOGE("DHType is invalid, dhType: %" PRIu32, (uint32_t)dhType);
         return;
     }
+    std::lock_guard<std::mutex> lock(lowLatencyMutex_);
     DHLOGI("lowLatencySwitchSet size: %d", lowLatencySwitchSet_.size());
     if (lowLatencySwitchSet_.empty()) {
         DHLOGD("Open LowLatency dhType: %#X", dhType);
@@ -64,6 +65,7 @@ void LowLatency::DisableLowLatency(DHType dhType)
         DHLOGE("DHType is invalid, dhType: %" PRIu32, (uint32_t)dhType);
         return;
     }
+    std::lock_guard<std::mutex> lock(lowLatencyMutex_);
     lowLatencySwitchSet_.erase(dhType);
     if (lowLatencySwitchSet_.empty()) {
         DHLOGD("Close LowLatency dhType: %#X", dhType);
@@ -79,6 +81,7 @@ void LowLatency::DisableLowLatency(DHType dhType)
 void LowLatency::CloseLowLatency()
 {
     DHLOGI("Shutdown LowLatency");
+    std::lock_guard<std::mutex> lock(lowLatencyMutex_);
     lowLatencySwitchSet_.clear();
     auto &rssClient = OHOS::ResourceSchedule::ResSchedClient::GetInstance();
     // to restore normal latency mode: value = 1
