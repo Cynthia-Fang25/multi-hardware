@@ -27,6 +27,7 @@ ohos_shared_library("distributedhardwareutils") {
     "include",
     "include/log",
     "include/eventbus",
+    "//third_party/json/include",
   ]
 
   sources = [
