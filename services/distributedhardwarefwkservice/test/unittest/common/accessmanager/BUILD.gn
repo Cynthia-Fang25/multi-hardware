@@ -34,6 +34,7 @@ config("module_private_config") {
     "${services_path}/distributedhardwarefwkservice/include/utils",
     "${services_path}/distributedhardwarefwkservice/include/accessmanager",
     "${utils_path}/include/eventbus",
+    "//third_party/json/include",
   ]
 }
 
