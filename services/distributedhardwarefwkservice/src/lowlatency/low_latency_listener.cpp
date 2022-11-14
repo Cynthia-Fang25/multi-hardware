@@ -25,6 +25,9 @@ namespace OHOS {
 namespace DistributedHardware {
 void LowLatencyListener::OnMessage(const DHTopic topic, const std::string& message)
 {
+    (void) topic;
+    (void) message;
+#ifdef DHARDWARE_LOW_LATENCY
     if (topic <= DHTopic::TOPIC_MIN || topic >= DHTopic::TOPIC_MAX) {
         DHLOGE("Topic is invalid, topic: %" PRIu32, (uint32_t)topic);
         return;
@@ -48,9 +51,11 @@ void LowLatencyListener::OnMessage(const DHTopic topic, const std::string& messa
     }
     DHType dhType = jsonObj[DH_TYPE];
     bool isEnable = jsonObj[LOW_LATENCY_ENABLE];
-
-#ifdef DHARDWARE_LOW_LATENCY
-    isEnable ? LowLatency::GetInstance().EnableLowLatency(dhType) : LowLatency::GetInstance().DisableLowLatency(dhType);
+    if (isEnable) {
+        LowLatency::GetInstance().EnableLowLatency(dhType);
+    } else {
+        LowLatency::GetInstance().DisableLowLatency(dhType);
+    }
 #endif
 }
 
