@@ -63,6 +63,8 @@ ohos_shared_library("distributedhardwarefwksvr") {
     "src/ipc/publisher_listener_proxy.cpp",
     "src/localhardwaremanager/local_hardware_manager.cpp",
     "src/localhardwaremanager/plugin_listener_impl.cpp",
+    "src/lowlatency/low_latency.cpp",
+    "src/lowlatency/low_latency_listener.cpp",
     "src/publisher/publisher.cpp",
     "src/publisher/publisher_item.cpp",
     "src/resourcemanager/capability_info.cpp",
@@ -82,15 +84,13 @@ ohos_shared_library("distributedhardwarefwksvr") {
     "src/task/task_factory.cpp",
     "src/utils/dh_context.cpp",
     "src/versionmanager/version_manager.cpp",
-    "src/lowlatency/low_latency.cpp",
-    "src/lowlatency/low_latency_listener.cpp",
   ]
 
   deps = [
     "${utils_path}:distributedhardwareutils",
     "//foundation/distributedhardware/device_manager/interfaces/inner_kits/native_cpp:devicemanagersdk",
-    "//foundation/systemabilitymgr/safwk/interfaces/innerkits/safwk:system_ability_fwk",
     "//foundation/resourceschedule/resource_schedule_service/ressched/interfaces/innerkits/ressched_client:ressched_client",
+    "//foundation/systemabilitymgr/safwk/interfaces/innerkits/safwk:system_ability_fwk",
   ]
 
   defines = [
