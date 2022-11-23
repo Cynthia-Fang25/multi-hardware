@@ -41,10 +41,7 @@ void AccessManagerFuzzTest(const uint8_t* data, size_t size)
 
     AccessManager::GetInstance()->Init();
     DmDeviceInfo deviceInfo;
-    int32_t ret = memcpy_s(deviceInfo.deviceId, DM_MAX_DEVICE_ID_LEN, (reinterpret_cast<const char *>(data)), size);
-    if (ret != EOK) {
-        return;
-    }
+    memcpy_s(deviceInfo.deviceId, DM_MAX_DEVICE_ID_LEN, (reinterpret_cast<const char *>(data)), size);
     AccessManager::GetInstance()->OnDeviceReady(deviceInfo);
 
     usleep(SLEEP_TIME_US);
