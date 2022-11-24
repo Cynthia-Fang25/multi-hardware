@@ -130,21 +130,8 @@ HWTEST_F(UtilsToolTest, utils_tool_test_004, TestSize.Level0)
 HWTEST_F(UtilsToolTest, utils_tool_test_005, TestSize.Level0)
 {
     std::string networkId = "";
-    std::string = GetUUIDBySoftBus(networkId);
+    std::string ret = GetUUIDBySoftBus(networkId);
     EXPECT_EQ(ret.size(), 0);
-}
-
-/**
- * @tc.name: utils_tool_test_005
- * @tc.desc: Verify the GetDeviceIdByUUID function
- * @tc.type: FUNC
- * @tc.require: AR000GHSK0
- */
-HWTEST_F(UtilsToolTest, utils_tool_test_005, TestSize.Level0)
-{
-    std::string uuidEmpty = "";
-    std::string ret = GetDeviceIdByUUID(uuidEmpty);
-    ASSERT_EQ(ret.size(), 0);
 }
 
 /**
@@ -154,6 +141,19 @@ HWTEST_F(UtilsToolTest, utils_tool_test_005, TestSize.Level0)
  * @tc.require: AR000GHSK0
  */
 HWTEST_F(UtilsToolTest, utils_tool_test_006, TestSize.Level0)
+{
+    std::string uuidEmpty = "";
+    std::string ret = GetDeviceIdByUUID(uuidEmpty);
+    ASSERT_EQ(ret.size(), 0);
+}
+
+/**
+ * @tc.name: utils_tool_test_007
+ * @tc.desc: Verify the GetDeviceIdByUUID function
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSK0
+ */
+HWTEST_F(UtilsToolTest, utils_tool_test_007, TestSize.Level0)
 {
     std::string uuid = "bb536a637105409e904d4da78290ab1";
     std::string ret = GetDeviceIdByUUID(uuid);

@@ -40,6 +40,7 @@ namespace DistributedHardware {
 
 namespace {
 const string DATABASE_DIR = "/data/service/el1/public/database/dtbhardware_manager_service/";
+const std::string DEV_NETWORK_ID_1 = "nt36a637105409e904d4da83790a4a9";
 const string TEST_DEV_ID_0 = "bb536a637105409e904d4da83791aa11";
 const string TEST_DEV_ID_1 = "bb536a637105409e904d4da83791bb22";
 const string TEST_DEV_ID_2 = "bb536a637105409e904d4da83791bb33";
