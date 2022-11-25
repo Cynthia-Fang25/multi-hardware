@@ -159,7 +159,5 @@ HWTEST_F(UtilsToolTest, utils_tool_test_007, TestSize.Level0)
     std::string ret = GetDeviceIdByUUID(uuid);
     ASSERT_NE(ret.size(), 0);
 }
-
-
 } // namespace DistributedHardware
 } // namespace OHOS
