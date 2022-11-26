@@ -15,7 +15,8 @@ import("//build/test.gni")
 import(
     "//foundation/distributedhardware/distributed_hardware_fwk/distributedhardwarefwk.gni")
 
-module_out_path = "distributed_hardware_fwk/access_manager_test"
+module_out_path =
+    "distributed_hardware_fwk/distributed_hardware_manager_factory_test"
 
 config("module_private_config") {
   include_dirs = [
@@ -23,7 +24,6 @@ config("module_private_config") {
     "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
     "//base/notification/eventhandler/interfaces/inner_api",
     "//commonlibrary/c_utils/base/include",
-    "//third_party/json/include",
     "//utils/system/safwk/native/include",
     "//foundation/distributedhardware/device_manager/interfaces/inner_kits/native_cpp/include",
     "//foundation/distributedhardware/device_manager/common/include",
@@ -38,7 +38,7 @@ config("module_private_config") {
   ]
 }
 
-ohos_unittest("AccessManagerTest") {
+ohos_unittest("DistributedHardwareManagerFactoryTest") {
   module_out_path = module_out_path
 
   sources = [
@@ -46,7 +46,7 @@ ohos_unittest("AccessManagerTest") {
     "${services_path}/distributedhardwarefwkservice/src/distributed_hardware_manager_factory.cpp",
   ]
 
-  sources += [ "access_manager_test.cpp" ]
+  sources += [ "distributed_hardware_manager_factory_test.cpp" ]
 
   configs = [ ":module_private_config" ]
 
@@ -65,8 +65,8 @@ ohos_unittest("AccessManagerTest") {
   external_deps = [ "init:libbegetutil" ]
 }
 
-group("access_manager_test") {
+group("distributed_hardware_manager_factory_test") {
   testonly = true
 
-  deps = [ ":AccessManagerTest" ]
+  deps = [ ":DistributedHardwareManagerFactoryTest" ]
 }
