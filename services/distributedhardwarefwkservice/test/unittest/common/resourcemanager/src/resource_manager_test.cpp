@@ -397,7 +397,7 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_015, TestSize.Level0)
     std::string value = "";
     std::shared_ptr<CapabilityInfo> capPtr = nullptr;
     int32_t ret = CapabilityUtils::GetCapabilityByValue(value, capPtr);
-    EXPECT_EQ(ret, ERR_DH_FWK_JSON_PARSE_FAILED);
+    EXPECT_EQ(ERR_DH_FWK_JSON_PARSE_FAILED, ret);
 }
 
 /**
@@ -411,7 +411,7 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_016, TestSize.Level0)
     std::string deviceId = "deviceIdtest";
     std::string dhId = "dhIdtest";
     std::string str = CapabilityUtils::GetCapabilityKey(deviceId, dhId);
-    EXPECT_EQ(str, "deviceIdtest###dhIdtest");
+    EXPECT_EQ("deviceIdtest###dhIdtest", str);
 }
 
 /**
@@ -424,7 +424,7 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_017, TestSize.Level0)
 {
     std::string key = "keytest";
     bool ret = CapabilityUtils::IsCapKeyMatchDeviceId(key, DEV_ID_0);
-    EXPECT_EQ(ret, false);
+    EXPECT_EQ(false, ret);
 }
 
 /**
@@ -437,7 +437,7 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_018, TestSize.Level0)
 {
     std::string key = "bb536a637105409e904d4da83790a4a7###keytest";
     bool ret = CapabilityUtils::IsCapKeyMatchDeviceId(key, DEV_ID_0);
-    EXPECT_EQ(ret, true);
+    EXPECT_EQ(true, ret);
 }
 
 /**

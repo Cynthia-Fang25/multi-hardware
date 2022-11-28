@@ -322,7 +322,7 @@ HWTEST_F(ComponentManagerTest, Enable_test_005, TestSize.Level0)
     std::string dhId = "";
     ComponentManager::GetInstance().compSource_.clear();
     auto ret = ComponentManager::GetInstance().Enable(networkId, uuid, dhId, DHType::CAMERA);
-    EXPECT_EQ(ret, ERR_DH_FWK_PARA_INVALID);
+    EXPECT_EQ(ERR_DH_FWK_PARA_INVALID, ret);
 }
 
 /**
@@ -405,7 +405,7 @@ HWTEST_F(ComponentManagerTest, Disable_test_005, TestSize.Level0)
     std::string dhId = "";
     ComponentManager::GetInstance().compSource_.clear();
     auto ret = ComponentManager::GetInstance().Disable(networkId, uuid, dhId, DHType::CAMERA);
-    EXPECT_EQ(ret, ERR_DH_FWK_PARA_INVALID);
+    EXPECT_EQ(ERR_DH_FWK_PARA_INVALID, ret);
 }
 
 /**
@@ -468,7 +468,7 @@ HWTEST_F(ComponentManagerTest, get_enableparam_test_001, TestSize.Level0)
     EnableParam param;
     auto ret = ComponentManager::GetInstance().GetEnableParam(NETWORK_TEST, UUID_TEST,
         DH_ID_1, DHType::CAMERA, param);
-    EXPECT_EQ(ret, DH_FWK_SUCCESS);
+    EXPECT_EQ(DH_FWK_SUCCESS, ret);
 }
 
 /**
@@ -494,7 +494,7 @@ HWTEST_F(ComponentManagerTest, get_sinkversion_fromvermgr_test_001, TestSize.Lev
     VersionManager::GetInstance().AddDHVersion(UUID_TEST, dhVersion);
     std::string sinkVersion;
     auto ret = ComponentManager::GetInstance().GetSinkVersionFromVerMgr(UUID_TEST, DHType::CAMERA, sinkVersion);
-    EXPECT_EQ(ret, DH_FWK_SUCCESS);
+    EXPECT_EQ(DH_FWK_SUCCESS, ret);
 }
 
 /**
@@ -508,7 +508,7 @@ HWTEST_F(ComponentManagerTest, GetDHType_test_001, TestSize.Level0)
     std::string uuid = "distribueted_111222333";
     std::string dhId = "camera_1234567489";
     auto ret = ComponentManager::GetInstance().GetDHType(uuid, dhId);
-    EXPECT_EQ(ret, DHType::UNKNOWN);
+    EXPECT_EQ(DHType::UNKNOWN, ret);
 }
 } // namespace DistributedHardware
 } // namespace OHOS

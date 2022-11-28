@@ -171,7 +171,7 @@ HWTEST_F(ComponentLoaderTest, component_loader_test_009, TestSize.Level0)
 {
     std::string soNameEmpty = "";
     auto handler = ComponentLoader::GetInstance().GetHandler(soNameEmpty);
-    EXPECT_EQ(handler, nullptr);
+    EXPECT_EQ(nullptr, handler);
 }
 
 /**
@@ -184,7 +184,7 @@ HWTEST_F(ComponentLoaderTest, component_loader_test_010, TestSize.Level0)
 {
     std::string soName = "NON_EXISTENT_SO";
     auto handler = ComponentLoader::GetInstance().GetHandler(soName);
-    EXPECT_EQ(handler, nullptr);
+    EXPECT_EQ(nullptr, handler);
 }
 
 /**
@@ -221,8 +221,9 @@ HWTEST_F(ComponentLoaderTest, component_loader_test_012, TestSize.Level0)
  */
 HWTEST_F(ComponentLoaderTest, component_loader_test_013, TestSize.Level0)
 {
+    const int32_t INVALID_SA_ID = -1;
     int32_t ret = ComponentLoader::GetInstance().GetSourceSaId(DHType::UNKNOWN);
-    EXPECT_EQ(-1, ret);
+    EXPECT_EQ(INVALID_SA_ID, ret);
 }
 } // namespace DistributedHardware
 } // namespace OHOS

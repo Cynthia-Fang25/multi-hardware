@@ -131,7 +131,7 @@ HWTEST_F(UtilsToolTest, utils_tool_test_005, TestSize.Level0)
 {
     std::string networkId = "";
     std::string ret = GetUUIDBySoftBus(networkId);
-    EXPECT_EQ(ret.size(), 0);
+    EXPECT_EQ(0, ret.size());
 }
 
 /**
@@ -144,7 +144,7 @@ HWTEST_F(UtilsToolTest, utils_tool_test_006, TestSize.Level0)
 {
     std::string uuidEmpty = "";
     std::string ret = GetDeviceIdByUUID(uuidEmpty);
-    ASSERT_EQ(ret.size(), 0);
+    ASSERT_EQ(0, ret.size());
 }
 
 /**
@@ -157,7 +157,7 @@ HWTEST_F(UtilsToolTest, utils_tool_test_007, TestSize.Level0)
 {
     std::string uuid = "bb536a637105409e904d4da78290ab1";
     std::string ret = GetDeviceIdByUUID(uuid);
-    ASSERT_NE(ret.size(), 0);
+    ASSERT_NE(0, ret.size());
 }
 } // namespace DistributedHardware
 } // namespace OHOS
