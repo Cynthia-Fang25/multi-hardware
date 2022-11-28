@@ -310,6 +310,22 @@ HWTEST_F(ComponentManagerTest, enable_test_004, TestSize.Level0)
 }
 
 /**
+ * @tc.name: enable_test_005
+ * @tc.desc: Verify the Enable for Multi-thread
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSK7
+ */
+HWTEST_F(ComponentManagerTest, Enable_test_005, TestSize.Level0)
+{
+    std::string networkId = "";
+    std::string uuid = "";
+    std::string dhId = "";
+    ComponentManager::GetInstance().compSource_.clear();
+    auto ret = ComponentManager::GetInstance().Enable(networkId, uuid, dhId, DHType::CAMERA);
+    EXPECT_EQ(ret, ERR_DH_FWK_PARA_INVALID);
+}
+
+/**
  * @tc.name: disable_test_001
  * @tc.desc: Verify the Disable success
  * @tc.type: FUNC
@@ -374,6 +390,22 @@ HWTEST_F(ComponentManagerTest, disable_test_004, TestSize.Level0)
     thread4.join();
     thread5.join();
     thread6.join();
+}
+
+/**
+ * @tc.name: disable_test_005
+ * @tc.desc: Verify the Disable for Multi-thread
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSK9
+ */
+HWTEST_F(ComponentManagerTest, Disable_test_005, TestSize.Level0)
+{
+    std::string networkId = "";
+    std::string uuid = "";
+    std::string dhId = "";
+    ComponentManager::GetInstance().compSource_.clear();
+    auto ret = ComponentManager::GetInstance().Disable(networkId, uuid, dhId, DHType::CAMERA);
+    EXPECT_EQ(ret, ERR_DH_FWK_PARA_INVALID);
 }
 
 /**
@@ -463,6 +495,20 @@ HWTEST_F(ComponentManagerTest, get_sinkversion_fromvermgr_test_001, TestSize.Lev
     std::string sinkVersion;
     auto ret = ComponentManager::GetInstance().GetSinkVersionFromVerMgr(UUID_TEST, DHType::CAMERA, sinkVersion);
     EXPECT_EQ(ret, DH_FWK_SUCCESS);
+}
+
+/**
+ * @tc.name: GetDHType_test_001
+ * @tc.desc: Verify the GetDHType
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSK9
+ */
+HWTEST_F(ComponentManagerTest, GetDHType_test_001, TestSize.Level0)
+{
+    std::string uuid = "distribueted_111222333";
+    std::string dhId = "camera_1234567489";
+    auto ret = ComponentManager::GetInstance().GetDHType(uuid, dhId);
+    EXPECT_EQ(ret, DHType::UNKNOWN);
 }
 } // namespace DistributedHardware
 } // namespace OHOS
