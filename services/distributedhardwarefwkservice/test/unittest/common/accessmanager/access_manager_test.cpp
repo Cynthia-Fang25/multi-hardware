@@ -21,12 +21,12 @@
 
 #include "gtest/gtest.h"
 
-#include "dm_device_info.h"
 #define private public
 #include "access_manager.h"
+#undef private
+#include "dm_device_info.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_manager_factory.h"
-#undef private
 using namespace testing::ext;
 
 namespace OHOS {
