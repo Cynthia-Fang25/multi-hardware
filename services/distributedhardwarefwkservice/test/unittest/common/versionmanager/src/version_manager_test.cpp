@@ -155,6 +155,12 @@ HWTEST_F(VersionManagerTest, version_manager_test_005, TestSize.Level0)
     EXPECT_EQ(DH_FWK_SUCCESS, ret);
 }
 
+/**
+ * @tc.name: version_manager_test_006
+ * @tc.desc: Verify GetCompVersion function
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSKN
+ */
 HWTEST_F(VersionManagerTest, version_manager_test_006, TestSize.Level0)
 {
     DHVersion dhVersion;
