@@ -510,20 +510,5 @@ HWTEST_F(ComponentManagerTest, GetDHType_test_001, TestSize.Level0)
     auto ret = ComponentManager::GetInstance().GetDHType(uuid, dhId);
     EXPECT_EQ(ret, DHType::UNKNOWN);
 }
-
-/**
- * @tc.name: Enable_test_001
- * @tc.desc: Verify the Enable
- * @tc.type: FUNC
- * @tc.require: AR000GHSK9
- */
-/*HWTEST_F(ComponentManagerTest, Enable_test_001, TestSize.Level0)
-{
-    EnableParam param;
-    MockIDistributedHardwareSource *stub;
-    auto compDisable = std::make_shared<ComponentDisable>();
-    auto ret = compDisable->Disable(NETWORK_TEST, UUID_TEST, stub);
-     EXPECT_EQ(ret, ERR_DH_FWK_PARA_INVALID);
-}*/
 } // namespace DistributedHardware
 } // namespace OHOS
