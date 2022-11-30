@@ -377,7 +377,7 @@ HWTEST_F(AccessManagerTest, OnDeviceChanged_001, TestSize.Level0)
  */
 HWTEST_F(AccessManagerTest, UnInit_001, TestSize.Level0)
 {
-    EXPECT_EQ(ERR_DH_FWK_ACCESS_UNINIT_DM_FAILED, AccessManager::GetInstance()->UnInit());
+    EXPECT_EQ(DH_FWK_SUCCESS, AccessManager::GetInstance()->UnInit());
 }
 
 /**
@@ -388,7 +388,7 @@ HWTEST_F(AccessManagerTest, UnInit_001, TestSize.Level0)
  */
 HWTEST_F(AccessManagerTest, UnRegisterDevStateCallback_001, TestSize.Level0)
 {
-    EXPECT_NE(DH_FWK_SUCCESS, AccessManager::GetInstance()->UnRegisterDevStateCallback());
+    EXPECT_EQ(DH_FWK_SUCCESS, AccessManager::GetInstance()->UnRegisterDevStateCallback());
 }
 } // namespace DistributedHardware
 } // namespace OHOS

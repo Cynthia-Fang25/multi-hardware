@@ -28,6 +28,5 @@ group("test") {
     "common/task:dh_task_test",
     "common/versioninfomanager:versioninfo_manager_test",
     "common/versionmanager:version_manager_test",
-    "common/task:dh_task_test",
   ]
 }
