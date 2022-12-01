@@ -19,7 +19,9 @@
 #include <set>
 #include <string>
 
+#define private public
 #include "enabled_comps_dump.h"
+#undef private
 
 using namespace testing::ext;
 namespace OHOS {
