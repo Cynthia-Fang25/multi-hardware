@@ -38,7 +38,7 @@ void ComponentMonitorTest::SetUp()
     compMonitorPtr_ = std::make_shared<ComponentMonitor>();
 }
 
-void ComponentMonitorTest::TearDown() 
+void ComponentMonitorTest::TearDown()
 {
     compMonitorPtr_ = nullptr;
 }

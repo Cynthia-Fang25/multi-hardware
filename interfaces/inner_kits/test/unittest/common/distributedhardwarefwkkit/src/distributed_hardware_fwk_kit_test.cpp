@@ -22,12 +22,10 @@
 
 #include "distributed_hardware_errno.h"
 #include "dhfwk_sa_manager.h"
+#include "distributed_hardware_fwk_kit.h"
 #include "distributed_hardware_log.h"
 #include "iservice_registry.h"
 #include "system_ability_definition.h"
-#define private public
-#include "distributed_hardware_fwk_kit.h"
-#undef private
 
 using OHOS::DistributedHardware::DHTopic;
 

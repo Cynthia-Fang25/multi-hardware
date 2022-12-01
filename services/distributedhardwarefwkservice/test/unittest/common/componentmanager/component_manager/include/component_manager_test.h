@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef OHOS_DISTRIBUTED_HARDWARE_COMPONENT_MANAGER_TEST_H
-#define OHOS_DISTRIBUTED_HARDWARE_COMPONENT_MANAGER_TEST_H
+#ifndef COMPONENT_MANAGER_TEST_H
+#define COMPONENT_MANAGER_TEST_H
 
 #include "gtest/gtest.h"
 
