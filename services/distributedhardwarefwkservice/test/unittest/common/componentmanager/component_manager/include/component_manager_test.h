@@ -31,4 +31,4 @@ public:
 };
 } // namespace DistributedHardware
 } // namespace OHOS
-#endif
+#endif COMPONENT_MANAGER_TEST_H
