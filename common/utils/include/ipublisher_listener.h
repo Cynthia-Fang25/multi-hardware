@@ -42,6 +42,8 @@ enum class DHTopic : uint32_t {
 
 class IPublisherListener : public IRemoteBroker {
 public:
+    IPublisherListener() = default;
+    virtual ~IPublisherListener() = default;
     virtual void OnMessage(const DHTopic topic, const std::string& message) = 0;
 
     enum class Message : uint32_t {

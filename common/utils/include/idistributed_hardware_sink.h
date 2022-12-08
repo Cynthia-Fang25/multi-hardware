@@ -23,11 +23,15 @@ namespace DistributedHardware {
 const std::string COMPONENT_LOADER_GET_SINK_HANDLER = "GetSinkHardwareHandler";
 class SubscribeCallback {
 public:
+    SubscribeCallback() = default;
+    virtual ~SubscribeCallback() = default;
     virtual int32_t OnSubscribeCallback(const std::string &dhId, int32_t status, const std::string &data) = 0;
 };
 
 class IDistributedHardwareSink {
 public:
+    IDistributedHardwareSink() = default;
+    virtual ~IDistributedHardwareSink() = default;
     virtual int32_t InitSink(const std::string &params) = 0;
     virtual int32_t ReleaseSink() = 0;
     virtual int32_t SubscribeLocalHardware(const std::string &dhId, const std::string &params) = 0;

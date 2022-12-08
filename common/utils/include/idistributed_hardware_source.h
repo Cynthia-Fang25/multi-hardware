@@ -24,12 +24,16 @@ namespace DistributedHardware {
 const std::string COMPONENT_LOADER_GET_SOURCE_HANDLER = "GetSourceHardwareHandler";
 class RegisterCallback {
 public:
+    RegisterCallback() = default;
+    virtual ~RegisterCallback() = default;
     virtual int32_t OnRegisterResult(const std::string &uuid, const std::string &dhId, int32_t status,
         const std::string &data) = 0;
 };
 
 class UnregisterCallback {
 public:
+    UnregisterCallback() = default;
+    virtual ~UnregisterCallback() = default;
     virtual int32_t OnUnregisterResult(const std::string &uuid, const std::string &dhId, int32_t status,
         const std::string &data) = 0;
 };
@@ -41,6 +45,8 @@ struct EnableParam {
 
 class IDistributedHardwareSource {
 public:
+    IDistributedHardwareSource() = default;
+    virtual ~IDistributedHardwareSource() = default;
     virtual int32_t InitSource(const std::string &params) = 0;
     virtual int32_t ReleaseSource() = 0;
     virtual int32_t RegisterDistributedHardware(const std::string &uuid, const std::string &dhId,
