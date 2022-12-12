@@ -84,7 +84,7 @@ HWTEST_F(LowLatencyTest, EnableLowLatency_003, TestSize.Level0)
 HWTEST_F(LowLatencyTest, EnableLowLatency_004, TestSize.Level0)
 {
     uint32_t MAX_SWITCH_SIZE = 256;
-    for(uint32_t i = 0; i <= MAX_SWITCH_SIZE; ++i) {
+    for (uint32_t i = 0; i <= MAX_SWITCH_SIZE; ++i) {
         LowLatency::GetInstance().lowLatencySwitchSet_.insert(static_cast<DHType>(i));
     }
     DHType dhType = DHType::CAMERA;
