@@ -24,12 +24,11 @@ group("test") {
     "common/distributedhardwareservice:distributed_hardware_service_test",
     "common/hidumphelper:enabled_comps_dump_test",
     "common/localhardwaremanager:local_hardware_manager_test",
+    "common/lowlatency/lowlatency:low_latency_text",
+    "common/lowlatency/lowlatencylistener:low_latency_listener_text",
     "common/resourcemanager:resource_manager_test",
     "common/task:dh_task_test",
     "common/versioninfomanager:versioninfo_manager_test",
     "common/versionmanager:version_manager_test",
-    "common/ipc:publisher_listener_proxy_text",
-    "common/lowlatency/lowlatency:low_latency_text",
-    "common/lowlatency/lowlatencylistener:low_latency_listener_text",
   ]
 }
