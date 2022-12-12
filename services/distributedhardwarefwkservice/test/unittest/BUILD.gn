@@ -28,6 +28,7 @@ group("test") {
     "common/task:dh_task_test",
     "common/versioninfomanager:versioninfo_manager_test",
     "common/versionmanager:version_manager_test",
+    "common/ipc:publisher_listener_proxy_text",
     "common/lowlatency/lowlatency:low_latency_text",
     "common/lowlatency/lowlatencylistener:low_latency_listener_text",
   ]
