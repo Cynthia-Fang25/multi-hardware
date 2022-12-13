@@ -36,8 +36,8 @@ public:
 class MockDBAdapter : public DBAdapter {
 public:
     MockDBAdapter(const std::string &appId, const std::string &storeId,
-        const std::shared_ptr<DistributedKv::KvStoreObserver> &changeListener) :
-            DBAdapter(appId, storeId, changeListener) {}
+        const std::shared_ptr<DistributedKv::KvStoreObserver> &changeListener)
+            : DBAdapter(appId, storeId, changeListener) {}
 
     int32_t RemoveCapabilityInfoByKey(const std::string &key)
     {
