@@ -33,6 +33,7 @@ void LowLatencyTest::SetUp()
 
 void LowLatencyTest::TearDown()
 {
+    LowLatency::GetInstance().lowLatencySwitchSet_.clear();
 }
 
 /**
@@ -102,7 +103,7 @@ HWTEST_F(LowLatencyTest, DisableLowLatency_001, TestSize.Level0)
 {
     DHType dhType = DHType::UNKNOWN;
     LowLatency::GetInstance().DisableLowLatency(dhType);
-    EXPECT_EQ(false, LowLatency::GetInstance().lowLatencySwitchSet_.empty());
+    EXPECT_EQ(true, LowLatency::GetInstance().lowLatencySwitchSet_.empty());
 }
 
 /**
@@ -116,7 +117,7 @@ HWTEST_F(LowLatencyTest, DisableLowLatency_002, TestSize.Level0)
     DHType dhType = DHType::CAMERA;
     LowLatency::GetInstance().lowLatencySwitchSet_.insert(dhType);
     LowLatency::GetInstance().DisableLowLatency(dhType);
-    EXPECT_EQ(false, LowLatency::GetInstance().lowLatencySwitchSet_.empty());
+    EXPECT_EQ(true, LowLatency::GetInstance().lowLatencySwitchSet_.empty());
 }
 
 /**
