@@ -13,27 +13,28 @@
  * limitations under the License.
  */
 
-#ifndef OHOS_DISTRIBUTED_HARDWARE_LOW_LATENCY_TEXT_H
-#define OHOS_DISTRIBUTED_HARDWARE_LOW_LATENCY_TEXT_H
+#ifndef OHOS_DISTRIBUTED_HARDWARE_LOW_LATENCY_LISTENER_TEST_H
+#define OHOS_DISTRIBUTED_HARDWARE_LOW_LATENCY_LISTENER_TEST_H
 
 #include <string>
 #include <memory>
 #include <gtest/gtest.h>
 
 #define private public
-#include "low_latency.h"
+#include "low_latency_listener.h"
 #undef private
 #include "distributed_hardware_errno.h"
 
 namespace OHOS {
 namespace DistributedHardware {
-class LowLatencyTest : public testing::Test {
+class LowLatencyListenerTest : public testing::Test {
 public:
     static void SetUpTestCase();
     static void TearDownTestCase();
     void SetUp();
     void TearDown();
+    sptr<LowLatencyListener> Listener_ = nullptr;
 };
 } // namespace DistributedHardware
 } // namespace OHOS
-#endif // OHOS_DISTRIBUTED_HARDWARE_LOW_LATENCY_TEXT_H
+#endif // OHOS_DISTRIBUTED_HARDWARE_LOW_LATENCY_LISTENER_TEST_H

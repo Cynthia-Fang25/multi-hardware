@@ -42,6 +42,7 @@ void ComponentLoaderTest::TearDown()
 {
     ComponentLoader::GetInstance().UnInit();
     g_compHandlerMap.clear();
+    ComponentLoader::GetInstance().compHandlerMap_.clear();
 }
 
 /**

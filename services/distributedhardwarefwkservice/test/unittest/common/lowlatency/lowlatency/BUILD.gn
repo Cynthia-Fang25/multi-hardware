@@ -15,7 +15,7 @@ import("//build/test.gni")
 import(
     "//foundation/distributedhardware/distributed_hardware_fwk/distributedhardwarefwk.gni")
 
-module_out_path = "distributed_hardware_fwk/low_latency_text"
+module_out_path = "distributed_hardware_fwk/low_latency_test"
 
 config("module_private_config") {
   visibility = [ ":*" ]
@@ -29,10 +29,10 @@ config("module_private_config") {
   ]
 }
 
-ohos_unittest("LowLatencyText") {
+ohos_unittest("LowLatencyTest") {
   module_out_path = module_out_path
 
-  sources = [ "src/low_latency_text.cpp" ]
+  sources = [ "src/low_latency_test.cpp" ]
 
   configs = [ ":module_private_config" ]
 
@@ -44,7 +44,7 @@ ohos_unittest("LowLatencyText") {
 
   defines = [
     "HI_LOG_ENABLE",
-    "DH_LOG_TAG=\"LowLatencyText\"",
+    "DH_LOG_TAG=\"LowLatencyTest\"",
     "LOG_DOMAIN=0xD004100",
   ]
 
@@ -54,7 +54,7 @@ ohos_unittest("LowLatencyText") {
   ]
 }
 
-group("low_latency_text") {
+group("low_latency_test") {
   testonly = true
-  deps = [ ":LowLatencyText" ]
+  deps = [ ":LowLatencyTest" ]
 }

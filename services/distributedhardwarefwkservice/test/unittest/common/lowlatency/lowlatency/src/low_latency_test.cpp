@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "low_latency_text.h"
+#include "low_latency_test.h"
 
 using namespace testing::ext;
 
