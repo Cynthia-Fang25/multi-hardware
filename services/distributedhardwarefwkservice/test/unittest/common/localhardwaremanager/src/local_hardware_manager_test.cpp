@@ -18,6 +18,7 @@
 #define private public
 #include "capability_info_manager.h"
 #include "component_loader.h"
+#include "dh_context.h"
 #include "local_hardware_manager.h"
 #undef private
 
@@ -59,6 +60,63 @@ HWTEST_F(LocalHardwareManagerTest, local_hardware_manager_test_001, TestSize.Lev
 HWTEST_F(LocalHardwareManagerTest, local_hardware_manager_test_002, TestSize.Level0)
 {
     LocalHardwareManager::GetInstance().UnInit();
+}
+
+/**
+ * @tc.name: Init_001
+ * @tc.desc: Verify the Init function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSK3
+ */
+HWTEST_F(LocalHardwareManagerTest, Init_001, TestSize.Level0)
+{
+    ComponentLoader::GetInstance().UnInit();
+    LocalHardwareManager::GetInstance().Init();
+    EXPECT_EQ(true, LocalHardwareManager::GetInstance().pluginListenerMap_.empty());
+}
+
+/**
+ * @tc.name: CheckNonExistCapabilityInfo_001
+ * @tc.desc: Verify the CheckNonExistCapabilityInfo function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSK3
+ */
+HWTEST_F(LocalHardwareManagerTest, CheckNonExistCapabilityInfo_001, TestSize.Level0)
+{
+    std::vector<DHItem> dhItems;
+    DHType dhType =  DHType::INPUT;
+    LocalHardwareManager::GetInstance().CheckNonExistCapabilityInfo(dhItems, dhType);
+    EXPECT_EQ(true, LocalHardwareManager::GetInstance().pluginListenerMap_.empty());
+}
+
+/**
+ * @tc.name: GetLocalCapabilityMapByPrefix_001
+ * @tc.desc: Verify the GetLocalCapabilityMapByPrefix function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSK3
+ */
+HWTEST_F(LocalHardwareManagerTest, GetLocalCapabilityMapByPrefix_001, TestSize.Level0)
+{
+    DHType dhType =  DHType::INPUT;
+    CapabilityInfoMap capabilityInfoMap;
+    LocalHardwareManager::GetInstance().GetLocalCapabilityMapByPrefix(dhType, capabilityInfoMap);
+    EXPECT_EQ(true, LocalHardwareManager::GetInstance().pluginListenerMap_.empty());
+}
+
+/**
+ * @tc.name: GetLocalCapabilityMapByPrefix_002
+ * @tc.desc: Verify the GetLocalCapabilityMapByPrefix function.
+ * @tc.type: FUNC
+ * @tc.require: AR000GHSK3
+ */
+HWTEST_F(LocalHardwareManagerTest, GetLocalCapabilityMapByPrefix_002, TestSize.Level0)
+{
+    uint32_t invalid = 0x09;
+    DHType dhType = static_cast<DHType>(invalid);
+    CapabilityInfoMap capabilityInfoMap;
+    DHContext::GetInstance().devInfo_.deviceId = "deviceId";
+    LocalHardwareManager::GetInstance().GetLocalCapabilityMapByPrefix(dhType, capabilityInfoMap);
+    EXPECT_EQ(true, LocalHardwareManager::GetInstance().pluginListenerMap_.empty());
 }
 } // namespace DistributedHardware
 } // namespace OHOS
