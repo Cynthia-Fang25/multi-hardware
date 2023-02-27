@@ -35,6 +35,7 @@ namespace DistributedHardware {
     constexpr int32_t MODE_ENABLE = 0;
     constexpr int32_t MODE_DISABLE = 1;
     constexpr uint32_t MAX_SWITCH_SIZE = 256;
+    constexpr uint32_t DISTRIBUTED_HARDWARE_FWK_SA_ID = 4801;
     const std::string LOW_LATENCY_KEY = "identity";
     const std::u16string DHMS_STUB_INTERFACE_TOKEN = u"ohos.distributedhardware.accessToken";
     const std::string COMPONENTSLOAD_PROFILE_PATH =
