@@ -24,7 +24,7 @@ namespace DistributedHardware {
 class PluginListenerImpl : public PluginListener {
 public:
     explicit PluginListenerImpl(const DHType type) : dhType_(type) {}
-    virtual ~PluginListenerImpl() = default;
+    ~PluginListenerImpl() = default;
 
     virtual void PluginHardware(const std::string &dhId, const std::string &attrs) override;
     virtual void UnPluginHardware(const std::string &dhId) override;
