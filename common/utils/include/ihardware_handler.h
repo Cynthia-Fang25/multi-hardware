@@ -31,12 +31,16 @@ struct DHItem {
 
 class PluginListener {
 public:
+    PluginListener() = default;
+    virtual ~PluginListener() = default;
     virtual void PluginHardware(const std::string &dhId, const std::string &attrs) = 0;
     virtual void UnPluginHardware(const std::string &dhId) = 0;
 };
 
 class IHardwareHandler {
 public:
+    IHardwareHandler() = default;
+    virtual ~IHardwareHandler() = default;
     virtual int32_t Initialize() = 0;
     virtual std::vector<DHItem> Query() = 0;
     virtual std::map<std::string, std::string> QueryExtraInfo() = 0;

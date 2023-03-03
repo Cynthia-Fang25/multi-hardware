@@ -25,7 +25,8 @@ namespace OHOS {
 namespace DistributedHardware {
 class IDistributedHardwareManager {
 public:
-    virtual ~IDistributedHardwareManager() {}
+    IDistributedHardwareManager() = default;
+    virtual ~IDistributedHardwareManager() = default;
     virtual int32_t Initialize() = 0;
     virtual int32_t Release() = 0;
     virtual int32_t SendOnLineEvent(const std::string &networkId, const std::string &uuid,
