@@ -51,7 +51,10 @@ ohos_unittest("ComponentLoaderTest") {
     "//third_party/googletest:gtest_main",
   ]
 
-  external_deps = [ "hitrace_native:hitrace_meter" ]
+  external_deps = [
+    "config_policy:configpolicy_util",
+    "hitrace_native:hitrace_meter",
+  ]
 
   defines = [
     "HI_LOG_ENABLE",
