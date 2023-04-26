@@ -107,6 +107,7 @@ ohos_shared_library("distributedhardwarefwksvr") {
 
   external_deps = [
     "c_utils:utils",
+    "config_policy:configpolicy_util",
     "eventhandler:libeventhandler",
     "init:libbegetutil",
     "ipc:ipc_core",
