@@ -81,6 +81,8 @@ int Dump(int fd, const std::vector<std::u16string> &args)
     (void)args;
     return DH_FWK_SUCCESS;
 }
+
+void WaitForInit() override {};
 };
 } // namespace DistributedHardware
 } // namespace OHOS
