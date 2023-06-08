@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -40,19 +40,24 @@ class SoftbusChannelAdapter {
 public:
     int32_t CreateChannelServer(const std::string &ownerName, const std::string &sessName);
     int32_t RemoveChannelServer(const std::string &ownerName, const std::string &sessName);
+
     int32_t OpenSoftbusChannel(const std::string &mySessName, const std::string &peerSessName,
         const std::string &peerDevId);
     int32_t CloseSoftbusChannel(const std::string &mySessName, const std::string &peerDevId);
+
     int32_t SendBytesData(const std::string &sessName, const std::string &peerDevId, const std::string &data);
     int32_t SendStreamData(const std::string &sessName, const std::string &peerDevId, const StreamData *data,
         const StreamData *ext);
+
     int32_t RegisterChannelListener(const std::string &sessName, const std::string &peerDevId, 
         ISoftbusChannelListener *listener);
     int32_t UnRegisterChannelListener(const std::string &sessName, const std::string &peerDevId);
+
     int32_t StartDeviceTimeSync(const std::string &ownerName, const std::string &sessName, 
         const std::string &peerDevId);
     int32_t StopDeviceTimeSync(const std::string &ownerName, const std::string &sessName, 
         const std::string &peerDevId);
+
     void SendChannelEvent(ISoftbusChannelListener *listener, const AVTransEvent &event);
 
     int32_t OnSoftbusChannelOpened(int32_t sessionId, int32_t result);
