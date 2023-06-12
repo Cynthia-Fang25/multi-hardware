@@ -26,16 +26,16 @@ const std::string META_FRAME_NUMBER = "meta_frame_number";
 
 std::shared_ptr<OHOS::Media::Plugin::BufferMeta> AVTransAudioBufferMeta::Clone()
 {
-   auto bufferMeta = std::make_shared<AVTransAudioBufferMeta>();
-   bufferMeta->pts_ = pts_;
-   bufferMeta->cts_ = cts_;
-   bufferMeta->format_ = format_;
-   bufferMeta->dataType_ = dataType_;
-   bufferMeta->frameNum_ = frameNum_;
-   bufferMeta->channels_ = channels_;
-   bufferMeta->sampleRate_ = sampleRate_;
-   bufferMeta->Upate(*this);
-   return bufferMeta;
+    auto bufferMeta = std::make_shared<AVTransAudioBufferMeta>();
+    bufferMeta->pts_ = pts_;
+    bufferMeta->cts_ = cts_;
+    bufferMeta->format_ = format_;
+    bufferMeta->dataType_ = dataType_;
+    bufferMeta->frameNum_ = frameNum_;
+    bufferMeta->channels_ = channels_;
+    bufferMeta->sampleRate_ = sampleRate_;
+    bufferMeta->Update(*this);
+    return bufferMeta;
 }
 
 std::string AVTransAudioBufferMeta::MarshalAudioMeta()
@@ -53,10 +53,8 @@ bool AVTransAudioBufferMeta::UnmarshalAudioMeta(const std::string& jsonStr)
     if (metaJson.is_discarded()) {
         return false;
     }
-    if (!metaJson.contains(META_DATA_TYPE) || !metaJson.contains(META_TIMESTAMP) || !metaJson.contains(META_FRAME_NUMBER)) {
-        return false;
-    }
-    if (!IsUInt32(metaJson, META_DATA_TYPE) || !IsInt64(metaJson, META_TIMESTAMP) || !IsUInt32(metaJson, META_FRAME_NUMBER)) {
+    if (!IsUInt32(metaJson, META_DATA_TYPE) || !IsInt64(metaJson, META_TIMESTAMP) ||
+        !IsUInt32(metaJson, META_FRAME_NUMBER)) {
         return false;
     }
     dataType_ = metaJson[META_DATA_TYPE].get<BufferDataType>();
@@ -67,16 +65,16 @@ bool AVTransAudioBufferMeta::UnmarshalAudioMeta(const std::string& jsonStr)
 
 std::shared_ptr<OHOS::Media::Plugin::BufferMeta> AVTransVideoBufferMeta::Clone()
 {
-   auto bufferMeta = std::make_shared<AVTransVideoBufferMeta>();
-   bufferMeta->pts_ = pts_;
-   bufferMeta->cts_ = cts_;
-   bufferMeta->width_ = width_;
-   bufferMeta->height_ = height_;
-   bufferMeta->format_ = format_;
-   bufferMeta->dataType_ = dataType_;
-   bufferMeta->frameNum_ = frameNum_;
-   bufferMeta->Upate(*this);
-   return bufferMeta;
+    auto bufferMeta = std::make_shared<AVTransVideoBufferMeta>();
+    bufferMeta->pts_ = pts_;
+    bufferMeta->cts_ = cts_;
+    bufferMeta->width_ = width_;
+    bufferMeta->height_ = height_;
+    bufferMeta->format_ = format_;
+    bufferMeta->dataType_ = dataType_;
+    bufferMeta->frameNum_ = frameNum_;
+    bufferMeta->Update(*this);
+    return bufferMeta;
 }
 
 std::string AVTransVideoBufferMeta::MarshalVideoMeta()
@@ -94,10 +92,8 @@ bool AVTransVideoBufferMeta::UnmarshalVideoMeta(const std::string& jsonStr)
     if (metaJson.is_discarded()) {
         return false;
     }
-    if (!metaJson.contains(META_DATA_TYPE) || !metaJson.contains(META_TIMESTAMP) || !metaJson.contains(META_FRAME_NUMBER)) {
-        return false;
-    }
-    if (!IsUInt32(metaJson, META_DATA_TYPE) || !IsInt64(metaJson, META_TIMESTAMP) || !IsUInt32(metaJson, META_FRAME_NUMBER)) {
+    if (!IsUInt32(metaJson, META_DATA_TYPE) || !IsInt64(metaJson, META_TIMESTAMP) ||
+        !IsUInt32(metaJson, META_FRAME_NUMBER)) {
         return false;
     }
     dataType_ = metaJson[META_DATA_TYPE].get<BufferDataType>();

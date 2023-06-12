@@ -143,7 +143,8 @@ void Convert2HiSBufferMeta(std::shared_ptr<AVTransBuffer> transBuffer, std::shar
         uint32_t dataType = std::atoi(value.c_str());
         hisAMeta->dataType_ = (BufferDataType)dataType;
 
-        TRUE_RETURN(!transMeta->GetMetaItem(AVTransTag::AUDIO_SAMPLE_FORMAT, value), "get AUDIO_SAMPLE_FORMAT meta failed");
+        TRUE_RETURN(!transMeta->GetMetaItem(AVTransTag::AUDIO_SAMPLE_FORMAT, value),
+            "get AUDIO_SAMPLE_FORMAT meta failed");
         uint32_t format = std::atoi(value.c_str());
         hisAMeta->format_ = (AudioSampleFormat)format;
 
@@ -159,7 +160,8 @@ void Convert2HiSBufferMeta(std::shared_ptr<AVTransBuffer> transBuffer, std::shar
         uint32_t dataType = std::atoi(value.c_str());
         hisVMeta->dataType_ = (BufferDataType)dataType;
 
-        TRUE_RETURN(!transMeta->GetMetaItem(AVTransTag::VIDEO_PIXEL_FORMAT, value), "get VIDEO_PIXEL_FORMAT meta failed");
+        TRUE_RETURN(!transMeta->GetMetaItem(AVTransTag::VIDEO_PIXEL_FORMAT, value),
+            "get VIDEO_PIXEL_FORMAT meta failed");
         uint32_t format = std::atoi(value.c_str());
         hisVMeta->format_ = (VideoPixelFormat)format;
 

@@ -33,10 +33,11 @@ std::shared_ptr<BufferData> AVTransBuffer::CreateBufferData(size_t capacity)
 
 std::shared_ptr<BufferData> AVTransBuffer::WrapBufferData(const uint8_t* data, size_t capacity, size_t size)
 {
-    auto bufData = std::make_shared<BufferData>(capacity, std::shared_ptr<uint8_t>(const_cast<uint8_t *>(data), [](void* ptr) {}));
+    auto bufData = std::make_shared<BufferData>(capacity,
+        std::shared_ptr<uint8_t>(const_cast<uint8_t *>(data), [](void* ptr) {}));
     bufData->SetSize(size);
     data_.push_back(bufData);
-    return bufData;    
+    return bufData;
 }
 
 std::shared_ptr<BufferData> AVTransBuffer::GetBufferData(uint32_t index)

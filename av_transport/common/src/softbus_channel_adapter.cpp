@@ -171,7 +171,8 @@ int32_t SoftbusChannelAdapter::CloseSoftbusChannel(const std::string& sessName, 
     return DH_AVT_SUCCESS;
 }
 
-int32_t SoftbusChannelAdapter::SendBytesData(const std::string& sessName, const std::string &peerDevId, const std::string &data)
+int32_t SoftbusChannelAdapter::SendBytesData(const std::string& sessName, const std::string &peerDevId,
+    const std::string &data)
 {
     DHLOGI("Send bytes data for sessName:%s, peerDevId:%s.", sessName.c_str(), GetAnonyString(peerDevId).c_str());
     TRUE_RETURN_V_MSG_E(sessName.empty(), ERR_DH_AVT_INVALID_PARAM, "input sessName is empty.");
@@ -207,7 +208,8 @@ int32_t SoftbusChannelAdapter::SendStreamData(const std::string& sessName, const
 int32_t SoftbusChannelAdapter::RegisterChannelListener(const std::string& sessName, const std::string &peerDevId,
     ISoftbusChannelListener *listener)
 {
-    DHLOGI("Register channel listener for sessName:%s, peerDevId:%s.", sessName.c_str(), GetAnonyString(peerDevId).c_str());
+    DHLOGI("Register channel listener for sessName:%s, peerDevId:%s.",
+        sessName.c_str(), GetAnonyString(peerDevId).c_str());
     TRUE_RETURN_V_MSG_E(sessName.empty(), ERR_DH_AVT_INVALID_PARAM, "input sessName is empty.");
     TRUE_RETURN_V_MSG_E(peerDevId.empty(), ERR_DH_AVT_INVALID_PARAM, "input peerDevId is empty.");
     TRUE_RETURN_V_MSG_E(listener == nullptr, ERR_DH_AVT_INVALID_PARAM, "input callback is nullptr.");
@@ -273,7 +275,8 @@ int32_t SoftbusChannelAdapter::GetSessIdBySessName(const std::string& sessName, 
     std::lock_guard<std::mutex> lock(idMapMutex_);
     std::string idMapKey = sessName + "_" + peerDevId;
     if (devId2SessIdMap_.find(idMapKey) == devId2SessIdMap_.end()) {
-        DHLOGE("Can not find sessionId for sessName:%s, peerDevId:%s.", sessName.c_str(), GetAnonyString(peerDevId).c_str());
+        DHLOGE("Can not find sessionId for sessName:%s, peerDevId:%s.",
+            sessName.c_str(), GetAnonyString(peerDevId).c_str());
         return -1;
     }
     return devId2SessIdMap_[idMapKey];
@@ -400,7 +403,8 @@ void SoftbusChannelAdapter::OnSoftbusTimeSyncResult(const TimeSyncResultInfo *in
     TimeSyncAccuracy accuracy  = info->result.accuracy;
     DHLOGI("Time sync success, flag:%" PRId32", millisecond:%" PRId32", microsecond:%" PRId32", accuracy:%" PRId32,
         info->flag, millisecond, microsecond, accuracy);
-    DHLOGI("renguang debug: targetNetworkId:%s, masterNetworkId:%s", info->target.targetNetworkId, info->target.masterNetworkId);
+    DHLOGI("renguang debug: targetNetworkId:%s, masterNetworkId:%s", info->target.targetNetworkId,
+        info->target.masterNetworkId);
 
     std::string targetDevId(info->target.targetNetworkId);
     std::string masterDevId(info->target.masterNetworkId);
