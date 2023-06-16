@@ -129,7 +129,7 @@ int32_t DistributedHardwareStub::PublishMessageInner(MessageParcel &data, Messag
 
 int32_t DistributedHardwareStub::InitializeInner(MessageParcel &data, MessageParcel &reply)
 {
-	TransRole transRole = (TransRole)(data.ReadUint32());
+    TransRole transRole = (TransRole)(data.ReadUint32());
     int32_t engineId = 0;
     int32_t ret = Initialize(transRole, engineId);
     if (!reply.WriteInt32(engineId)) {

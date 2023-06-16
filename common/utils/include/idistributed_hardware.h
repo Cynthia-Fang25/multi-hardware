@@ -41,7 +41,8 @@ public:
     virtual int32_t Release(int32_t engineId) = 0;
     virtual int32_t CreateControlChannel(int32_t engineId, const std::string &peerDevId) = 0;
     virtual int32_t Notify(int32_t engineId, const AVTransEvent &event) = 0;
-    virtual int32_t RegisterCtlCenterCallback(int32_t engineId, const sptr<IAVTransControlCenterCallback> &callback) = 0;
+    virtual int32_t RegisterCtlCenterCallback(int32_t engineId,
+        const sptr<IAVTransControlCenterCallback> &callback) = 0;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

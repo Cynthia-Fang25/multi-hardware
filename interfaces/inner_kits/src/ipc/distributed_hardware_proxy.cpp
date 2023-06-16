@@ -206,7 +206,8 @@ int32_t DistributedHardwareProxy::Notify(int32_t engineId, const AVTransEvent &e
     return DH_FWK_SUCCESS;
 }
 
-int32_t DistributedHardwareProxy::RegisterCtlCenterCallback(int32_t engineId, const sptr<IAVTransControlCenterCallback> &callback)
+int32_t DistributedHardwareProxy::RegisterCtlCenterCallback(int32_t engineId,
+    const sptr<IAVTransControlCenterCallback> &callback)
 {
     (void)engineId;
     (void)callback;

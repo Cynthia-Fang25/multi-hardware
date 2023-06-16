@@ -27,7 +27,7 @@ namespace DistributedHardware {
 class IAVTransControlCenterCallback : public IRemoteBroker {
 public:
     virtual int32_t SetParameter(AVTransTag tag, const std::string &value) = 0;
-	virtual int32_t SetSharedMemory(const AVTransSharedMemory &memory) = 0;
+    virtual int32_t SetSharedMemory(const AVTransSharedMemory &memory) = 0;
     virtual int32_t Notify(const AVTransEvent &event) = 0;
 
     enum class Message : uint32_t {
