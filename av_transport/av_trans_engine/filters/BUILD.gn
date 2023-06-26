@@ -1,0 +1,54 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+source_set("avtrans_input_filter") {
+  include_dirs = [
+    "${plugin_path}/core",
+    "${plugin_path}/interface"
+  ]
+
+  sources = [ 
+    "av_transport_input/av_transport_input_filter.cpp",
+    "${plugin_path}/core/avtrans_input.cpp"
+   ]
+
+  public_deps = [ 
+    "${histreamer_path}/foundation:histreamer_foundation",
+    "${histreamer_path}/pipeline:histreamer_base",
+    "${plugin_path}/plugins/av_trans_input/daudio_input:plugin_AVTransDaudioInput",
+    "${plugin_path}/plugins/av_trans_input/dscreen_input:plugin_AVTransDscreenInput",
+    "${plugin_path}/plugins/av_trans_input/dsoftbus_input:plugin_AVTransDsoftbusInput",
+    "${plugin_path}/plugins/av_trans_input/dsoftbus_input_audio:plugin_AVTransDsoftbusInputAudio",
+   ]
+}
+
+source_set("avtrans_output_filter") {
+  include_dirs = [
+    "${plugin_path}/core",
+    "${plugin_path}/interface"
+  ]
+
+  sources = [ 
+    "av_transport_output/av_transport_output_filter.cpp",
+    "${plugin_path}/core/avtrans_output.cpp"
+   ]
+
+  public_deps = [ 
+    "${histreamer_path}/foundation:histreamer_foundation",
+    "${histreamer_path}/pipeline:histreamer_base",
+    "${plugin_path}/plugins/av_trans_output/daudio_output:plugin_AVTransDaudioOutput",
+    "${plugin_path}/plugins/av_trans_output/dscreen_output:plugin_AVTransDscreenOutput",
+    "${plugin_path}/plugins/av_trans_output/dsoftbus_output:plugin_AVTransDsoftbusOutput",
+    "${plugin_path}/plugins/av_trans_output/dsoftbus_output_audio:plugin_AVTransDsoftbusOutputAudio",
+   ]
+}
