@@ -1,104 +1,103 @@
 {
-  "name": "@ohos/distributed_hardware_fwk",
-  "description": "distributed hardware framework",
-  "version": "4.0",
-  "author": {},
-  "repository": "https://gitee.com/openharmony/distributed_hardware_fwk",
-  "license": "Apache License 2.0",
-  "publishAs": "code-segment",
-  "segment": {
-    "destPath": "foundation/distributedhardware/distributed_hardware_fwk"
-  },
-  "dirs": {},
-  "scripts": {},
-  "component": {
-    "name": "distributed_hardware_fwk",
-    "subsystem": "distributedhardware",
-    "syscap": [
-      "SystemCapability.DistributedHardware.DistributedHardwareFWK"
-    ],
-    "features": [],
-    "adapted_system_type": [
-      "standard"
-    ],
-    "rom": "128KB",
-    "ram": "6144KB",
-    "hisysevent_config": [
-      "//foundation/distributedhardware/distributed_hardware_fwk/hisysevent.yaml"
-    ],
-    "deps": {
-      "components": [
-        "dsoftbus",
-        "distributeddatamgr",
-        "eventhandler",
-        "hitrace_native",
-        "c_utils",
-        "hiviewdfx_hilog_native",
-        "startup_l2",
-        "bundle_framework",
-        "samgr",
-        "ipc",
-        "safwk",
-        "common",
-        "hisysevent_native",
-        "ability_runtime",
-        "device_manager",
-        "config_policy",
-        "init",
-        "kv_store",
-        "resource_schedule_service",
-        "multimedia_histreamer"
-      ],
-      "third_party": [
-        "json",
-        "googletest",
-        "openssl"
-      ]
+    "name": "@ohos/distributed_hardware_fwk",
+    "description": "distributed hardware framework",
+    "version": "4.0",
+    "author": {},
+    "repository": "https://gitee.com/openharmony/distributed_hardware_fwk",
+    "license": "Apache License 2.0",
+    "publishAs": "code-segment",
+    "segment": {
+        "destPath": "foundation/distributedhardware/distributed_hardware_fwk"
     },
-    "build": {
-      "sub_component": [
-        "//foundation/distributedhardware/distributed_hardware_fwk/utils:distributedhardwareutils",
-        "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice:distributedhardwarefwksvr",
-        "//foundation/distributedhardware/distributed_hardware_fwk/sa_profile:dhfwk_sa_profile",
-        "//foundation/distributedhardware/distributed_hardware_fwk/sa_profile:dhardware.cfg",
-        "//foundation/distributedhardware/distributed_hardware_fwk/interfaces/inner_kits:libdhfwk_sdk",
-        "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/av_trans_handler/histreamer_ability_querier:histreamer_ability_querier"
-      ],
-      "inner_kits": [
-        {
-          "type": "so",
-          "name": "//foundation/distributedhardware/distributed_hardware_fwk/interfaces/inner_kits:libdhfwk_sdk",
-          "header": {
-            "header_files": [
-              "distributed_hardware_fwk_kit.h"
+    "dirs": {},
+    "scripts": {},
+    "component": {
+        "name": "distributed_hardware_fwk",
+        "subsystem": "distributedhardware",
+        "syscap": [
+            "SystemCapability.DistributedHardware.DistributedHardwareFWK"
+        ],
+        "features": [],
+        "adapted_system_type": [
+            "standard"
+        ],
+        "rom": "128KB",
+        "ram": "6144KB",
+        "hisysevent_config": [
+            "//foundation/distributedhardware/distributed_hardware_fwk/hisysevent.yaml"
+        ],
+        "deps": {
+            "components": [
+                "dsoftbus",
+                "distributeddatamgr",
+                "eventhandler",
+                "hitrace_native",
+                "c_utils",
+                "hilog",
+                "startup_l2",
+                "bundle_framework",
+                "samgr",
+                "ipc",
+                "safwk",
+                "common",
+                "hisysevent_native",
+                "ability_runtime",
+                "device_manager",
+                "config_policy",
+                "init",
+                "kv_store",
+                "resource_schedule_service",
+                "multimedia_histreamer"
             ],
-            "header_base": "//foundation/distributedhardware/distributed_hardware_fwk/interfaces/inner_kits/include"
-          }
+            "third_party": [
+                "json",
+                "googletest",
+                "openssl"
+            ]
         },
-        {
-          "type": "so",
-          "name": "//foundation/distributedhardware/distributed_hardware_fwk/utils:distributedhardwareutils",
-          "header": {
-            "header_files": [
-              "anonymous_string.h",
-              "dh_utils_hisysevent.h",
-              "dh_utils_hitrace.h",
-              "dh_utils_tool.h",
-              "histreamer_ability_parser.h",
-              "histreamer_query_tool.h"
+        "build": {
+            "sub_component": [
+                "//foundation/distributedhardware/distributed_hardware_fwk/utils:distributedhardwareutils",
+                "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice:distributedhardwarefwksvr",
+                "//foundation/distributedhardware/distributed_hardware_fwk/sa_profile:dhfwk_sa_profile",
+                "//foundation/distributedhardware/distributed_hardware_fwk/sa_profile:dhardware.cfg",
+                "//foundation/distributedhardware/distributed_hardware_fwk/interfaces/inner_kits:libdhfwk_sdk",
+                "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/av_trans_handler/histreamer_ability_querier:histreamer_ability_querier"
             ],
-            "header_base": "//foundation/distributedhardware/distributed_hardware_fwk/utils/include"
-          }
+            "inner_kits": [{
+                    "type": "so",
+                    "name": "//foundation/distributedhardware/distributed_hardware_fwk/interfaces/inner_kits:libdhfwk_sdk",
+                    "header": {
+                        "header_files": [
+                            "distributed_hardware_fwk_kit.h"
+                        ],
+                        "header_base": "//foundation/distributedhardware/distributed_hardware_fwk/interfaces/inner_kits/include"
+                    }
+                },
+                {
+                    "type": "so",
+                    "name": "//foundation/distributedhardware/distributed_hardware_fwk/utils:distributedhardwareutils",
+                    "header": {
+                        "header_files": [
+                            "anonymous_string.h",
+                            "dh_utils_hisysevent.h",
+                            "dh_utils_hitrace.h",
+                            "dh_utils_tool.h",
+                            "histreamer_ability_parser.h",
+                            "histreamer_query_tool.h"
+                        ],
+                        "header_base": "//foundation/distributedhardware/distributed_hardware_fwk/utils/include"
+                    }
+                }
+            ],
+            "test": [
+                "//foundation/distributedhardware/distributed_hardware_fwk/utils/test/unittest:utils_test",
+                "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice/test/unittest:test",
+                "//foundation/distributedhardware/distributed_hardware_fwk/interfaces/inner_kits/test/unittest:kit_test",
+                "//foundation/distributedhardware/distributed_hardware_fwk/utils/test/fuzztest:fuzztest",
+                "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice/test/fuzztest:fuzztest",
+                "//foundation/distributedhardware/distributed_hardware_fwk/interfaces/inner_kits/test/fuzztest:fuzztest"
+            ]
         }
-      ],
-      "test": [
-        "//foundation/distributedhardware/distributed_hardware_fwk/utils/test/unittest:utils_test",
-        "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice/test/unittest:test",
-        "//foundation/distributedhardware/distributed_hardware_fwk/interfaces/inner_kits/test/unittest:kit_test",
-        "//foundation/distributedhardware/distributed_hardware_fwk/utils/test/fuzztest:fuzztest",
-        "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice/test/fuzztest:fuzztest",
-        "//foundation/distributedhardware/distributed_hardware_fwk/interfaces/inner_kits/test/fuzztest:fuzztest"
-      ]
     }
-  }
 }
