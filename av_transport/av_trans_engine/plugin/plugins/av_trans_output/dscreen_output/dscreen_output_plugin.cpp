@@ -32,7 +32,7 @@ GenericPluginDef CreateDscreenOutputPluginDef()
     definition.rank = PLUGIN_RANK;
     definition.creator = [] (const std::string& name) -> std::shared_ptr<AvTransOutputPlugin> {
         return std::make_shared<DscreenOutputPlugin>(name);
-    }
+    };
 
     definition.pkgVersion = AVTRANS_OUTPUT_API_VERSION;
     definition.license = LicenseType::APACHE_V2;
@@ -43,6 +43,8 @@ GenericPluginDef CreateDscreenOutputPluginDef()
     definition.inCaps.push_back(inCap);
     return definition;
 }
+
+static AutoRegisterPlugin<DscreenOutputPlugin> g_registerPluginHelper(CreateDscreenOutputPluginDef());
 
 DscreenOutputPlugin::DscreenOutputPlugin(std::string name)
     : AvTransOutputPlugin(std::move(name))

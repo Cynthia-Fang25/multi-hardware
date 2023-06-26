@@ -24,20 +24,20 @@
 namespace OHOS {
 namespace DistributedHardware {
 
-GenericPluginDef CreateDsoftbusInputPluginDef()
+std::vector<GenericPluginDef> CreateDsoftbusInputPluginDef()
 {
     int32_t capNum = 2;
     std::vector<GenericPluginDef> definitionList;
     for (int i = 0; i < capNum; i++) {
         DHLOGI("DsoftbusInputPlugin_H264 registered.");
-        AvTransInputPluginDef definition;
+        GenericPluginDef definition;
         definition.name = "AVTransDsoftbusInputPlugin_H264";
         definition.pkgName = "AVTransDsoftbusInputPlugin";
         definition.description = "Video transport from dsoftbus";
         definition.rank = PLUGIN_RANK;
         definition.creator = [] (const std::string& name) -> std::shared_ptr<AvTransInputPlugin> {
             return std::make_shared<DsoftbusInputPlugin>(name);
-        }
+        };
 
         definition.pkgVersion = AVTRANS_INPUT_API_VERSION;
         definition.license = LicenseType::APACHE_V2;
@@ -54,6 +54,8 @@ GenericPluginDef CreateDsoftbusInputPluginDef()
     }
     return definitionList;
 }
+
+static AutoRegisterPlugin<DsoftbusInputPlugin> g_registerPluginHelper(CreateDsoftbusInputPluginDef());
 
 DsoftbusInputPlugin::DsoftbusInputPlugin(std::string name)
     : AvTransInputPlugin(std::move(name))

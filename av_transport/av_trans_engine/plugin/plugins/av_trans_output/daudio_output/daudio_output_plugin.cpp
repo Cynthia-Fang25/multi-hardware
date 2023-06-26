@@ -33,7 +33,7 @@ GenericPluginDef CreateDaudioOutputPluginDef()
     definition.rank = PLUGIN_RANK;
     definition.creator = [] (const std::string& name) -> std::shared_ptr<AvTransOutputPlugin> {
         return std::make_shared<DaudioOutputPlugin>(name);
-    }
+    };
 
     definition.pkgVersion = AVTRANS_OUTPUT_API_VERSION;
     definition.license = LicenseType::APACHE_V2;
@@ -48,6 +48,8 @@ GenericPluginDef CreateDaudioOutputPluginDef()
     definition.inCaps.push_back(capBuilder.Build());
     return definition;
 }
+
+static AutoRegisterPlugin<DaudioOutputPlugin> g_registerPluginHelper(CreateDaudioOutputPluginDef());
 
 DaudioOutputPlugin::DaudioOutputPlugin(std::string name)
     : AvTransOutputPlugin(std::move(name))

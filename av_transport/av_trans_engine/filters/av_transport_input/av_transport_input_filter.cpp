@@ -189,10 +189,10 @@ ErrorCode AVInputFilter::FindPlugin()
         return ErrorCode::ERROR_INVALID_PARAMETER_VALUE;
     }
     mime = Plugin::AnyCast<std::string>(paramsMap_[Tag::MIME]);
-    auto nameList = PluginManager::Instance().ListPlugins(PluginType::AVTRANS_INPUT);
+    auto nameList = PluginManager::Instance().ListPlugins(PluginType::GENERIC_PLUGIN);
     for (const std::string& name : nameList) {
-        auto info = PluginManager::Instance().GetPluginInfo(PluginType::AVTRANS_INPUT, name);
-        if (mime != info->outCaps[0].mime) {
+        auto info = PluginManager::Instance().GetPluginInfo(PluginType::GENERIC_PLUGIN, name);
+        if (info->outCaps.empty() || mime != info->outCaps[0].mime) {
             continue;
         }
         if (DoNegotiate(info->outCaps) && CreatePlugin(info) == ErrorCode::SUCCESS) {
@@ -245,7 +245,7 @@ ErrorCode AVInputFilter::CreatePlugin(const std::shared_ptr<PluginInfo>& selecte
             MEDIA_LOG_E("Deinit last plugin: " PUBLIC_LOG_S " error", pluginInfo_->name.c_str());
         }
     }
-    plugin_ = PluginManager::Instance().CreateAvTransInputPlugin(selectedInfo->name);
+    plugin_ = PluginManager::Instance().CreateGenericPlugin<AvTransInput, AvTransInputPlugin>(selectedInfo->name);
     if (plugin_ == nullptr) {
         MEDIA_LOG_E("PluginManager CreatePlugin " PUBLIC_LOG_S " fail", selectedInfo->name.c_str());
         return ErrorCode::ERROR_INVALID_PARAMETER_VALUE;

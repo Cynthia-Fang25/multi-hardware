@@ -32,6 +32,9 @@
 namespace OHOS {
 namespace DistributedHardware {
 
+using namespace OHOS::Media;
+using namespace OHOS::Media::Pipeline;
+
 class AVOutputFilter : public FilterBase {
 public:
     explicit AVOutputFilter(const std::string& name);
@@ -64,7 +67,7 @@ private:
     ErrorCode SetPluginParams();
     void OnDataCallback(std::shared_ptr<AVBuffer> buffer);
 
-    std::shared_ptr<Plugin::AvTransOutput> plugin_ {nullptr};
+    std::shared_ptr<AvTransOutput> plugin_ {nullptr};
     std::shared_ptr<Plugin::PluginInfo> pluginInfo_ {nullptr};
     std::unordered_map<Plugin::Tag, Plugin::Any> paramsMap_;
     OSAL::Mutex outputFilterMutex_ {};

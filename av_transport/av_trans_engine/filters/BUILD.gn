@@ -11,18 +11,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import("//build/ohos.gni")
+import(
+    "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/distributed_av_transport.gni")
+
 source_set("avtrans_input_filter") {
   include_dirs = [
     "${plugin_path}/core",
-    "${plugin_path}/interface"
+    "${plugin_path}/interface",
   ]
 
-  sources = [ 
+  sources = [
     "av_transport_input/av_transport_input_filter.cpp",
-    "${plugin_path}/core/avtrans_input.cpp"
+    "${plugin_path}/core/avtrans_input.cpp",
    ]
 
-  public_deps = [ 
+  public_deps = [
     "${histreamer_path}/foundation:histreamer_foundation",
     "${histreamer_path}/pipeline:histreamer_base",
     "${plugin_path}/plugins/av_trans_input/daudio_input:plugin_AVTransDaudioInput",
@@ -35,15 +39,15 @@ source_set("avtrans_input_filter") {
 source_set("avtrans_output_filter") {
   include_dirs = [
     "${plugin_path}/core",
-    "${plugin_path}/interface"
+    "${plugin_path}/interface",
   ]
 
-  sources = [ 
+  sources = [
     "av_transport_output/av_transport_output_filter.cpp",
-    "${plugin_path}/core/avtrans_output.cpp"
+    "${plugin_path}/core/avtrans_output.cpp",
    ]
 
-  public_deps = [ 
+  public_deps = [
     "${histreamer_path}/foundation:histreamer_foundation",
     "${histreamer_path}/pipeline:histreamer_base",
     "${plugin_path}/plugins/av_trans_output/daudio_output:plugin_AVTransDaudioOutput",

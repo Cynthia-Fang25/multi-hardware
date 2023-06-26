@@ -32,6 +32,9 @@
 namespace OHOS {
 namespace DistributedHardware {
 
+using namespace OHOS::Media;
+using namespace OHOS::Media::Pipeline;
+
 class AVInputFilter : public FilterBase {
 public:
     explicit AVInputFilter(const std::string& name);
@@ -68,7 +71,7 @@ private:
     OHOS::Media::Plugin::AudioChannelLayout TransAudioChannelLayout(int layoutPtr);
     OHOS::Media::Plugin::AudioSampleFormat TransAudioSampleFormat(int sampleFormat);
 
-    std::shared_ptr<Plugin::AvTransInput> plugin_ {nullptr};
+    std::shared_ptr<AvTransInput> plugin_ {nullptr};
     std::shared_ptr<Plugin::PluginInfo> pluginInfo_ {nullptr};
     Capability capNegWithDownstream_ {};
     std::unordered_map<Plugin::Tag, Plugin::Any> paramsMap_;

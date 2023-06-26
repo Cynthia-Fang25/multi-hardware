@@ -13,9 +13,12 @@
  * limitations under the License.
  */
 
-#include "avtrans_output.h"\
+#include "avtrans_output.h"
 
 #include "../interface/avtrans_output_plugin.h"
+
+namespace OHOS {
+namespace DistributedHardware {
 
 AvTransOutput::AvTransOutput(uint32_t pkgVer, uint32_t apiVer, std::shared_ptr<AvTransOutputPlugin> plugin)
     : Base(pkgVer, apiVer, plugin), AvTransOutputPlugin_(std::move(plugin)) {}
@@ -28,4 +31,6 @@ Status AvTransOutput::PushData(const std::string& inPort, std::shared_ptr<Plugin
 Status AvTransOutput::SetDataCallback(std::function<void(std::shared_ptr<Plugin::Buffer>)> callback)
 {
     return AvTransOutputPlugin_->SetDataCallback(callback);
+}
+}
 }

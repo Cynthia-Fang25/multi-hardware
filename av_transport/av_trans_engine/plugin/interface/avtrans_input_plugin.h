@@ -28,6 +28,10 @@
 
 namespace OHOS {
 namespace DistributedHardware {
+
+using namespace OHOS::Media;
+using namespace OHOS::Media::Pipeline;
+
 struct AvTransInputPlugin : public PluginBase {
 explicit AvTransInputPlugin(std::string name): PluginBase(std::move(name)) {}
 

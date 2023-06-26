@@ -22,10 +22,8 @@
 #include <mutex>
 #include <queue>
 
-#include "av_sync_utils.h"
 #include "av_trans_buffer.h"
 #include "av_trans_constants.h"
-#include "av_trans_errno.h"
 #include "av_trans_log.h"
 #include "av_trans_meta.h"
 #include "av_trans_types.h"

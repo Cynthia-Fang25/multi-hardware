@@ -22,20 +22,14 @@ source_set("plugin_AVTransDscreenOutput") {
     "${histreamer_path}/include/pipeline/core",
     "${histreamer_path}/include/plugin/interface",
     "${histreamer_path}/include/plugin/common",
+    "${histreamer_path}/include/plugin/core",
     "${histreamer_path}/plugin/core",
     "${histreamer_path}/include/foundation/osal/thread",
     "${histreamer_path}/foundation/utils",
     "//third_party/json/include",
   ]
 
-  sources = [
-    "${common_path}/src/av_sync_utils.cpp",
-    "${common_path}/src/av_trans_buffer.cpp",
-    "${common_path}/src/av_trans_log.cpp",
-    "${common_path}/src/av_trans_meta.cpp",
-    "${common_path}/src/av_trans_utils.cpp",
-    "dscreen_output_plugin.cpp",
-  ]
+  sources = [ "dscreen_output_plugin.cpp" ]
 
   deps = [
     "${histreamer_path}/foundation:histreamer_foundation",

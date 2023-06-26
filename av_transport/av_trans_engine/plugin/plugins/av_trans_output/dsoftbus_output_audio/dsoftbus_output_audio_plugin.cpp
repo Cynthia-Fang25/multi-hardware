@@ -32,7 +32,7 @@ GenericPluginDef CreateDsoftbusOutputAudioPluginDef()
     definition.rank = PLUGIN_RANK;
     definition.creator = [] (const std::string& name) -> std::shared_ptr<AvTransOutputPlugin> {
         return std::make_shared<DsoftbusOutputAudioPlugin>(name);
-    }
+    };
 
     definition.pkgVersion = AVTRANS_OUTPUT_API_VERSION;
     definition.license = LicenseType::APACHE_V2;
@@ -48,28 +48,7 @@ GenericPluginDef CreateDsoftbusOutputAudioPluginDef()
     return definition;
 }
 
-Status DsoftbusOutputAudioRegister(const std::shared_ptr<Register> &reg)
-{
-    AvTransOutputPluginDef definition;
-    definition.name = "AVTransDsoftbusOutputAudioPlugin";
-    definition.description = "Audio transport to dsoftbus";
-    definition.rank = PLUGIN_RANK;
-    definition.pluginType = PluginType::AVTRANS_OUTPUT;
-    definition.creator = DsoftbusOutputAudioPluginCreator;
-
-    CapabilityBuilder capBuilder;
-    capBuilder.SetMime(OHOS::Media::MEDIA_MIME_AUDIO_AAC);
-    DiscreteCapability<uint32_t> valuesSampleRate = {8000, 11025, 12000, 16000,
-        22050, 24000, 32000, 44100, 48000, 64000, 96000};
-    capBuilder.SetAudioSampleRateList(valuesSampleRate);
-    DiscreteCapability<AudioSampleFormat> valuesSampleFormat = {AudioSampleFormat::S16};
-    capBuilder.SetAudioSampleFormatList(valuesSampleFormat);
-    definition.inCaps.push_back(capBuilder.Build());
-
-    return reg->AddPlugin(definition);
-}
-
-PLUGIN_DEFINITION(AVTransDsoftbusOutputAudio, LicenseType::APACHE_V2, DsoftbusOutputAudioRegister, [] {});
+static AutoRegisterPlugin<DsoftbusOutputAudioPlugin> g_registerPluginHelper(CreateDsoftbusOutputAudioPluginDef());
 
 DsoftbusOutputAudioPlugin::DsoftbusOutputAudioPlugin(std::string name)
     : AvTransOutputPlugin(std::move(name))

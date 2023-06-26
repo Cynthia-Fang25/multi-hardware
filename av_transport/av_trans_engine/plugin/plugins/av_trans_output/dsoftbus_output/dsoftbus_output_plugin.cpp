@@ -22,20 +22,20 @@
 namespace OHOS {
 namespace DistributedHardware {
 
-GenericPluginDef CreateDsoftbusOutputPluginDef()
+std::vector<GenericPluginDef> CreateDsoftbusOutputPluginDef()
 {
     int32_t capNum = 2;
     std::vector<GenericPluginDef> definitionList;
     for (int i = 0; i < capNum; i++) {
         DHLOGI("DsoftbusOutputPlugin_H264 registered.");
-        AvTransInputPluginDef definition;
+        GenericPluginDef definition;
         definition.name = "AVTransDsoftbusOutputPlugin_H264";
         definition.pkgName = "AVTransDsoftbusOutputPlugin";
         definition.description = "Video transport to dsoftbus";
         definition.rank = PLUGIN_RANK;
         definition.creator = [] (const std::string& name) -> std::shared_ptr<AvTransOutputPlugin> {
-            return std::make_shared<DsoftbusInputPlugin>(name);
-        }
+            return std::make_shared<DsoftbusOutputPlugin>(name);
+        };
 
         definition.pkgVersion = AVTRANS_OUTPUT_API_VERSION;
         definition.license = LicenseType::APACHE_V2;
@@ -47,11 +47,13 @@ GenericPluginDef CreateDsoftbusOutputPluginDef()
             definition.name = "AVTransDsoftbusOutputPlugin_H265";
             capBuilder.SetMime(Media::MEDIA_MIME_VIDEO_H265);
         }
-        definition.outCaps.push_back(capBuilder.Build());
+        definition.inCaps.push_back(capBuilder.Build());
         definitionList.push_back(definition);
     }
     return definitionList;
 }
+
+static AutoRegisterPlugin<DsoftbusOutputPlugin> g_registerPluginHelper(CreateDsoftbusOutputPluginDef());
 
 DsoftbusOutputPlugin::DsoftbusOutputPlugin(std::string name)
     : AvTransOutputPlugin(std::move(name))

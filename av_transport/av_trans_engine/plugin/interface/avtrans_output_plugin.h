@@ -23,11 +23,15 @@
 #include "plugin/common/plugin_source_tags.h"
 #include "plugin/common/plugin_buffer.h"
 #include "plugin/common/plugin_caps.h"
-#include "plugin_base.h"
-#include "plugin_definition.h"
+#include "plugin/interface/plugin_base.h"
+#include "plugin/interface/plugin_definition.h"
 
 namespace OHOS {
 namespace DistributedHardware {
+
+using namespace OHOS::Media;
+using namespace OHOS::Media::Pipeline;
+
 struct AvTransOutputPlugin : public PluginBase {
 explicit AvTransOutputPlugin(std::string name): PluginBase(std::move(name)) {}
 

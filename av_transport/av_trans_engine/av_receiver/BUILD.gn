@@ -38,12 +38,11 @@ ohos_shared_library("distributed_av_receiver") {
     "${histreamer_path}/include/pipeline/filters",
     "${histreamer_path}/include/pipeline/filters/codec/audio_decoder",
     "${histreamer_path}/include/pipeline/filters/codec/video_decoder",
-    "${histreamer_path}/include/pipeline/filters/source/av_transport_input",
-    "${histreamer_path}/include/pipeline/filters/sink/av_transport_output",
-    "${histreamer_path}/include/plugin",
     "${histreamer_path}/include/plugin/common",
     "${histreamer_path}/include/scene/standard",
     "${histreamer_path}/pipeline/filters/codec",
+    "${filters_path}/av_transport_input",
+    "${filters_path}/av_transport_output",
   ]
 
   sources = [
@@ -59,8 +58,9 @@ ohos_shared_library("distributed_av_receiver") {
 
   deps = [
     "${control_center_path}/inner_kits:avtranscenter_sdk",
-    "${histreamer_path}/pipeline:histreamer_pipeline",
-    "${histreamer_path}/pipeline:histreamer_pipeline_base",
+    "${histreamer_path}/pipeline/filters/codec:codec_filters,
+    "${filters_path}/avtrans_input_filter",
+    "${filters_path}/avtrans_output_filter",
   ]
 
   defines = [

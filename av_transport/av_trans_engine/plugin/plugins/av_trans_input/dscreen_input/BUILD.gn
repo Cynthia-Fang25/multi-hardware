@@ -22,20 +22,14 @@ source_set("plugin_AVTransDscreenInput") {
     "${histreamer_path}/include/pipeline/core",
     "${histreamer_path}/include/plugin/interface",
     "${histreamer_path}/include/plugin/common",
+    "${histreamer_path}/include/plugin/core",
     "${histreamer_path}/plugin/core",
     "${histreamer_path}/include/foundation/osal/thread",
     "${histreamer_path}/foundation/utils",
     "//third_party/json/include",
   ]
 
-  sources = [
-    "${common_path}/src/av_sync_utils.cpp",
-    "${common_path}/src/av_trans_buffer.cpp",
-    "${common_path}/src/av_trans_log.cpp",
-    "${common_path}/src/av_trans_meta.cpp",
-    "${common_path}/src/av_trans_utils.cpp",
-    "dscreen_input_plugin.cpp",
-  ]
+  sources = [ "dscreen_input_plugin.cpp" ]
 
   deps = [
     "${histreamer_path}/foundation:histreamer_foundation",
@@ -47,12 +41,5 @@ source_set("plugin_AVTransDscreenInput") {
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"dscreen_input_plugin\"",
     "LOG_DOMAIN=0xD004100",
-  ]
-
-  external_deps = [
-    "c_utils:utils",
-    "hiviewdfx_hilog_native:libhilog",
-    "ipc:ipc_core",
-    "samgr:samgr_proxy",
   ]
 }

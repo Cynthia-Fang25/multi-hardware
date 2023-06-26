@@ -27,6 +27,9 @@ namespace OHOS {
 namespace DistributedHardware {
 struct AvTransOutputPlugin;
 
+using namespace OHOS::Media;
+using namespace OHOS::Media::Pipeline;
+
 class AvTransOutput : public Base {
 public:
     AvTransOutput(const AvTransOutput &) = delete;

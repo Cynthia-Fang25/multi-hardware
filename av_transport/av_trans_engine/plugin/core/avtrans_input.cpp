@@ -17,6 +17,9 @@
 
 #include "../interface/avtrans_input_plugin.h"
 
+namespace OHOS {
+namespace DistributedHardware {
+
 AvTransInput::AvTransInput(uint32_t pkgVer, uint32_t apiVer, std::shared_ptr<AvTransInputPlugin> plugin)
     : Base(pkgVer, apiVer, plugin), AvTransInputPlugin_(std::move(plugin)) {}
 
@@ -28,4 +31,6 @@ Status AvTransInput::PushData(const std::string& inPort, std::shared_ptr<Plugin:
 Status AvTransInput::SetDataCallback(std::function<void(std::shared_ptr<Plugin::Buffer>)> callback)
 {
     return AvTransInputPlugin_->SetDataCallback(callback);
+}
+}
 }

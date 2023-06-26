@@ -44,7 +44,7 @@ using namespace OHOS::Media::Plugin;
 using json = nlohmann::json;
 using AVDataCallback = std::function<void(std::shared_ptr<Plugin::Buffer>)>;
 
-class DaudioInputPlugin : public Media::Plugin::AvTransInputPlugin {
+class DaudioInputPlugin : public AvTransInputPlugin {
 public:
     explicit DaudioInputPlugin(std::string name);
     ~DaudioInputPlugin();

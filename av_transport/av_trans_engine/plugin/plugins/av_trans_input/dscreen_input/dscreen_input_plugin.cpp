@@ -34,7 +34,7 @@ GenericPluginDef CreateDscreenInputPluginDef()
     definition.rank = PLUGIN_RANK;
     definition.creator = [] (const std::string& name) -> std::shared_ptr<AvTransInputPlugin> {
         return std::make_shared<DscreenInputPlugin>(name);
-    }
+    };
 
     definition.pkgVersion = AVTRANS_INPUT_API_VERSION;
     definition.license = LicenseType::APACHE_V2;
@@ -45,6 +45,8 @@ GenericPluginDef CreateDscreenInputPluginDef()
     definition.outCaps.push_back(outCap);
     return definition;
 }
+
+static AutoRegisterPlugin<DscreenInputPlugin> g_registerPluginHelper(CreateDscreenInputPluginDef());
 
 DscreenInputPlugin::DscreenInputPlugin(std::string name)
     : AvTransInputPlugin(std::move(name))

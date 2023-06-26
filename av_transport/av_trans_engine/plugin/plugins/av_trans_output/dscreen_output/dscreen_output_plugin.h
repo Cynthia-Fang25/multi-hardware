@@ -22,7 +22,6 @@
 #include <queue>
 #include <condition_variable>
 
-#include "av_sync_utils.h"
 #include "av_trans_buffer.h"
 #include "av_trans_errno.h"
 #include "av_trans_constants.h"
@@ -45,7 +44,7 @@ using namespace OHOS::Media::Plugin;
 using json = nlohmann::json;
 using AVDataCallback = std::function<void(std::shared_ptr<Plugin::Buffer>)>;
 
-class DscreenOutputPlugin : public Media::Plugin::AvTransOutputPlugin {
+class DscreenOutputPlugin : public AvTransOutputPlugin {
 public:
     explicit DscreenOutputPlugin(std::string name);
     ~DscreenOutputPlugin();
