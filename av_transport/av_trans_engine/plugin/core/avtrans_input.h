@@ -28,7 +28,7 @@ namespace DistributedHardware {
 struct AvTransInputPlugin;
 
 using namespace OHOS::Media;
-using namespace OHOS::Media::Pipeline;
+using namespace OHOS::Media::Plugin;
 
 class AvTransInput : public Base {
 public:

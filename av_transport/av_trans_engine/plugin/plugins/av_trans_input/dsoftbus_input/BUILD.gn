@@ -26,9 +26,9 @@ source_set("plugin_AVTransDsoftbusInput") {
     "${histreamer_path}/plugin/core",
     "${histreamer_path}/include/foundation/osal/thread",
     "${histreamer_path}/foundation/utils",
-    "${dsoftbus_path}/interface/kits/transport",
-    "${dsoftbus_path}/interface/kits/bus_center",
-    "${dsoftbus_path}/interface/kits/common",
+    "${dsoftbus_path}/interfaces/kits/transport",
+    "${dsoftbus_path}/interfaces/kits/bus_center",
+    "${dsoftbus_path}/interfaces/kits/common",
     "//third_party/json/include",
   ]
 

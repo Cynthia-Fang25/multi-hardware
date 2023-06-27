@@ -30,7 +30,7 @@ namespace OHOS {
 namespace DistributedHardware {
 
 using namespace OHOS::Media;
-using namespace OHOS::Media::Pipeline;
+using namespace OHOS::Media::Plugin;
 
 struct AvTransOutputPlugin : public PluginBase {
 explicit AvTransOutputPlugin(std::string name): PluginBase(std::move(name)) {}
