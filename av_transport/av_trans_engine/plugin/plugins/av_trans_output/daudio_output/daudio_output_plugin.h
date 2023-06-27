@@ -22,6 +22,8 @@
 #include <mutex>
 #include <queue>
 
+#include "av_sync_utils.h"
+#include "av_trans_errno.h"
 #include "av_trans_buffer.h"
 #include "av_trans_constants.h"
 #include "av_trans_log.h"
@@ -35,7 +37,7 @@
 #include "nlohmann/json.hpp"
 #include "plugin_manager.h"
 #include "plugin_types.h"
-#include "plugin/plugins/ffmpeg_adapter/utils/ffmpeg_utils.h"
+#include "plugin/convert/ffmpeg_convert.h"
 
 namespace OHOS {
 namespace DistributedHardware {

@@ -15,26 +15,24 @@ import("//build/ohos.gni")
 import(
     "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/distributed_av_transport.gni")
 
-source_set("plugin_AVTransDscreenOutput") {
+ohos_source_set("plugin_AVTransDscreenOutput") {
   include_dirs = [
     "${common_path}/include",
     "${plugin_path}/interface",
-    "${histreamer_path}/include/pipeline/core",
-    "${histreamer_path}/include/plugin/interface",
-    "${histreamer_path}/include/plugin/common",
-    "${histreamer_path}/include/plugin/core",
-    "${histreamer_path}/plugin/core",
-    "${histreamer_path}/include/foundation/osal/thread",
-    "${histreamer_path}/foundation/utils",
     "//third_party/json/include",
   ]
 
   sources = [ "dscreen_output_plugin.cpp" ]
 
-  deps = [
-    "${histreamer_path}/foundation:histreamer_foundation",
-    "${histreamer_path}/plugin:histreamer_plugin_core",
-    "${histreamer_path}/plugin:histreamer_plugin_intf",
+  external_deps = [
+    "histreamer:histreamer_base",
+    "histreamer:histreamer_codec_filters",
+    "histreamer:histreamer_plugin_base",
+    "histreamer:histreamer_ffmpeg_convert",
+  ]
+
+  public_configs = [
+    "${plugin_path}/plugins:avtrans_cflags",
   ]
 
   defines = [
@@ -42,4 +40,6 @@ source_set("plugin_AVTransDscreenOutput") {
     "DH_LOG_TAG=\"dscreen_output_plugin\"",
     "LOG_DOMAIN=0xD004100",
   ]
+  part_name = "distributed_hardware_fwk"
+  subsystem_name = "distributedhardware"
 }

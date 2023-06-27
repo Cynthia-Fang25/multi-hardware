@@ -15,31 +15,58 @@ import("//build/ohos.gni")
 import(
     "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/distributed_av_transport.gni")
 
-source_set("avtrans_input_filter") {
+ohos_source_set("avtrans_input_filter") {
   include_dirs = [
     "${plugin_path}/core",
     "${plugin_path}/interface",
+    "${common_path}/include",
   ]
 
   sources = [
     "av_transport_input/av_transport_input_filter.cpp",
     "${plugin_path}/core/avtrans_input.cpp",
-   ]
+  ]
+
+  external_deps = [
+    "hiviewdfx_hilog_native:libhilog",
+    "histreamer:histreamer_base",
+    "histreamer:histreamer_codec_filters",
+    "histreamer:histreamer_plugin_base",
+    "histreamer:histreamer_ffmpeg_convert",
+  ]
 
   public_deps = [
-    "${histreamer_path}/foundation:histreamer_foundation",
-    "${histreamer_path}/pipeline:histreamer_base",
     "${plugin_path}/plugins/av_trans_input/daudio_input:plugin_AVTransDaudioInput",
     "${plugin_path}/plugins/av_trans_input/dscreen_input:plugin_AVTransDscreenInput",
     "${plugin_path}/plugins/av_trans_input/dsoftbus_input:plugin_AVTransDsoftbusInput",
     "${plugin_path}/plugins/av_trans_input/dsoftbus_input_audio:plugin_AVTransDsoftbusInputAudio",
-   ]
+  ]
+
+  cflags = [
+    "-O2",
+    "-fPIC",
+    "-Wall",
+    "-frtti",
+    "-fexceptions",
+    "-Wno-unused-but-set-variable",
+    "-Wno-format",
+  ]
+  cflags_cc = cflags
+  part_name = "distributed_hardware_fwk"
+  subsystem_name = "distributedhardware"
+
+  defines = [
+    "HI_LOG_ENABLE",
+    "DH_LOG_TAG=\"av_transport_input_filter\"",
+    "LOG_DOMAIN=0xD004100",
+  ]
 }
 
-source_set("avtrans_output_filter") {
+ohos_source_set("avtrans_output_filter") {
   include_dirs = [
     "${plugin_path}/core",
     "${plugin_path}/interface",
+    "${common_path}/include",
   ]
 
   sources = [
@@ -47,12 +74,37 @@ source_set("avtrans_output_filter") {
     "${plugin_path}/core/avtrans_output.cpp",
    ]
 
+  external_deps = [
+    "hiviewdfx_hilog_native:libhilog",
+    "histreamer:histreamer_base",
+    "histreamer:histreamer_codec_filters",
+    "histreamer:histreamer_plugin_base",
+    "histreamer:histreamer_ffmpeg_convert",
+  ]
+
   public_deps = [
-    "${histreamer_path}/foundation:histreamer_foundation",
-    "${histreamer_path}/pipeline:histreamer_base",
     "${plugin_path}/plugins/av_trans_output/daudio_output:plugin_AVTransDaudioOutput",
     "${plugin_path}/plugins/av_trans_output/dscreen_output:plugin_AVTransDscreenOutput",
     "${plugin_path}/plugins/av_trans_output/dsoftbus_output:plugin_AVTransDsoftbusOutput",
     "${plugin_path}/plugins/av_trans_output/dsoftbus_output_audio:plugin_AVTransDsoftbusOutputAudio",
-   ]
+  ]
+
+  cflags = [
+    "-O2",
+    "-fPIC",
+    "-Wall",
+    "-frtti",
+    "-fexceptions",
+    "-Wno-unused-but-set-variable",
+    "-Wno-format",
+  ]
+  cflags_cc = cflags
+  part_name = "distributed_hardware_fwk"
+  subsystem_name = "distributedhardware"
+
+  defines = [
+    "HI_LOG_ENABLE",
+    "DH_LOG_TAG=\"av_transport_output_filter\"",
+    "LOG_DOMAIN=0xD004100",
+  ]
 }

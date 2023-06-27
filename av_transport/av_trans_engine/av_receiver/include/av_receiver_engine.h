@@ -38,7 +38,6 @@
 #include "pipeline_core.h"
 #include "audio_decoder_filter.h"
 #include "video_decoder_filter.h"
-#include "async_mode.h"
 
 namespace OHOS {
 namespace DistributedHardware {

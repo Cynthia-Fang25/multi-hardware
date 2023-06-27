@@ -26,7 +26,7 @@ namespace DistributedHardware {
 
 GenericPluginDef CreateDsoftbusInputAudioPluginDef()
 {
-    DHLOGI("DsoftbusInputAudioPlugin registered.");
+    AVTRANS_LOGI("DsoftbusInputAudioPlugin registered.");
     GenericPluginDef definition;
     definition.name = "AVTransDsoftbusInputAudioPlugin";
     definition.pkgName = "AVTransDsoftbusInputAudioPlugin";

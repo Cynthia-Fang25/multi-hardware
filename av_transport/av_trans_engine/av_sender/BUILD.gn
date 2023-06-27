@@ -15,7 +15,18 @@ import("//build/ohos.gni")
 import(
     "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/distributed_av_transport.gni")
 
+config("sender_external_config") {
+  include_dirs = [
+    "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/common/include",
+    "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/av_trans_engine/av_sender/include",
+    "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/av_trans_engine/av_receiver/include",
+    "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/interface",
+  ]
+}
+
 ohos_shared_library("distributed_av_sender") {
+  public_configs = [ ":sender_external_config" ]
+
   include_dirs = [
     "${drivers_disaplay_path}/interfaces/include",
     "${media_standard_path}/interfaces/inner_api/native",
@@ -29,17 +40,6 @@ ohos_shared_library("distributed_av_sender") {
     "${dh_fwk_utils_path}/include",
     "${control_center_path}/inner_kits/include",
     "${control_center_path}/inner_kits/include/ipc",
-
-    "${histreamer_path}/include",
-    "${histreamer_path}/include/foundation",
-    "${histreamer_path}/include/pipeline",
-    "${histreamer_path}/include/pipeline/core",
-    "${histreamer_path}/include/pipeline/factory",
-    "${histreamer_path}/include/pipeline/filters",
-    "${histreamer_path}/include/pipeline/filters/codec/audio_encoder",
-    "${histreamer_path}/include/pipeline/filters/codec/video_encoder",
-    "${histreamer_path}/include/plugin/common",
-    "${histreamer_path}/include/scene/standard",
     "${filters_path}/av_transport_input",
     "${filters_path}/av_transport_output",
   ]
@@ -57,7 +57,6 @@ ohos_shared_library("distributed_av_sender") {
 
   deps = [
     "${control_center_path}/inner_kits:avtranscenter_sdk",
-    "${histreamer_path}/pipeline/filters/codec:codec_filters,
     "${filters_path}:avtrans_input_filter",
     "${filters_path}:avtrans_output_filter",
   ]
@@ -85,6 +84,10 @@ ohos_shared_library("distributed_av_sender") {
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
+    "histreamer:histreamer_base",
+    "histreamer:histreamer_codec_filters",
+    "histreamer:histreamer_plugin_base",
+    "histreamer:histreamer_ffmpeg_convert",
   ]
 
   remove_configs = [

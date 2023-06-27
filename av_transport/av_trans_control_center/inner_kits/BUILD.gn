@@ -50,6 +50,7 @@ ohos_shared_library("avtranscenter_sdk") {
     "samgr:samgr_proxy",
   ]
 
-  part_name = "distributed_hardware_fwk"
   subsystem_name = "distributedhardware"
+
+  part_name = "distributed_hardware_fwk"
 }

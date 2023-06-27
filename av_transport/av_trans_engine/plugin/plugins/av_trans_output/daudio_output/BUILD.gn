@@ -15,16 +15,9 @@ import("//build/ohos.gni")
 import(
     "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/distributed_av_transport.gni")
 
-source_set("plugin_AVTransDaudioOutput") {
+ohos_source_set("plugin_AVTransDaudioOutput") {
   include_dirs = [
     "${common_path}/include",
-    "${histreamer_path}/foundation/osal/thread",
-    "${histreamer_path}/include/pipeline/core",
-    "${histreamer_path}/include/plugin/common",
-    "${histreamer_path}/include/plugin/interface",
-    "${histreamer_path}/include/plugin/core",
-    "${histreamer_path}/foundation/utils",
-    "${histreamer_path}/plugin/core",
     "${plugin_path}/interface",
     "//third_party/json/include",
     "//third_party/ffmpeg",
@@ -32,11 +25,15 @@ source_set("plugin_AVTransDaudioOutput") {
 
   sources = [ "daudio_output_plugin.cpp" ]
 
-  deps = [
-    "${histreamer_path}/foundation:histreamer_foundation",
-    "${histreamer_path}/plugin:histreamer_plugin_core",
-    "${histreamer_path}/plugin:histreamer_plugin_intf",
-    "//third_party/ffmpeg:libohosffmpeg",
+  external_deps = [
+    "histreamer:histreamer_base",
+    "histreamer:histreamer_codec_filters",
+    "histreamer:histreamer_plugin_base",
+    "histreamer:histreamer_ffmpeg_convert",
+  ]
+
+  public_configs = [
+    "${plugin_path}/plugins:avtrans_cflags",
   ]
 
   defines = [
@@ -44,4 +41,6 @@ source_set("plugin_AVTransDaudioOutput") {
     "DH_LOG_TAG=\"daudio_output_plugin\"",
     "LOG_DOMAIN=0xD004100",
   ]
+  part_name = "distributed_hardware_fwk"
+  subsystem_name = "distributedhardware"
 }

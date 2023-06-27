@@ -24,7 +24,7 @@ namespace DistributedHardware {
 
 GenericPluginDef CreateDscreenOutputPluginDef()
 {
-    DHLOGI("DscreenOutputPlugin registered.");
+    AVTRANS_LOGI("DscreenOutputPlugin registered.");
     GenericPluginDef definition;
     definition.name = "AVTransDscreenOutputPlugin";
     definition.pkgName = "AVTransDscreenOutputPlugin";

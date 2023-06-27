@@ -22,6 +22,7 @@
 #include <queue>
 #include <condition_variable>
 
+#include "av_sync_utils.h"
 #include "av_trans_buffer.h"
 #include "av_trans_errno.h"
 #include "av_trans_constants.h"

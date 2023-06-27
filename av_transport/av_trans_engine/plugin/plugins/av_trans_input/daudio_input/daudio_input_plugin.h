@@ -21,6 +21,7 @@
 #include <memory>
 #include <mutex>
 
+#include "av_sync_utils.h"
 #include "av_trans_buffer.h"
 #include "av_trans_constants.h"
 #include "av_trans_log.h"

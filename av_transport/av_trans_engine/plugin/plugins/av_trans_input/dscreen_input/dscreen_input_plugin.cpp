@@ -26,7 +26,7 @@ using json = nlohmann::json;
 
 GenericPluginDef CreateDscreenInputPluginDef()
 {
-    DHLOGI("DscreenInputPlugin registered.");
+    AVTRANS_LOGI("DscreenInputPlugin registered.");
     GenericPluginDef definition;
     definition.name = "AVTransDscreenInputPlugin";
     definition.pkgName = "AVTransDscreenInputPlugin";

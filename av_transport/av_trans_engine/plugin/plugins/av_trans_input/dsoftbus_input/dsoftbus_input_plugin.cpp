@@ -29,7 +29,7 @@ std::vector<GenericPluginDef> CreateDsoftbusInputPluginDef()
     int32_t capNum = 2;
     std::vector<GenericPluginDef> definitionList;
     for (int i = 0; i < capNum; i++) {
-        DHLOGI("DsoftbusInputPlugin_H264 registered.");
+        AVTRANS_LOGI("DsoftbusInputPlugin_H264 registered.");
         GenericPluginDef definition;
         definition.name = "AVTransDsoftbusInputPlugin_H264";
         definition.pkgName = "AVTransDsoftbusInputPlugin";
@@ -45,7 +45,7 @@ std::vector<GenericPluginDef> CreateDsoftbusInputPluginDef()
         CapabilityBuilder capBuilder;
         capBuilder.SetMime(Media::MEDIA_MIME_VIDEO_H264);
         if (i == 1) {
-            DHLOGI("DsoftbusInputPlugin_H265 registered.");
+            AVTRANS_LOGI("DsoftbusInputPlugin_H265 registered.");
             definition.name = "AVTransDsoftbusInputPlugin_H265";
             capBuilder.SetMime(Media::MEDIA_MIME_VIDEO_H265);
         }
