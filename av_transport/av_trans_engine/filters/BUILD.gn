@@ -23,16 +23,16 @@ ohos_source_set("avtrans_input_filter") {
   ]
 
   sources = [
-    "av_transport_input/av_transport_input_filter.cpp",
     "${plugin_path}/core/avtrans_input.cpp",
+    "av_transport_input/av_transport_input_filter.cpp",
   ]
 
   external_deps = [
-    "hiviewdfx_hilog_native:libhilog",
     "histreamer:histreamer_base",
     "histreamer:histreamer_codec_filters",
-    "histreamer:histreamer_plugin_base",
     "histreamer:histreamer_ffmpeg_convert",
+    "histreamer:histreamer_plugin_base",
+    "hiviewdfx_hilog_native:libhilog",
   ]
 
   public_deps = [
@@ -70,16 +70,16 @@ ohos_source_set("avtrans_output_filter") {
   ]
 
   sources = [
-    "av_transport_output/av_transport_output_filter.cpp",
     "${plugin_path}/core/avtrans_output.cpp",
-   ]
+    "av_transport_output/av_transport_output_filter.cpp",
+  ]
 
   external_deps = [
-    "hiviewdfx_hilog_native:libhilog",
     "histreamer:histreamer_base",
     "histreamer:histreamer_codec_filters",
-    "histreamer:histreamer_plugin_base",
     "histreamer:histreamer_ffmpeg_convert",
+    "histreamer:histreamer_plugin_base",
+    "hiviewdfx_hilog_native:libhilog",
   ]
 
   public_deps = [

@@ -27,13 +27,11 @@ ohos_source_set("plugin_AVTransDscreenInput") {
   external_deps = [
     "histreamer:histreamer_base",
     "histreamer:histreamer_codec_filters",
-    "histreamer:histreamer_plugin_base",
     "histreamer:histreamer_ffmpeg_convert",
+    "histreamer:histreamer_plugin_base",
   ]
 
-  public_configs = [
-    "${plugin_path}/plugins:avtrans_cflags",
-  ]
+  public_configs = [ "${plugin_path}/plugins:avtrans_cflags" ]
 
   defines = [
     "HI_LOG_ENABLE",

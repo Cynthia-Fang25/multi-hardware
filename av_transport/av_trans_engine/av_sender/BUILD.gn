@@ -78,16 +78,16 @@ ohos_shared_library("distributed_av_sender") {
     "dsoftbus:softbus_client",
     "graphic_standard:libgraphic_utils",
     "graphic_standard:surface",
+    "histreamer:histreamer_base",
+    "histreamer:histreamer_codec_filters",
+    "histreamer:histreamer_ffmpeg_convert",
+    "histreamer:histreamer_plugin_base",
     "hisysevent_native:libhisysevent",
     "hitrace_native:hitrace_meter",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
-    "histreamer:histreamer_base",
-    "histreamer:histreamer_codec_filters",
-    "histreamer:histreamer_plugin_base",
-    "histreamer:histreamer_ffmpeg_convert",
   ]
 
   remove_configs = [
