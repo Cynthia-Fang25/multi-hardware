@@ -17,6 +17,7 @@
 
 #include <cinttypes>
 #include <dlfcn.h>
+#include <filesystem>
 #include <fstream>
 #include <string>
 
@@ -70,6 +71,9 @@ const std::string LIB_LOAD_PATH = "/system/lib64/";
 #else
 const std::string LIB_LOAD_PATH = "/system/lib/";
 #endif
+
+const std::string DH_CFG_PATH_1 = "/vendor/etc/distributedhardware";
+const std::string DH_CFG_PATH_2 = "/sys_prod/etc/distributedhardware";
 
 std::map<std::string, DHType> g_mapDhTypeName = {
     { "UNKNOWN", DHType::UNKNOWN },
@@ -354,8 +358,17 @@ int32_t ComponentLoader::ParseConfig()
     char path[PATH_MAX + 1] = {0x00};
     char *profilePath = GetOneCfgFile(COMPONENTSLOAD_PROFILE_PATH, buf, MAX_PATH_LEN);
     if (profilePath == nullptr) {
-        DHLOGE("profilePath is null.");
-        return ERR_DH_FWK_LOADER_PROFILE_PATH_IS_NULL;
+        DHLOGE("CCM get profilePath is null, try next path");
+        if (std::filesystem::is_directory(DH_CFG_PATH_1)) {
+            DHLOGW("DH Comp Config Path use DH_CFG_PATH_1: %s", DH_CFG_PATH_1.c_str());
+            profilePath = DH_CFG_PATH_1;
+        } else if (std::filesystem::is_directory(DH_CFG_PATH_2)) {
+            DHLOGW("DH Comp Config Path use DH_CFG_PATH_2: %s", DH_CFG_PATH_2.c_str());
+            profilePath = DH_CFG_PATH_2;
+        } else {
+            DHLOGE("Can not find DH Comp Config folder");
+            return ERR_DH_FWK_LOADER_PROFILE_PATH_IS_NULL;
+        }
     }
     if (strlen(profilePath) == 0 || strlen(profilePath) > PATH_MAX || realpath(profilePath, path) == nullptr) {
         DHLOGE("File connicailization failed.");
