@@ -186,7 +186,7 @@ int32_t AVReceiverEngine::Start()
 int32_t AVReceiverEngine::Stop()
 {
     AVTRANS_LOGI("Stop enter.");
-    ErrorCode ret = pipeline_->Pause();
+    ErrorCode ret = pipeline_->Stop();
     TRUE_RETURN_V(ret != ErrorCode::SUCCESS, ERR_DH_AVT_STOP_FAILED);
     SetCurrentState(StateId::STOPPED);
     return DH_AVT_SUCCESS;
