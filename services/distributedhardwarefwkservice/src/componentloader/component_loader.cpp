@@ -23,6 +23,7 @@
 
 #include "config_policy_utils.h"
 #include "nlohmann/json.hpp"
+#include <securec.h>
 
 #include "constants.h"
 #include "dh_context.h"
@@ -354,21 +355,29 @@ int32_t ComponentLoader::ParseConfig()
     std::map<DHType, CompConfig> dhtypeMap;
     int32_t ret;
     DHLOGI("ParseConfig start");
-    char buf[MAX_PATH_LEN] = {0};
-    char path[PATH_MAX + 1] = {0x00};
-    char *profilePath = GetOneCfgFile(COMPONENTSLOAD_PROFILE_PATH, buf, MAX_PATH_LEN);
+    char buf[PATH_MAX] = {0x00};
+    char path[PATH_MAX] = {0x00};
+    char *profilePath = GetOneCfgFile(COMPONENTSLOAD_PROFILE_PATH, buf, PATH_MAX);
     if (profilePath == nullptr) {
         DHLOGE("CCM get profilePath is null, try next path");
+        std::string backUpPath;
         if (std::filesystem::is_directory(DH_CFG_PATH_1)) {
             DHLOGW("DH Comp Config Path use DH_CFG_PATH_1: %s", DH_CFG_PATH_1.c_str());
-            profilePath = DH_CFG_PATH_1;
+            backUpPath = DH_CFG_PATH_1;
         } else if (std::filesystem::is_directory(DH_CFG_PATH_2)) {
             DHLOGW("DH Comp Config Path use DH_CFG_PATH_2: %s", DH_CFG_PATH_2.c_str());
-            profilePath = DH_CFG_PATH_2;
+            backUpPath = DH_CFG_PATH_2;
         } else {
             DHLOGE("Can not find DH Comp Config folder");
             return ERR_DH_FWK_LOADER_PROFILE_PATH_IS_NULL;
         }
+
+        if (memcpy_s(buf, PATH_MAX, backUpPath.c_str(), backUpPath.length()) != EOK) {
+            DHLOGE("Copy path failed");
+            return ERR_DH_FWK_LOADER_PROFILE_PATH_IS_NULL;
+        }
+
+        profilePath = buf;
     }
     if (strlen(profilePath) == 0 || strlen(profilePath) > PATH_MAX || realpath(profilePath, path) == nullptr) {
         DHLOGE("File connicailization failed.");
