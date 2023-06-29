@@ -162,7 +162,7 @@ int32_t AVSenderEngine::Start()
 int32_t AVSenderEngine::Stop()
 {
     AVTRANS_LOGI("Stop sender engine enter.");
-    ErrorCode ret = pipeline_->Pause();
+    ErrorCode ret = pipeline_->Stop();
     TRUE_RETURN_V_MSG_E(ret != ErrorCode::SUCCESS, ERR_DH_AVT_STOP_FAILED, "stop pipeline failed");
     SetCurrentState(StateId::STOPPED);
     NotifyStreamChange(EventType::EVENT_REMOVE_STREAM);
