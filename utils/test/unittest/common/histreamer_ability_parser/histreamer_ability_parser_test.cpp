@@ -71,12 +71,12 @@ HWTEST_F(HistreamerAbilityParserTest, histreamer_ability_parser_test_002, TestSi
     jsonObject[MIME] = "audio/mp4a-latm";
     jsonObject[AD_MPEG_VER] = "hello";
     FromJson(jsonObject, audioEncoderOut);
-    EXPECT_EQ("audio/mp4a-latm", audioEncoderOut.mime);  
+    EXPECT_EQ("audio/mp4a-latm", audioEncoderOut.mime);
 
     jsonObject[AD_MPEG_VER] = (uint32_t)4;
     jsonObject[AUDIO_AAC_PROFILE] = "hello";
     FromJson(jsonObject, audioEncoderOut);
-    EXPECT_EQ(4, (uint32_t)audioEncoderOut.ad_mpeg_ver); 
+    EXPECT_EQ(4, (uint32_t)audioEncoderOut.ad_mpeg_ver);
 
     jsonObject[AUDIO_AAC_PROFILE] = 0;
     jsonObject[AUDIO_AAC_STREAM_FORMAT] = "hello";
@@ -105,7 +105,10 @@ HWTEST_F(HistreamerAbilityParserTest, histreamer_ability_parser_test_003, TestSi
 
     AudioEncoderIn audioEncoderIn;
     audioEncoderIn.mime = "audio/raw";
-    audioEncoderIn.sample_rate = {96000, 88200, 64000, 48000, 44100, 32000, 24000, 22050, 16000, 12000, 11025, 8000, 7350};
+    audioEncoderIn.sample_rate = {
+        96000, 88200, 64000, 48000, 44100, 32000, 
+        24000, 22050, 16000, 12000, 11025, 8000, 7350
+    };
     audioEncoder.ins.push_back(audioEncoderIn);
     FromJson(jsonObject, audioEncoder);
     EXPECT_FALSE(audioEncoder.ins.empty());
@@ -146,7 +149,7 @@ HWTEST_F(HistreamerAbilityParserTest, histreamer_ability_parser_test_005, TestSi
     FromJson(jsonObject, audioDecoderOut);
     EXPECT_TRUE(audioDecoderOut.mime.empty());
 
-    jsonObject[MIME] = "audio/raw"; 
+    jsonObject[MIME] = "audio/raw";
     FromJson(jsonObject, audioDecoderOut);
     EXPECT_EQ("audio/raw", audioDecoderOut.mime);
     EXPECT_TRUE(audioDecoderOut.sample_fmt.empty());
@@ -323,7 +326,7 @@ HWTEST_F(HistreamerAbilityParserTest, histreamer_ability_parser_test_012, TestSi
 
 /**
  * @tc.name: histreamer_ability_parser_test_013
- * @tc.desc: Verify the FromJson<AudioEncoder>(const std::string &key, const nlohmann::json &jsonObject, std::vector<AudioEncoder> &objs) function
+ * @tc.desc: Verify the FromJson<AudioEncoder> function
  * @tc.type: FUNC
  * @tc.require: issuelI7MJPJ
  */
@@ -344,7 +347,7 @@ HWTEST_F(HistreamerAbilityParserTest, histreamer_ability_parser_test_013, TestSi
 
 /**
  * @tc.name: histreamer_ability_parser_test_014
- * @tc.desc: Verify the FromJson<AudioDecoder>(const std::string &key, const nlohmann::json &jsonObject, std::vector<AudioDecoder> &objs) function
+ * @tc.desc: Verify the FromJson<AudioDecoder> function
  * @tc.type: FUNC
  * @tc.require: issuelI7MJPJ
  */
@@ -365,7 +368,7 @@ HWTEST_F(HistreamerAbilityParserTest, histreamer_ability_parser_test_014, TestSi
 
 /**
  * @tc.name: histreamer_ability_parser_test_015
- * @tc.desc: Verify the FromJson<VideoEncoder>(const std::string &key, const nlohmann::json &jsonObject, std::vector<VideoEncoder> &objs) function
+ * @tc.desc: Verify the FromJson<VideoEncoder> function
  * @tc.type: FUNC
  * @tc.require: issuelI7MJPJ
  */
@@ -386,7 +389,7 @@ HWTEST_F(HistreamerAbilityParserTest, histreamer_ability_parser_test_015, TestSi
 
 /**
  * @tc.name: histreamer_ability_parser_test_016
- * @tc.desc: Verify the FromJson<VideoDecoder>(const std::string &key, const nlohmann::json &jsonObject, std::vector<VideoDecoder> &objs) function
+ * @tc.desc: Verify the FromJson<VideoDecoder> function
  * @tc.type: FUNC
  * @tc.require: issuelI7MJPJ
  */

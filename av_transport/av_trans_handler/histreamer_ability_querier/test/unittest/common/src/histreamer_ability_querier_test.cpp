@@ -34,7 +34,7 @@ void HistreamerAbilityQuerierTest::SetUp() {}
 void HistreamerAbilityQuerierTest::TearDown() {}
 
 namespace {
-int32_t MAX_MESSAGES_LEN = 1 * 1024 * 1024;
+int32_t g_maxMessagesLen = 1 * 1024 * 1024;
 static const std::uint16_t NUM = 1;
 static const std::string KEY = "key";
 static const std::string NAME = "name";
@@ -98,7 +98,8 @@ HWTEST_F(HistreamerAbilityQuerierTest, histreamer_ability_querier_test_003, Test
     std::vector<VideoEncoder> videoEncoders = QueryVideoEncoderAbility();
     EXPECT_FALSE(videoEncoders.empty() || videoEncoders.size() > 4);
     for (std::uint16_t i = 0; i < videoEncoders.size(); i++) {
-        EXPECT_TRUE(find(VIDEO_ENCODER_WANT.begin(), VIDEO_ENCODER_WANT.end(), videoEncoders[i].name) != VIDEO_ENCODER_WANT.end()); 
+        auto it = find(VIDEO_ENCODER_WANT.begin(), VIDEO_ENCODER_WANT.end(), videoEncoders[i].name);
+        EXPECT_TRUE(it != VIDEO_ENCODER_WANT.end());
     }
 }
 
@@ -114,7 +115,8 @@ HWTEST_F(HistreamerAbilityQuerierTest, histreamer_ability_querier_test_004, Test
     std::vector<VideoDecoder> videoDecoders = QueryVideoDecoderAbility();
     EXPECT_FALSE(videoDecoders.empty() || videoDecoders.size() > 4);
     for (std::uint16_t i = 0; i < videoDecoders.size(); i++) {
-        EXPECT_TRUE(find(VIDEO_DECODER_WANT.begin(), VIDEO_DECODER_WANT.end(), videoDecoders[i].name) != VIDEO_DECODER_WANT.end());
+        auto it = find(VIDEO_DECODER_WANT.begin(), VIDEO_DECODER_WANT.end(), videoDecoders[i].name);
+        EXPECT_TRUE(it != VIDEO_DECODER_WANT.end());
     }
 }
 
@@ -126,9 +128,9 @@ HWTEST_F(HistreamerAbilityQuerierTest, histreamer_ability_querier_test_004, Test
  */
 HWTEST_F(HistreamerAbilityQuerierTest, histreamer_ability_querier_test_005, TestSize.Level0)
 {
-    char* RES_MAX = new char[MAX_MESSAGES_LEN];
+    char* RES_MAX = new char[g_maxMessagesLen];
     EXPECT_TRUE(QueryAudioEncoderAbilityStr(RES_MAX) >= 0);
-    EXPECT_TRUE(QueryAudioEncoderAbilityStr(RES_MAX) <= MAX_MESSAGES_LEN);
+    EXPECT_TRUE(QueryAudioEncoderAbilityStr(RES_MAX) <= g_maxMessagesLen);
     delete[] RES_MAX;
 }
 
@@ -140,9 +142,9 @@ HWTEST_F(HistreamerAbilityQuerierTest, histreamer_ability_querier_test_005, Test
  */
 HWTEST_F(HistreamerAbilityQuerierTest, histreamer_ability_querier_test_006, TestSize.Level0)
 {
-    char* RES_MAX = new char[MAX_MESSAGES_LEN];
+    char* RES_MAX = new char[g_maxMessagesLen];
     EXPECT_TRUE(QueryAudioDecoderAbilityStr(RES_MAX) >= 0);
-    EXPECT_TRUE(QueryAudioDecoderAbilityStr(RES_MAX) <= MAX_MESSAGES_LEN);
+    EXPECT_TRUE(QueryAudioDecoderAbilityStr(RES_MAX) <= g_maxMessagesLen);
     delete[] RES_MAX;
 }
 
@@ -154,9 +156,9 @@ HWTEST_F(HistreamerAbilityQuerierTest, histreamer_ability_querier_test_006, Test
  */
 HWTEST_F(HistreamerAbilityQuerierTest, histreamer_ability_querier_test_007, TestSize.Level0)
 {
-    char* RES_MAX = new char[MAX_MESSAGES_LEN];
+    char* RES_MAX = new char[g_maxMessagesLen];
     EXPECT_TRUE(QueryVideoEncoderAbilityStr(RES_MAX) >= 0);
-    EXPECT_TRUE(QueryVideoEncoderAbilityStr(RES_MAX) <= MAX_MESSAGES_LEN);
+    EXPECT_TRUE(QueryVideoEncoderAbilityStr(RES_MAX) <= g_maxMessagesLen);
     delete[] RES_MAX;
 }
 
@@ -168,9 +170,9 @@ HWTEST_F(HistreamerAbilityQuerierTest, histreamer_ability_querier_test_007, Test
  */
 HWTEST_F(HistreamerAbilityQuerierTest, histreamer_ability_querier_test_008, TestSize.Level0)
 {
-    char* RES_MAX = new char[MAX_MESSAGES_LEN];
+    char* RES_MAX = new char[g_maxMessagesLen];
     EXPECT_TRUE(QueryVideoDecoderAbilityStr(RES_MAX) >= 0);
-    EXPECT_TRUE(QueryVideoDecoderAbilityStr(RES_MAX) <= MAX_MESSAGES_LEN);
+    EXPECT_TRUE(QueryVideoDecoderAbilityStr(RES_MAX) <= g_maxMessagesLen);
     delete[] RES_MAX;
 }
 
@@ -199,7 +201,7 @@ HWTEST_F(HistreamerAbilityQuerierTest, histreamer_ability_querier_test_009, Test
 HWTEST_F(HistreamerAbilityQuerierTest, histreamer_ability_querier_test_010, TestSize.Level0)
 {
     nlohmann::json jsonObject;
-    const uint8_t num_s = 1; 
+    const uint8_t num_s = 1;
     jsonObject[KEY] = num_s;
     EXPECT_TRUE(IsUInt8(jsonObject, KEY));
 
@@ -258,12 +260,12 @@ HWTEST_F(HistreamerAbilityQuerierTest, histreamer_ability_querier_test_013, Test
     jsonObject[MIME] = "audio/mp4a-latm";
     jsonObject[AD_MPEG_VER] = "hello";
     FromJson(jsonObject, audioEncoderOut);
-    EXPECT_EQ("audio/mp4a-latm", audioEncoderOut.mime);  
+    EXPECT_EQ("audio/mp4a-latm", audioEncoderOut.mime);
 
     jsonObject[AD_MPEG_VER] = (uint32_t)4;
     jsonObject[AUDIO_AAC_PROFILE] = "hello";
     FromJson(jsonObject, audioEncoderOut);
-    EXPECT_EQ(4, (uint32_t)audioEncoderOut.ad_mpeg_ver); 
+    EXPECT_EQ(4, (uint32_t)audioEncoderOut.ad_mpeg_ver);
 
     jsonObject[AUDIO_AAC_PROFILE] = 0;
     jsonObject[AUDIO_AAC_STREAM_FORMAT] = "hello";
@@ -292,7 +294,10 @@ HWTEST_F(HistreamerAbilityQuerierTest, histreamer_ability_querier_test_014, Test
 
     AudioEncoderIn audioEncoderIn;
     audioEncoderIn.mime = "audio/raw";
-    audioEncoderIn.sample_rate = {96000, 88200, 64000, 48000, 44100, 32000, 24000, 22050, 16000, 12000, 11025, 8000, 7350};
+    audioEncoderIn.sample_rate = {
+        96000, 88200, 64000, 48000, 44100, 32000,
+        22050, 16000, 12000, 11025, 8000, 7350,24000
+    };
     audioEncoder.ins.push_back(audioEncoderIn);
     FromJson(jsonObject, audioEncoder);
     EXPECT_FALSE(audioEncoder.ins.empty());
@@ -333,10 +338,10 @@ HWTEST_F(HistreamerAbilityQuerierTest, histreamer_ability_querier_test_016, Test
     FromJson(jsonObject, audioDecoderOut);
     EXPECT_TRUE(audioDecoderOut.mime.empty());
 
-    jsonObject[MIME] = "audio/raw"; 
+    jsonObject[MIME] = "audio/raw";
     FromJson(jsonObject, audioDecoderOut);
     EXPECT_EQ("audio/raw", audioDecoderOut.mime);
-    EXPECT_TRUE(audioDecoderOut.sample_fmt.empty());  
+    EXPECT_TRUE(audioDecoderOut.sample_fmt.empty());
 }
 
 /**
