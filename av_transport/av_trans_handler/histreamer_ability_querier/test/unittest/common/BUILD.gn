@@ -62,4 +62,3 @@ group("histreamer_ability_querier_test") {
   testonly = true
   deps = [ ":HistreamerAbilityQuerierTest" ]
 }
-
