@@ -105,10 +105,7 @@ HWTEST_F(HistreamerAbilityParserTest, histreamer_ability_parser_test_003, TestSi
 
     AudioEncoderIn audioEncoderIn;
     audioEncoderIn.mime = "audio/raw";
-    audioEncoderIn.sample_rate = {
-        96000, 88200, 64000, 48000, 44100, 32000, 
-        24000, 22050, 16000, 12000, 11025, 8000, 7350
-    };
+    audioEncoderIn.sample_rate = {96000, 88200, 64000, 48000, 44100, 32000};
     audioEncoder.ins.push_back(audioEncoderIn);
     FromJson(jsonObject, audioEncoder);
     EXPECT_FALSE(audioEncoder.ins.empty());
