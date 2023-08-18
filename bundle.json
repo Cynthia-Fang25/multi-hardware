@@ -47,7 +47,6 @@
       ],
       "third_party": [
         "json",
-        "googletest",
         "openssl"
       ]
     },
