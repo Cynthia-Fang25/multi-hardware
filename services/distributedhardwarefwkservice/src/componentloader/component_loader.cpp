@@ -114,17 +114,17 @@ int32_t ParseComponent(const nlohmann::json &json, CompConfig &cfg)
     cfg.name = json.at(COMP_NAME).get<std::string>();
     if (!IsString(json, COMP_TYPE)) {
         DHLOGE("COMP_TYPE is invalid");
-        return ;
+        return;
     }
     cfg.type = g_mapDhTypeName[json.at(COMP_TYPE).get<std::string>()];
     if (!IsString(json, COMP_HANDLER_LOC)) {
         DHLOGE("COMP_HANDLER_LOC is invalid");
-        return ERR_DH_FWK_JSON_PARSE_FAILED;
+        return;
     }
     cfg.compHandlerLoc = json.at(COMP_HANDLER_LOC).get<std::string>();
     if (!IsString(json, COMP_HANDLER_VERSION)) {
         DHLOGE("COMP_HANDLER_VERSION is invalid");
-        return ERR_DH_FWK_JSON_PARSE_FAILED;
+        return;
     }
     cfg.compHandlerVersion = json.at(COMP_HANDLER_VERSION).get<std::string>();
     return DH_FWK_SUCCESS;
@@ -178,7 +178,7 @@ void from_json(const nlohmann::json &json, CompConfig &cfg)
     }
     if (ParseSource(json, cfg) != DH_FWK_SUCCESS) {
         DHLOGE("ParseSource is failed");
-        return;s
+        return;
     }
     if (ParseSink(json, cfg) != DH_FWK_SUCCESS) {
         DHLOGE("ParseSink is failed");
