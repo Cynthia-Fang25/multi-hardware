@@ -1,0 +1,83 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/test.gni")
+import("../../../../distributed_av_transport.gni")
+
+module_out_path = "distributed_hardware_fwk/av_transport"
+
+ohos_unittest("AvTransControlCenterCallbackTest") {
+  module_out_path = module_out_path
+
+  include_dirs = [
+    "${dh_fwk_utils_path}/include",
+    "${common_path}/include",
+    "${dh_fwk_sdk_path}/include",
+    "${engine_path}/av_sender/include",
+    "${control_center_path}/inner_kits/include",
+    "${control_center_path}/inner_kits/include/ipc",
+    "${filters_path}/av_transport_input",
+    "${filters_path}/av_transport_output",
+    "${engine_path}/av_sender/test/unittest/av_sender_engine_provider/include",
+    "${interface_path}",
+    "${media_standard_path}/interfaces/inner_api/native",
+  ]
+
+  sources = [
+    "${common_path}/src/av_sync_utils.cpp",
+    "${common_path}/src/av_trans_log.cpp",
+    "${common_path}/src/av_trans_meta.cpp",
+    "${common_path}/src/av_trans_utils.cpp",
+    "${common_path}/src/softbus_channel_adapter.cpp",
+    "av_trans_control_center_callback_test.cpp",
+  ]
+
+  cflags = [
+    "-O2",
+    "-fPIC",
+    "-Wall",
+    "-frtti",
+    "-fexceptions",
+    "-Dprivate = public",
+  ]
+  cflags_cc = cflags
+
+  defines = [
+    "HI_LOG_ENABLE",
+    "DH_LOG_TAG=\"av_trans_control_center_callback_test\"",
+    "LOG_DOMAIN=0xD004100",
+  ]
+
+  deps = [
+    "${engine_path}/filters:avtrans_output_filter",
+    "${plugin_path}/plugins/av_trans_output/dsoftbus_output_audio:plugin_AVTransDsoftbusOutputAudio",
+    "//third_party/googletest:gtest_rtti",
+    "//third_party/libevdev:libevdev",
+  ]
+
+  external_deps = [
+    "c_utils:utils",
+    "dsoftbus:softbus_client",
+    "hilog:libhilog",
+    "histreamer:histreamer_base",
+    "histreamer:histreamer_codec_filters",
+    "histreamer:histreamer_ffmpeg_convert",
+    "histreamer:histreamer_plugin_base",
+  ]
+}
+
+group("av_trans_control_center_callback_test") {
+  testonly = true
+
+  deps = [ ":AvTransControlCenterCallbackTest" ]
+}
