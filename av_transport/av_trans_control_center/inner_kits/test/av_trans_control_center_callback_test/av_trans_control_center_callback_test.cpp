@@ -46,7 +46,7 @@ void AvTransControlCenterCallbackTest::TearDownTestCase()
 HWTEST_F(AvTransControlCenterCallbackTest, SetParameter_001, testing::ext::TestSize.Level1)
 {
     std::shared_ptr<AVTransControlCenterCallback> avTransTest_ =
-        FilterFactory::Instance().CreateFilterWithType<AVTransControlCenterCallback>(AVINPUT_NAME, TRANSRNAME);    
+        FilterFactory::Instance().CreateFilterWithType<AVTransControlCenterCallback>(AVINPUT_NAME, TRANSRNAME);
     AVTransTag tag = AVTransTag::START_AV_SYNC;
     std::string value = VideoBitStreamFormat::ANNEXB;
     int32_t ret = avTransTest_->SetParameter(tag, value);
@@ -56,7 +56,7 @@ HWTEST_F(AvTransControlCenterCallbackTest, SetParameter_001, testing::ext::TestS
 HWTEST_F(AvTransControlCenterCallbackTest, SetParameter_002, testing::ext::TestSize.Level1)
 {
     std::shared_ptr<AVTransControlCenterCallback> avTransTest_ =
-        FilterFactory::Instance().CreateFilterWithType<AVTransControlCenterCallback>(AVINPUT_NAME, TRANSRNAME);    
+        FilterFactory::Instance().CreateFilterWithType<AVTransControlCenterCallback>(AVINPUT_NAME, TRANSRNAME);
     AVTransTag tag = AVTransTag::STOP_AV_SYNC;
     std::string value = VideoBitStreamFormat::ANNEXB;
     int32_t ret = avTransTest_->SetParameter(tag, value);
@@ -66,7 +66,7 @@ HWTEST_F(AvTransControlCenterCallbackTest, SetParameter_002, testing::ext::TestS
 HWTEST_F(AvTransControlCenterCallbackTest, SetParameter_003, testing::ext::TestSize.Level1)
 {
     std::shared_ptr<AVTransControlCenterCallback> avTransTest_ =
-        FilterFactory::Instance().CreateFilterWithType<AVTransControlCenterCallback>(AVINPUT_NAME, TRANSRNAME);    
+        FilterFactory::Instance().CreateFilterWithType<AVTransControlCenterCallback>(AVINPUT_NAME, TRANSRNAME);
     AVTransTag tag = AVTransTag::TIME_SYNC_RESULT;
     std::string value = VideoBitStreamFormat::ANNEXB;
     int32_t ret = avTransTest_->SetParameter(tag, value);
@@ -76,7 +76,7 @@ HWTEST_F(AvTransControlCenterCallbackTest, SetParameter_003, testing::ext::TestS
 HWTEST_F(AvTransControlCenterCallbackTest, SetSharedMemory_001, testing::ext::TestSize.Level1)
 {
     std::shared_ptr<AVTransControlCenterCallback> avTransTest_ =
-        FilterFactory::Instance().CreateFilterWithType<AVTransControlCenterCallback>(AVINPUT_NAME, TRANSRNAME);    
+        FilterFactory::Instance().CreateFilterWithType<AVTransControlCenterCallback>(AVINPUT_NAME, TRANSRNAME);
     AVTransSharedMemory memory = sendEngine->SetParameter(AVTransTag::SHARED_MEMORY_FD, MarshalSharedMemory(memory));
     int32_t ret = avTransTest_->SetSharedMemory(memory);
     EXPECT_EQ(DH_AVT_SUCCESS, ret);
@@ -85,7 +85,7 @@ HWTEST_F(AvTransControlCenterCallbackTest, SetSharedMemory_001, testing::ext::Te
 HWTEST_F(AvTransControlCenterCallbackTest, SetSharedMemory_002, testing::ext::TestSize.Level1)
 {
     std::shared_ptr<AVTransControlCenterCallback> avTransTest_ =
-        FilterFactory::Instance().CreateFilterWithType<AVTransControlCenterCallback>(AVINPUT_NAME, TRANSRNAME);    
+        FilterFactory::Instance().CreateFilterWithType<AVTransControlCenterCallback>(AVINPUT_NAME, TRANSRNAME);
     AVTransSharedMemory memory = rcvEngine->SetParameter(AVTransTag::SHARED_MEMORY_FD, MarshalSharedMemory(memory));
     int32_t ret = avTransTest_->SetSharedMemory(memory);
     EXPECT_EQ(DH_AVT_SUCCESS, ret);
