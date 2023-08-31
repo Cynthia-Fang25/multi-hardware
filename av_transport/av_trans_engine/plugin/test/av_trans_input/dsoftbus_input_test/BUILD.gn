@@ -53,7 +53,6 @@ ohos_unittest("DsoftbusInputPluginTest") {
     "-O2",
     "-fPIC",
     "-Wall",
-    "-frtti",
     "-fexceptions",
     "-Dprivate = public",
   ]

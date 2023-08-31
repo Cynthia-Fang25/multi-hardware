@@ -44,7 +44,6 @@ ohos_unittest("AvSenderEngineTest") {
     "-O2",
     "-fPIC",
     "-Wall",
-    "-frtti",
     "-fexceptions",
     "-Dprivate = public",
     "-Dprotected = public",
