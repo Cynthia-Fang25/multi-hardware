@@ -55,7 +55,6 @@ ohos_unittest("DscreenInputTest") {
     "-O2",
     "-fPIC",
     "-Wall",
-    "-frtti",
     "-fexceptions",
     "-Dprivate = public",
   ]

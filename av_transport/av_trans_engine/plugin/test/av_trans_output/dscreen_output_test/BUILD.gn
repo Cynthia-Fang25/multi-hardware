@@ -40,7 +40,6 @@ ohos_unittest("DscreenOutputPluginTest") {
     "-O2",
     "-fPIC",
     "-Wall",
-    "-frtti",
     "-fexceptions",
     "-Dprivate = public",
   ]
