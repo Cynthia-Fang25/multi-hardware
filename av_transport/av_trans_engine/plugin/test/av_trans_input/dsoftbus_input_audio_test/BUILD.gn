@@ -54,7 +54,6 @@ ohos_unittest("DsoftbusInputAudioPluginTest") {
     "-O2",
     "-fPIC",
     "-Wall",
-    "-frtti",
     "-fexceptions",
     "-Dprivate = public",
   ]

@@ -39,7 +39,6 @@ ohos_unittest("DaudioOutputPluginTest") {
     "-O2",
     "-fPIC",
     "-Wall",
-    "-frtti",
     "-fexceptions",
     "-Dprivate = public",
   ]
