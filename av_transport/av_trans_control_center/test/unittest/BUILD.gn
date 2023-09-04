@@ -68,7 +68,6 @@ ohos_unittest("AvTransControlCenterTest") {
     "-O2",
     "-fPIC",
     "-Wall",
-    "-frtti",
     "-fexceptions",
   ]
   cflags_cc = cflags

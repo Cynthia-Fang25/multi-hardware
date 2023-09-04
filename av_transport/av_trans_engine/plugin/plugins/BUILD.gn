@@ -16,7 +16,6 @@ config("avtrans_cflags") {
     "-O2",
     "-fPIC",
     "-Wall",
-    "-frtti",
     "-fexceptions",
     "-Wno-unused-but-set-variable",
     "-Wno-format",
