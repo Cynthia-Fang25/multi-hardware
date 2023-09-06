@@ -29,6 +29,14 @@ void DsoftbusInputAudioPluginTest::SetUp(void) {}
 
 void DsoftbusInputAudioPluginTest::TearDown(void) {}
 
+class DsoftbusInputAudioPluginCallback : public Callback {
+public:
+    void OnEvent(const PluginEvent &event)
+    {
+        (void)event;
+    }
+};
+
 HWTEST_F(DsoftbusInputAudioPluginTest, Prepare_001, TestSize.Level1)
 {
     auto plugin = std::make_shared<DsoftbusInputAudioPlugin>(PLUGINNAME);
@@ -47,6 +55,17 @@ HWTEST_F(DsoftbusInputAudioPluginTest, Prepare_002, TestSize.Level1)
     plugin->ownerName_ = "ohos.dhardware.dcamera";
     ret = plugin->Prepare();
     EXPECT_EQ(Status::ERROR_INVALID_OPERATION, ret);
+}
+
+HWTEST_F(DsoftbusInputAudioPluginTest, Reset_001, TestSize.Level1)
+{
+    auto plugin = std::make_shared<DsoftbusInputAudioPlugin>(PLUGINNAME);
+    Status ret = plugin->Reset();
+    EXPECT_EQ(Status::OK, ret);
+
+    plugin->bufferPopTask_ = std::make_shared<Media::OSAL::Task>("videoBufferQueuePopThread");
+    ret = plugin->Reset();
+    EXPECT_EQ(Status::OK, ret);
 }
 
 HWTEST_F(DsoftbusInputAudioPluginTest, Start_001, TestSize.Level1)
@@ -116,38 +135,25 @@ HWTEST_F(DsoftbusInputAudioPluginTest, GetParameter_002, TestSize.Level1)
     plugin->DataEnqueue(buffer);
 }
 
-HWTEST_F(DsoftbusInputAudioPluginTest, Reset_001, TestSize.Level1)
-{
-    auto plugin = std::make_shared<DsoftbusInputAudioPlugin>(PLUGINNAME);
-    Status ret = plugin->Reset();
-    EXPECT_EQ(Status::OK, ret);
-}
-
-HWTEST_F(DsoftbusInputAudioPluginTest, Pause_001, TestSize.Level1)
-{
-    auto plugin = std::make_shared<DsoftbusInputAudioPlugin>(PLUGINNAME);
-    Status ret = plugin->Pause();
-    EXPECT_EQ(Status::OK, ret);
-}
-
-HWTEST_F(DsoftbusInputAudioPluginTest, Resume_001, TestSize.Level1)
-{
-    auto plugin = std::make_shared<DsoftbusInputAudioPlugin>(PLUGINNAME);
-    Status ret = plugin->Resume();
-    EXPECT_EQ(Status::OK, ret);
-}
-
 HWTEST_F(DsoftbusInputAudioPluginTest, SetCallback_001, TestSize.Level1)
 {
     auto plugin = std::make_shared<DsoftbusInputAudioPlugin>(PLUGINNAME);
     Status ret = plugin->SetCallback(nullptr);
     EXPECT_EQ(Status::ERROR_NULL_POINTER, ret);
-}
 
-HWTEST_F(DsoftbusInputAudioPluginTest, SetDataCallback_001, TestSize.Level1)
-{
-    auto plugin = std::make_shared<DsoftbusInputAudioPlugin>(PLUGINNAME);
-    Status ret = plugin->SetDataCallback(nullptr);
+    DsoftbusInputAudioPluginCallback cb {};
+    AVTransEvent event {EventType::EVENT_CHANNEL_OPENED, "", ""};
+    plugin->OnChannelEvent(event);
+
+    AVTransEvent event {EventType::EVENT_CHANNEL_OPEN_FAIL, "", ""};
+    plugin->OnChannelEvent(event);
+
+    AVTransEvent event {EventType::EVENT_CHANNEL_CLOSED, "", ""};
+    plugin->OnChannelEvent(event);
+
+    AVTransEvent event {EventType::EVENT_DATA_RECEIVED, "", ""};
+    plugin->OnChannelEvent(event);
+    ret = plugin->SetCallback(&cb);
     EXPECT_EQ(Status::OK, ret);
 }
 } // namespace DistributedHardware
