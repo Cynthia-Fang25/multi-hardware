@@ -14,32 +14,35 @@
 import("//build/test.gni")
 import("../../../../../distributed_av_transport.gni")
 
-module_out_path = "distributed_hardware_fwk/dscreen_input_test"
+module_out_path = "distributed_hardware_fwk/avtrans_input_output_unittest"
 
-ohos_unittest("DscreenInputTest") {
+ohos_unittest("AvTransInputOutputTest") {
   module_out_path = module_out_path
 
   include_dirs = [
-    "${common_path}/include",
-    "${plugin_path}/interface",
-    "${plugin_path}/plugins/av_trans_input/dscreen_input",
     "//third_party/ffmpeg",
     "//third_party/json/include",
+    "${plugin_path}/core",
+    "${plugin_path}/interface",
+    "${common_path}/include",
   ]
 
   sources = [
-    "${common_path}/src/av_sync_utils.cpp",
-    "${common_path}/src/av_trans_log.cpp",
-    "${common_path}/src/av_trans_message.cpp",
-    "${common_path}/src/av_trans_meta.cpp",
-    "${common_path}/src/av_trans_utils.cpp",
-    "dscreen_input_test.cpp",
+    "avtrans_input_test.cpp",
+    "avtrans_output_test.cpp",
   ]
 
-  deps = [
-    "${plugin_path}/plugins/av_trans_input/dscreen_input:plugin_AVTransDscreenInput",
-    "//third_party/googletest:gtest",
+  cflags = [
+    "-O2",
+    "-fPIC",
+    "-Wall",
+    "-frtti",
+    "-fexceptions",
+    "-Dprivate = public",
   ]
+  cflags_cc = cflags
+
+  deps = [ "//third_party/googletest:gtest" ]
 
   external_deps = [
     "bounds_checking_function:libsec_shared",
@@ -47,29 +50,21 @@ ohos_unittest("DscreenInputTest") {
     "eventhandler:libeventhandler",
     "hilog:libhilog",
     "histreamer:histreamer_base",
+    "histreamer:histreamer_codec_filters",
+    "histreamer:histreamer_ffmpeg_convert",
     "histreamer:histreamer_plugin_base",
     "kv_store:distributeddata_inner",
     "safwk:system_ability_fwk",
   ]
 
-  cflags = [
-    "-O2",
-    "-fPIC",
-    "-Wall",
-    "-fexceptions",
-    "-Dprivate = public",
-  ]
-
-  cflags_cc = cflags
-
   defines = [
     "HI_LOG_ENABLE",
-    "DH_LOG_TAG=\"dscreen_input_plugin_test\"",
+    "DH_LOG_TAG=\"avtrans_input_output_test\"",
     "LOG_DOMAIN=0xD004100",
   ]
 }
 
-group("dscreen_input_unittest") {
+group("avtrans_input_output_unittest") {
   testonly = true
-  deps = [ ":DscreenInputTest" ]
+  deps = [ ":AvTransInputOutputTest" ]
 }

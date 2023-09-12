@@ -12,7 +12,7 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import("../../../../../distributed_av_transport.gni")
+import("../../../../../../../distributed_av_transport.gni")
 
 module_out_path = "distributed_hardware_fwk/daudio_input_test"
 

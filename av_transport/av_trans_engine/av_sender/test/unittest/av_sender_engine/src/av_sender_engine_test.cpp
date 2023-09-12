@@ -17,6 +17,7 @@
 
 #include "pipeline/factory/filter_factory.h"
 #include "plugin_video_tags.h"
+#include "distributed_hardware_fwk_kit.h"
 
 using namespace testing::ext;
 using namespace OHOS::DistributedHardware;
@@ -48,6 +49,8 @@ HWTEST_F(AvSenderEngineTest, Initialize_001, testing::ext::TestSize.Level1)
     std::string peerDevId = "pEid";
     auto sender = std::make_shared<AVSenderEngine>(ownerName, peerDevId);
     sender->initialized_ = true;
+    std::string value = MIME_VIDEO_H264;
+    sender->SetVideoCodecType(value);
     int32_t ret = sender->Initialize();
     EXPECT_EQ(DH_AVT_SUCCESS, ret);
 }
@@ -58,6 +61,8 @@ HWTEST_F(AvSenderEngineTest, Initialize_002, testing::ext::TestSize.Level1)
     std::string peerDevId = "pEid";
     auto sender = std::make_shared<AVSenderEngine>(ownerName, peerDevId);
     sender->avInput_ = nullptr;
+    std::string value = MIME_VIDEO_H265;
+    sender->SetVideoCodecType(value);
     int32_t ret = sender->Initialize();
     EXPECT_EQ(ERR_DH_AVT_INIT_FAILED, ret);
 }
@@ -68,8 +73,33 @@ HWTEST_F(AvSenderEngineTest, Initialize_003, testing::ext::TestSize.Level1)
     std::string peerDevId = "pEid";
     auto sender = std::make_shared<AVSenderEngine>(ownerName, peerDevId);
     sender->sessionName_ = "";
+    sender->SetEnginePause(ownerName);
+    sender->pipeline_ = nullptr;
+    sender->SetEnginePause(ownerName);
     int32_t ret = sender->Initialize();
     EXPECT_EQ(ERR_DH_AVT_INIT_FAILED, ret);
+}
+
+HWTEST_F(AvSenderEngineTest, InitPipeline_001, testing::ext::TestSize.Level1)
+{
+    std::string ownerName = "001";
+    std::string peerDevId = "pEid";
+    auto sender = std::make_shared<AVSenderEngine>(ownerName, peerDevId);
+    sender->ownerName_ = "";
+    sender->SetEngineResume(ownerName);
+    sender->pipeline_ = nullptr;
+    sender->SetEngineResume(ownerName);
+    int32_t ret = sender->InitPipeline();
+    EXPECT_EQ(ERR_DH_AVT_NULL_POINTER, ret);
+}
+
+HWTEST_F(AvSenderEngineTest, InitPipeline_002, testing::ext::TestSize.Level1)
+{
+    std::string peerDevId = "pEid";
+    auto sender = std::make_shared<AVSenderEngine>(OWNER_NAME_D_MIC, peerDevId);
+    sender->ownerName_ = "";
+    int32_t ret = sender->InitPipeline();
+    EXPECT_EQ(ERR_DH_AVT_NULL_POINTER, ret);
 }
 
 HWTEST_F(AvSenderEngineTest, CreateControlChannel_001, testing::ext::TestSize.Level1)
@@ -123,6 +153,19 @@ HWTEST_F(AvSenderEngineTest, Start_002, testing::ext::TestSize.Level1)
     int32_t ret = sender->Start();
     sender->Stop();
     EXPECT_EQ(DH_AVT_SUCCESS, ret);
+}
+
+HWTEST_F(AvSenderEngineTest, Start_003, testing::ext::TestSize.Level1)
+{
+    std::string ownerName = "001";
+    std::string peerDevId = "pEid";
+    auto sender = std::make_shared<AVSenderEngine>(ownerName, peerDevId);
+    sender->currentState_ = StateId::CH_CREATED;
+    sender->pipeline_ = std::make_shared<OHOS::Media::Pipeline::PipelineCore>();
+    sender->dhfwkKit_ = std::make_shared<DistributedHardwareFwkKit>();
+    int32_t ret = sender->Start();
+    sender->Stop();
+    EXPECT_EQ(ERR_DH_AVT_CREATE_CHANNEL_FAILED, ret);
 }
 
 HWTEST_F(AvSenderEngineTest, Stop_001, testing::ext::TestSize.Level1)
@@ -296,12 +339,104 @@ HWTEST_F(AvSenderEngineTest, PreparePipeline_004, testing::ext::TestSize.Level1)
 
 HWTEST_F(AvSenderEngineTest, SendMessage_001, testing::ext::TestSize.Level1)
 {
-    std::string ownerName = "001";
+    std::string ownerName = OWNER_NAME_D_MIC;
     std::string peerDevId = "pEid";
-    std::string configParam = "value";
     auto sender = std::make_shared<AVSenderEngine>(ownerName, peerDevId);
+    EventType type = EventType::EVENT_ADD_STREAM;
+    sender->NotifyStreamChange(type);
     int32_t ret = sender->SendMessage(nullptr);
     EXPECT_EQ(ERR_DH_AVT_INVALID_PARAM, ret);
+}
+
+HWTEST_F(AvSenderEngineTest, SendMessage_002, testing::ext::TestSize.Level1)
+{
+    std::string ownerName = OWNER_NAME_D_SPEAKER;
+    std::string peerDevId = "pEid";
+    auto sender = std::make_shared<AVSenderEngine>(ownerName, peerDevId);
+    EventType type = EventType::EVENT_ADD_STREAM;
+    sender->NotifyStreamChange(type);
+    std::shared_ptr<AVTransMessage> message = std::make_shared<AVTransMessage>();
+    int32_t ret = sender->SendMessage(message);
+    EXPECT_EQ(ERR_DH_AVT_INVALID_PARAM, ret);
+}
+
+HWTEST_F(AvSenderEngineTest, RegisterSenderCallback_001, testing::ext::TestSize.Level1)
+{
+    std::string ownerName = OWNER_NAME_D_SCREEN;
+    std::string peerDevId = "pEid";
+    auto sender = std::make_shared<AVSenderEngine>(ownerName, peerDevId);
+    EventType type = EventType::EVENT_ADD_STREAM;
+    sender->NotifyStreamChange(type);
+    std::shared_ptr<SenderEngineCallback> callback = std::make_shared<SenderEngineCallback>();
+    int32_t ret = sender->RegisterSenderCallback(callback);
+    EXPECT_EQ(DH_AVT_SUCCESS, ret);
+}
+
+HWTEST_F(AvSenderEngineTest, RegisterSenderCallback_002, testing::ext::TestSize.Level1)
+{
+    std::string ownerName = OWNER_NAME_D_CAMERA;
+    std::string peerDevId = "pEid";
+    auto sender = std::make_shared<AVSenderEngine>(ownerName, peerDevId);
+    EventType type = EventType::EVENT_ADD_STREAM;
+    sender->NotifyStreamChange(type);
+    std::shared_ptr<SenderEngineCallback> callback = nullptr;
+    int32_t ret = sender->RegisterSenderCallback(callback);
+    EXPECT_EQ(ERR_DH_AVT_INVALID_PARAM, ret);
+}
+
+HWTEST_F(AvSenderEngineTest, OnChannelEvent_001, testing::ext::TestSize.Level1)
+{
+    std::string ownerName = OWNER_NAME_D_CAMERA;
+    std::string peerDevId = "pEid";
+    auto sender = std::make_shared<AVSenderEngine>(ownerName, peerDevId);
+    sender->senderCallback_ = nullptr;
+    AVTransEvent transEvent;
+    transEvent.content = "content";
+    transEvent.type = EventType::EVENT_CHANNEL_OPENED;
+    sender->OnChannelEvent(transEvent);
+
+    sender->senderCallback_ = std::make_shared<SenderEngineCallback>();
+    sender->OnChannelEvent(transEvent);
+    Event event;
+    event.type = OHOS::Media::EventType::EVENT_PLUGIN_EVENT;
+    sender->OnEvent(event);
+
+    EXPECT_EQ(StateId::CH_CREATED, sender->currentState_);
+}
+
+HWTEST_F(AvSenderEngineTest, OnChannelEvent_002, testing::ext::TestSize.Level1)
+{
+    std::string ownerName = OWNER_NAME_D_CAMERA;
+    std::string peerDevId = "pEid";
+    auto sender = std::make_shared<AVSenderEngine>(ownerName, peerDevId);
+    AVTransEvent transEvent;
+    transEvent.content = "content";
+    transEvent.type = EventType::EVENT_CHANNEL_OPEN_FAIL;
+    sender->senderCallback_ = std::make_shared<SenderEngineCallback>();
+    sender->OnChannelEvent(transEvent);
+    Event event;
+    event.type = OHOS::Media::EventType::EVENT_PLUGIN_EVENT;
+    sender->OnEvent(event);
+
+    EXPECT_EQ(StateId::INITIALIZED, sender->currentState_);
+}
+
+HWTEST_F(AvSenderEngineTest, OnChannelEvent_003, testing::ext::TestSize.Level1)
+{
+    std::string ownerName = OWNER_NAME_D_CAMERA;
+    std::string peerDevId = "pEid";
+    auto sender = std::make_shared<AVSenderEngine>(ownerName, peerDevId);
+    AVTransEvent event;
+    event.content = "content";
+    event.type = EventType::EVENT_CHANNEL_CLOSED;
+    sender->senderCallback_ = std::make_shared<SenderEngineCallback>();
+    sender->currentState_ = StateId::CH_CREATED;
+    sender->OnChannelEvent(event);
+
+    event.type = EventType::EVENT_DATA_RECEIVED;
+    sender->OnChannelEvent(event);
+
+    EXPECT_EQ(StateId::INITIALIZED, sender->currentState_);
 }
 } // namespace DistributedHardware
 } // namespace OHOS

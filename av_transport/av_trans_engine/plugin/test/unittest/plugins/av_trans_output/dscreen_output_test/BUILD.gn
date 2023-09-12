@@ -12,17 +12,18 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import("../../../../../distributed_av_transport.gni")
+import("../../../../../../../distributed_av_transport.gni")
 
-module_out_path = "distributed_hardware_fwk/daudio_output_test"
+module_out_path = "distributed_hardware_fwk/dscreen_output_test"
 
-ohos_unittest("DaudioOutputPluginTest") {
+ohos_unittest("DscreenOutputPluginTest") {
   module_out_path = module_out_path
 
   include_dirs = [
     "${common_path}/include",
     "${plugin_path}/interface",
-    "${plugin_path}/plugins/av_trans_output/daudio_output",
+    "${plugin_path}/plugins/av_trans_output/dscreen_output",
+    "${output_controller_path}/include",
     "//third_party/ffmpeg",
     "//third_party/json/include",
   ]
@@ -32,7 +33,7 @@ ohos_unittest("DaudioOutputPluginTest") {
     "${common_path}/src/av_trans_log.cpp",
     "${common_path}/src/av_trans_message.cpp",
     "${common_path}/src/av_trans_utils.cpp",
-    "daudio_output_test.cpp",
+    "dscreen_output_test.cpp",
   ]
 
   cflags = [
@@ -45,7 +46,7 @@ ohos_unittest("DaudioOutputPluginTest") {
   cflags_cc = cflags
 
   deps = [
-    "${plugin_path}/plugins/av_trans_output/daudio_output:plugin_AVTransDaudioOutput",
+    "${plugin_path}/plugins/av_trans_output/dscreen_output:plugin_AVTransDscreenOutput",
     "//third_party/googletest:gtest",
   ]
 
@@ -63,12 +64,12 @@ ohos_unittest("DaudioOutputPluginTest") {
 
   defines = [
     "HI_LOG_ENABLE",
-    "DH_LOG_TAG=\"daudio_output_plugin_test\"",
+    "DH_LOG_TAG=\"dscreen_output_plugin_test\"",
     "LOG_DOMAIN=0xD004100",
   ]
 }
 
-group("daudio_output_unittest") {
+group("dscreen_output_unittest") {
   testonly = true
-  deps = [ ":DaudioOutputPluginTest" ]
+  deps = [ ":DscreenOutputPluginTest" ]
 }
