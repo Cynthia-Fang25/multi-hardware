@@ -12,27 +12,27 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import("../../../../../distributed_av_transport.gni")
+import("../../../../../../../distributed_av_transport.gni")
 
-module_out_path = "distributed_hardware_fwk/dsoftbus_output_audio_test"
+module_out_path = "distributed_hardware_fwk/daudio_output_test"
 
-ohos_unittest("DsoftbusOutputAudioPluginTest") {
+ohos_unittest("DaudioOutputPluginTest") {
   module_out_path = module_out_path
 
   include_dirs = [
     "${common_path}/include",
     "${plugin_path}/interface",
-    "${plugin_path}/plugins/av_trans_output/dsoftbus_output_audio",
+    "${plugin_path}/plugins/av_trans_output/daudio_output",
     "//third_party/ffmpeg",
     "//third_party/json/include",
   ]
 
   sources = [
+    "${common_path}/src/av_sync_utils.cpp",
     "${common_path}/src/av_trans_log.cpp",
-    "${common_path}/src/av_trans_meta.cpp",
+    "${common_path}/src/av_trans_message.cpp",
     "${common_path}/src/av_trans_utils.cpp",
-    "${common_path}/src/softbus_channel_adapter.cpp",
-    "dsoftbus_output_audio_plugin_test.cpp",
+    "daudio_output_test.cpp",
   ]
 
   cflags = [
@@ -46,28 +46,30 @@ ohos_unittest("DsoftbusOutputAudioPluginTest") {
   cflags_cc = cflags
 
   deps = [
-    "${plugin_path}/plugins/av_trans_output/dsoftbus_output_audio:plugin_AVTransDsoftbusOutputAudio",
+    "${plugin_path}/plugins/av_trans_output/daudio_output:plugin_AVTransDaudioOutput",
     "//third_party/googletest:gtest_rtti",
   ]
 
   external_deps = [
     "bounds_checking_function:libsec_shared",
     "c_utils:utils",
-    "dsoftbus:softbus_client",
+    "eventhandler:libeventhandler",
     "hilog:libhilog",
     "histreamer:histreamer_base",
     "histreamer:histreamer_ffmpeg_convert",
     "histreamer:histreamer_plugin_base",
+    "kv_store:distributeddata_inner",
+    "safwk:system_ability_fwk",
   ]
 
   defines = [
     "HI_LOG_ENABLE",
-    "DH_LOG_TAG=\"dsoftbus_output_audio_plugin_test\"",
+    "DH_LOG_TAG=\"daudio_output_plugin_test\"",
     "LOG_DOMAIN=0xD004100",
   ]
 }
 
-group("dsoftbus_output_audio_unittest") {
+group("daudio_output_unittest") {
   testonly = true
-  deps = [ ":DsoftbusOutputAudioPluginTest" ]
+  deps = [ ":DaudioOutputPluginTest" ]
 }

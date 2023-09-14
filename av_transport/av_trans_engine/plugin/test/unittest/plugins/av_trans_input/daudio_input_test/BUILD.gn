@@ -12,17 +12,17 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import("../../../../../distributed_av_transport.gni")
+import("../../../../../../../distributed_av_transport.gni")
 
-module_out_path = "distributed_hardware_fwk/dscreen_input_test"
+module_out_path = "distributed_hardware_fwk/daudio_input_test"
 
-ohos_unittest("DscreenInputTest") {
+ohos_unittest("DaudioInputPluginTest") {
   module_out_path = module_out_path
 
   include_dirs = [
     "${common_path}/include",
     "${plugin_path}/interface",
-    "${plugin_path}/plugins/av_trans_input/dscreen_input",
+    "${plugin_path}/plugins/av_trans_input/daudio_input",
     "//third_party/ffmpeg",
     "//third_party/json/include",
   ]
@@ -33,11 +33,21 @@ ohos_unittest("DscreenInputTest") {
     "${common_path}/src/av_trans_message.cpp",
     "${common_path}/src/av_trans_meta.cpp",
     "${common_path}/src/av_trans_utils.cpp",
-    "dscreen_input_test.cpp",
+    "daudio_input_test.cpp",
   ]
 
+  cflags = [
+    "-O2",
+    "-fPIC",
+    "-Wall",
+    "-frtti",
+    "-fexceptions",
+    "-Dprivate = public",
+  ]
+  cflags_cc = cflags
+
   deps = [
-    "${plugin_path}/plugins/av_trans_input/dscreen_input:plugin_AVTransDscreenInput",
+    "${plugin_path}/plugins/av_trans_input/daudio_input:plugin_AVTransDaudioInput",
     "//third_party/googletest:gtest_rtti",
   ]
 
@@ -52,25 +62,14 @@ ohos_unittest("DscreenInputTest") {
     "safwk:system_ability_fwk",
   ]
 
-  cflags = [
-    "-O2",
-    "-fPIC",
-    "-Wall",
-    "-frtti",
-    "-fexceptions",
-    "-Dprivate = public",
-  ]
-
-  cflags_cc = cflags
-
   defines = [
     "HI_LOG_ENABLE",
-    "DH_LOG_TAG=\"dscreen_input_plugin_test\"",
+    "DH_LOG_TAG=\"daudio_input_plugin_test\"",
     "LOG_DOMAIN=0xD004100",
   ]
 }
 
-group("dscreen_input_unittest") {
+group("daudio_input_unittest") {
   testonly = true
-  deps = [ ":DscreenInputTest" ]
+  deps = [ ":DaudioInputPluginTest" ]
 }
