@@ -19,6 +19,7 @@
 #include <gtest/gtest.h>
 
 #include "av_receiver_engine.h"
+#include "av_sender_engine.h"
 #include "av_trans_buffer.h"
 #include "av_trans_errno.h"
 #include "av_trans_constants.h"
@@ -27,6 +28,7 @@
 #include "av_trans_types.h"
 #include "av_trans_utils.h"
 #include "i_av_receiver_engine.h"
+#include "i_av_receiver_engine_callback.h"
 #include "softbus_channel_adapter.h"
 #include "distributed_hardware_fwk_kit.h"
 #include "av_trans_control_center_callback.h"
@@ -55,6 +57,21 @@ public:
     static void TearDownTestCase();
     void SetUp() override;
     void TearDown() override;
+};
+class ReceiverEngineCallback : public IAVReceiverEngineCallback {
+public:
+    ReceiverEngineCallback() = default;
+    ~ReceiverEngineCallback() override = default;
+    int32_t OnReceiverEvent(const AVTransEvent &event) override
+    {
+        (void) event;
+        return DH_AVT_SUCCESS;
+    }
+    int32_t OnMessageReceived(const std::shared_ptr<AVTransMessage> &message) override
+    {
+        (void) message;
+        return DH_AVT_SUCCESS;
+    }
 };
 } // namespace DistributedHardware
 } // namespace OHOS
