@@ -17,10 +17,16 @@ import(
 
 ohos_source_set("plugin_AVTransDsoftbusInput") {
   include_dirs = [
+    "//foundation/distributedhardware/distributed_hardware_fwk/common/inculde";
+    "//foundation/distributedhardware/distributed_hardware_fwk/common/utils/inculde";
+    "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/common/inculde";
     "${common_path}/include",
     "${plugin_path}/interface",
     "//third_party/json/include",
+    "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice/inculde/hidumphelper";
   ]
+
+  deps = [ "//foundation/distributedhardware/distributed_hardware_fwk/services/distributedhardwarefwkservice:distributedhardwarefwksvr" ]
 
   sources = [ "dsoftbus_input_plugin.cpp" ]
 

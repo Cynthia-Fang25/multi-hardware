@@ -17,6 +17,7 @@
 
 #include <unordered_map>
 
+#include "constants.h"
 #include "capability_info_manager.h"
 #include "component_loader.h"
 #include "component_manager.h"
@@ -33,6 +34,8 @@ const std::string LOADED_COMP_LIST = "-l";
 const std::string ENABLED_COMP_LIST = "-e";
 const std::string TASK_LIST = "-t";
 const std::string CAPABILITY_LIST = "-c";
+const std::string ARGS_DUMP_SOURCE_SCREEN_DATA = "--dump";
+const std::string ARGS_DUMP_SOURCE_SCREEN_DATA_RESTART = "--redump";
 
 const std::unordered_map<std::string, HidumpFlag> MAP_ARGS = {
     { ARGS_HELP, HidumpFlag::GET_HELP },
@@ -40,6 +43,8 @@ const std::unordered_map<std::string, HidumpFlag> MAP_ARGS = {
     { ENABLED_COMP_LIST, HidumpFlag::GET_ENABLED_COMP_LIST },
     { TASK_LIST, HidumpFlag::GET_TASK_LIST },
     { CAPABILITY_LIST, HidumpFlag::GET_CAPABILITY_LIST },
+    { ARGS_DUMP_SOURCE_SCREEN_DATA, HidumpFlag::DUMP_SOURCE_SCREEN_DATA },
+    { ARGS_DUMP_SOURCE_SCREEN_DATA_RESTART, HidumpFlag::DUMP_SOURCE_SCREEN_DATA_RESTART },
 };
 
 std::unordered_map<TaskType, std::string> g_mapTaskType = {
@@ -111,6 +116,14 @@ int32_t HidumpHelper::ProcessDump(const HidumpFlag &flag, std::string &result)
         }
         case HidumpFlag::GET_CAPABILITY_LIST : {
             errCode = ShowAllCapabilityInfos(result);
+            break;
+        }
+        case HidumpFlag::DUMP_SOURCE_SCREEN_DATA : {
+            errCode = DumpScreenData(result);
+            break;
+        }
+        case HidumpFlag::DUMP_SOURCE_SCREEN_DATA_RESTART : {
+            errCode = ReDumpScreenData(result);
             break;
         }
         default: {
@@ -295,6 +308,10 @@ int32_t HidumpHelper::ShowHelp(std::string &result)
     result.append(": Show all tasks\n");
     result.append(" -c    ");
     result.append(": Show all Capability info of online components\n\n");
+    result.append(" --dump");
+    result.append(": dump screen data in /data/data/dscreen\n\n");
+    result.append(" --redump");
+    result.append(": clear file and restart dump source screen data\n\n");
 
     return DH_FWK_SUCCESS;
 }
@@ -308,3 +325,106 @@ int32_t HidumpHelper::ShowIllealInfomation(std::string &result)
 }
 } // namespace DistributedHardware
 } // namespace OHOS
+
+bool HidumpHelper::GetDumpFlag()
+{
+    return DumpFlag_;
+}
+bool HidumpHelper::GetFileFullFlag()
+{
+    return FileFullFlag_;
+}
+bool HidumpHelper::GetReDumpFlag()
+{
+    return ReDumpFlag_;
+}
+void HidumpHelper::SetDumpFlagTrue()
+{
+    DumpFlag_ = true;
+}
+void HidumpHelper::SetDumpFlagFalse()
+{
+    DumpFlag_ = false;
+}
+void HidumpHelper::SetFileFullFlagTrue()
+{
+    FileFullFlag_ = true;
+}
+void HidumpHelper::SetFileFullFlagFalse()
+{
+    FileFullFlag_ = false;
+}
+void HidumpHelper::SetReDumpFlagTrue()
+{
+    ReDumpFlag_ = true;
+}
+void HidumpHelper::SetReDumpFlagFalse()
+{
+    ReDumpFlag_ = false;
+}
+
+void HidumpHelper::DumpDfxDataToFile(std::string fileName, uint8_t *buffer, int32_t bufSize)
+{
+    DHLOGE("DumpDfxDataToFile.");
+    if (GetReDumpFlag() == true) {
+        std::remove(fileName.c_str());
+        SetReDumpFlagFalse();
+    }
+    std::ofstream ofs(fileName, std::ios::binary | std::ios::out | std::ios::app);
+
+    if (!ofs.is_open()) {
+        DHLOGE("open file failed.");
+        return;
+    }
+    DHLOGE("open Hidumper SaveFile file success.");
+    ofs.seekp(0, std::ios::end);
+    uint32_t fileSize = ofs.tellp();
+    DHLOGE("fileSize = %d, video.size = %d, maxsize = %d", fileSize, bufSize,
+        DUMP_FILE_MAX_SIZE);
+    if ((fileSize + bufSize) < DUMP_FILE_MAX_SIZE) {
+        SetFileFullFlagFalse();
+        ofs.write((const char *)buffer, bufSize);
+    } else {
+        SetFileFullFlagTrue();
+    }
+    ofs.close();
+}
+
+int32_t HidumpHelper::DumpScreenData(std::string &result)
+{
+    DHLOGI("Dump screen data.");
+
+    if (access(DUMP_FILE_PATH.c_str(), 0) < 0) {
+        if (mkdir(DUMP_FILE_PATH.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)) {
+            DHLOGI("Create dir err.");
+            DHLOGI("dir path : %s", DUMP_FILE_PATH.c_str());
+            return ERR_DH_FWK_HIDUMP_ERROR;
+        }
+    }
+
+    if (FileFullFlag_ == false) {
+        result.append("Dump...");
+        SetDumpFlagTrue();
+    } else {
+        result.append("File oversize 300M : stop dump, use parameter \"--redump\" to clear dumpfile and redump");
+    }
+    return DH_FWK_SUCCESS;
+}
+
+int32_t HidumpHelper::ReDumpScreenData(std::string &result)
+{
+    DHLOGI("Redump screen data.");
+
+    if (access(DUMP_FILE_PATH.c_str(), 0) < 0) {
+        if (mkdir(DUMP_FILE_PATH.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)) {
+            DHLOGI("Create dir err.");
+            DHLOGI("dir path : %s", DUMP_FILE_PATH.c_str());
+            return ERR_DH_FWK_HIDUMP_ERROR;
+        }
+    }
+    SetFileFlagFalse();
+    SetReDumpFlagTrue();
+    result.append("ReDumpStart...");
+    SetDumpFlagTrue();
+    return DH_FWK_SUCCESS;
+}

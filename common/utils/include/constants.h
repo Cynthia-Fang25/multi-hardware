@@ -62,6 +62,9 @@ namespace DistributedHardware {
     const std::string DH_COMPONENT_SINK_VER = "version";
     const std::string DH_COMPONENT_DEFAULT_VERSION = "1.0";
     const std::string LOW_LATENCY_ENABLE = "low_latency_enable";
+    const std::string DUMP_FILE_PATH = "/data/data/dscreen";
+    const std::string SCREEN_FILE_NAME_AFTERCODING = "Screen_Aftercoding.jpg";
+    const std::string SCREEN_FILE_NAME_BEFOREENCODING = "Screen_BeforeEncoding.jpg";
     constexpr const char *DO_RECOVER = "DoRecover";
     constexpr const char *SEND_ONLINE = "SendOnLine";
     constexpr const char *DISABLE_TASK_INNER = "DisableTask";
