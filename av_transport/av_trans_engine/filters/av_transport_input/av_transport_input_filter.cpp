@@ -513,6 +513,9 @@ ErrorCode AVInputFilter::SetPluginParams()
     if (paramsMap_.find(Tag::MEDIA_DESCRIPTION) != paramsMap_.end()) {
         plugin_->SetParameter(Tag::MEDIA_DESCRIPTION, paramsMap_[Tag::MEDIA_DESCRIPTION]);
     }
+    if (paramsMap_.find(Tag::MEDIA_TITLE) != paramsMap_.end()) {
+        plugin_->SetParameter(Tag::MEDIA_TITLE, paramsMap_[Tag::MEDIA_TITLE]);
+    }
     return ErrorCode::SUCCESS;
 }
 

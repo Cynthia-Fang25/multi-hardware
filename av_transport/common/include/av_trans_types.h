@@ -124,6 +124,7 @@ enum struct AVTransTag : uint32_t {
     AUDIO_CONTENT_TYPE,
     AUDIO_CHANNEL_LAYOUT,
     AUDIO_BIT_RATE,
+    AUDIO_SESSION_NAME_MID,
 
     /* -------------------- d_video tag -------------------- */
     VIDEO_WIDTH = SECTION_D_VIDEO_START + 1,

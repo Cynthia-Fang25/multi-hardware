@@ -234,6 +234,7 @@ void AVSenderEngine::RegRespFunMap()
     funcMap_[AVTransTag::ENGINE_READY] = &AVSenderEngine::SetEngineReady;
     funcMap_[AVTransTag::ENGINE_PAUSE] = &AVSenderEngine::SetEnginePause;
     funcMap_[AVTransTag::ENGINE_RESUME] = &AVSenderEngine::SetEngineResume;
+    funcMap_[AVTransTag::AUDIO_SESSION_NAME_MID] = &AVSenderEngine::SetAudioSessionNameMid;
 }
 
 void AVSenderEngine::SetVideoWidth(const std::string &value)
@@ -381,6 +382,12 @@ void AVSenderEngine::SetEngineResume(const std::string &value)
 
     ErrorCode ret = pipeline_->Resume();
     TRUE_LOG_MSG(ret != ErrorCode::SUCCESS, "pipeline resume failed");
+}
+
+void AVSenderEngine::SetAudioSessionNameMid(const std::string &value)
+{
+    avOutput_->SetParameter(static_cast<int32_t>(Plugin::Tag::MEDIA_TITLE), value);
+    AVTRANS_LOGI("SetParameter audio session name mid success,audio session mid name = %s", value.c_str());
 }
 
 int32_t AVSenderEngine::PushData(const std::shared_ptr<AVTransBuffer> &buffer)

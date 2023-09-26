@@ -65,6 +65,7 @@ Status DsoftbusOutputAudioPlugin::Init()
     AVTRANS_LOGI("Init.");
     Media::OSAL::ScopedLock lock(operationMutes_);
     state_ = State::INITIALIZED;
+    sessionNameMid_ = "";
     return Status::OK;
 }
 
@@ -83,7 +84,7 @@ Status DsoftbusOutputAudioPlugin::Prepare()
         return Status::ERROR_WRONG_STATE;
     }
 
-    sessionName_ = ownerName_ + "_" + SENDER_DATA_SESSION_NAME_SUFFIX;
+    sessionName_ = ownerName_ + "_" + sessionNameMid_ + SENDER_DATA_SESSION_NAME_SUFFIX;
     int32_t ret = SoftbusChannelAdapter::GetInstance().CreateChannelServer(TransName2PkgName(ownerName_), sessionName_);
     if (ret != DH_AVT_SUCCESS) {
         AVTRANS_LOGE("Create Session Server failed ret: %d.", ret);
@@ -181,6 +182,9 @@ Status DsoftbusOutputAudioPlugin::SetParameter(Tag tag, const ValueType &value)
     if (tag == Tag::MEDIA_DESCRIPTION) {
         ParseChannelDescription(Plugin::AnyCast<std::string>(value), ownerName_, peerDevId_);
     }
+    if (tag == Tag::MEDIA_TITLE) {
+        sessionNameMid_ = Plugin::AnyCast<std::string>(value);
+    }
     paramsMap_.insert(std::pair<Tag, ValueType>(tag, value));
     return Status::OK;
 }
@@ -199,7 +203,7 @@ Status DsoftbusOutputAudioPlugin::SetCallback(Callback *cb)
 
 Status DsoftbusOutputAudioPlugin::OpenSoftbusChannel()
 {
-    std::string peerSessName_ = ownerName_ + "_" + RECEIVER_DATA_SESSION_NAME_SUFFIX;
+    std::string peerSessName_ = ownerName_ + "_" + sessionNameMid_ + RECEIVER_DATA_SESSION_NAME_SUFFIX;
     int32_t ret = SoftbusChannelAdapter::GetInstance().OpenSoftbusChannel(sessionName_, peerSessName_, peerDevId_);
     if ((ret != DH_AVT_SUCCESS) && (ret != ERR_DH_AVT_SESSION_HAS_OPENED)) {
         AVTRANS_LOGE("Open softbus channel failed ret: %d.", ret);

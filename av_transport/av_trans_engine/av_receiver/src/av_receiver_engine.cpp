@@ -254,6 +254,7 @@ void AVReceiverEngine::RegRespFunMap()
     funcMap_[AVTransTag::STOP_AV_SYNC] = &AVReceiverEngine::SetStopAvSync;
     funcMap_[AVTransTag::SHARED_MEMORY_FD] = &AVReceiverEngine::SetSharedMemoryFd;
     funcMap_[AVTransTag::ENGINE_READY] = &AVReceiverEngine::SetEngineReady;
+    funcMap_[AVTransTag::AUDIO_SESSION_NAME_MID] = &AVReceiverEngine::SetAudioSessionNameMid;
 }
 
 void AVReceiverEngine::SetVideoWidth(const std::string &value)
@@ -376,6 +377,12 @@ void AVReceiverEngine::SetEngineReady(const std::string &value)
 {
     int32_t ret = PreparePipeline(value);
     TRUE_LOG_MSG(ret != DH_AVT_SUCCESS, "SetParameter ENGINE_READY failed");
+}
+
+void AVReceiverEngine::SetAudioSessionNameMid(const std::string &value)
+{
+    avInput_->SetParameter(static_cast<int32_t>(Plugin::Tag::MEDIA_TITLE), value);
+    AVTRANS_LOGI("SetParameter audio session name mid success,audio session mid name = %s", value.c_str());
 }
 
 int32_t AVReceiverEngine::SendMessage(const std::shared_ptr<AVTransMessage> &message)
