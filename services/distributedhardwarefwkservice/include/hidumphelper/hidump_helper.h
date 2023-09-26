@@ -33,16 +33,33 @@ enum class HidumpFlag {
     GET_TASK_LIST,
     GET_CAPABILITY_LIST,
 };
+constexpr uint32_t DUMP_FILE_MAX_SIZE = 295 * 1024 * 1024;
 
 class HidumpHelper {
 DECLARE_SINGLE_INSTANCE_BASE(HidumpHelper);
 public:
     int32_t Dump(const std::vector<std::string>& args, std::string &result);
+    bool GetDumpFlag();
+    bool GetFileFullFlag();
+    bool GetReDumpFlag();
+    void SetDumpFlagTrue();
+    void SetDumpFlagFalse();
+    void SetFileFullFlagTrue();
+    void SetFileFullFlagFalse();
+    void SetReDumpFlagTrue();
+    void SetReDumpFlagFalse();
+    void DumpDfxDataToFile(std::string fileName, uint8_t *buffer, int32_t bufSize);
 
 private:
     explicit HidumpHelper() = default;
     ~HidumpHelper() = default;
 
+    bool DumpFlag_ = false;
+    bool FileFullFlag_ = false;
+    bool ReDumpFlag_ = false;
+
+    int32_t DumpScreenData(std::string &result);
+    int32_t ReDumpScreenData(std::string &result);
     int32_t ProcessDump(const HidumpFlag &flag, std::string &result);
     int32_t ShowAllLoadedComps(std::string &result);
     int32_t ShowAllEnabledComps(std::string &result);

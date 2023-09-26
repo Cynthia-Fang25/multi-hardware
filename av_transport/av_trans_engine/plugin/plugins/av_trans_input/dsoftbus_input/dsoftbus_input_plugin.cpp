@@ -15,6 +15,8 @@
 
 #include "dsoftbus_input_plugin.h"
 
+#include "constants.h"
+#include "hidump_helper.h"
 #include "foundation/utils/constants.h"
 #include "plugin/common/share_memory.h"
 #include "plugin/common/plugin_caps_builder.h"
@@ -245,6 +247,12 @@ void DsoftbusInputPlugin::OnStreamReceived(const StreamData *data, const StreamD
     auto buffer = CreateBuffer(metaType, data, resMsg);
     if (buffer != nullptr) {
         DataEnqueue(buffer);
+    }
+    
+    if(HidumpHelper::GetInstance().GetDumpFlag() == true) {
+        HidumpHelper::GetInstance().DumpDfxDataToFile((DUMP_FILE_PATH + "/" + SCREEN_FILE_NAME_AFTERCODING),
+            static_cast<uint8_t *>(buffer), buffer->GetMemoryCount());
+        HidumpHelper::GetInstance().SetDumpFlagFalse();
     }
 }
 

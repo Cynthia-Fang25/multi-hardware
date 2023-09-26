@@ -14,6 +14,8 @@
  */
 #include "dsoftbus_output_plugin.h"
 
+#include "constants.h"
+#include "hidump_helper.h"
 #include "foundation/utils/constants.h"
 #include "plugin/common/plugin_caps_builder.h"
 #include "plugin/factory/plugin_factory.h"
@@ -252,6 +254,11 @@ Status DsoftbusOutputPlugin::PushData(const std::string &inPort, std::shared_ptr
     }
     dataQueue_.push(buffer);
     dataCond_.notify_all();
+    if(HidumpHelper::GetInstance().GetDumpFlag() == true) {
+        HidumpHelper::GetInstance().DumpDfxDataToFile((DUMP_FILE_PATH + "/" + SCREEN_FILE_NAME_AFTERCODING),
+            static_cast<uint8_t *>(buffer), buffer->GetMemoryCount());
+        HidumpHelper::GetInstance().SetDumpFlagFalse();
+    }
     return Status::OK;
 }
 
