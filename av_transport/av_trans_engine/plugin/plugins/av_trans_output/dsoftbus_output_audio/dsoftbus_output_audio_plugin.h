@@ -79,6 +79,7 @@ private:
 private:
     std::string ownerName_;
     std::string sessionName_;
+    std::string sessionNameMid_;
     std::string peerDevId_;
     std::condition_variable dataCond_;
     std::mutex dataQueueMtx_;

@@ -309,6 +309,9 @@ ErrorCode AVOutputFilter::SetPluginParams()
     if (paramsMap_.find(Tag::MEDIA_DESCRIPTION) != paramsMap_.end()) {
         plugin_->SetParameter(Tag::MEDIA_DESCRIPTION, paramsMap_[Tag::MEDIA_DESCRIPTION]);
     }
+    if (paramsMap_.find(Tag::MEDIA_TITLE) != paramsMap_.end()) {
+        plugin_->SetParameter(Tag::MEDIA_TITLE, paramsMap_[Tag::MEDIA_TITLE]);
+    }
     if (paramsMap_.find(Tag::AUDIO_CHANNELS) != paramsMap_.end()) {
         plugin_->SetParameter(Tag::AUDIO_CHANNELS, paramsMap_[Tag::AUDIO_CHANNELS]);
     }
