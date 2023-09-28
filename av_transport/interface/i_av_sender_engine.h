@@ -105,6 +105,9 @@ public:
      * @return Returns DH_AVT_SUCCESS(0) if successful, otherwise returns other error code.
      */
     virtual int32_t RegisterSenderCallback(const std::shared_ptr<IAVSenderEngineCallback> &callback) = 0;
+
+    virtual bool StartDumpMediaData() = 0;
+    virtual bool StopDumpMediaData() = 0;
 };
 } // DistributedHardware
 } // OHOS

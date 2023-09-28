@@ -17,6 +17,7 @@
 #define OHOS_AV_TRANS_ENGINE_PLUGINS_OUTPUT_DSOFTBUS_H
 
 #include <algorithm>
+#include <atomic>
 #include <condition_variable>
 #include <map>
 #include <memory>
@@ -77,6 +78,7 @@ private:
     void FeedChannelData();
 
 private:
+    std::atomic<bool> dumpFlag_ ;
     std::string ownerName_;
     std::string sessionName_;
     std::string peerDevId_;

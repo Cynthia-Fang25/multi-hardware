@@ -62,6 +62,8 @@ public:
     int32_t CreateControlChannel(const std::vector<std::string> &dstDevIds,
         const ChannelAttribute &attribution) override;
     int32_t RegisterSenderCallback(const std::shared_ptr<IAVSenderEngineCallback> &callback) override;
+    bool StartDumpMediaData() override;
+    bool StopDumpMediaData() override;
 
     // interfaces from ISoftbusChannelListener
     void OnChannelEvent(const AVTransEvent &event) override;

@@ -70,6 +70,7 @@ Status DsoftbusInputPlugin::Init()
 {
     AVTRANS_LOGI("Init");
     Media::OSAL::ScopedLock lock(operationMutes_);
+    dumpFlag_.store(false);
     state_ = State::INITIALIZED;
     return Status::OK;
 }
@@ -182,6 +183,9 @@ Status DsoftbusInputPlugin::SetParameter(Tag tag, const ValueType &value)
     Media::OSAL::ScopedLock lock(operationMutes_);
     if (tag == Tag::MEDIA_DESCRIPTION) {
         ParseChannelDescription(Plugin::AnyCast<std::string>(value), ownerName_, peerDevId_);
+    }
+    if (tag == Tag::SECTION_USER_SPECIFIC_START) {
+        dumpFlag_.store(Plugin::AnyCast<bool>(value));
     }
     paramsMap_.insert(std::pair<Tag, ValueType>(tag, value));
     return Status::OK;
