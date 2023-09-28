@@ -14,6 +14,11 @@
  */
 #include "dsoftbus_output_plugin.h"
 
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fstream>
+
 #include "foundation/utils/constants.h"
 #include "plugin/common/plugin_caps_builder.h"
 #include "plugin/factory/plugin_factory.h"
@@ -68,6 +73,8 @@ Status DsoftbusOutputPlugin::Init()
 {
     AVTRANS_LOGI("Init Dsoftbus Output Plugin.");
     Media::OSAL::ScopedLock lock(operationMutes_);
+    dumpFlag_.store(false);
+    reDumpFlag_.store(false);
     state_ = State::INITIALIZED;
     return Status::OK;
 }
@@ -168,6 +175,12 @@ Status DsoftbusOutputPlugin::SetParameter(Tag tag, const ValueType &value)
     if (tag == Tag::MEDIA_DESCRIPTION) {
         ParseChannelDescription(Plugin::AnyCast<std::string>(value), ownerName_, peerDevId_);
     }
+    if (tag == Tag::SECTION_USER_SPECIFIC_START) {
+        dumpFlag_.store(Plugin::AnyCast<bool>(value));
+    }
+    if (tag == Tag::SECTION_VIDEO_SPECIFIC_START) {
+        reDumpFlag_.store(Plugin::AnyCast<bool>(value));
+    }
     paramsMap_.insert(std::pair<Tag, ValueType>(tag, value));
     return Status::OK;
 }
@@ -252,6 +265,10 @@ Status DsoftbusOutputPlugin::PushData(const std::string &inPort, std::shared_ptr
     }
     dataQueue_.push(buffer);
     dataCond_.notify_all();
+    if (GetDumpFlag() == true || GetReDumpFlag() == true) {
+        DumpBufferToFile(SCREEN_FILE_NAME_AFTERCODING,
+            buffer->GetMemory()->GetWritableAddr(0,0), buffer->GetMemoryCount());
+        SetDumpFlagFalse();
     return Status::OK;
 }
 
@@ -327,6 +344,45 @@ Status DsoftbusOutputPlugin::SetDataCallback(AVDataCallback callback)
 {
     AVTRANS_LOGI("SetDataCallback");
     return Status::OK;
+}
+
+bool DsoftbusInputPlugin::GetDumpFlag()
+{
+    return dumpFlag_;
+}
+
+void DsoftbusInputPlugin::SetDumpFlagFalse()
+{
+    dumpFlag_ = false;
+}
+
+bool DsoftbusInputPlugin::GetReDumpFlag()
+{
+    return reDumpFlag_;
+}
+
+void DsoftbusInputPlugin::SetReDumpFlagFalse()
+{
+    reDumpFlag_ = false;
+}
+
+void DsoftbusInputPlugin::DumpBufferToFile(std::string fileName, uint8_t *buffer, int32_t bufSize)
+{
+    DHLOGE("DumpBufferToFile.");
+    if (GetReDumpFlag() == true) {
+        std::remove(fileName.c_str());
+        SetReDumpFlagFalse();
+    }
+    
+    std::ofstream ofs(fileName, std::ios::binary | std::ios::out | std::ios::app);
+
+    if (!ofs.is_open()) {
+        DHLOGE("open file failed.");
+        return;
+    }
+    DHLOGE("open trans Hidumper SaveFile file success.");
+    ofs.write((const char *)buffer, bufSize);
+    ofs.close();
 }
 }
 }
