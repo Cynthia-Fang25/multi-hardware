@@ -17,6 +17,7 @@
 #define OHOS_AV_TRANS_ENGINE_PLUGINS_INPUT_DSOFTBUS_H
 
 #include <algorithm>
+#include <atomic>
 #include <condition_variable>
 #include <map>
 #include <memory>
@@ -78,6 +79,7 @@ private:
     std::shared_ptr<Buffer> CreateBuffer(uint32_t metaType, const StreamData *data, const json &resMsg);
 
 private:
+    std::atomic<bool> dumpFlag_ ;
     std::string ownerName_;
     std::string sessionName_;
     std::string peerDevId_;
