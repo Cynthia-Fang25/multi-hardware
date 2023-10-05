@@ -470,7 +470,7 @@ bool AVSenderEngine::StartDumpMediaData()
         AVTRANS_LOGE("avOutput_ is nullptr.");
         return false;
     }
-    avOutput_->SetParameter(static_cast<int32_t>(Plugin::Tag::SECTION_USER_SPECIFIC_START), false);
+    avOutput_->SetParameter(static_cast<int32_t>(Plugin::Tag::SECTION_USER_SPECIFIC_START), true);
     return true;
 }
 
