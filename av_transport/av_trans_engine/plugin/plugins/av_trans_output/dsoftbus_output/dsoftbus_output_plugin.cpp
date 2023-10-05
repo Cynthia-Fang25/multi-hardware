@@ -26,7 +26,6 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-
 std::vector<GenericPluginDef> CreateDsoftbusOutputPluginDef()
 {
     int32_t capNum = 2;
@@ -346,29 +345,29 @@ Status DsoftbusOutputPlugin::SetDataCallback(AVDataCallback callback)
     return Status::OK;
 }
 
-bool DsoftbusInputPlugin::GetDumpFlag()
+bool DsoftbusOutputPlugin::GetDumpFlag()
 {
     return dumpFlag_;
 }
 
-void DsoftbusInputPlugin::SetDumpFlagFalse()
+void DsoftbusOutputPlugin::SetDumpFlagFalse()
 {
     dumpFlag_ = false;
 }
 
-bool DsoftbusInputPlugin::GetReDumpFlag()
+bool DsoftbusOutputPlugin::GetReDumpFlag()
 {
     return reDumpFlag_;
 }
 
-void DsoftbusInputPlugin::SetReDumpFlagFalse()
+void DsoftbusOutputPlugin::SetReDumpFlagFalse()
 {
     reDumpFlag_ = false;
 }
 
-void DsoftbusInputPlugin::DumpBufferToFile(std::string fileName, uint8_t *buffer, int32_t bufSize)
+void DsoftbusOutputPlugin::DumpBufferToFile(std::string fileName, uint8_t *buffer, int32_t bufSize)
 {
-    DHLOGE("DumpBufferToFile.");
+    AVTRANS_LOGE("DumpBufferToFile.");
     if (GetReDumpFlag() == true) {
         std::remove(fileName.c_str());
         SetReDumpFlagFalse();
@@ -377,10 +376,10 @@ void DsoftbusInputPlugin::DumpBufferToFile(std::string fileName, uint8_t *buffer
     std::ofstream ofs(fileName, std::ios::binary | std::ios::out | std::ios::app);
 
     if (!ofs.is_open()) {
-        DHLOGE("open file failed.");
+        AVTRANS_LOGE("open file failed.");
         return;
     }
-    DHLOGE("open trans Hidumper SaveFile file success.");
+    AVTRANS_LOGE("open trans Hidumper SaveFile file success.");
     ofs.write((const char *)buffer, bufSize);
     ofs.close();
 }

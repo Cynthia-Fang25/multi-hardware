@@ -364,7 +364,7 @@ void DsoftbusInputPlugin::SetReDumpFlagFalse()
 
 void DsoftbusInputPlugin::DumpBufferToFile(std::string fileName, uint8_t *buffer, int32_t bufSize)
 {
-    DHLOGE("DumpBufferToFile.");
+    AVTRANS_LOGE("DumpBufferToFile.");
     if (GetReDumpFlag() == true) {
         std::remove(fileName.c_str());
         SetReDumpFlagFalse();
@@ -373,10 +373,10 @@ void DsoftbusInputPlugin::DumpBufferToFile(std::string fileName, uint8_t *buffer
     std::ofstream ofs(fileName, std::ios::binary | std::ios::out | std::ios::app);
 
     if (!ofs.is_open()) {
-        DHLOGE("open file failed.");
+        AVTRANS_LOGE("open file failed.");
         return;
     }
-    DHLOGE("open trans Hidumper SaveFile file success.");
+    AVTRANS_LOGE("open trans Hidumper SaveFile file success.");
     ofs.write((const char *)buffer, bufSize);
     ofs.close();
 }

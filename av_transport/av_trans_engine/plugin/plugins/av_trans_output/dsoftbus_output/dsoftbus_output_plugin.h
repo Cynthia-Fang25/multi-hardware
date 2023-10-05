@@ -66,7 +66,7 @@ public:
     Status SetDataCallback(AVDataCallback callback) override;
     bool GetDumpFlag();
     void SetDumpFlagFalse();
-    bool GetDumpFlag();
+    bool GetReDumpFlag();
     void SetReDumpFlagFalse();
     void DumpBufferToFile(std::string fileName, uint8_t *buffer, int32_t bufSize);
     void ReDumpBufferToFile(std::string fileName, uint8_t *buffer, int32_t bufSize);
