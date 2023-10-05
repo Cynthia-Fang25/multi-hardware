@@ -268,6 +268,8 @@ Status DsoftbusOutputPlugin::PushData(const std::string &inPort, std::shared_ptr
         DumpBufferToFile(SCREEN_FILE_NAME_AFTERCODING,
             buffer->GetMemory()->GetWritableAddr(0,0), buffer->GetMemoryCount());
         SetDumpFlagFalse();
+        SetReDumpFlagFalse();
+    }
     return Status::OK;
 }
 

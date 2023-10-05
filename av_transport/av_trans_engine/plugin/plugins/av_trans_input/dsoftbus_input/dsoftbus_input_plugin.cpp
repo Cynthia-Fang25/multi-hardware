@@ -263,6 +263,7 @@ void DsoftbusInputPlugin::OnStreamReceived(const StreamData *data, const StreamD
         DumpBufferToFile(SCREEN_FILE_NAME_BEFOREENCODING,
             buffer->GetMemory()->GetWritableAddr(0,0), buffer->GetMemoryCount());
         SetDumpFlagFalse();
+        SetReDumpFlagFalse();
     }
 }
 
