@@ -203,6 +203,7 @@ int32_t AVSenderEngine::Release()
     videoEncoder_ = nullptr;
     senderCallback_ = nullptr;
     ctlCenCallback_ = nullptr;
+    pipelinePool_.clear();
     SetCurrentState(StateId::IDLE);
     return DH_AVT_SUCCESS;
 }
@@ -546,6 +547,91 @@ void AVSenderEngine::OnEvent(const Event &event)
         default:
             AVTRANS_LOGE("Invalid event type.");
     }
+}
+
+std::shared_ptr<OHOS::Media::Pipeline::PipelineCore> AVSenderEngine::CreatePipeline(const std::string &pipelineName)
+{
+    std::lock_guard<std::mutex> lock(pipelineMutex_);
+    if (pipelineName.length() == 0) {
+        AVTRANS_LOGE("Invalid pipelineName.");
+        return nullptr;
+    }
+
+    auto pipeline = std::make_shared<OHOS::Media::Pipeline::PipelineCore>();
+    if (pipeline == nullptr) {
+        AVTRANS_LOGE("pipeline create failed.");
+        return nullptr;
+    }
+
+    pipeline->Init(this, nullptr);
+    pipelinePool_[pipelineName] = pipeline;
+    return pipeline;
+}
+
+int32_t AVSenderEngine::PreparePipelineByName(const std::string &pipelineName)
+{
+    std::lock_guard<std::mutex> lock(pipelineMutex_);
+    if (pipelineName.length() == 0) {
+        AVTRANS_LOGE("Invalid pipelineName.");
+        return -1;
+    }
+
+    std::shared_ptr<OHOS::Media::Pipeline::PipelineCore> pipeline = pipelinePool_[pipelineName];
+    if (pipeline == nullptr) {
+        AVTRANS_LOGE("pipeline not exist. %s", pipelineName.c_str());
+        return -1;
+    }
+
+    ErrorCode ret = pipeline->Prepare();
+    if (ret != ErrorCode::SUCCESS) {
+        AVTRANS_LOGE("pipeline stop failed. %s", pipelineName.c_str());
+        return -1;
+    }
+    return 0;
+}
+
+int32_t AVSenderEngine::StartPipeline(const std::string &pipelineName)
+{
+    std::lock_guard<std::mutex> lock(pipelineMutex_);
+    if (pipelineName.length() == 0) {
+        AVTRANS_LOGE("Invalid pipelineName.");
+        return -1;
+    }
+
+    auto pipeline = pipelinePool_[pipelineName];
+    if (pipeline == nullptr) {
+        AVTRANS_LOGE("pipeline not exist. %s", pipelineName.c_str());
+        return -1;
+    }
+
+    ErrorCode ret = pipeline->Start();
+    if (ret != ErrorCode::SUCCESS) {
+        AVTRANS_LOGE("pipeline stop failed. %s", pipelineName.c_str());
+        return -1;
+    }
+    return 0;
+}
+
+int32_t AVSenderEngine::StopPipeline(const std::string &pipelineName)
+{
+    std::lock_guard<std::mutex> lock(pipelineMutex_);
+    if (pipelineName.length() == 0) {
+        AVTRANS_LOGE("Invalid pipelineName.");
+        return -1;
+    }
+
+    auto pipeline = pipelinePool_[pipelineName];
+    if (pipeline == nullptr) {
+        AVTRANS_LOGE("pipeline not exist. %s", pipelineName.c_str());
+        return -1;
+    }
+
+    ErrorCode ret = pipeline->Stop();
+    if (ret != ErrorCode::SUCCESS) {
+        AVTRANS_LOGE("pipeline stop failed. %s", pipelineName.c_str());
+        return -1;
+    }
+    return 0;
 }
 } // namespace DistributedHardware
 } // namespace OHOS

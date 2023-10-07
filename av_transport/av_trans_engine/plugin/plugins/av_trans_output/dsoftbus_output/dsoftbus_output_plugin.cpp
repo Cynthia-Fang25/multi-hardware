@@ -57,6 +57,7 @@ DsoftbusOutputPlugin::DsoftbusOutputPlugin(std::string name)
     : AvTransOutputPlugin(std::move(name))
 {
     AVTRANS_LOGI("ctor.");
+    sessionNameMid_ = "";
 }
 
 DsoftbusOutputPlugin::~DsoftbusOutputPlugin()
@@ -87,10 +88,9 @@ Status DsoftbusOutputPlugin::Prepare()
         return Status::ERROR_WRONG_STATE;
     }
 
-    sessionName_ = ownerName_ + "_" + SENDER_DATA_SESSION_NAME_SUFFIX;
-    int32_t ret = SoftbusChannelAdapter::GetInstance().CreateChannelServer(TransName2PkgName(ownerName_), sessionName_);
-    if (ret != DH_AVT_SUCCESS) {
-        AVTRANS_LOGE("Create Session Server failed ret: %d.", ret);
+    Status ret = OpenSoftbusChannel();
+    if (ret != Status::OK) {
+        AVTRANS_LOGE("OpenSoftbusSession failed.");
         return Status::ERROR_INVALID_OPERATION;
     }
 
@@ -127,11 +127,7 @@ Status DsoftbusOutputPlugin::Start()
         AVTRANS_LOGE("The state is wrong.");
         return Status::ERROR_WRONG_STATE;
     }
-    Status ret = OpenSoftbusChannel();
-    if (ret != Status::OK) {
-        AVTRANS_LOGE("OpenSoftbusSession failed.");
-        return Status::ERROR_INVALID_OPERATION;
-    }
+
     DataQueueClear(dataQueue_);
     bufferPopTask_->Start();
     state_ = State::RUNNING;
@@ -168,6 +164,9 @@ Status DsoftbusOutputPlugin::SetParameter(Tag tag, const ValueType &value)
     if (tag == Tag::MEDIA_DESCRIPTION) {
         ParseChannelDescription(Plugin::AnyCast<std::string>(value), ownerName_, peerDevId_);
     }
+    if (tag == Tag::MEDIA_TITLE) {
+        sessionNameMid_ = Plugin::AnyCast<std::string>(value);
+    }
     paramsMap_.insert(std::pair<Tag, ValueType>(tag, value));
     return Status::OK;
 }
@@ -186,12 +185,13 @@ Status DsoftbusOutputPlugin::SetCallback(Callback *cb)
 
 Status DsoftbusOutputPlugin::OpenSoftbusChannel()
 {
+    sessionName_ = ownerName_ + "_" + sessionNameMid_ + SENDER_DATA_SESSION_NAME_SUFFIX;
     int32_t ret = SoftbusChannelAdapter::GetInstance().RegisterChannelListener(sessionName_, peerDevId_, this);
     if (ret != DH_AVT_SUCCESS) {
         AVTRANS_LOGE("Register channel listener failed ret: %d.", ret);
         return Status::ERROR_INVALID_OPERATION;
     }
-    std::string peerSessName_ = ownerName_ + "_" + RECEIVER_DATA_SESSION_NAME_SUFFIX;
+    std::string peerSessName_ = ownerName_ + "_" + sessionNameMid_ + RECEIVER_DATA_SESSION_NAME_SUFFIX;
     ret = SoftbusChannelAdapter::GetInstance().OpenSoftbusChannel(sessionName_, peerSessName_, peerDevId_);
     if ((ret != DH_AVT_SUCCESS) && (ret != ERR_DH_AVT_SESSION_HAS_OPENED)) {
         AVTRANS_LOGE("Open softbus channel failed ret: %d.", ret);

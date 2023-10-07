@@ -24,6 +24,8 @@
 #include "av_trans_types.h"
 #include "i_av_receiver_engine_callback.h"
 
+#include "pipeline_core.h"
+
 namespace OHOS {
 namespace DistributedHardware {
 /**
@@ -97,6 +99,11 @@ public:
      * @return Returns DH_AVT_SUCCESS(0) if successful, otherwise returns other error code.
      */
     virtual int32_t RegisterReceiverCallback(const std::shared_ptr<IAVReceiverEngineCallback> &callback) = 0;
+
+    virtual std::shared_ptr<OHOS::Media::Pipeline::PipelineCore> CreatePipeline(const std::string &pipelineName) = 0;
+    virtual int32_t PreparePipelineByName(const std::string &pipelineName) = 0;
+    virtual int32_t StartPipeline(const std::string &pipelineName) = 0;
+    virtual int32_t StopPipeline(const std::string &pipelineName) = 0;
 };
 } // DistributedHardware
 } // OHOS

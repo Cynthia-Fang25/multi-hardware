@@ -55,6 +55,8 @@ public:
     bool Configure(const std::string& inPort, const std::shared_ptr<const Plugin::Meta>& upstreamMeta,
         Plugin::Meta& upstreamParams, Plugin::Meta& downstreamParams) override;
 
+    ErrorCode CreateDataChannelServer();
+
 private:
     void InitPorts() override;
     ErrorCode FindPlugin();
@@ -71,6 +73,11 @@ private:
     std::shared_ptr<Plugin::PluginInfo> pluginInfo_ {nullptr};
     std::unordered_map<Plugin::Tag, Plugin::Any> paramsMap_;
     OSAL::Mutex outputFilterMutex_ {};
+
+    std::string ownerName_;
+    std::string sessionName_;
+    std::string sessionNameMid_;
+    std::string peerDevId_;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

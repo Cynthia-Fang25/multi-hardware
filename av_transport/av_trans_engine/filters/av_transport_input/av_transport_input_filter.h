@@ -50,6 +50,8 @@ public:
     ErrorCode Resume() override;
     ErrorCode PushData(const std::string& inPort, const AVBufferPtr& buffer, int64_t offset) override;
 
+    ErrorCode CreateDataChannelServer();
+
 private:
     void InitPorts() override;
     ErrorCode FindPlugin();
@@ -76,6 +78,11 @@ private:
     Capability capNegWithDownstream_ {};
     std::unordered_map<Plugin::Tag, Plugin::Any> paramsMap_;
     OSAL::Mutex inputFilterMutex_ {};
+
+    std::string ownerName_;
+    std::string sessionName_;
+    std::string sessionNameMid_;
+    std::string peerDevId_;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

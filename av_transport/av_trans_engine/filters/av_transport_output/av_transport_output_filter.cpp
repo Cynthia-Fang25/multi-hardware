@@ -17,6 +17,8 @@
 #include "av_transport_output_filter.h"
 #include "av_trans_log.h"
 #include "av_trans_constants.h"
+#include "av_trans_utils.h"
+#include "softbus_channel_adapter.h"
 #include "pipeline/filters/common/plugin_utils.h"
 #include "pipeline/factory/filter_factory.h"
 #include "plugin/common/plugin_attr_desc.h"
@@ -31,6 +33,10 @@ static AutoRegisterFilter<AVOutputFilter> g_registerFilterHelper("builtin.avtran
 AVOutputFilter::AVOutputFilter(const std::string& name) : FilterBase(name), plugin_(nullptr), pluginInfo_(nullptr)
 {
     AVTRANS_LOGI("ctor called");
+    ownerName_ = "";
+    sessionName_ = "";
+    sessionNameMid_ = "";
+    peerDevId_ = "";
 }
 
 AVOutputFilter::~AVOutputFilter()
@@ -52,6 +58,12 @@ ErrorCode AVOutputFilter::SetParameter(int32_t key, const Any& value)
     }
     if (plugin_ != nullptr) {
         plugin_->SetParameter(static_cast<Plugin::Tag>(key), value);
+    }
+    if (tag == Tag::MEDIA_DESCRIPTION) {
+        ParseChannelDescription(Plugin::AnyCast<std::string>(value), ownerName_, peerDevId_);
+    }
+    if (tag == Tag::MEDIA_TITLE) {
+        sessionNameMid_ = Plugin::AnyCast<std::string>(value);
     }
     {
         OSAL::ScopedLock lock(outputFilterMutex_);
@@ -309,6 +321,9 @@ ErrorCode AVOutputFilter::SetPluginParams()
     if (paramsMap_.find(Tag::MEDIA_DESCRIPTION) != paramsMap_.end()) {
         plugin_->SetParameter(Tag::MEDIA_DESCRIPTION, paramsMap_[Tag::MEDIA_DESCRIPTION]);
     }
+    if (paramsMap_.find(Tag::MEDIA_TITLE) != paramsMap_.end()) {
+        plugin_->SetParameter(Tag::MEDIA_TITLE, paramsMap_[Tag::MEDIA_TITLE]);
+    }
     if (paramsMap_.find(Tag::AUDIO_CHANNELS) != paramsMap_.end()) {
         plugin_->SetParameter(Tag::AUDIO_CHANNELS, paramsMap_[Tag::AUDIO_CHANNELS]);
     }
@@ -350,7 +365,18 @@ void AVOutputFilter::OnDataCallback(std::shared_ptr<Plugin::Buffer> buffer)
         AVTRANS_LOGE("buffer is nullptr!");
         return;
     }
-    OnEvent(Event{name_, EventType::EVENT_BUFFER_PROGRESS, buffer});
+    OnEvent(Event{name_, OHOS::Media::EventType::EVENT_BUFFER_PROGRESS, buffer});
+}
+
+ErrorCode AVOutputFilter::CreateDataChannelServer()
+{
+    sessionName_ = ownerName_ + "_" + sessionNameMid_ + SENDER_DATA_SESSION_NAME_SUFFIX;
+    int32_t ret = SoftbusChannelAdapter::GetInstance().CreateChannelServer(TransName2PkgName(ownerName_), sessionName_);
+    if (static_cast<ErrorCode>(ret) != ErrorCode::SUCCESS) {
+        AVTRANS_LOGE("Create Session Server failed ret: %d.", ret);
+        return ErrorCode::ERROR_INVALID_PARAMETER_VALUE;
+    }
+    return ErrorCode::SUCCESS;
 }
 } // namespace DistributedHardware
 } // namespace OHOS
