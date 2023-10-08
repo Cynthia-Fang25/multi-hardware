@@ -63,6 +63,11 @@ public:
         const ChannelAttribute &attribution) override;
     int32_t RegisterReceiverCallback(const std::shared_ptr<IAVReceiverEngineCallback> &callback) override;
 
+    std::shared_ptr<OHOS::Media::Pipeline::PipelineCore> CreatePipeline(const std::string &pipelineName) override;
+    int32_t PreparePipelineByName(const std::string &pipelineName) override;
+    int32_t StartPipeline(const std::string &pipelineName) override;
+    int32_t StopPipeline(const std::string &pipelineName) override;
+
     // interfaces from ISoftbusChannelListener
     void OnChannelEvent(const AVTransEvent &event) override;
     void OnStreamReceived(const StreamData *data, const StreamData *ext) override;
@@ -125,6 +130,9 @@ private:
     std::shared_ptr<AVOutputFilter> avOutput_ = nullptr;
     std::shared_ptr<OHOS::Media::Pipeline::AudioDecoderFilter> audioDecoder_ = nullptr;
     std::shared_ptr<OHOS::Media::Pipeline::VideoDecoderFilter> videoDecoder_ = nullptr;
+
+    std::mutex pipelineMutex_;
+    std::map<std::string, std::shared_ptr<OHOS::Media::Pipeline::PipelineCore>> pipelinePool_;
 
     using SetParaFunc = void (AVReceiverEngine::*)(const std::string &value);
     std::map<AVTransTag, SetParaFunc> funcMap_;

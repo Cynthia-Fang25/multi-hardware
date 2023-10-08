@@ -59,6 +59,7 @@ DsoftbusInputPlugin::DsoftbusInputPlugin(std::string name)
     : AvTransInputPlugin(std::move(name))
 {
     AVTRANS_LOGI("ctor");
+    sessionNameMid_ = "";
 }
 
 DsoftbusInputPlugin::~DsoftbusInputPlugin()
@@ -89,13 +90,8 @@ Status DsoftbusInputPlugin::Prepare()
         return Status::ERROR_WRONG_STATE;
     }
 
-    sessionName_ = ownerName_ + "_" + RECEIVER_DATA_SESSION_NAME_SUFFIX;
-    int32_t ret = SoftbusChannelAdapter::GetInstance().CreateChannelServer(TransName2PkgName(ownerName_), sessionName_);
-    if (ret != DH_AVT_SUCCESS) {
-        AVTRANS_LOGE("Create Session Server failed ret: %d.", ret);
-        return Status::ERROR_INVALID_OPERATION;
-    }
-    ret = SoftbusChannelAdapter::GetInstance().RegisterChannelListener(sessionName_, peerDevId_, this);
+    sessionName_ = ownerName_ + "_" + sessionNameMid_ + RECEIVER_DATA_SESSION_NAME_SUFFIX;
+    int32_t ret = SoftbusChannelAdapter::GetInstance().RegisterChannelListener(sessionName_, peerDevId_, this);
     if (ret != DH_AVT_SUCCESS) {
         AVTRANS_LOGE("Register channel listener failed ret: %d.", ret);
         return Status::ERROR_INVALID_OPERATION;
@@ -182,6 +178,9 @@ Status DsoftbusInputPlugin::SetParameter(Tag tag, const ValueType &value)
     Media::OSAL::ScopedLock lock(operationMutes_);
     if (tag == Tag::MEDIA_DESCRIPTION) {
         ParseChannelDescription(Plugin::AnyCast<std::string>(value), ownerName_, peerDevId_);
+    }
+    if (tag == Tag::MEDIA_TITLE) {
+        sessionNameMid_ = Plugin::AnyCast<std::string>(value);
     }
     paramsMap_.insert(std::pair<Tag, ValueType>(tag, value));
     return Status::OK;

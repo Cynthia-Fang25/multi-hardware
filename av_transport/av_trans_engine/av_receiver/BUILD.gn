@@ -22,6 +22,7 @@ config("receiver_external_config") {
     "${engine_path}/av_sender/include",
     "${engine_path}/av_receiver/include",
     "${interface_path}",
+    "//third_party/json/include",
   ]
 }
 

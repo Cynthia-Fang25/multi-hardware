@@ -20,6 +20,7 @@ ohos_source_set("avtrans_input_filter") {
     "${plugin_path}/core",
     "${plugin_path}/interface",
     "${common_path}/include",
+    "//third_party/json/include",
   ]
 
   sources = [
@@ -68,6 +69,7 @@ ohos_source_set("avtrans_output_filter") {
     "${plugin_path}/core",
     "${plugin_path}/interface",
     "${common_path}/include",
+    "//third_party/json/include",
   ]
 
   sources = [

@@ -17,6 +17,8 @@
 #include "av_transport_input_filter.h"
 #include "av_trans_log.h"
 #include "av_trans_constants.h"
+#include "av_trans_utils.h"
+#include "softbus_channel_adapter.h"
 #include "pipeline/filters/common/plugin_utils.h"
 #include "pipeline/factory/filter_factory.h"
 #include "plugin/common/plugin_attr_desc.h"
@@ -31,6 +33,10 @@ static AutoRegisterFilter<AVInputFilter> g_registerFilterHelper("builtin.avtrans
 AVInputFilter::AVInputFilter(const std::string& name) : FilterBase(name), plugin_(nullptr), pluginInfo_(nullptr)
 {
     AVTRANS_LOGI("ctor called");
+    ownerName_ = "";
+    sessionName_ = "";
+    sessionNameMid_ = "";
+    peerDevId_ = "";
 }
 
 AVInputFilter::~AVInputFilter()
@@ -52,6 +58,12 @@ ErrorCode AVInputFilter::SetParameter(int32_t key, const Any& value)
     }
     if (plugin_ != nullptr) {
         plugin_->SetParameter(static_cast<Plugin::Tag>(key), value);
+    }
+    if (tag == Tag::MEDIA_DESCRIPTION) {
+        ParseChannelDescription(Plugin::AnyCast<std::string>(value), ownerName_, peerDevId_);
+    }
+    if (tag == Tag::MEDIA_TITLE) {
+        sessionNameMid_ = Plugin::AnyCast<std::string>(value);
     }
     {
         OSAL::ScopedLock lock(inputFilterMutex_);
@@ -513,6 +525,9 @@ ErrorCode AVInputFilter::SetPluginParams()
     if (paramsMap_.find(Tag::MEDIA_DESCRIPTION) != paramsMap_.end()) {
         plugin_->SetParameter(Tag::MEDIA_DESCRIPTION, paramsMap_[Tag::MEDIA_DESCRIPTION]);
     }
+    if (paramsMap_.find(Tag::MEDIA_TITLE) != paramsMap_.end()) {
+        plugin_->SetParameter(Tag::MEDIA_TITLE, paramsMap_[Tag::MEDIA_TITLE]);
+    }
     return ErrorCode::SUCCESS;
 }
 
@@ -584,6 +599,17 @@ void AVInputFilter::OnDataCallback(std::shared_ptr<Plugin::Buffer> buffer)
         return;
     }
     outPorts_[0]->PushData(buffer, 0);
+}
+
+ErrorCode AVInputFilter::CreateDataChannelServer()
+{
+    sessionName_ = ownerName_ + "_" + sessionNameMid_ + RECEIVER_DATA_SESSION_NAME_SUFFIX;
+    int32_t ret = SoftbusChannelAdapter::GetInstance().CreateChannelServer(TransName2PkgName(ownerName_), sessionName_);
+    if (static_cast<ErrorCode>(ret) != ErrorCode::SUCCESS) {
+        AVTRANS_LOGE("Create Session Server failed ret: %d.", ret);
+        return ErrorCode::ERROR_INVALID_PARAMETER_VALUE;
+    }
+    return ErrorCode::SUCCESS;
 }
 } // namespace DistributedHardware
 } // namespace OHOS
