@@ -12,27 +12,28 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import("../../../../../distributed_av_transport.gni")
+import("../../../../../../../distributed_av_transport.gni")
 
-module_out_path = "distributed_hardware_fwk/dsoftbus_output_test"
+module_out_path = "distributed_hardware_fwk/dscreen_output_test"
 
-ohos_unittest("DsoftbusOutputPluginTest") {
+ohos_unittest("DscreenOutputPluginTest") {
   module_out_path = module_out_path
 
   include_dirs = [
     "${common_path}/include",
     "${plugin_path}/interface",
-    "${plugin_path}/plugins/av_trans_output/dsoftbus_output",
+    "${plugin_path}/plugins/av_trans_output/dscreen_output",
+    "${output_controller_path}/include",
     "//third_party/ffmpeg",
     "//third_party/json/include",
   ]
 
   sources = [
+    "${common_path}/src/av_sync_utils.cpp",
     "${common_path}/src/av_trans_log.cpp",
-    "${common_path}/src/av_trans_meta.cpp",
+    "${common_path}/src/av_trans_message.cpp",
     "${common_path}/src/av_trans_utils.cpp",
-    "${common_path}/src/softbus_channel_adapter.cpp",
-    "dsoftbus_output_plugin_test.cpp",
+    "dscreen_output_test.cpp",
   ]
 
   cflags = [
@@ -45,28 +46,30 @@ ohos_unittest("DsoftbusOutputPluginTest") {
   cflags_cc = cflags
 
   deps = [
-    "${plugin_path}/plugins/av_trans_output/dsoftbus_output:plugin_AVTransDsoftbusOutput",
+    "${plugin_path}/plugins/av_trans_output/dscreen_output:plugin_AVTransDscreenOutput",
     "//third_party/googletest:gtest",
   ]
 
   external_deps = [
     "bounds_checking_function:libsec_shared",
     "c_utils:utils",
-    "dsoftbus:softbus_client",
+    "eventhandler:libeventhandler",
     "hilog:libhilog",
     "histreamer:histreamer_base",
     "histreamer:histreamer_ffmpeg_convert",
     "histreamer:histreamer_plugin_base",
+    "kv_store:distributeddata_inner",
+    "safwk:system_ability_fwk",
   ]
 
   defines = [
     "HI_LOG_ENABLE",
-    "DH_LOG_TAG=\"dsoftbus_output_plugin_test\"",
+    "DH_LOG_TAG=\"dscreen_output_plugin_test\"",
     "LOG_DOMAIN=0xD004100",
   ]
 }
 
-group("dsoftbus_output_unittest") {
+group("dscreen_output_unittest") {
   testonly = true
-  deps = [ ":DsoftbusOutputPluginTest" ]
+  deps = [ ":DscreenOutputPluginTest" ]
 }

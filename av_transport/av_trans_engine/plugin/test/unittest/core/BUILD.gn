@@ -14,47 +14,54 @@
 import("//build/test.gni")
 import("../../../../../distributed_av_transport.gni")
 
-module_out_path = "distributed_hardware_fwk/daudio_output_test"
+module_out_path = "distributed_hardware_fwk/avtrans_input_output_unittest"
 
-ohos_unittest("DaudioOutputPluginTest") {
+ohos_unittest("AvTransInputOutputTest") {
   module_out_path = module_out_path
 
   include_dirs = [
-    "${common_path}/include",
-    "${plugin_path}/interface",
-    "${plugin_path}/plugins/av_trans_output/daudio_output",
     "//third_party/ffmpeg",
     "//third_party/json/include",
+    "${plugin_path}/core",
+    "${plugin_path}/interface",
+    "${common_path}/include",
   ]
 
   sources = [
     "${common_path}/src/av_sync_utils.cpp",
     "${common_path}/src/av_trans_log.cpp",
     "${common_path}/src/av_trans_message.cpp",
+    "${common_path}/src/av_trans_meta.cpp",
     "${common_path}/src/av_trans_utils.cpp",
-    "daudio_output_test.cpp",
+    "${common_path}/src/softbus_channel_adapter.cpp",
+    "avtrans_input_test.cpp",
+    "avtrans_output_test.cpp",
   ]
 
   cflags = [
     "-O2",
     "-fPIC",
     "-Wall",
+    "-frtti",
     "-fexceptions",
     "-Dprivate = public",
   ]
   cflags_cc = cflags
 
   deps = [
-    "${plugin_path}/plugins/av_trans_output/daudio_output:plugin_AVTransDaudioOutput",
-    "//third_party/googletest:gtest",
+    "${filters_path}:avtrans_input_filter",
+    "${filters_path}:avtrans_output_filter",
+    "//third_party/googletest:gtest_rtti",
   ]
 
   external_deps = [
     "bounds_checking_function:libsec_shared",
     "c_utils:utils",
+    "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "hilog:libhilog",
     "histreamer:histreamer_base",
+    "histreamer:histreamer_codec_filters",
     "histreamer:histreamer_ffmpeg_convert",
     "histreamer:histreamer_plugin_base",
     "kv_store:distributeddata_inner",
@@ -63,12 +70,12 @@ ohos_unittest("DaudioOutputPluginTest") {
 
   defines = [
     "HI_LOG_ENABLE",
-    "DH_LOG_TAG=\"daudio_output_plugin_test\"",
+    "DH_LOG_TAG=\"avtrans_input_output_test\"",
     "LOG_DOMAIN=0xD004100",
   ]
 }
 
-group("daudio_output_unittest") {
+group("avtrans_input_output_unittest") {
   testonly = true
-  deps = [ ":DaudioOutputPluginTest" ]
+  deps = [ ":AvTransInputOutputTest" ]
 }
