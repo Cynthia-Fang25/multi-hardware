@@ -25,7 +25,8 @@ Publisher::Publisher() : publisherItems_({
         { DHTopic::TOPIC_STOP_DSCREEN, std::make_shared<PublisherItem>(DHTopic::TOPIC_STOP_DSCREEN) },
         { DHTopic::TOPIC_DEV_OFFLINE, std::make_shared<PublisherItem>(DHTopic::TOPIC_DEV_OFFLINE) },
         { DHTopic::TOPIC_LOW_LATENCY, std::make_shared<PublisherItem>(DHTopic::TOPIC_LOW_LATENCY) },
-        {DHTopic::TOPIC_LINK_CAR_CABIN,std::make_shared<PublisherItem>(DHTopic::TOPIC_LINK_CAR_CABIN)},
+        {DHTopic::TOPIC_CONNECT_SUCCESS,std::make_shared<PublisherItem>(DHTopic::TOPIC_CONNECT_SUCCESS)},
+        {DHTopic::TOPIC_DISCONNECT_SUCCESS,std::make_shared<PublisherItem>(DHTopic::TOPIC_DISCONNECT_SUCCESS)},
     })
 {
 }
