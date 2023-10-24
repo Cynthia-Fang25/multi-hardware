@@ -37,7 +37,9 @@ enum class DHTopic : uint32_t {
     // publish low latency message
     TOPIC_LOW_LATENCY = 5,
     // Topic max border, not use for real topic
-    TOPIC_MAX = 6
+    TOPIC_MAX = 6,
+    // Topic Link Car Cabin
+    TOPIC_LINK_CAR_CABIN=7
 };
 
 class IPublisherListener : public IRemoteBroker {
