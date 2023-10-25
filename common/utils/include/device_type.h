@@ -25,13 +25,15 @@ enum class DHType : uint32_t {
     UNKNOWN = 0x0,            // unknown device
     CAMERA = 0x01,            // Camera
     AUDIO = 0x02,             // Mic
-    SCREEN = 0x08,           // Display
+    SCREEN = 0x08,            // Display
     GPS = 0x10,               // GPS
     INPUT = 0x20,             // Key board
     HFP = 0x40,               // HFP External device
     A2D = 0x80,               // A2DP External device
     VIRMODEM_MIC = 0x100,     // Cellular call MIC
     VIRMODEM_SPEAKER = 0x200, // Cellular call Speaker
+    AUDIO_MIC = 0x400,        // AUDIO Mic
+    AUDIO_SPEAKER = 0x800,    // AUDIO Speaker
     MAX_DH = 0x80000000
 };
 
