@@ -152,6 +152,7 @@ int32_t ComponentManager::UnInit()
 
     compSource_.clear();
     compSink_.clear();
+    compSensitiveDesc_.clear();
 
     if (monitorTaskTimer_ != nullptr) {
         monitorTaskTimer_->StopTimer();
@@ -211,6 +212,14 @@ ActionResult ComponentManager::StartSink()
         auto params = compversion.sinkVersion;
         auto future = std::async(std::launch::async, [item, params]() { return item.second->InitSink(params); });
         futures.emplace(item.first, future.share());
+        if (audioCompPrivacy_ == nullptr && item.first == DHType::CAMERA) {
+            audioCompPrivacy_ = std::make_shared<ComponentPrivacy>();
+            item.second->RegisterPrivacyResources(audioCompPrivacy_);
+        }
+        if (cameraCompPrivacy_ == nullptr && item.first == DHType::AUDIO) {
+            cameraCompPrivacy_ = std::make_shared<ComponentPrivacy>();
+            item.second->RegisterPrivacyResources(cameraCompPrivacy_);
+        }
     }
     return futures;
 }
@@ -232,6 +241,14 @@ ActionResult ComponentManager::StartSink(DHType dhType)
         return compSink_[dhType]->InitSink(params);
     });
     futures.emplace(dhType, future.share());
+    if (audioCompPrivacy_ == nullptr && item.first == DHType::CAMERA) {
+        audioCompPrivacy_ = std::make_shared<ComponentPrivacy>();
+        compSink_[dhType]->RegisterPrivacyResources(audioCompPrivacy_);
+    }
+    if (cameraCompPrivacy_ == nullptr && item.first == DHType::AUDIO) {
+        cameraCompPrivacy_ = std::make_shared<ComponentPrivacy>();
+        compSink_[dhType]->RegisterPrivacyResources(cameraCompPrivacy_);
+    }
 
     return futures;
 }
@@ -606,6 +623,11 @@ void ComponentManager::RecoverDistributedHardware(DHType dhType)
         auto task = TaskFactory::GetInstance().CreateTask(TaskType::ENABLE, taskParam, nullptr);
         TaskExecutor::GetInstance().PushTask(task);
     }
+}
+
+std::map<DHType, IDistributedHardwareSink*> ComponentManager::GetDHSinkInstance()
+{
+    return compSink_;
 }
 } // namespace DistributedHardware
 } // namespace OHOS

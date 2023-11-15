@@ -63,6 +63,15 @@ int32_t DistributedHardwareStub::OnRemoteRequest(uint32_t code, MessageParcel &d
         case static_cast<uint32_t>(DHMsgInterfaceCode::QUERY_LOCAL_SYS_SPEC): {
             return QueryLocalSysSpecInner(data, reply);
         }
+        case static_cast<uint32_t>(DHMsgInterfaceCode::PAUSE_DISTRIBUTED_HARDWARE): {
+            return PauseDistributedHardwareInner(data, reply);
+        }
+        case static_cast<uint32_t>(DHMsgInterfaceCode::RESUME_DISTRIBUTED_HARDWARE): {
+            return ResumeDistributedHardwareInner(data, reply);
+        }
+        case static_cast<uint32_t>(DHMsgInterfaceCode::STOP_DISTRIBUTED_HARDWARE): {
+            return StopDistributedHardwareInner(data, reply);
+        }
         default:
             return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
     }
@@ -231,6 +240,42 @@ bool DistributedHardwareStub::ValidQueryLocalSpec(uint32_t spec)
         return false;
     }
     return true;
+}
+
+int32_t DistributedHardwareStub::PauseDistributedHardwareInner(MessageParcel &data, MessageParcel &reply)
+{
+    DHType dhType = static_cast<DHType>(data.ReadInt32());
+    std::string networkId = data.ReadString();
+    int32_t ret = PauseDistributedHardware(dhType, networkId);
+    if (!reply.WriteInt32(ret)) {
+        DHLOGE("Write ret code failed");
+        return ERR_DH_FWK_SERVICE_WRITE_INFO_FAIL;
+    }
+    return DH_FWK_SUCCESS;
+}
+
+int32_t DistributedHardwareStub::ResumeDistributedHardwareInner(MessageParcel &data, MessageParcel &reply)
+{
+    DHType dhType = static_cast<DHType>(data.ReadInt32());
+    std::string networkId = data.ReadString();
+    int32_t ret = ResumeDistributedHardware(dhType, networkId);
+    if (!reply.WriteInt32(ret)) {
+        DHLOGE("Write ret code failed");
+        return ERR_DH_FWK_SERVICE_WRITE_INFO_FAIL;
+    }
+    return DH_FWK_SUCCESS;
+}
+
+int32_t DistributedHardwareStub::StopDistributedHardwareInner(MessageParcel &data, MessageParcel &reply)
+{
+    DHType dhType = static_cast<DHType>(data.ReadInt32());
+    std::string networkId = data.ReadString();
+    int32_t ret = StopDistributedHardware(dhType, networkId);
+    if (!reply.WriteInt32(ret)) {
+        DHLOGE("Write ret code failed");
+        return ERR_DH_FWK_SERVICE_WRITE_INFO_FAIL;
+    }
+    return DH_FWK_SUCCESS;
 }
 } // namespace DistributedHardware
 } // namespace OHOS
