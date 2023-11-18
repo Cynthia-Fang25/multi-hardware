@@ -43,6 +43,7 @@
         "kv_store",
         "resource_schedule_service",
         "graphic_2d",
+        "graphic_surface",
         "histreamer",
         "bounds_checking_function"
       ],
