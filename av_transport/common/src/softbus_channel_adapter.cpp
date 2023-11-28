@@ -461,8 +461,8 @@ void SoftbusChannelAdapter::SendChannelEvent(const std::string &sessName, const 
         std::lock_guard<std::mutex> lock(listenerMtx_);
         listener = listenerMap_[sessName];
         TRUE_RETURN(listener == nullptr, "input listener is nullptr.");
+        listener->OnChannelEvent(event);
     }
-    listener->OnChannelEvent(event);
 }
 } // namespace DistributedHardware
 } // namespace OHOS
