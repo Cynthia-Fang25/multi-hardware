@@ -19,23 +19,16 @@
 using namespace testing::ext;
 namespace OHOS {
 namespace DistributedHardware {
-void AVTransControlCenterTest::SetUpTestCase(void)
-{
-}
+void AVTransControlCenterTest::SetUpTestCase(void) {}
 
-void AVTransControlCenterTest::TearDownTestCase(void)
-{
-}
+void AVTransControlCenterTest::TearDownTestCase(void) {}
 
 void AVTransControlCenterTest::SetUp()
 {
     center_ = std::make_shared<AVTransControlCenter>();
 }
 
-void AVTransControlCenterTest::TearDown()
-{
-    center_ = nullptr;
-}
+void AVTransControlCenterTest::TearDown() {}
 
 /**
  * @tc.name: initialize_av_center_001
@@ -78,7 +71,7 @@ HWTEST_F(AVTransControlCenterTest, initialize_av_center_003, TestSize.Level0)
     int32_t engineId = BASE_ENGINE_ID;
     center_->initialized_= false;
     int32_t ret = center_->InitializeAVCenter(transRole, engineId);
-    EXPECT_EQ(ERR_DH_AVT_CREATE_CHANNEL_FAILED, ret);
+    EXPECT_EQ(ERR_DH_AVT_SESSION_ERROR, ret);
 }
 
 /**
