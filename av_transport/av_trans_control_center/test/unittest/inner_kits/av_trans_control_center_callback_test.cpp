@@ -19,13 +19,9 @@
 using namespace testing::ext;
 namespace OHOS {
 namespace DistributedHardware {
-void AVTransControlCenterCallbackTest::SetUpTestCase(void)
-{
-}
+void AVTransControlCenterCallbackTest::SetUpTestCase(void) {}
 
-void AVTransControlCenterCallbackTest::TearDownTestCase(void)
-{
-}
+void AVTransControlCenterCallbackTest::TearDownTestCase(void) {}
 
 void AVTransControlCenterCallbackTest::SetUp()
 {
@@ -34,10 +30,7 @@ void AVTransControlCenterCallbackTest::SetUp()
     callBack_->senderEngine_ = std::shared_ptr<SenderEngineTest>();
 }
 
-void AVTransControlCenterCallbackTest::TearDown()
-{
-    callBack_ = nullptr;
-}
+void AVTransControlCenterCallbackTest::TearDown() {}
 
 /**
  * @tc.name: set_parameter_001

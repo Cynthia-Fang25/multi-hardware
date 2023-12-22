@@ -19,23 +19,16 @@
 using namespace testing::ext;
 namespace OHOS {
 namespace DistributedHardware {
-void AVSyncManagerTest::SetUpTestCase(void)
-{
-}
+void AVSyncManagerTest::SetUpTestCase(void) {}
 
-void AVSyncManagerTest::TearDownTestCase(void)
-{
-}
+void AVSyncManagerTest::TearDownTestCase(void) {}
 
 void AVSyncManagerTest::SetUp()
 {
     syncManager_ = std::make_shared<AVSyncManager>();
 }
 
-void AVSyncManagerTest::TearDown()
-{
-    syncManager_ = nullptr;
-}
+void AVSyncManagerTest::TearDown() {}
 
 /**
  * @tc.name: add_stream_info_001
