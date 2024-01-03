@@ -73,6 +73,7 @@ private:
     void UnRegisterKvStoreDeathListener();
     void RegisterManualSyncListener();
     void UnRegisterManualSyncListener();
+    void HandleManualSync(const std::string &deviceId);
     DistributedKv::Status GetKvStorePtr();
 
 private:
