@@ -142,16 +142,21 @@ void DBAdapter::SyncCompleted(const std::map<std::string, DistributedKv::Status>
             manualSyncCountMap_[deviceId] = 0;
         } else {
             manualSyncCountMap_[deviceId]++;
-            if (manualSyncCountMap_[deviceId] >= MANUAL_SYNC_TIMES) {
-                manualSyncCountMap_[deviceId] = 0;
-            } else {
-                auto retryTask = [this, deviceId] {
-                    this->ManualSync(deviceId);
-                    usleep(MANUAL_SYNC_INTERVAL);
-                };
-                DHContext::GetInstance().GetEventBus()->PostTask(retryTask, "retryTask", 0);
-            }
+            HandleManualSync(deviceId);
         }
+    }
+}
+
+void DBAdapter::HandleManualSync(const std::string &deviceId)
+{
+    if (manualSyncCountMap_[deviceId] >= MANUAL_SYNC_TIMES) {
+        manualSyncCountMap_[deviceId] = 0;
+    } else {
+        auto retryTask = [this, deviceId] {
+            this->ManualSync(deviceId);
+            usleep(MANUAL_SYNC_INTERVAL);
+        };
+        DHContext::GetInstance().GetEventBus()->PostTask(retryTask, "retryTask", 0);
     }
 }
 
