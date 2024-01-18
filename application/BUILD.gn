@@ -11,8 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import("//build/ohos.gni")
+import("./DHardware_UI.gni")
 
 ohos_hap("DHardware_UI") {
   hap_profile = "entry/src/main/module.json"
@@ -27,7 +27,7 @@ ohos_hap("DHardware_UI") {
   js_build_mode = "release"
   module_install_dir = "app/com.ohos.dhardwareui"
   if (defined(sign_hap_py_path)) {
-    certificate_profile = "//vendor/tools/hap_sign_conf/applications/prebuilt_hap/DHardware_UI.p7b"
+    certificate_profile = "${certificate_profile_path}"
     key_alias = "DHardwareUI Release"
     private_key_path = "DHardwareUI Release"
     compatible_version = "11"
