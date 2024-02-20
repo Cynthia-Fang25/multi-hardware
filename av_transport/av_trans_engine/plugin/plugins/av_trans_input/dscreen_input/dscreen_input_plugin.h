@@ -57,7 +57,7 @@ public:
 
 private:
     std::atomic<uint32_t> frameNumber_;
-    std::mutex paramsMapMutex_;
+    Media::OSAL::Mutex operationMutes_ {};
     std::map<Tag, ValueType> paramsMap_;
     AVTransSharedMemory sharedMemory_ = AVTransSharedMemory{ 0, 0, "" };
 };

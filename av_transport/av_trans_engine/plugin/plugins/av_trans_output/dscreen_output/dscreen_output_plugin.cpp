@@ -59,8 +59,9 @@ DscreenOutputPlugin::~DscreenOutputPlugin()
 Status DscreenOutputPlugin::Init()
 {
     AVTRANS_LOGI("Init.");
+    Media::OSAL::ScopedLock lock(operationMutes_);
     InitOutputController();
-    SetCurrentState(State::INITIALIZED);
+    state_ = State::INITIALIZED;
     return Status::OK;
 }
 
@@ -74,10 +75,10 @@ Status DscreenOutputPlugin::Prepare()
 {
     AVTRANS_LOGI("Prepare");
     {
-        TRUE_RETURN_V_MSG_E((GetCurrentState() != State::INITIALIZED), Status::ERROR_WRONG_STATE,
-            "The state is wrong.");
+        Media::OSAL::ScopedLock lock(operationMutes_);
+        TRUE_RETURN_V_MSG_E((state_ != State::INITIALIZED), Status::ERROR_WRONG_STATE, "The state is wrong.");
         TRUE_RETURN_V_MSG_E((!controller_), Status::ERROR_NULL_POINTER, "Controller is nullptr.");
-        SetCurrentState(State::PREPARED);
+        state_ = State::PREPARED;
     }
     controller_->PrepareControl();
     return Status::OK;
@@ -87,7 +88,8 @@ Status DscreenOutputPlugin::Reset()
 {
     AVTRANS_LOGI("Reset");
     {
-        SetCurrentState(State::INITIALIZED);
+        Media::OSAL::ScopedLock lock(operationMutes_);
+        state_ = State::INITIALIZED;
         eventsCb_ = nullptr;
         dataCb_ = nullptr;
     }
@@ -101,13 +103,19 @@ Status DscreenOutputPlugin::Reset()
 
 Status DscreenOutputPlugin::GetParameter(Tag tag, ValueType &value)
 {
-    TRUE_RETURN_V_MSG_E((!controller_), Status::ERROR_NULL_POINTER, "Controller is nullptr.");
+    {
+        Media::OSAL::ScopedLock lock(operationMutes_);
+        TRUE_RETURN_V_MSG_E((!controller_), Status::ERROR_NULL_POINTER, "Controller is nullptr.");
+    }
     return controller_->GetParameter(tag, value);
 }
 
 Status DscreenOutputPlugin::SetParameter(Tag tag, const ValueType &value)
 {
-    TRUE_RETURN_V_MSG_E((!controller_), Status::ERROR_NULL_POINTER, "Controller is nullptr.");
+    {
+        Media::OSAL::ScopedLock lock(operationMutes_);
+        TRUE_RETURN_V_MSG_E((!controller_), Status::ERROR_NULL_POINTER, "Controller is nullptr.");
+    }
     return controller_->SetParameter(tag, value);
 }
 
@@ -115,9 +123,10 @@ Status DscreenOutputPlugin::Start()
 {
     AVTRANS_LOGI("Start");
     {
-        TRUE_RETURN_V_MSG_E((GetCurrentState() != State::PREPARED), Status::ERROR_WRONG_STATE, "The state is wrong.");
+        Media::OSAL::ScopedLock lock(operationMutes_);
+        TRUE_RETURN_V_MSG_E((state_ != State::PREPARED), Status::ERROR_WRONG_STATE, "The state is wrong.");
         TRUE_RETURN_V_MSG_E((!controller_), Status::ERROR_NULL_POINTER, "Controller is nullptr.");
-        SetCurrentState(State::RUNNING);
+        state_ = State::RUNNING;
     }
     controller_->StartControl();
     return Status::OK;
@@ -127,9 +136,10 @@ Status DscreenOutputPlugin::Stop()
 {
     AVTRANS_LOGI("Stop");
     {
-        TRUE_RETURN_V_MSG_E((GetCurrentState() != State::RUNNING), Status::ERROR_WRONG_STATE, "The state is wrong.");
+        Media::OSAL::ScopedLock lock(operationMutes_);
+        TRUE_RETURN_V_MSG_E((state_ != State::RUNNING), Status::ERROR_WRONG_STATE, "The state is wrong.");
         TRUE_RETURN_V_MSG_E((!controller_), Status::ERROR_NULL_POINTER, "Controller is nullptr.");
-        SetCurrentState(State::PREPARED);
+        state_ = State::PREPARED;
     }
     controller_->StopControl();
     return Status::OK;
@@ -137,6 +147,7 @@ Status DscreenOutputPlugin::Stop()
 
 Status DscreenOutputPlugin::SetCallback(Callback *cb)
 {
+    Media::OSAL::ScopedLock lock(operationMutes_);
     TRUE_RETURN_V_MSG_E((!cb), Status::ERROR_NULL_POINTER, "SetCallback failed, cb is nullptr.");
     eventsCb_ = cb;
     AVTRANS_LOGI("SetCallback success.");
@@ -145,6 +156,7 @@ Status DscreenOutputPlugin::SetCallback(Callback *cb)
 
 Status DscreenOutputPlugin::SetDataCallback(AVDataCallback callback)
 {
+    Media::OSAL::ScopedLock lock(operationMutes_);
     dataCb_ = callback;
     AVTRANS_LOGI("SetDataCallback success.");
     return Status::OK;
@@ -152,9 +164,12 @@ Status DscreenOutputPlugin::SetDataCallback(AVDataCallback callback)
 
 Status DscreenOutputPlugin::PushData(const std::string &inPort, std::shared_ptr<Plugin::Buffer> buffer, int32_t offset)
 {
-    TRUE_RETURN_V_MSG_E((buffer == nullptr || buffer->IsEmpty()), Status::ERROR_NULL_POINTER,
-        "AVBuffer is nullptr.");
-    TRUE_RETURN_V_MSG_E((!controller_), Status::ERROR_NULL_POINTER, "Controller is nullptr.");
+    {
+        Media::OSAL::ScopedLock lock(operationMutes_);
+        TRUE_RETURN_V_MSG_E((buffer == nullptr || buffer->IsEmpty()), Status::ERROR_NULL_POINTER,
+            "AVBuffer is nullptr.");
+        TRUE_RETURN_V_MSG_E((!controller_), Status::ERROR_NULL_POINTER, "Controller is nullptr.");
+    }
     controller_->PushData(buffer);
     return Status::OK;
 }

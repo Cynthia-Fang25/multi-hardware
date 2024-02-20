@@ -79,17 +79,6 @@ private:
     void DataQueueClear(std::queue<std::shared_ptr<Buffer>> &queue);
     void CloseSoftbusChannel();
     void FeedChannelData();
-    State GetCurrentState()
-    {
-        std::lock_guard<std::mutex> lock(stateMutex_);
-        return state_;
-    }
-
-    void SetCurrentState(State state)
-    {
-        std::lock_guard<std::mutex> lock(stateMutex_);
-        state_ = state;
-    }
 
 private:
     std::atomic<bool> dumpFlag_ ;
@@ -98,13 +87,12 @@ private:
     std::string sessionName_;
     std::string peerDevId_;
     std::condition_variable dataCond_;
-    std::mutex stateMutex_;
     std::mutex dataQueueMtx_;
-    std::mutex paramMapMutex_;
+    Media::OSAL::Mutex operationMutes_ {};
     std::shared_ptr<Media::OSAL::Task> bufferPopTask_;
     std::queue<std::shared_ptr<Buffer>> dataQueue_;
     std::map<Tag, ValueType> paramsMap_;
-    std::atomic<State> state_ = State::CREATED;
+    State state_ {State::CREATED};
     Callback* eventsCb_ = nullptr;
 };
 } // namespace DistributedHardware

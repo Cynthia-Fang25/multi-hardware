@@ -71,9 +71,10 @@ DsoftbusOutputPlugin::~DsoftbusOutputPlugin()
 Status DsoftbusOutputPlugin::Init()
 {
     AVTRANS_LOGI("Init Dsoftbus Output Plugin.");
+    Media::OSAL::ScopedLock lock(operationMutes_);
     dumpFlag_.store(false);
     reDumpFlag_.store(false);
-    SetCurrentState(State::INITIALIZED);
+    state_ = State::INITIALIZED;
     return Status::OK;
 }
 
@@ -86,7 +87,8 @@ Status DsoftbusOutputPlugin::Deinit()
 Status DsoftbusOutputPlugin::Prepare()
 {
     AVTRANS_LOGI("Prepare");
-    if (GetCurrentState() != State::INITIALIZED) {
+    Media::OSAL::ScopedLock lock(operationMutes_);
+    if (state_ != State::INITIALIZED) {
         AVTRANS_LOGE("The state is wrong.");
         return Status::ERROR_WRONG_STATE;
     }
@@ -96,17 +98,15 @@ Status DsoftbusOutputPlugin::Prepare()
         bufferPopTask_ = std::make_shared<Media::OSAL::Task>("videoBufferQueuePopThread");
         bufferPopTask_->RegisterHandler([this] { FeedChannelData(); });
     }
-    SetCurrentState(State::PREPARED);
+    state_ = State::PREPARED;
     return Status::OK;
 }
 
 Status DsoftbusOutputPlugin::Reset()
 {
     AVTRANS_LOGI("Reset");
-    {
-        std::lock_guard<std::mutex> lock(paramMapMutex_);
-        paramsMap_.clear();
-    }
+    Media::OSAL::ScopedLock lock(operationMutes_);
+    paramsMap_.clear();
     if (bufferPopTask_) {
         bufferPopTask_->Stop();
         bufferPopTask_.reset();
@@ -114,14 +114,15 @@ Status DsoftbusOutputPlugin::Reset()
     DataQueueClear(dataQueue_);
     eventsCb_ = nullptr;
     SoftbusChannelAdapter::GetInstance().UnRegisterChannelListener(sessionName_, peerDevId_);
-    SetCurrentState(State::INITIALIZED);
+    state_ = State::INITIALIZED;
     return Status::OK;
 }
 
 Status DsoftbusOutputPlugin::Start()
 {
     AVTRANS_LOGI("Dsoftbus Output Plugin start.");
-    if (GetCurrentState() != State::PREPARED) {
+    Media::OSAL::ScopedLock lock(operationMutes_);
+    if (state_ != State::PREPARED) {
         AVTRANS_LOGE("The state is wrong.");
         return Status::ERROR_WRONG_STATE;
     }
@@ -132,18 +133,18 @@ Status DsoftbusOutputPlugin::Start()
     }
     DataQueueClear(dataQueue_);
     bufferPopTask_->Start();
-    SetCurrentState(State::RUNNING);
+    state_ = State::RUNNING;
     return Status::OK;
 }
 
 Status DsoftbusOutputPlugin::Stop()
 {
     AVTRANS_LOGI("Dsoftbus Output Plugin stop.");
-    if (GetCurrentState() != State::RUNNING) {
+    if (state_ != State::RUNNING) {
         AVTRANS_LOGE("The state is wrong.");
         return Status::ERROR_WRONG_STATE;
     }
-    SetCurrentState(State::PREPARED);
+    state_ = State::PREPARED;
     bufferPopTask_->Stop();
     DataQueueClear(dataQueue_);
     CloseSoftbusChannel();
@@ -152,7 +153,6 @@ Status DsoftbusOutputPlugin::Stop()
 
 Status DsoftbusOutputPlugin::GetParameter(Tag tag, ValueType &value)
 {
-    std::lock_guard<std::mutex> lock(paramMapMutex_);
     auto res = paramsMap_.find(tag);
     if (res != paramsMap_.end()) {
         value = res->second;
@@ -163,7 +163,7 @@ Status DsoftbusOutputPlugin::GetParameter(Tag tag, ValueType &value)
 
 Status DsoftbusOutputPlugin::SetParameter(Tag tag, const ValueType &value)
 {
-    std::lock_guard<std::mutex> lock(paramMapMutex_);
+    Media::OSAL::ScopedLock lock(operationMutes_);
     if (tag == Tag::MEDIA_DESCRIPTION) {
         ParseChannelDescription(Plugin::AnyCast<std::string>(value), ownerName_, peerDevId_);
     }
@@ -179,6 +179,7 @@ Status DsoftbusOutputPlugin::SetParameter(Tag tag, const ValueType &value)
 
 Status DsoftbusOutputPlugin::SetCallback(Callback *cb)
 {
+    Media::OSAL::ScopedLock lock(operationMutes_);
     if (cb == nullptr) {
         AVTRANS_LOGE("SetCallback failed, cb is nullptr.");
         return Status::ERROR_INVALID_OPERATION;
@@ -245,7 +246,7 @@ void DsoftbusOutputPlugin::OnStreamReceived(const StreamData *data, const Stream
 
 Status DsoftbusOutputPlugin::PushData(const std::string &inPort, std::shared_ptr<Buffer> buffer, int32_t offset)
 {
-    std::lock_guard<std::mutex> lock(dataQueueMtx_);
+    Media::OSAL::ScopedLock lock(operationMutes_);
     if (buffer == nullptr || buffer->IsEmpty()) {
         AVTRANS_LOGE("Buffer is nullptr.");
         return Status::ERROR_NULL_POINTER;
@@ -272,13 +273,13 @@ Status DsoftbusOutputPlugin::PushData(const std::string &inPort, std::shared_ptr
 
 void DsoftbusOutputPlugin::FeedChannelData()
 {
-    while (GetCurrentState() == State::RUNNING) {
+    while (state_ == State::RUNNING) {
         std::shared_ptr<Buffer> buffer;
         {
             std::unique_lock<std::mutex> lock(dataQueueMtx_);
             dataCond_.wait_for(lock, std::chrono::milliseconds(PLUGIN_TASK_WAIT_TIME),
                 [this]() { return !dataQueue_.empty(); });
-            if (GetCurrentState() != State::RUNNING) {
+            if (state_ != State::RUNNING) {
                 return;
             }
             if (dataQueue_.empty()) {
@@ -334,7 +335,6 @@ void DsoftbusOutputPlugin::SendDataToSoftbus(std::shared_ptr<Buffer> &buffer)
 
 void DsoftbusOutputPlugin::DataQueueClear(std::queue<std::shared_ptr<Buffer>> &queue)
 {
-    std::lock_guard<std::mutex> lock(dataQueueMtx_);
     std::queue<std::shared_ptr<Buffer>> empty;
     swap(empty, queue);
 }

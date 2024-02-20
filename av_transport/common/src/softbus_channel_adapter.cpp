@@ -333,13 +333,7 @@ int32_t SoftbusChannelAdapter::SendBytesData(const std::string& sessName, const 
     TRUE_RETURN_V_MSG_E(peerDevId.empty(), ERR_DH_AVT_INVALID_PARAM, "input peerDevId is empty.");
     TRUE_RETURN_V_MSG_E(data.empty(), ERR_DH_AVT_INVALID_PARAM, "input data string is empty.");
 
-    int32_t existSessId = GetSessIdBySessName(sessName, peerDevId);
-    if (existSessId < 0) {
-        AVTRANS_LOGI("Can not find sessionId for mySessName:%s, peerDevId:%s.",
-            sessName.c_str(), GetAnonyString(peerDevId).c_str());
-        return ERR_DH_AVT_SEND_DATA_FAILED;
-    }
-    int32_t ret = SendBytes(existSessId, data.c_str(), strlen(data.c_str()));
+    int32_t ret = SendBytes(GetSessIdBySessName(sessName, peerDevId), data.c_str(), strlen(data.c_str()));
     if (ret != DH_AVT_SUCCESS) {
         AVTRANS_LOGE("Send bytes data failed ret:%" PRId32, ret);
         return ERR_DH_AVT_SEND_DATA_FAILED;
@@ -356,13 +350,7 @@ int32_t SoftbusChannelAdapter::SendStreamData(const std::string& sessName, const
     TRUE_RETURN_V_MSG_E(ext == nullptr, ERR_DH_AVT_INVALID_PARAM, "input ext data is nullptr.");
 
     StreamFrameInfo frameInfo = {0};
-    int32_t existSessId = GetSessIdBySessName(sessName, peerDevId);
-    if (existSessId < 0) {
-        AVTRANS_LOGI("Can not find sessionId for mySessName:%s, peerDevId:%s.",
-            sessName.c_str(), GetAnonyString(peerDevId).c_str());
-        return ERR_DH_AVT_SEND_DATA_FAILED;
-    }
-    int32_t ret = SendStream(existSessId, data, ext, &frameInfo);
+    int32_t ret = SendStream(GetSessIdBySessName(sessName, peerDevId), data, ext, &frameInfo);
     if (ret != DH_AVT_SUCCESS) {
         AVTRANS_LOGE("Send stream data failed ret:%" PRId32, ret);
         return ERR_DH_AVT_SEND_DATA_FAILED;
@@ -505,6 +493,7 @@ void SoftbusChannelAdapter::OnSoftbusChannelClosed(int32_t sessionId, ShutdownRe
     for (auto it = devId2SessIdMap_.begin(); it != devId2SessIdMap_.end();) {
         if (it->second == sessionId) {
             event.content = GetOwnerFromSessName(it->first);
+            AVTRANS_LOGI("find sessName is: %s", it->first.c_str());
             std::thread(&SoftbusChannelAdapter::SendChannelEvent, this, it->first, event).detach();
             it = devId2SessIdMap_.erase(it);
         } else {
@@ -607,7 +596,7 @@ std::string SoftbusChannelAdapter::GetOwnerFromSessName(const std::string &sessN
 
 void SoftbusChannelAdapter::SendChannelEvent(const std::string &sessName, const AVTransEvent event)
 {
-    AVTRANS_LOGI("SendChannelEvent event.type_%" PRId32, event.type);
+    AVTRANS_LOGI("SendChannelEvent event.type_%" PRId32", sessName: %s", event.type, sessName.c_str());
     pthread_setname_np(pthread_self(), SEND_CHANNEL_EVENT);
 
     ISoftbusChannelListener *listener = nullptr;

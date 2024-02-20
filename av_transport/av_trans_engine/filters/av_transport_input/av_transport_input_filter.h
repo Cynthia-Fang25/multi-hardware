@@ -18,7 +18,6 @@
 
 #include <memory>
 #include <string>
-#include <mutex>
 
 #include "foundation/osal/utils/util.h"
 #include "foundation/utils/constants.h"
@@ -76,8 +75,7 @@ private:
     std::shared_ptr<Plugin::PluginInfo> pluginInfo_ {nullptr};
     Capability capNegWithDownstream_ {};
     std::unordered_map<Plugin::Tag, Plugin::Any> paramsMap_;
-    std::mutex inputFilterMutex_;
-    std::mutex paramsMapMutex_;
+    OSAL::Mutex inputFilterMutex_ {};
 };
 } // namespace DistributedHardware
 } // namespace OHOS

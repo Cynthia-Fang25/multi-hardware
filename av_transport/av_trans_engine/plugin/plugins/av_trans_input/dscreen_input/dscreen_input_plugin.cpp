@@ -74,7 +74,7 @@ Status DscreenInputPlugin::Deinit()
 Status DscreenInputPlugin::Reset()
 {
     AVTRANS_LOGI("Reset");
-    std::lock_guard<std::mutex> lock(paramsMapMutex_);
+    Media::OSAL::ScopedLock lock(operationMutes_);
     paramsMap_.clear();
     frameNumber_.store(0);
     return Status::OK;
@@ -94,7 +94,7 @@ Status DscreenInputPlugin::Resume()
 
 Status DscreenInputPlugin::GetParameter(Tag tag, ValueType &value)
 {
-    std::lock_guard<std::mutex> lock(paramsMapMutex_);
+    Media::OSAL::ScopedLock lock(operationMutes_);
     auto res = paramsMap_.find(tag);
     if (res != paramsMap_.end()) {
         value = res->second;
@@ -105,7 +105,7 @@ Status DscreenInputPlugin::GetParameter(Tag tag, ValueType &value)
 
 Status DscreenInputPlugin::SetParameter(Tag tag, const ValueType &value)
 {
-    std::lock_guard<std::mutex> lock(paramsMapMutex_);
+    Media::OSAL::ScopedLock lock(operationMutes_);
     paramsMap_.insert(std::pair<Tag, ValueType>(tag, value));
     if (tag == Plugin::Tag::USER_SHARED_MEMORY_FD) {
         sharedMemory_ = UnmarshalSharedMemory(Media::Plugin::AnyCast<std::string>(value));
@@ -115,7 +115,7 @@ Status DscreenInputPlugin::SetParameter(Tag tag, const ValueType &value)
 
 Status DscreenInputPlugin::PushData(const std::string& inPort, std::shared_ptr<Buffer> buffer, int32_t offset)
 {
-    std::lock_guard<std::mutex> lock(paramsMapMutex_);
+    Media::OSAL::ScopedLock lock(operationMutes_);
     if (!buffer || buffer->IsEmpty()) {
         AVTRANS_LOGE("buffer is nullptr or empty.");
         return Status::ERROR_NULL_POINTER;

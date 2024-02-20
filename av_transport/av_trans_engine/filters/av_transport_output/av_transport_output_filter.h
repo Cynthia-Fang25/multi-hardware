@@ -18,7 +18,6 @@
 
 #include <memory>
 #include <string>
-#include <mutex>
 
 #include "foundation/osal/utils/util.h"
 #include "foundation/utils/constants.h"
@@ -71,8 +70,7 @@ private:
     std::shared_ptr<AvTransOutput> plugin_ {nullptr};
     std::shared_ptr<Plugin::PluginInfo> pluginInfo_ {nullptr};
     std::unordered_map<Plugin::Tag, Plugin::Any> paramsMap_;
-    std::mutex outputFilterMutex_;
-    std::mutex paramsMapMutex_;
+    OSAL::Mutex outputFilterMutex_ {};
 };
 } // namespace DistributedHardware
 } // namespace OHOS
