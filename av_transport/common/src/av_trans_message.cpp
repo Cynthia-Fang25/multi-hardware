@@ -39,17 +39,36 @@ AVTransMessage::~AVTransMessage()
 
 std::string AVTransMessage::MarshalMessage()
 {
-    nlohmann::json msgJson;
-    msgJson[KEY_TYPE] = type_;
-    msgJson[KEY_CONTENT] = content_;
-    msgJson[KEY_DST_DEVID] = dstDevId_;
-    return msgJson.dump();
+    // nlohmann::json msgJson;
+    // msgJson[KEY_TYPE] = type_;
+    // msgJson[KEY_CONTENT] = content_;
+    // msgJson[KEY_DST_DEVID] = dstDevId_;
+    // return msgJson.dump();
+    cJSON *msgJson = cJSON_CreateObject();
+    if (msgJson == nullptr) {
+        return "";
+    }
+    cJSON_AddNumberToObject(msgJson, KEY_TYPE.c_str(), type_);
+    cJSON_AddStringToObject(msgJson, KEY_CONTENT.c_str(), content_);
+    cJSON_AddStringToObject(msgJson, KEY_DST_DEVID.c_str(), dstDevId_);
+    char *jsonstr = cJSON_Print(msgJson);
+    if (jsonstr == nullptr) {
+        cJSON_Delete(msgJson);
+        return "";
+    }
+    cJSON_Delete(msgJson);
+    cJSON_free(jsonstr);
+    return std::string(jsonstr);
 }
 
 bool AVTransMessage::UnmarshalMessage(const std::string& jsonStr, const std::string &peerDevId)
 {
-    nlohmann::json msgJson = nlohmann::json::parse(jsonStr, nullptr, false);
-    if (msgJson.is_discarded()) {
+    // nlohmann::json msgJson = nlohmann::json::parse(jsonStr, nullptr, false);
+    // if (msgJson.is_discarded()) {
+    //     return false;
+    // }
+    cJSON *metaJson = cJSON_Parse(jsonStr.c_str());
+    if (metaJson == nullptr || !cJSON_IsObject(metaJson)) {
         return false;
     }
     if (!IsUInt32(msgJson, KEY_TYPE) || !IsString(msgJson, KEY_CONTENT)) {

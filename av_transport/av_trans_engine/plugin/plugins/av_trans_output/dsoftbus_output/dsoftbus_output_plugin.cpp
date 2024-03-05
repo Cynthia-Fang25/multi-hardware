@@ -297,10 +297,15 @@ void DsoftbusOutputPlugin::FeedChannelData()
 
 void DsoftbusOutputPlugin::SendDataToSoftbus(std::shared_ptr<Buffer> &buffer)
 {
-    json jsonObj;
+    //json jsonObj;
+    cJSON *jsonObj = cJSON_CreateObject();
+    if (jsonObj == nullptr) {
+        retrun;
+    }
     auto bufferMeta = buffer->GetBufferMeta();
     BufferMetaType metaType = bufferMeta->GetType();
-    jsonObj[AVT_DATA_META_TYPE] = metaType;
+    //jsonObj[AVT_DATA_META_TYPE] = metaType;
+    cJSON_AddNumberToObject(jsonObj, AVT_DATA_META_TYPE.c_str(), metaType);
     if (metaType != BufferMetaType::VIDEO) {
         AVTRANS_LOGE("metaType is wrong");
         return;
@@ -316,9 +321,16 @@ void DsoftbusOutputPlugin::SendDataToSoftbus(std::shared_ptr<Buffer> &buffer)
     if (bufferMeta->IsExist(Tag::AUDIO_SAMPLE_PER_FRAME)) {
         hisAMeta->extFrameNum_ = Plugin::AnyCast<uint32_t>(bufferMeta->GetMeta(Tag::AUDIO_SAMPLE_PER_FRAME));
     }
-    jsonObj[AVT_DATA_PARAM] = hisAMeta->MarshalVideoMeta();
+    // jsonObj[AVT_DATA_PARAM] = hisAMeta->MarshalVideoMeta();
+    cJSON_AddStringToObject(jsonObj, AVT_DATA_PARAM.c_str(), hisAMeta->MarshalVideoMeta().c_str());
 
-    std::string jsonStr = jsonObj.dump();
+    // std::string jsonStr = jsonObj.dump();
+    char *jsonstr = cJSON_Print(jsonObj);
+    if (jsonstr == nullptr) {
+        cJSON_Delete(jsonObj);
+        return;
+    }
+    std::string jsonStr = jsonstr;
     AVTRANS_LOGI("jsonStr->bufLen %zu, jsonStR: %s", jsonStr.length(), jsonStr.c_str());
 
     auto bufferData = buffer->GetMemory();

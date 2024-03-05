@@ -53,9 +53,9 @@ void ParseChannelDescription(const std::string &descJsonStr, std::string &ownerN
 EventType CastEventType(Plugin::PluginEventType type, bool isAbnormal);
 void DumpBufferToFile(std::string fileName, uint8_t *buffer, int32_t bufSize);
 
-bool IsUInt32(const nlohmann::json &jsonObj, const std::string &key);
-bool IsInt64(const nlohmann::json &jsonObj, const std::string &key);
-bool IsString(const nlohmann::json &jsonObj, const std::string &key);
+bool IsUInt32(cJSON *jsonObj, const std::string &key);
+bool IsInt64(cJSON *jsonObj, const std::string &key);
+bool IsString(cJSON *jsonObj, const std::string &key);
 
 int64_t GetCurrentTime();
 
