@@ -230,17 +230,26 @@ void DsoftbusInputAudioPlugin::OnStreamReceived(const StreamData *data, const St
     std::string message(reinterpret_cast<const char *>(ext->buf), ext->bufLen);
     AVTRANS_LOGI("Receive message : %s", message.c_str());
 
-    json resMsg = json::parse(message, nullptr, false);
+    //json resMsg = json::parse(message, nullptr, false);
+    cJSON *resMsg = cJSON_Parse(message.c_str());
+    if (resMsg == nullptr) {
+        return;
+    }
     TRUE_RETURN(resMsg.is_discarded(), "The resMsg parse failed");
     TRUE_RETURN(!IsUInt32(resMsg, AVT_DATA_META_TYPE), "invalid data type");
-    uint32_t metaType = resMsg[AVT_DATA_META_TYPE];
-
+    // uint32_t metaType = resMsg[AVT_DATA_META_TYPE];
+    cJSON *typeItem = cJSON_GetObjectItem(resMsg, AVT_DATA_META_TYPE);
+    if (typeItem == NULL) {
+        cJSON_Delete(resMsg);
+        return;
+    }
+    uint32_t metaType = typeItem->valueInt;
     auto buffer = CreateBuffer(metaType, data, resMsg);
     DataEnqueue(buffer);
 }
 
 std::shared_ptr<Buffer> DsoftbusInputAudioPlugin::CreateBuffer(uint32_t metaType,
-    const StreamData *data, const json &resMsg)
+    const StreamData *data, const cJSON *resMsg)
 {
     auto buffer = Buffer::CreateDefaultBuffer(static_cast<BufferMetaType>(metaType), data->bufLen);
     auto bufData = buffer->GetMemory();
@@ -250,9 +259,12 @@ std::shared_ptr<Buffer> DsoftbusInputAudioPlugin::CreateBuffer(uint32_t metaType
         AVTRANS_LOGE("write buffer data failed.");
         return buffer;
     }
-
+    cJSON *paramItem = cJSON_GetObjectItem(resMsg, AVT_DATA_PARAM);
+    if (paramItem == NULL) {
+        return nullptr;
+    }
     auto meta = std::make_shared<AVTransAudioBufferMeta>();
-    meta->UnmarshalAudioMeta(resMsg[AVT_DATA_PARAM]);
+    meta->UnmarshalAudioMeta(std::string(paramItem->valuestring));
     buffer->pts = meta->pts_;
     buffer->GetBufferMeta()->SetMeta(Tag::USER_FRAME_PTS, meta->pts_);
     buffer->GetBufferMeta()->SetMeta(Tag::USER_FRAME_NUMBER, meta->frameNum_);

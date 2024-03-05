@@ -246,11 +246,20 @@ void DsoftbusInputPlugin::OnStreamReceived(const StreamData *data, const StreamD
     std::string message(reinterpret_cast<const char *>(ext->buf), ext->bufLen);
     AVTRANS_LOGI("Receive message : %s", message.c_str());
 
-    json resMsg = json::parse(message, nullptr, false);
+    // json resMsg = json::parse(message, nullptr, false);
+    cJSON *resMsg = cJSON_Parse(message.c_str());
+    if (resMsg == nullptr) {
+        return;
+    }
     TRUE_RETURN(resMsg.is_discarded(), "The resMsg parse failed");
     TRUE_RETURN(!IsUInt32(resMsg, AVT_DATA_META_TYPE), "invalid data type");
-    uint32_t metaType = resMsg[AVT_DATA_META_TYPE];
-
+    //uint32_t metaType = resMsg[AVT_DATA_META_TYPE];
+    cJSON *typeItem = cJSON_GetObjectItem(resMsg, AVT_DATA_META_TYPE);
+    if (typeItem == NULL) {
+        cJSON_Delete(resMsg);
+        return;
+    }
+    uint32_t metaType = typeItem->valueInt;
     auto buffer = CreateBuffer(metaType, data, resMsg);
     if (buffer != nullptr) {
         DataEnqueue(buffer);
@@ -258,7 +267,7 @@ void DsoftbusInputPlugin::OnStreamReceived(const StreamData *data, const StreamD
 }
 
 std::shared_ptr<Buffer> DsoftbusInputPlugin::CreateBuffer(uint32_t metaType,
-    const StreamData *data, const json &resMsg)
+    const StreamData *data, const cJSON *resMsg)
 {
     auto buffer = Buffer::CreateDefaultBuffer(static_cast<BufferMetaType>(metaType), data->bufLen);
     auto bufData = buffer->GetMemory();
@@ -268,9 +277,12 @@ std::shared_ptr<Buffer> DsoftbusInputPlugin::CreateBuffer(uint32_t metaType,
         AVTRANS_LOGE("write buffer data failed.");
         return buffer;
     }
-
+    cJSON *paramItem = cJSON_GetObjectItem(resMsg, AVT_DATA_PARAM);
+    if (paramItem == NULL) {
+        return nullptr;
+    }
     auto meta = std::make_shared<AVTransVideoBufferMeta>();
-    if (!meta->UnmarshalVideoMeta(resMsg[AVT_DATA_PARAM])) {
+    if (!meta->UnmarshalVideoMeta(std::string(paramItem->valuestring))) {
         AVTRANS_LOGE("Unmarshal video buffer eta failed.");
         return nullptr;
     }

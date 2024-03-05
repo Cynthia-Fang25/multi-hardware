@@ -42,26 +42,60 @@ std::shared_ptr<OHOS::Media::Plugin::BufferMeta> AVTransAudioBufferMeta::Clone()
 
 std::string AVTransAudioBufferMeta::MarshalAudioMeta()
 {
-    nlohmann::json metaJson;
-    metaJson[META_DATA_TYPE] = dataType_;
-    metaJson[META_TIMESTAMP] = pts_;
-    metaJson[META_FRAME_NUMBER] = frameNum_;
-    return metaJson.dump();
+    // nlohmann::json metaJson;
+    // metaJson[META_DATA_TYPE] = dataType_;
+    // metaJson[META_TIMESTAMP] = pts_;
+    // metaJson[META_FRAME_NUMBER] = frameNum_;
+    // return metaJson.dump();
+    cJSON *metaJson = cJSON_CreateObject();
+    if (metaJson == nullptr) {
+        return "";
+    }
+    cJSON_AddNumberToObject(metaJson, META_DATA_TYPE.c_str(), dataType_);
+    cJSON_AddNumberToObject(metaJson, META_TIMESTAMP.c_str(), pts_);
+    cJSON_AddNumberToObject(metaJson, META_FRAME_NUMBER.c_str(), frameNum_);
+    char *jsonstr = cJSON_Print(metaJson);
+    if (jsonstr == nullptr) {
+        cJSON_Delete(metaJson);
+        return "";
+    }
+    cJSON_Delete(metaJson);
+    cJSON_free(jsonstr);
+    return std::string(jsonstr);
 }
 
 bool AVTransAudioBufferMeta::UnmarshalAudioMeta(const std::string& jsonStr)
 {
-    nlohmann::json metaJson = nlohmann::json::parse(jsonStr, nullptr, false);
-    if (metaJson.is_discarded()) {
-        return false;
+    // nlohmann::json metaJson = nlohmann::json::parse(jsonStr, nullptr, false);
+    // if (metaJson.is_discarded()) {
+    //     return false;
+    // }
+    cJSON *metaJson = cJSON_Parse(jsonStr.c_str());
+    if (metaJson == nullptr || !cJSON_IsObject(metaJson)) {
+        return ;
     }
     if (!IsUInt32(metaJson, META_DATA_TYPE) || !IsInt64(metaJson, META_TIMESTAMP) ||
         !IsUInt32(metaJson, META_FRAME_NUMBER)) {
         return false;
     }
     dataType_ = metaJson[META_DATA_TYPE].get<BufferDataType>();
-    pts_ = metaJson[META_TIMESTAMP].get<int64_t>();
-    frameNum_ = metaJson[META_FRAME_NUMBER].get<uint32_t>();
+    // pts_ = metaJson[META_TIMESTAMP].get<int64_t>();
+    // frameNum_ = metaJson[META_FRAME_NUMBER].get<uint32_t>();
+    cJSON *typeObj = cJSON_GetObjectItemCaseSensitive(metaJson, META_DATA_TYPE.c_str());
+    if (typeObj == nullptr || !cJSON_IsNumber(typeObj)) {
+        return false;
+    }
+    cJSON *ptsObj = cJSON_GetObjectItemCaseSensitive(metaJson, META_TIMESTAMP.c_str());
+    if (ptsObj == nullptr || !cJSON_IsNumber(ptsObj)) {
+        return false;
+    }
+    cJSON *frameObj = cJSON_GetObjectItemCaseSensitive(metaJson, META_FRAME_NUMBER.c_str());
+    if (frameObj == nullptr || !cJSON_IsNumber(frameObj)) {
+        return false;
+    }
+    dataType_ = typeObj->valueint;
+    pts_ = ptsObj->valueint;
+    frameNum_ = frameObj->valueint;
     return true;
 }
 
@@ -83,23 +117,48 @@ std::shared_ptr<OHOS::Media::Plugin::BufferMeta> AVTransVideoBufferMeta::Clone()
 
 std::string AVTransVideoBufferMeta::MarshalVideoMeta()
 {
-    nlohmann::json metaJson;
-    metaJson[META_DATA_TYPE] = dataType_;
-    metaJson[META_TIMESTAMP] = pts_;
-    metaJson[META_FRAME_NUMBER] = frameNum_;
+    // nlohmann::json metaJson;
+    // metaJson[META_DATA_TYPE] = dataType_;
+    // metaJson[META_TIMESTAMP] = pts_;
+    // metaJson[META_FRAME_NUMBER] = frameNum_;
+    // if (extPts_ > 0) {
+    //     metaJson[META_EXT_TIMESTAMP] = extPts_;
+    // }
+    // if (extFrameNum_ > 0) {
+    //     metaJson[META_EXT_FRAME_NUMBER] = extFrameNum_;
+    // }
+    // return metaJson.dump();
+    cJSON *metaJson = cJSON_CreateObject();
+    if (metaJson == nullptr) {
+        return "";
+    }
+    cJSON_AddNumberToObject(metaJson, META_DATA_TYPE.c_str(), dataType_);
+    cJSON_AddNumberToObject(metaJson, META_TIMESTAMP.c_str(), pts_);
+    cJSON_AddNumberToObject(metaJson, META_FRAME_NUMBER.c_str(), frameNum_);
     if (extPts_ > 0) {
-        metaJson[META_EXT_TIMESTAMP] = extPts_;
+        //metaJson[META_EXT_TIMESTAMP] = extPts_;
+        cJSON_AddNumberToObject(metaJson, META_EXT_TIMESTAMP.c_str(), extPts_);
     }
     if (extFrameNum_ > 0) {
-        metaJson[META_EXT_FRAME_NUMBER] = extFrameNum_;
+        // metaJson[META_EXT_FRAME_NUMBER] = extFrameNum_;
+        cJSON_AddNumberToObject(metaJson, META_EXT_FRAME_NUMBER.c_str(), extFrameNum_);
     }
-    return metaJson.dump();
+    char *jsonstr = cJSON_Print(metaJson);
+    if (jsonstr == nullptr) {
+        cJSON_Delete(metaJson);
+        return "";
+    }
+    return std::string(metaJson);
 }
 
 bool AVTransVideoBufferMeta::UnmarshalVideoMeta(const std::string& jsonStr)
 {
-    nlohmann::json metaJson = nlohmann::json::parse(jsonStr, nullptr, false);
-    if (metaJson.is_discarded()) {
+    // nlohmann::json metaJson = nlohmann::json::parse(jsonStr, nullptr, false);
+    // if (metaJson.is_discarded()) {
+    //     return false;
+    // }
+    cJSON *metaJson = cJSON_Parse(jsonStr.c_str());
+    if (metaJson == nullptr || !cJSON_IsObject(metaJson)) {
         return false;
     }
     if (IsUInt32(metaJson, META_DATA_TYPE)) {
