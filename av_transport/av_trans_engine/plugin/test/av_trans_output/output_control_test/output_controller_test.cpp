@@ -103,7 +103,9 @@ HWTEST_F(OutputControllerTest, ReleaseControl_001, testing::ext::TestSize.Level1
 HWTEST_F(OutputControllerTest, ControlOutput_001, testing::ext::TestSize.Level1)
 {
     auto controller = std::make_shared<OutputController>();
-    std::shared_ptr<Plugin::Buffer> data = std::make_shared<AVBuffer>();
+    std::shared_ptr<Plugin::Buffer> data = nullptr;
+    controller->CalProcessTime(data);
+    data = std::make_shared<AVBuffer>();
     controller->SetAllowControlState(false);
     int32_t ret = controller->ControlOutput(data);
     EXPECT_EQ(OUTPUT_FRAME, ret);

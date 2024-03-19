@@ -211,7 +211,7 @@ ErrorCode AVInputFilter::FindPlugin()
     auto nameList = PluginManager::Instance().ListPlugins(PluginType::GENERIC_PLUGIN);
     for (const std::string& name : nameList) {
         auto info = PluginManager::Instance().GetPluginInfo(PluginType::GENERIC_PLUGIN, name);
-        if (info->outCaps.empty() || mime != info->outCaps[0].mime) {
+        if (info == nullptr || info->outCaps.empty() || mime != info->outCaps[0].mime) {
             continue;
         }
         if (DoNegotiate(info->outCaps) && CreatePlugin(info) == ErrorCode::SUCCESS) {
@@ -554,9 +554,12 @@ ErrorCode AVInputFilter::PushData(const std::string& inPort, const AVBufferPtr& 
         AVTRANS_LOGE("outPorts is empty or invalid!");
         return ErrorCode::ERROR_INVALID_PARAMETER_VALUE;
     }
-
+    TRUE_RETURN_V_MSG_E(buffer->GetMemory() == nullptr || buffer->GetBufferMeta() == nullptr,
+        ErrorCode::ERROR_NULL_POINTER, "buffer->GetMemory() or buffer->GetBufferMeta() is null");
     size_t bufSize = buffer->GetMemory()->GetSize();
     auto tempBuffer = std::make_shared<AVBuffer>(Plugin::BufferMetaType::VIDEO);
+    TRUE_RETURN_V_MSG_E(tempBuffer == nullptr || tempBuffer->GetMemory() == nullptr,
+        ErrorCode::ERROR_NULL_POINTER, "tempBuffer or tempBuffer->GetMemory() is null");
     tempBuffer->pts = buffer->pts;
     tempBuffer->flag = buffer->flag;
     tempBuffer->AllocMemory(nullptr, bufSize);

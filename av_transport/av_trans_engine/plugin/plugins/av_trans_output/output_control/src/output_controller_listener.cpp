@@ -21,7 +21,7 @@ namespace DistributedHardware {
 int32_t OutputControllerListener::OnOutput(const std::shared_ptr<Plugin::Buffer>& data)
 {
     std::shared_ptr<ControllableOutput> output = output_.lock();
-    TRUE_RETURN_V_MSG_E((!output), NOTIFY_FAILED, "Output is nullptr, notify failed.");
+    TRUE_RETURN_V_MSG_E(output == nullptr, NOTIFY_FAILED, "Output is nullptr, notify failed.");
     output->OnOutput(data);
     return NOTIFY_SUCCESS;
 }
