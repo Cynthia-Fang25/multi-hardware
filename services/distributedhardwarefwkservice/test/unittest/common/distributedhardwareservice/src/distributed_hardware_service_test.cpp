@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,13 +23,9 @@
 #include "dh_context.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
-#define protected public
-#define private public
 #include "distributed_hardware_service.h"
 #include "distributed_hardware_manager.h"
 #include "task_board.h"
-#undef private
-#undef protected
 #include "mock_publisher_listener.h"
 
 using namespace testing::ext;
