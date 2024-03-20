@@ -136,7 +136,7 @@ ohos_shared_library("distributedhardwarefwksvr") {
     "samgr:samgr_proxy",
   ]
 
+  innerapi_tags = [ "platformsdk_indirect" ]
   subsystem_name = "distributedhardware"
-
   part_name = "distributed_hardware_fwk"
 }
