@@ -67,6 +67,7 @@ ohos_shared_library("libdhfwk_sdk") {
 
   external_deps = [
     "c_utils:utils",
+    "hilog:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
@@ -74,7 +75,7 @@ ohos_shared_library("libdhfwk_sdk") {
 
   cflags_cc = [ "-DHILOG_ENABLE" ]
 
-  innerapi_tags = [ "platformsdk" ]
   subsystem_name = "distributedhardware"
+
   part_name = "distributed_hardware_fwk"
 }
