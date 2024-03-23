@@ -94,7 +94,7 @@ Status DsoftbusInputAudioPlugin::Prepare()
     }
     
     if (!bufferPopTask_) {
-        bufferPopTask_ = std::make_shared<Media::OSAL::Task>("audioBufferQueuePopThread");
+        bufferPopTask_ = std::make_shared<Media::OSAL::Task>("videoBufferQueuePopThread");
         bufferPopTask_->RegisterHandler([this] { HandleData(); });
     }
     SetCurrentState(State::PREPARED);
@@ -111,7 +111,6 @@ Status DsoftbusInputAudioPlugin::Reset()
         paramsMap_.clear();
     }
     if (bufferPopTask_) {
-        isrunning_.store(false);
         bufferPopTask_->Stop();
         bufferPopTask_.reset();
     }
@@ -130,7 +129,6 @@ Status DsoftbusInputAudioPlugin::Start()
         return Status::ERROR_WRONG_STATE;
     }
     DataQueueClear(dataQueue_);
-    isrunning_.store(true);
     bufferPopTask_->Start();
     SetCurrentState(State::RUNNING);
     return Status::OK;
@@ -144,7 +142,6 @@ Status DsoftbusInputAudioPlugin::Stop()
         return Status::ERROR_WRONG_STATE;
     }
     SetCurrentState(State::PREPARED);
-    isrunning_.store(false);
     DataQueueClear(dataQueue_);
     bufferPopTask_->Stop();
     return Status::OK;
@@ -277,16 +274,15 @@ void DsoftbusInputAudioPlugin::DataEnqueue(std::shared_ptr<Buffer> &buffer)
 
 void DsoftbusInputAudioPlugin::HandleData()
 {
-    AVTRANS_LOGI("HandleData enter.");
-    while (isrunning_) {
-        if (GetCurrentState() != State::RUNNING) {
-            continue;
-        }
+    while (GetCurrentState() == State::RUNNING) {
         std::shared_ptr<Buffer> buffer;
         {
             std::unique_lock<std::mutex> lock(dataQueueMtx_);
             dataCond_.wait_for(lock, std::chrono::milliseconds(PLUGIN_TASK_WAIT_TIME),
                 [this]() { return !dataQueue_.empty(); });
+            if (GetCurrentState() != State::RUNNING) {
+                return;
+            }
             if (dataQueue_.empty()) {
                 continue;
             }
@@ -299,7 +295,6 @@ void DsoftbusInputAudioPlugin::HandleData()
         }
         dataCb_(buffer);
     }
-    AVTRANS_LOGI("HandleData end.");
 }
 
 void DsoftbusInputAudioPlugin::DataQueueClear(std::queue<std::shared_ptr<Buffer>> &queue)

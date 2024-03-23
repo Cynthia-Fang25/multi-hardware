@@ -121,7 +121,6 @@ Status DsoftbusInputPlugin::Reset()
     std::lock_guard<std::mutex> lock(paramsMapMutex_);
     paramsMap_.clear();
     if (bufferPopTask_) {
-        isrunning_.store(false);
         bufferPopTask_->Stop();
         bufferPopTask_.reset();
     }
@@ -140,7 +139,6 @@ Status DsoftbusInputPlugin::Start()
         return Status::ERROR_WRONG_STATE;
     }
     DataQueueClear(dataQueue_);
-    isrunning_.store(true);
     bufferPopTask_->Start();
     SetCurrentState(State::RUNNING);
     return Status::OK;
@@ -154,7 +152,6 @@ Status DsoftbusInputPlugin::Stop()
         return Status::ERROR_WRONG_STATE;
     }
     SetCurrentState(State::PREPARED);
-    isrunning_.store(false);
     bufferPopTask_->Stop();
     DataQueueClear(dataQueue_);
     return Status::OK;
@@ -312,16 +309,15 @@ void DsoftbusInputPlugin::DataEnqueue(std::shared_ptr<Buffer> &buffer)
 
 void DsoftbusInputPlugin::HandleData()
 {
-    AVTRANS_LOGI("HandleData enter.");
-    while (isrunning_) {
-        if (GetCurrentState() != State::RUNNING) {
-            continue;
-        }
+    while (GetCurrentState() == State::RUNNING) {
         std::shared_ptr<Buffer> buffer;
         {
             std::unique_lock<std::mutex> lock(dataQueueMtx_);
             dataCond_.wait_for(lock, std::chrono::milliseconds(PLUGIN_TASK_WAIT_TIME),
                 [this]() { return !dataQueue_.empty(); });
+            if (GetCurrentState() != State::RUNNING) {
+                return;
+            }
             if (dataQueue_.empty()) {
                 continue;
             }
@@ -334,7 +330,6 @@ void DsoftbusInputPlugin::HandleData()
         }
         dataCb_(buffer);
     }
-    AVTRANS_LOGI("HandleData end.");
 }
 
 void DsoftbusInputPlugin::DataQueueClear(std::queue<std::shared_ptr<Buffer>> &queue)
