@@ -329,6 +329,7 @@ ErrorCode AVOutputFilter::SetPluginParams()
 
 ErrorCode AVOutputFilter::SetEventCallBack()
 {
+    std::lock_guard<std::mutex> lock(outputFilterMutex_);
     if (plugin_ == nullptr) {
         AVTRANS_LOGE("plugin is nullptr!");
         return ErrorCode::ERROR_INVALID_PARAMETER_VALUE;
@@ -339,6 +340,7 @@ ErrorCode AVOutputFilter::SetEventCallBack()
 
 ErrorCode AVOutputFilter::SetDataCallBack()
 {
+    std::lock_guard<std::mutex> lock(outputFilterMutex_);
     if (plugin_ == nullptr) {
         AVTRANS_LOGE("plugin is nullptr!");
         return ErrorCode::ERROR_INVALID_PARAMETER_VALUE;
@@ -349,6 +351,7 @@ ErrorCode AVOutputFilter::SetDataCallBack()
 
 void AVOutputFilter::OnDataCallback(std::shared_ptr<Plugin::Buffer> buffer)
 {
+    std::lock_guard<std::mutex> lock(outputFilterMutex_);
     if (buffer == nullptr) {
         AVTRANS_LOGE("buffer is nullptr!");
         return;

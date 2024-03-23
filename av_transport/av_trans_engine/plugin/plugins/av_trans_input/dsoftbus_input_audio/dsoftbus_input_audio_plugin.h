@@ -100,7 +100,6 @@ private:
     std::queue<std::shared_ptr<Buffer>> dataQueue_;
     std::map<Tag, ValueType> paramsMap_;
     std::atomic<State> state_ = State::CREATED;
-    std::atomic<bool> isrunning_ = false;
     Callback* eventsCb_ = nullptr;
     AVDataCallback dataCb_;
 };

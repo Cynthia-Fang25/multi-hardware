@@ -109,7 +109,6 @@ private:
     std::atomic<State> state_ = State::CREATED;
     Callback* eventsCb_ = nullptr;
     AVDataCallback dataCb_;
-    std::atomic<bool> isrunning_ = false;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

@@ -134,7 +134,6 @@ Status DaudioOutputPlugin::Reset()
     AVTRANS_LOGI("Reset enter");
     eventcallback_ = nullptr;
     if (sendPlayTask_) {
-        isrunning_.store(false);
         sendPlayTask_->Stop();
         sendPlayTask_.reset();
     }
@@ -186,7 +185,6 @@ Status DaudioOutputPlugin::Start()
         return Status::ERROR_WRONG_STATE;
     }
     DataQueueClear(outputBuffer_);
-    isrunning_.store(true);
     sendPlayTask_->Start();
     SetCurrentState(State::RUNNING);
     return Status::OK;
@@ -200,7 +198,6 @@ Status DaudioOutputPlugin::Stop()
         return Status::ERROR_WRONG_STATE;
     }
     SetCurrentState(State::PREPARED);
-    isrunning_.store(false);
     sendPlayTask_->Stop();
     DataQueueClear(outputBuffer_);
     return Status::OK;
@@ -257,16 +254,15 @@ Status DaudioOutputPlugin::PushData(const std::string &inPort, std::shared_ptr<P
 
 void DaudioOutputPlugin::HandleData()
 {
-    AVTRANS_LOGI("HandleData enter.");
-    while (isrunning_) {
-        if (GetCurrentState() != State::RUNNING) {
-            continue;
-        }
+    while (GetCurrentState() == State::RUNNING) {
         std::shared_ptr<Plugin::Buffer> buffer;
         {
             std::unique_lock<std::mutex> lock(dataQueueMtx_);
             dataCond_.wait_for(lock, std::chrono::milliseconds(PLUGIN_TASK_WAIT_TIME),
                 [this]() { return !outputBuffer_.empty(); });
+            if (GetCurrentState() != State::RUNNING) {
+                return;
+            }
             if (outputBuffer_.empty()) {
                 continue;
             }
@@ -280,7 +276,6 @@ void DaudioOutputPlugin::HandleData()
         datacallback_(buffer);
         WriteMasterClockToMemory(buffer);
     }
-    AVTRANS_LOGI("HandleData end.");
 }
 
 void DaudioOutputPlugin::WriteMasterClockToMemory(const std::shared_ptr<Plugin::Buffer> &buffer)
