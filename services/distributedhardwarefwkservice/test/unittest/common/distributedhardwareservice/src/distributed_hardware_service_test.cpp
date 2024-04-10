@@ -23,13 +23,9 @@
 #include "dh_context.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
-#define protected public
-#define private public
 #include "distributed_hardware_service.h"
 #include "distributed_hardware_manager.h"
 #include "task_board.h"
-#undef private
-#undef protected
 #include "mock_publisher_listener.h"
 
 using namespace testing::ext;

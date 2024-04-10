@@ -20,11 +20,9 @@
 #include <sys/types.h>
 #include <vector>
 
-#define private public
 #include "capability_info.h"
 #include "capability_info_manager.h"
 #include "version_info_event.h"
-#undef private
 #include "dh_context.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
