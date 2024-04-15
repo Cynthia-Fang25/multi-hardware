@@ -40,6 +40,13 @@ ohos_unittest("ResourceManagerTest") {
 
   configs = [ ":module_private_config" ]
 
+  cflags = [
+    "-Wall",
+    "-Werror",
+    "-g3",
+    "-Dprivate=public",
+  ]
+
   deps = [
     "${services_path}/distributedhardwarefwkservice:distributedhardwarefwksvr",
     "${utils_path}:distributedhardwareutils",
