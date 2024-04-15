@@ -140,7 +140,7 @@ std::string SoftbusChannelAdapter::TransName2PkgName(const std::string &ownerNam
     };
     auto foundItem = std::find_if(std::begin(mapArray), std::end(mapArray),
         [&](const auto& item) { return item.first == ownerName; });
-    if (foundItem != std::end(mapArray)) {
+    if (foundItem != std::end(mapArray) && foundItem != nullptr) {
         return foundItem->second;
     }
     return EMPTY_STRING;
@@ -150,7 +150,7 @@ std::string SoftbusChannelAdapter::FindSessNameByPeerSessName(const std::string 
 {
     auto foundItem = std::find_if(std::begin(LOCAL_TO_PEER_SESSION_NAME_MAP), std::end(LOCAL_TO_PEER_SESSION_NAME_MAP),
         [&](const auto& item) { return item.first == peerSessionName; });
-    if (foundItem != std::end(LOCAL_TO_PEER_SESSION_NAME_MAP)) {
+    if (foundItem != std::end(LOCAL_TO_PEER_SESSION_NAME_MAP) && foundItem != nullptr) {
         return foundItem->second;
     }
     return EMPTY_STRING;
@@ -557,7 +557,7 @@ void SoftbusChannelAdapter::OnSoftbusStreamReceived(int32_t sessionId, const Str
 void SoftbusChannelAdapter::OnSoftbusTimeSyncResult(const TimeSyncResultInfo *info, int32_t result)
 {
     AVTRANS_LOGI("On softbus channel time sync result:%{public}" PRId32, result);
-    TRUE_RETURN(result == 0, "On softbus channel time sync failed");
+    TRUE_RETURN(result == 0 || info == nullptr, "On softbus channel time sync failed or info is null");
 
     int32_t millisecond = info->result.millisecond;
     int32_t microsecond = info->result.microsecond;

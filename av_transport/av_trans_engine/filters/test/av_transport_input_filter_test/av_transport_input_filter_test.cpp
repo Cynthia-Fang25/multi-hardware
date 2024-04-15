@@ -127,7 +127,7 @@ HWTEST_F(AvTransportInputFilterTest, Start_001, testing::ext::TestSize.Level1)
 HWTEST_F(AvTransportInputFilterTest, Start_002, testing::ext::TestSize.Level1)
 {
     std::shared_ptr<AVInputFilter> avInputTest_ =
-    FilterFactory::Instance().CreateFilterWithType<AVInputFilter>(AVINPUT_NAME, FILTERNAME);
+        FilterFactory::Instance().CreateFilterWithType<AVInputFilter>(AVINPUT_NAME, FILTERNAME);
     avInputTest_->state_ = FilterState::READY;
     avInputTest_->plugin_ =
         PluginManager::Instance().CreateGenericPlugin<AvTransInput, AvTransInputPlugin>("AVTransDaudioInputPlugin");

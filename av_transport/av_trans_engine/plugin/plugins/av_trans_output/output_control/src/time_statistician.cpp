@@ -19,7 +19,9 @@ namespace OHOS {
 namespace DistributedHardware {
 void TimeStatistician::CalProcessTime(const std::shared_ptr<Plugin::Buffer>& data)
 {
+    TRUE_RETURN(data == nullptr, "data is nullptr.");
     auto bufferMeta = data->GetBufferMeta();
+    TRUE_RETURN(bufferMeta == nullptr, "bufferMeta is nullptr.");
     if (!bufferMeta->IsExist(Tag::USER_PUSH_DATA_TIME)) {
         ClearStatistics();
         return;
