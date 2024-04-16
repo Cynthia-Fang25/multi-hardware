@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,18 +13,17 @@
  * limitations under the License.
  */
 
-#include "resourcemanager_fuzzer.h"
+#include "distributedfwkservices_fuzzer.h"
 
+#include <algorithm>
+#include <chrono>
 #include <cstddef>
 #include <cstdint>
 #include <string>
-#include <vector>
+#include <unistd.h>
 
-#include "capability_info.h"
-#include "capability_info_manager.h"
-#include "dh_context.h"
 #include "distributed_hardware_errno.h"
-#include "distributed_hardware_log.h"
+#include "distributed_hardware_service.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -34,36 +33,386 @@ namespace {
         DHType::CAMERA, DHType::AUDIO, DHType::SCREEN, DHType::VIRMODEM_AUDIO,
         DHType::INPUT, DHType::A2D, DHType::GPS, DHType::HFP
     };
+    const DHTopic dhTopFuzz[DH_TYPE_SIZE] = {
+        DHTopic::TOPIC_MIN, DHTopic::TOPIC_START_DSCREEN,
+        DHTopic::TOPIC_SINK_PROJECT_WINDOW_INFO,
+        DHTopic::TOPIC_STOP_DSCREEN, DHTopic::TOPIC_DEV_OFFLINE, DHTopic::TOPIC_LOW_LATENCY,
+        DHTopic::TOPIC_INIT_DHMS_READY, DHTopic::TOPIC_PHY_DEV_PLUGIN, DHTopic::TOPIC_MAX
+    };
+    const uint32_t QUERY_LOCAL_SYS_SIZE = 6;
+    const uint32_t IS_BOOL = 2;
+    const uint32_t TRANS_ROLE_SIZE = 3;
+    const QueryLocalSysSpecType specType[QUERY_LOCAL_SYS_SIZE] = {
+        QueryLocalSysSpecType::MIN, QueryLocalSysSpecType::HISTREAMER_AUDIO_ENCODER,
+        QueryLocalSysSpecType::HISTREAMER_AUDIO_DECODER, QueryLocalSysSpecType::HISTREAMER_VIDEO_ENCODER,
+        QueryLocalSysSpecType::HISTREAMER_VIDEO_DECODER, QueryLocalSysSpecType::MAX
+    };
+    const TransRole transRole[TRANS_ROLE_SIZE] = {
+        TransRole::AV_SENDER, TransRole::AV_RECEIVER, TransRole::UNKNOWN
+    };
 }
 
-void ResourceManagerFuzzTest(const uint8_t* data, size_t size)
-{
-    if ((data == nullptr) || (size < sizeof(uint16_t))) {
+class MyFwkServicesFuzzTest : public IRemoteStub<IPublisherListener> {
+public:
+    virtual sptr<IRemoteObject> AsObject() override
+    {
+        return nullptr;
+    }
+    void OnMessage(const DHTopic topic, const std::string& message) override
+    {
         return;
     }
+};
 
-    std::string dhId(reinterpret_cast<const char*>(data), size);
-    std::string devId(reinterpret_cast<const char*>(data), size);
-    std::string devName(reinterpret_cast<const char*>(data), size);
-    uint16_t devType = *(reinterpret_cast<const uint16_t*>(data));
+void FwkServicesServicesFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    const int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
+    bool runOnCreate = false;
+    if (asId == 0) {
+        runOnCreate = false; 
+    } else {
+        runOnCreate = true; 
+    }
+    DistributedHardwareService service(asId, runOnCreate);
+}
+
+void FwkServicesOnStartFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    const int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
+    bool runOnCreate = false;
+    if (asId == 0) {
+        runOnCreate = false; 
+    } else {
+        runOnCreate = true; 
+    }
+    DistributedHardwareService service(asId, runOnCreate);
+    service.OnStart();
+}
+
+void FwkServicesInitFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    const int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
+    bool runOnCreate = false;
+    if (asId == 0) {
+        runOnCreate = false; 
+    } else {
+        runOnCreate = true; 
+    }
+    DistributedHardwareService service(asId, runOnCreate);
+    service.Init();
+}
+
+void FwkServicesInitLocalDevInfoFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    const int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
+    bool runOnCreate = false;
+    if (asId == 0) {
+        runOnCreate = false; 
+    } else {
+        runOnCreate = true; 
+    }
+    DistributedHardwareService service(asId, runOnCreate);
+    service.InitLocalDevInfo();
+}
+
+void FwkServicesOnStopFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    const int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
+    bool runOnCreate = false;
+    if (asId == 0) {
+        runOnCreate = false; 
+    } else {
+        runOnCreate = true; 
+    }
+    DistributedHardwareService service(asId, runOnCreate);
+    service.OnStop();
+}
+
+void FwkServicesRegisterFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
+    bool runOnCreate = false;
+    if (asId == 0) {
+        runOnCreate = false; 
+    } else {
+        runOnCreate = true; 
+    }
+    DistributedHardwareService service(asId, runOnCreate);
+    DHTopic dhType = dhTopFuzz[data[0] % DH_TYPE_SIZE];
+    sptr<IPublisherListener> listener = (new (std::nothrow)
+        MyFwkServicesFuzzTest());
+    service.Init();
+    service.RegisterPublisherListener(dhType, listener);
+}
+
+void FwkServicesUnregisterPublisherFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
+    bool runOnCreate = false;
+    if (asId == 0) {
+        runOnCreate = false; 
+    } else {
+        runOnCreate = true; 
+    }
+    DistributedHardwareService service(asId, runOnCreate);
+    DHTopic dhType = dhTopFuzz[data[0] % DH_TYPE_SIZE];
+    sptr<IPublisherListener> listener = (new (std::nothrow)
+        MyFwkServicesFuzzTest());
+    service.Init();
+    service.RegisterPublisherListener(dhType, listener);
+    service.UnregisterPublisherListener(dhType, listener);
+}
+
+void FwkServicesPublishMessageFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
+    bool runOnCreate = false;
+    if (asId == 0) {
+        runOnCreate = false; 
+    } else {
+        runOnCreate = true; 
+    }
+    DistributedHardwareService service(asId, runOnCreate);
+    DHTopic dhType = dhTopFuzz[data[0] % DH_TYPE_SIZE];
+    std::string msg(reinterpret_cast<const char*>(data), size);
+    service.Init();
+    service.PublishMessage(dhType, msg);
+}
+
+void FwkServicesQueryLocalSysSpecFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
+    bool runOnCreate = false;
+    if (asId == 0) {
+        runOnCreate = false; 
+    } else {
+        runOnCreate = true; 
+    }
+    DistributedHardwareService service(asId, runOnCreate);
+    QueryLocalSysSpecType spec = specType[data[0] % QUERY_LOCAL_SYS_SIZE];
+    service.Init();
+    service.QueryLocalSysSpec(spec);
+}
+
+void FwkServicesQueryDhSysSpecFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
+    bool runOnCreate = false;
+    if (asId == 0) {
+        runOnCreate = false; 
+    } else {
+        runOnCreate = true; 
+    }
+    DistributedHardwareService service(asId, runOnCreate);
+    std::string targetKey(reinterpret_cast<const char*>(data), size);
+    std::string attrs(reinterpret_cast<const char*>(data), size);
+    service.Init();
+    service.QueryDhSysSpec(targetKey, attrs);
+}
+
+void FwkServicesInitializeAVCenterFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
+    bool runOnCreate = false;
+    if (asId == 0) {
+        runOnCreate = false; 
+    } else {
+        runOnCreate = true; 
+    }
+    DistributedHardwareService service(asId, runOnCreate);
+    TransRole transRoleType = transRole[data[0] % TRANS_ROLE_SIZE];
+    int32_t engineId = *(reinterpret_cast<const uint32_t*>(data));
+    service.Init();
+    service.InitializeAVCenter(transRoleType, engineId);
+}
+
+void FwkServicesReleaseAVCenterFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
+    bool runOnCreate = false;
+    if (asId == 0) {
+        runOnCreate = false; 
+    } else {
+        runOnCreate = true; 
+    }
+    DistributedHardwareService service(asId, runOnCreate);
+    int32_t engineId = *(reinterpret_cast<const uint32_t*>(data));
+    service.Init();
+    service.ReleaseAVCenter(engineId);
+}
+
+void FwkServicesCreateControlChannelFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
+    bool runOnCreate = false;
+    if (asId == 0) {
+        runOnCreate = false; 
+    } else {
+        runOnCreate = true; 
+    }
+    DistributedHardwareService service(asId, runOnCreate);
+    int32_t engineId = *(reinterpret_cast<const uint32_t*>(data));
+    std::string peerDevId(reinterpret_cast<const char*>(data), size);
+    service.Init();
+    service.CreateControlChannel(engineId, peerDevId);
+}
+
+void FwkServicesRegisterCtlCenterCallbackFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
+    bool runOnCreate = false;
+    if (asId == 0) {
+        runOnCreate = false; 
+    } else {
+        runOnCreate = true; 
+    }
+    sptr<IAVTransControlCenterCallback> callback = nullptr;
+
+    DistributedHardwareService service(asId, runOnCreate);
+    int32_t engineId = *(reinterpret_cast<const uint32_t*>(data));
+    service.Init();
+    service.RegisterCtlCenterCallback(engineId, callback);
+}
+
+void FwkServicesNotifySourceRemoteSinkStartedFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
+    bool runOnCreate = false;
+    if (asId == 0) {
+        runOnCreate = false; 
+    } else {
+        runOnCreate = true; 
+    }
+
+    DistributedHardwareService service(asId, runOnCreate);
+    std::string deviceId(reinterpret_cast<const char*>(data), size);
+    service.Init();
+    service.NotifySourceRemoteSinkStarted(deviceId);
+}
+
+void FwkServicesDumpFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
+    bool runOnCreate = false;
+    if (asId == 0) {
+        runOnCreate = false; 
+    } else {
+        runOnCreate = true; 
+    }
+
+    DistributedHardwareService service(asId, runOnCreate);
+    int32_t fd = *(reinterpret_cast<const uint32_t*>(data));
+    std::vector<std::u16string> args;
+    service.Init();
+    service.Dump(fd, args);
+}
+
+void FwkServicesPauseDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
+    bool runOnCreate = false;
+    if (asId == 0) {
+        runOnCreate = false; 
+    } else {
+        runOnCreate = true; 
+    }
+
+    DistributedHardwareService service(asId, runOnCreate);
     DHType dhType = dhTypeFuzz[data[0] % DH_TYPE_SIZE];
-    std::string dhAttrs(reinterpret_cast<const char*>(data), size);
-    std::string dhSubtype(reinterpret_cast<const char*>(data), size);
+    std::string networkId(reinterpret_cast<const char*>(data), size);
+    service.Init();
+    service.PauseDistributedHardware(dhType, networkId);
+}
 
-    std::shared_ptr<CapabilityInfo> capInfo =
-        std::make_shared<CapabilityInfo>(dhId, devId, devName, devType, dhType, dhAttrs, dhSubtype);
-    std::vector<std::shared_ptr<CapabilityInfo>> resInfos;
-    resInfos.emplace_back(capInfo);
+void FwkServicesResumeDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
+    bool runOnCreate = false;
+    if (asId == 0) {
+        runOnCreate = false; 
+    } else {
+        runOnCreate = true; 
+    }
 
-    CapabilityInfoManager::GetInstance()->AddCapability(resInfos);
+    DistributedHardwareService service(asId, runOnCreate);
+    DHType dhType = dhTypeFuzz[data[0] % DH_TYPE_SIZE];
+    std::string networkId(reinterpret_cast<const char*>(data), size);
+    service.Init();
+    service.ResumeDistributedHardware(dhType, networkId);
+}
 
-    std::shared_ptr<CapabilityInfo> info;
-    CapabilityInfoManager::GetInstance()->GetCapability(capInfo->GetDeviceId(), capInfo->GetDHId(), info);
-    CapabilityInfoManager::GetInstance()->GetDataByKey(capInfo->GetKey(), info);
+void FwkServicesStopDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
+    bool runOnCreate = false;
+    if (asId == 0) {
+        runOnCreate = false; 
+    } else {
+        runOnCreate = true; 
+    }
 
-    CapabilityInfoMap capMap;
-    CapabilityInfoManager::GetInstance()->GetDataByKeyPrefix(capInfo->GetDeviceId(), capMap);
-    CapabilityInfoManager::GetInstance()->RemoveCapabilityInfoByKey(capInfo->GetKey());
+    DistributedHardwareService service(asId, runOnCreate);
+    DHType dhType = dhTypeFuzz[data[0] % DH_TYPE_SIZE];
+    std::string networkId(reinterpret_cast<const char*>(data), size);
+    service.Init();
+    service.StopDistributedHardware(dhType, networkId);
 }
 }
 }
@@ -72,7 +421,23 @@ void ResourceManagerFuzzTest(const uint8_t* data, size_t size)
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
 {
     /* Run your code on data */
-    OHOS::DistributedHardware::ResourceManagerFuzzTest(data, size);
+    OHOS::DistributedHardware::FwkServicesServicesFuzzTest(data, size);
+    OHOS::DistributedHardware::FwkServicesOnStartFuzzTest(data, size);
+    OHOS::DistributedHardware::FwkServicesInitFuzzTest(data, size);
+    OHOS::DistributedHardware::FwkServicesInitLocalDevInfoFuzzTest(data, size);
+    OHOS::DistributedHardware::FwkServicesOnStopFuzzTest(data, size);
+    OHOS::DistributedHardware::FwkServicesRegisterFuzzTest(data, size);
+    OHOS::DistributedHardware::FwkServicesUnregisterPublisherFuzzTest(data, size);
+    OHOS::DistributedHardware::FwkServicesPublishMessageFuzzTest(data, size);
+    OHOS::DistributedHardware::FwkServicesQueryLocalSysSpecFuzzTest(data, size);
+    OHOS::DistributedHardware::FwkServicesQueryDhSysSpecFuzzTest(data, size);
+    OHOS::DistributedHardware::FwkServicesInitializeAVCenterFuzzTest(data, size);
+    OHOS::DistributedHardware::FwkServicesReleaseAVCenterFuzzTest(data, size);
+    OHOS::DistributedHardware::FwkServicesCreateControlChannelFuzzTest(data, size);
+    OHOS::DistributedHardware::FwkServicesRegisterCtlCenterCallbackFuzzTest(data, size);
+    OHOS::DistributedHardware::FwkServicesDumpFuzzTest(data, size);
+    OHOS::DistributedHardware::FwkServicesPauseDistributedHardwareFuzzTest(data, size);
+    OHOS::DistributedHardware::FwkServicesResumeDistributedHardwareFuzzTest(data, size);
+    OHOS::DistributedHardware::FwkServicesStopDistributedHardwareFuzzTest(data, size);
     return 0;
 }
-
