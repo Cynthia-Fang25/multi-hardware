@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-#ifndef TEST_RESOURCEMANAGER_FUZZER_H
-#define TEST_RESOURCEMANAGER_FUZZER_H
+#ifndef DISTRIBUTEDFWKSERVICES_FUZZER_H
+#define DISTRIBUTEDFWKSERVICES_FUZZER_H
 
-#define FUZZ_PROJECT_NAME "resourcemanager_fuzzer"
+#define FUZZ_PROJECT_NAME "distributedfwkservices_fuzzer"
 
 #endif
