@@ -237,26 +237,6 @@ void FwkServicesNotifySourceRemoteSinkStartedFuzzTest(const uint8_t* data, size_
     service.NotifySourceRemoteSinkStarted(deviceId);
 }
 
-void FwkServicesDumpFuzzTest(const uint8_t* data, size_t size)
-{
-    if ((data == nullptr) || (size < sizeof(int32_t))) {
-        return;
-    }
-    int32_t asId = *(reinterpret_cast<const uint32_t*>(data)) % IS_BOOL;
-    bool runOnCreate = false;
-    if (asId == 0) {
-        runOnCreate = false;
-    } else {
-        runOnCreate = true;
-    }
-
-    DistributedHardwareService service(asId, runOnCreate);
-    int32_t fd = *(reinterpret_cast<const uint32_t*>(data));
-    std::vector<std::u16string> args;
-
-    service.Dump(fd, args);
-}
-
 void FwkServicesPauseDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
 {
     if ((data == nullptr) || (size < sizeof(int32_t))) {
@@ -332,7 +312,6 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
     OHOS::DistributedHardware::FwkServicesReleaseAVCenterFuzzTest(data, size);
     OHOS::DistributedHardware::FwkServicesCreateControlChannelFuzzTest(data, size);
     OHOS::DistributedHardware::FwkServicesRegisterCtlCenterCallbackFuzzTest(data, size);
-    OHOS::DistributedHardware::FwkServicesDumpFuzzTest(data, size);
     OHOS::DistributedHardware::FwkServicesPauseDistributedHardwareFuzzTest(data, size);
     OHOS::DistributedHardware::FwkServicesResumeDistributedHardwareFuzzTest(data, size);
     OHOS::DistributedHardware::FwkServicesStopDistributedHardwareFuzzTest(data, size);
