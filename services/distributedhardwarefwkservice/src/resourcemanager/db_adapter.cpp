@@ -237,6 +237,12 @@ void DBAdapter::SyncDBForRecover()
         VersionInfoManager::GetInstance()->GetEventHandler()->SendEvent(msgEvent,
             0, AppExecFwk::EventQueue::Priority::IMMEDIATE);
     }
+
+    if (storeId_.storeId == GLOBAL_METAINFO_ID) {
+        AppExecFwk::InnerEvent::Pointer msgEvent = AppExecFwk::InnerEvent::Get(EVENT_META_INFO_DB_RECOVER);
+        MetaInfoManager::GetInstance()->GetEventHandler()->SendEvent(msgEvent,
+            0, AppExecFwk::EventQueue::Priority::IMMEDIATE);
+    }
 }
 
 int32_t DBAdapter::RegisterChangeListener()
