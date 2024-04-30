@@ -25,12 +25,14 @@
 
 #include "single_instance.h"
 #include "component_monitor.h"
+#include "capability_info.h"
 #include "device_type.h"
 #include "idistributed_hardware.h"
 #include "idistributed_hardware_sink.h"
 #include "idistributed_hardware_source.h"
 #include "low_latency_listener.h"
 #include "monitor_task_timer.h"
+#include "meta_capability_info.h"
 #include "version_info.h"
 #include "component_privacy.h"
 
@@ -88,6 +90,13 @@ private:
     bool IsIdenticalAccount(const std::string &networkId);
     int32_t RetryGetEnableParam(const std::string &networkId, const std::string &uuid,
         const std::string &dhId, const DHType dhType, EnableParam &param);
+    int32_t GetEnableCapParam(const std::string &networkId, const std::string &uuid, DHType dhType, EnableParam &param,
+        std::shared_ptr<CapabilityInfo> &capability);
+    int32_t GetEnableMetaParam(const std::string &networkId, const std::string &uuid, DHType dhType, EnableParam &param,
+        std::shared_ptr<MetaCapabilityInfo> &metaCapPtr);
+    int32_t GetCapParam(const std::string &uuid, const std::string &dhId, std::shared_ptr<CapabilityInfo> &capability);
+    int32_t GetMetaParam(const std::string &uuid, const std::string &dhId,
+        std::shared_ptr<MetaCapabilityInfo> &metaCapPtr);
 
 private:
     std::map<DHType, IDistributedHardwareSource*> compSource_;

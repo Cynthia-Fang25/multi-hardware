@@ -26,6 +26,7 @@
 #include "distributed_hardware_log.h"
 #include "hidump_helper.h"
 #include "local_hardware_manager.h"
+#include "meta_info_manager.h"
 #include "publisher.h"
 #include "task_board.h"
 #include "task_executor.h"
@@ -48,6 +49,7 @@ int32_t DistributedHardwareManager::LocalInit()
     ComponentLoader::GetInstance().Init();
     VersionManager::GetInstance().Init();
     CapabilityInfoManager::GetInstance()->Init();
+    MetaInfoManager::GetInstance->Init();
     LocalHardwareManager::GetInstance().Init();
     DHLOGI("DHFWK Local Init end");
     return DH_FWK_SUCCESS;

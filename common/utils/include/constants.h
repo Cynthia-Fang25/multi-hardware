@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -40,6 +40,8 @@ namespace DistributedHardware {
     const std::string APP_ID = "dtbhardware_manager_service";
     const std::string GLOBAL_CAPABILITY_ID = "global_capability_info";
     const std::string GLOBAL_VERSION_ID = "global_version_info";
+    const std::string META_APP_ID = "dtbhardware_meta";
+    const std::string GLOBAL_METAINFO_ID = "global_metainfo_info";
     const std::string RESOURCE_SEPARATOR = "###";
     const std::string DH_ID = "dh_id";
     const std::string DEV_ID = "dev_id";
@@ -76,6 +78,7 @@ namespace DistributedHardware {
 
     const uint32_t EVENT_VERSION_INFO_DB_RECOVER = 101;
     const uint32_t EVENT_CAPABILITY_INFO_DB_RECOVER = 201;
+    const uint32_t EVENT_META_INFO_DB_RECOVER = 301;
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif
