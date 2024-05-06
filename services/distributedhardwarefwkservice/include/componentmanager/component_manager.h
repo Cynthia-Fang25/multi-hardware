@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -34,6 +34,8 @@
 #include "monitor_task_timer.h"
 #include "version_info.h"
 #include "component_privacy.h"
+#include "capability_info.h"
+#include "meta_capability_info.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -104,6 +106,13 @@ private:
     void StartTaskMonitor();
     void RegisterDHStateListener();
     void RegisterDataSyncTriggerListener();
+    int32_t GetEnableCapParam(const std::string &networkId, const std::string &uuid, DHType dhType, EnableParam &param,
+        std::shared_ptr<CapabilityInfo> &capability);
+    int32_t GetEnableMetaParam(const std::string &networkId, const std::string &uuid, DHType dhType, EnableParam &param,
+        std::shared_ptr<MetaCapabilityInfo> &metaCapPtr);
+    int32_t GetCapParam(const std::string &uuid, const std::string &dhId, std::shared_ptr<CapabilityInfo> &capability);
+    int32_t GetMetaParam(const std::string &uuid, const std::string &dhId,
+        std::shared_ptr<MetaCapabilityInfo> &metaCapPtr);
 
 private:
     std::map<DHType, IDistributedHardwareSource*> compSource_;
