@@ -103,8 +103,13 @@ struct ContinueSwitch {
 
   getImageWidth() {
     console.log(TAG + 'getImageWidth in, deviceInfo.deviceType : ' + deviceInfo.deviceType);
-    let shortLength = this.screenWidth < this.screenHeight / 2 ? this.screenWidth : this.screenHeight / 2;
-    this.imageWidth = shortLength * 0.8;
+    if (deviceInfo.deviceType === 'phone') {
+      this.imageWidth = 290;
+    } else if (deviceInfo.deviceType === 'table') {
+      this.imageWidth = 333;
+    } else if (deviceInfo.deviceType === '2in1') {
+      this.imageWidth = 394;
+    }
     console.log(TAG + 'this.imageWidth' + this.imageWidth);
   }
 
