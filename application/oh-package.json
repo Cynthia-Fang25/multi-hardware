@@ -13,8 +13,16 @@
  * limitations under the License.
  */
 {
+  "license": "",
+  "devDependencies": {
+    "@ohos/hypium": "1.0.6"
+  },
+  "author": "",
+  "name": "dhardware_ui",
+  "description": "Please describe the basic information.",
+  "main": "",
+  "version": "1.0.0",
   "dependencies": {
-    "@ohos/hvigor-ohos-plugin": "^4.1.2",
-    "@ohos/lottie": "^1.1.2"
+    "@ohos/lottie": "^2.0.10"
   }
 }
