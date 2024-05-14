@@ -12,17 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-{
-  "license": "",
-  "devDependencies": {
-    "@ohos/hypium": "1.0.6"
-  },
-  "author": "",
-  "name": "dhardware_ui",
-  "description": "Please describe the basic information.",
-  "main": "",
-  "version": "1.0.0",
-  "dependencies": {
-    "@ohos/lottie": "^2.0.10"
-  }
-}
+
+
+
+import { hapTasks } from '@ohos/hvigor-ohos-plugin';
+
+export default {
+  system: hapTasks, /* Built-in plugin of Hvigor. It cannot be modified. */
+  plugins:[] /* Custom plugin to extend the functionality of Hvigor. */
+};
