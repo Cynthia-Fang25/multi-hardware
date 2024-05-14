@@ -57,6 +57,7 @@ ohos_unittest("DistributedHardwareServiceTest") {
     "cJSON:cjson",
     "c_utils:utils",
     "eventhandler:libeventhandler",
+    "hilog:libhilog",
     "ipc:ipc_core",
     "power_manager:powermgr_client",
     "safwk:system_ability_fwk",

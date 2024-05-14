@@ -52,6 +52,7 @@ ohos_fuzztest("ComponentmanagerFuzzTest") {
   external_deps = [
     "cJSON:cjson",
     "c_utils:utils",
+    "hilog:libhilog",
     "ipc:ipc_single",
   ]
 
