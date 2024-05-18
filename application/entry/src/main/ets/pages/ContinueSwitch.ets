@@ -18,6 +18,7 @@ import settings from '@ohos.settings';
 import UIExtensionContentSession from '@ohos.app.ability.UIExtensionContentSession';
 import deviceInfo from '@ohos.deviceInfo';
 import { BusinessError } from '@ohos.base';
+import lottie, { AnimationItem } from '@ohos/lottie';
 
 const TAG = '[ContinueSwitch_Page] : ';
 let context = getContext(this) as common.UIAbilityContext;
@@ -42,8 +43,14 @@ struct ContinueSwitch {
   @State screenHeight: number = 0;
   @State screenWidth: number = 0;
   @State imageHeight: number = 0;
+  @State imageWidth: number = 0;
   @State textWidth: number = 0;
   @State gapLength: number = 0;
+  @State isFoldStatus: boolean = false;
+  private controller: CanvasRenderingContext2D = new CanvasRenderingContext2D();
+  private animateItem: AnimationItem | null = null;
+  private animateName: string = 'continue_lottie';
+  private animatePath: string = 'common/lottie/data.json';
 
   @Builder
   NavigationTitle() {
@@ -59,10 +66,11 @@ struct ContinueSwitch {
   onPageShow() {
     console.log(TAG + 'onPageShow in');
     this.getGapLength();
+    this.getImageHeight();
     display.getAllDisplays((err, data) => {
       this.screenWidth = px2vp(data[0].width);
       this.screenHeight = px2vp(data[0].height);
-      this.getImageHeight();
+      this.getImageWidth();
       console.log(TAG + 'screenWidth = ' + this.screenWidth + '; screenHeight = ' + this.screenHeight);
     })
   }
@@ -80,7 +88,7 @@ struct ContinueSwitch {
       context.resourceManager.getStringValue($r('app.string.continue_title')
         .id, (error: BusinessError, value: string) => {
         if (error != null) {
-          console.error(TAG + 'rror is ' + error);
+          console.error(TAG + 'error is ' + error);
         } else {
           this.title = value;
           console.info(TAG + '<aboutToAppear> this.title : ' + this.title);
@@ -93,10 +101,27 @@ struct ContinueSwitch {
     }
   }
 
+  getImageWidth() {
+    console.log(TAG + 'getImageWidth in, deviceInfo.deviceType : ' + deviceInfo.deviceType);
+    if (deviceInfo.deviceType === 'phone') {
+      this.imageWidth = 290;
+    } else if (deviceInfo.deviceType === 'table') {
+      this.imageWidth = 333;
+    } else if (deviceInfo.deviceType === '2in1') {
+      this.imageWidth = 394;
+    }
+    console.log(TAG + 'this.imageWidth' + this.imageWidth);
+  }
+
   getImageHeight() {
     console.log(TAG + 'getImageHeight in, deviceInfo.deviceType : ' + deviceInfo.deviceType);
-    let shortLength = this.screenWidth < this.screenHeight / 2 ? this.screenWidth : this.screenHeight / 2;
-    this.imageHeight = shortLength * 0.8;
+    if (deviceInfo.deviceType === 'phone') {
+      this.imageHeight = 220;
+    } else if (deviceInfo.deviceType === 'table') {
+      this.imageHeight = 212;
+    } else if (deviceInfo.deviceType === '2in1') {
+      this.imageHeight = 261;
+    }
     console.log(TAG + 'this.imageHeight' + this.imageHeight);
   }
 
@@ -123,11 +148,23 @@ struct ContinueSwitch {
     Navigation() {
       Row() {
         Column() {
-          Image($r('app.media.continueImg'))
-            .width(this.imageHeight)
+          Canvas(this.controller)
+            .width(this.imageWidth)
+            .height(this.imageHeight)
             .margin({ left: 35, right: 35, bottom: 24 })
             .backgroundColor(Color.Transparent)
-            .objectFit(ImageFit.Contain)
+            .onReady(() => {
+              console.log(TAG + 'Canvas onAppear');
+              this.animateItem = lottie.loadAnimation({
+                container: this.controller,
+                renderer: 'canvas',
+                loop: true,
+                autoplay: true,
+                name: this.animateName,
+                path: this.animatePath,
+                contentMode: 'Contain',
+              })
+            })
 
           Text($r('app.string.continue_desc'))
             .fontSize($r('sys.float.ohos_id_text_size_body2'))
