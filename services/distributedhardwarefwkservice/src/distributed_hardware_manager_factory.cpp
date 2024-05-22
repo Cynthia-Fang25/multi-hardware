@@ -205,6 +205,34 @@ int32_t DistributedHardwareManagerFactory::SendOffLineEvent(const std::string &n
     return DH_FWK_SUCCESS;
 }
 
+int32_t DistributedHardwareManagerFactory::SendDeviceChangedEvent(const std::string &networkId, const std::string &uuid,
+    uint16_t deviceType)
+{
+    if (networkId.empty() || networkId.size() > MAX_ID_LEN || uuid.empty() || uuid.size() > MAX_ID_LEN) {
+        DHLOGE("NetworkId or uuid is invalid");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
+
+    if (!isInit) {
+        DHLOGI("distributedHardwareMgr is null");
+        return ERR_DH_FWK_HARDWARE_MANAGER_DEVICE_NOT_ONLINE;
+    }
+    //if device not online, no need to handle device change event
+    if (!DHContext::GetInstance().IsDeviceOnline(uuid)) {
+        DHLOGI("Device not online, networkId: %{public}s, uuid: %{public}s",
+            GetAnonyString(networkId).c_str(), GetAnonyString(uuid).c_str());
+        return ERR_DH_FWK_HARDWARE_MANAGER_DEVICE_NOT_ONLINE;
+    }
+
+    auto result = DistributedHardwareManager::GetInstance().SendDeviceChangedEvent(networkId, uuid, deviceType);
+    if (result != DH_FWK_SUCCESS) {
+        DHLOGE("offline failed, errCode = %{public}d", result);
+        return result;
+    }
+
+    return DH_FWK_SUCCESS;
+}
+
 int32_t DistributedHardwareManagerFactory::GetComponentVersion(std::unordered_map<DHType, std::string> &versionMap)
 {
     DHLOGI("start");

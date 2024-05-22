@@ -913,27 +913,6 @@ std::map<DHType, IDistributedHardwareSink*> ComponentManager::GetDHSinkInstance(
     return compSink_;
 }
 
-bool ComponentManager::IsIdenticalAccount(const std::string &networkId)
-{
-    DmAuthForm authForm = DmAuthForm::INVALID_TYPE;
-    std::vector<DmDeviceInfo> deviceList;
-    DeviceManager::GetInstance().GetTrustedDeviceList(DH_FWK_PKG_NAME, "", deviceList);
-    if (deviceList.size() == 0 || deviceList.size() > MAX_ONLINE_DEVICE_SIZE) {
-        DHLOGE("DeviceList size is invalid!");
-        return false;
-    }
-    for (const auto &deviceInfo : deviceList) {
-        if (std::string(deviceInfo.networkId) == networkId) {
-            authForm = deviceInfo.authForm;
-            break;
-        }
-    }
-    if (authForm == DmAuthForm::IDENTICAL_ACCOUNT) {
-        return true;
-    }
-    return false;
-}
-
 void ComponentManager::UpdateBusinessState(const std::string &networkId, const std::string &dhId, BusinessState state)
 {
     DHLOGI("UpdateBusinessState, networkId: %{public}s, dhId: %{public}s, state: %{public}" PRIu32,

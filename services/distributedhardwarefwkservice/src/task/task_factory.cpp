@@ -52,6 +52,10 @@ std::shared_ptr<Task> TaskFactory::CreateTask(TaskType taskType, TaskParam taskP
             task = std::make_shared<OffLineTask>(taskParam.networkId, taskParam.uuid, taskParam.dhId, taskParam.dhType);
             break;
         }
+        case TaskType::DEVICE_CHANGED: {
+            task = std::make_shared<DeviceChangedTask>(taskParam.networkId, taskParam.uuid, taskParam.dhId, taskParam.dhType);
+            break;
+        }
         default: {
             DHLOGE("CreateTask type invalid, type: %{public}d", taskType);
             return nullptr;
