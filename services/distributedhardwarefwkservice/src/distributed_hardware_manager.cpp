@@ -146,6 +146,30 @@ int32_t DistributedHardwareManager::SendOffLineEvent(const std::string &networkI
     return DH_FWK_SUCCESS;
 }
 
+int32_t DistributedHardwareManager::SendDeviceChangedEvent(const std::string &networkId, const std::string &uuid,
+    uint16_t deviceType)
+{
+    (void)deviceType;
+
+    if (networkId.size() == 0 || networkId.size() > MAX_ID_LEN || uuid.size() == 0 || uuid.size() > MAX_ID_LEN) {
+        DHLOGE("NetworkId or uuid is invalid");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
+
+    DHLOGI("networkId = %{public}s, uuid = %{public}s", GetAnonyString(networkId).c_str(),
+        GetAnonyString(uuid).c_str());
+
+    TaskParam taskParam = {
+        .networkId = networkId,
+        .uuid = uuid,
+        .dhId = "",
+        .dhType = DHType::UNKNOWN
+    };
+    auto task = TaskFactory::GetInstance().CreateTask(TaskType::DEVICE_CHANGED, taskParam, nullptr);
+    TaskExecutor::GetInstance().PushTask(task);
+    return DH_FWK_SUCCESS;
+}
+
 size_t DistributedHardwareManager::GetOnLineCount()
 {
     return DHContext::GetInstance().GetOnlineCount();
