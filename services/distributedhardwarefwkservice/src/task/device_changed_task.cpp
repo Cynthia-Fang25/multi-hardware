@@ -98,13 +98,13 @@ void DeviceChangedTask::HandleDeviceChanged()
     }
 
     for (const auto &info : devDhInfos) {
+
         //skip enabled component
         std::string deviceKey = GetCapabilityKey(GetDeviceIdByUUID(GetUUID()), info.first);
         auto enabledDevices = TaskBoard::GetEnabledDevice();
         if (enabledDevices.find(deviceKey) != enabledDevices.end()) {
             continue;
         }
-
         TaskParam taskParam = {
             .networkId = GetNetworkId(),
             .uuid = GetUUID(),
