@@ -217,7 +217,11 @@ int32_t DistributedHardwareManagerFactory::SendDeviceChangedEvent(const std::str
         DHLOGI("distributedHardwareMgr is null");
         return ERR_DH_FWK_HARDWARE_MANAGER_DEVICE_NOT_ONLINE;
     }
+<<<<<<< HEAD
     //if device not online, no need to handle device change event
+=======
+
+>>>>>>> 4998d93c8291ecebbf5c402940f0f67c078794ac
     if (!DHContext::GetInstance().IsDeviceOnline(uuid)) {
         DHLOGI("Device not online, networkId: %{public}s, uuid: %{public}s",
             GetAnonyString(networkId).c_str(), GetAnonyString(uuid).c_str());
