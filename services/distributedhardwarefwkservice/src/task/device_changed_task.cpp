@@ -114,7 +114,6 @@ void DeviceChangedTask::HandleDeviceChanged()
         if (enabledDevices.find(deviceKey) != enabledDevices.end()) {
             continue;
         }
-
         TaskParam taskParam = {
             .networkId = GetNetworkId(),
             .uuid = GetUUID(),
