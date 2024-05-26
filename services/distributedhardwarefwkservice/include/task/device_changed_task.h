@@ -28,7 +28,7 @@ public:
     virtual void DoTask();
 
 private:
-    //void DoSyncInfo();
+    void HandleDeviceChanged();
     //void CreateEnableTask();
 };
 } // namespace DistributedHardware
