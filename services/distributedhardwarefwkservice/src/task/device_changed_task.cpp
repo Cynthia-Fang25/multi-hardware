@@ -66,6 +66,10 @@ void DeviceChangedTask::HandleDeviceChanged()
 {
     DHLOGI("networkId = %{public}s, uuid = %{public}s", GetAnonyString(GetNetworkId()).c_str(),
         GetAnonyString(GetUUID()).c_str());
+    if (!ComponentManager::GetInstance().IsIdenticalAccount(GetNetworkId())) {
+        DHLOGI("not identical account");
+        return;
+    }
     std::string deviceId = GetDeviceIdByUUID(GetUUID());
     std::vector<std::pair<std::string, DHType>> devDhInfos;
     std::vector<std::shared_ptr<CapabilityInfo>> capabilityInfos;
@@ -99,11 +103,13 @@ void DeviceChangedTask::HandleDeviceChanged()
 
     auto enabledDevices = TaskBoard::GetEnabledDevice();
     for (const auto &info : devDhInfos) {
+
         //skip enabled component
         std::string deviceKey = GetCapabilityKey(GetDeviceIdByUUID(GetUUID()), info.first);
         if (enabledDevices.find(deviceKey) != enabledDevices.end()) {
             continue;
         }
+
         TaskParam taskParam = {
             .networkId = GetNetworkId(),
             .uuid = GetUUID(),
