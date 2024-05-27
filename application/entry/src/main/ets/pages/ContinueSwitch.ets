@@ -18,6 +18,7 @@ import settings from '@ohos.settings';
 import UIExtensionContentSession from '@ohos.app.ability.UIExtensionContentSession';
 import deviceInfo from '@ohos.deviceInfo';
 import { BusinessError } from '@ohos.base';
+import lottie from '@ohos/lottie';
 
 const TAG = '[ContinueSwitch_Page] : ';
 let context = getContext(this) as common.UIAbilityContext;
