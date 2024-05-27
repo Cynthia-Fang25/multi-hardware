@@ -175,8 +175,25 @@ void AccessManager::OnDeviceReady(const DmDeviceInfo &deviceInfo)
 
 void AccessManager::OnDeviceChanged(const DmDeviceInfo &deviceInfo)
 {
-    (void)deviceInfo;
-    return;
+    std::lock_guard<std::mutex> lock(accessMutex_);
+    DHLOGI("start, networkId = %{public}s, deviceName = %{public}s",
+        GetAnonyString(deviceInfo.networkId).c_str(), GetAnonyString(deviceInfo.deviceName).c_str());
+
+    auto networkId = std::string(deviceInfo.networkId);
+    if (networkId.size() == 0 || networkId.size() > MAX_ID_LEN) {
+        DHLOGE("NetworkId is invalid!");
+        return;
+    }
+    auto uuid = GetUUIDBySoftBus(networkId);
+    if (uuid.size() == 0 || uuid.size() > MAX_ID_LEN) {
+        DHLOGE("Uuid is invalid!");
+        return;
+    }
+
+    auto ret =
+        DistributedHardwareManagerFactory::GetInstance().SendDeviceChangedEvent(networkId, uuid, deviceInfo.deviceTypeId);
+    DHLOGI("device changed result = %{public}d, networkId = %{public}s, uuid = %{public}s", ret,
+        GetAnonyString(networkId).c_str(), GetAnonyString(uuid).c_str());
 }
 
 void AccessManager::CheckTrustedDeviceOnline()
