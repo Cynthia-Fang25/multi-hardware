@@ -309,48 +309,5 @@ void ComponentPrivacy::ComponentEventHandler::ProcessStopPage(const AppExecFwk::
     std::string subtype = cJSON_GetObjectItem(innerMsg, PRIVACY_SUBTYPE.c_str())->valuestring;
     comPrivacyObj_->StopPrivacePage(subtype);
 }
-
-bool ComponentPrivacy::IsIdenticalAccount(const std::string &networkId)
-{
-    DmAuthForm authForm = DmAuthForm::INVALID_TYPE;
-    std::vector<DmDeviceInfo> deviceList;
-    DeviceManager::GetInstance().GetTrustedDeviceList(DH_FWK_PKG_NAME, "", deviceList);
-    if (deviceList.size() == 0 || deviceList.size() > MAX_ONLINE_DEVICE_SIZE) {
-        DHLOGE("DeviceList size is invalid!");
-        return false;
-    }
-    for (const auto &deviceInfo : deviceList) {
-        if (std::string(deviceInfo.networkId) == networkId) {
-            authForm = deviceInfo.authForm;
-            break;
-        }
-    }
-    if (authForm == DmAuthForm::IDENTICAL_ACCOUNT) {
-        return true;
-    }
-    return false;
-}
-
-bool ComponentPrivacy::IsSensitiveResource()
-{
-    EnableParam param;
-    auto ret = GetEnableParam(networkId, uuid, dhId, dhType, param);
-    if (ret != DH_FWK_SUCCESS) {
-        DHLOGE("GetEnableParam failed, uuid = %{public}s, dhId = %{public}s, errCode = %{public}d",
-            GetAnonyString(uuid).c_str(), GetAnonyString(dhId).c_str(), ret);
-        if (RetryGetEnableParam(networkId, uuid, dhId, dhType, param) != DH_FWK_SUCCESS) {
-            return false;
-        }
-    }
-    std::string subtype = param.subtype;
-    std::map<std::string, bool> resourceDesc = ComponentLoader::GetInstance().GetCompResourceDesc();
-    if (resourceDesc.find(subtype) == resourceDesc.end()) {
-        DHLOGE("GetCompResourceDesc failed, subtype: %{public}s", subtype.c_str());
-        return false;
-    }
-    
-    return resourceDesc[subtype];
-}
-
 } // namespace DistributedHardware
 } // namespace OHOS

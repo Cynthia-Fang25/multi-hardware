@@ -22,6 +22,7 @@
 #include "offline_task.h"
 #include "online_task.h"
 #include "task_board.h"
+#include "device_changed_task.h"
 
 namespace OHOS {
 namespace DistributedHardware {

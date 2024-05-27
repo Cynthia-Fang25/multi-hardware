@@ -16,9 +16,13 @@
 #include "device_changed_task.h"
 
 #include "anonymous_string.h"
+#include "capability_info_manager.h"
 #include "dh_utils_tool.h"
+#include "capability_utils.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
+#include "local_capability_info_manager.h"
+#include "meta_info_manager.h"
 #include "task_board.h"
 #include "task_executor.h"
 #include "task_factory.h"
@@ -43,7 +47,7 @@ DeviceChangedTask::~DeviceChangedTask()
 
 void DeviceChangedTask::DoTask()
 {
-    DHLOGD("start online task, id = %{public}s, uuid = %{public}s", GetId().c_str(), GetAnonyString(GetUUID()).c_str());
+    DHLOGD("start device changed task, id = %{public}s, uuid = %{public}s", GetId().c_str(), GetAnonyString(GetUUID()).c_str());
     this->SetTaskState(TaskState::RUNNING);
     for (const auto& step : this->GetTaskSteps()) {
         switch (step) {
@@ -57,7 +61,7 @@ void DeviceChangedTask::DoTask()
         }
     }
     SetTaskState(TaskState::SUCCESS);
-    DHLOGD("finish online task, remove it, id = %{public}s.", GetId().c_str());
+    DHLOGD("finish device changed task, remove it, id = %{public}s.", GetId().c_str());
     TaskBoard::GetInstance().RemoveTask(this->GetId());
 }
 

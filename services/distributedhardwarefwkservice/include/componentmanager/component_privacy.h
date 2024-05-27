@@ -39,8 +39,6 @@ public:
     void SetPageFlagTrue();
     void SetPageFlagFalse();
     bool GetPageFlag();
-    bool IsSensitiveResource();
-    bool IsIdenticalAccount(const std::string &networkId);
 
     class ComponentEventHandler : public AppExecFwk::EventHandler {
     public:
