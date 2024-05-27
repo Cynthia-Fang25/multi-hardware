@@ -62,14 +62,12 @@ namespace {
     constexpr int32_t DISABLE_RETRY_MAX_TIMES = 3;
     constexpr int32_t ENABLE_PARAM_RETRY_TIME = 500 * 1000;
     constexpr int32_t INVALID_SA_ID = -1;
-    constexpr int32_t MONITOR_TASK_DELAY_MS = 5 * 1000;
     constexpr int32_t UNINIT_COMPONENT_TIMEOUT_SECONDS = 2;
     const std::string MONITOR_TASK_TIMER_ID = "monitor_task_timer_id";
 }
 
 ComponentManager::ComponentManager() : compSource_({}), compSink_({}), compSrcSaId_({}),
     compMonitorPtr_(std::make_shared<ComponentMonitor>()), lowLatencyListener_(new(std::nothrow) LowLatencyListener),
-    monitorTaskTimer_(std::make_shared<MonitorTaskTimer>(MONITOR_TASK_TIMER_ID, MONITOR_TASK_DELAY_MS)),
     isUnInitTimeOut_(false), dhBizStates_({}), dhStateListener_(std::make_shared<DHStateListener>()),
     dataSyncTriggerListener_(std::make_shared<DHDataSyncTriggerListener>()),
     dhCommToolPtr_(std::make_shared<DHCommTool>()), needRefreshTaskParams_({})
@@ -102,7 +100,6 @@ int32_t ComponentManager::Init()
     }
 
     StartComponent();
-    StartTaskMonitor();
     RegisterDHStateListener();
     RegisterDataSyncTriggerListener();
     InitDHCommTool();
@@ -163,13 +160,6 @@ void ComponentManager::StartComponent()
     }
 }
 
-void ComponentManager::StartTaskMonitor()
-{
-    if (monitorTaskTimer_ != nullptr) {
-        monitorTaskTimer_->StartTimer();
-    }
-}
-
 void ComponentManager::RegisterDHStateListener()
 {
     for (const auto &item : compSource_) {
@@ -213,7 +203,6 @@ int32_t ComponentManager::UnInit()
     UnregisterDHStateListener();
     UnregisterDataSyncTriggerListener();
     UnInitDHCommTool();
-    StopTaskMonitor();
     StopPrivacy();
     UnInitSAMonitor();
     StopComponent();
@@ -279,14 +268,6 @@ void ComponentManager::UnInitDHCommTool()
     }
     DHLOGI("UnInit DH communication tool");
     dhCommToolPtr_->UnInit();
-}
-
-void ComponentManager::StopTaskMonitor()
-{
-    // stop monitor task timer
-    if (monitorTaskTimer_ != nullptr) {
-        monitorTaskTimer_->StopTimer();
-    }
 }
 
 void ComponentManager::StopComponent()
@@ -719,14 +700,14 @@ int32_t ComponentManager::GetCapParam(const std::string &uuid, const std::string
     std::string deviceId = GetDeviceIdByUUID(uuid);
     auto ret = CapabilityInfoManager::GetInstance()->GetCapability(deviceId, dhId, capability);
     if ((ret == DH_FWK_SUCCESS) && (capability != nullptr)) {
-        DHLOGE("GetCapability success, deviceId: %{public}s, uuid: %{public}s, dhId: %{public}s, ret: %{public}d",
+        DHLOGI("GetCapability success, deviceId: %{public}s, uuid: %{public}s, dhId: %{public}s, ret: %{public}d",
             GetAnonyString(deviceId).c_str(), GetAnonyString(uuid).c_str(), GetAnonyString(dhId).c_str(), ret);
         return ret;
     }
 
     ret = LocalCapabilityInfoManager::GetInstance()->GetCapability(deviceId, dhId, capability);
     if ((ret == DH_FWK_SUCCESS) && (capability != nullptr)) {
-        DHLOGE("Local GetCaps success, deviceId: %{public}s, uuid: %{public}s, dhId: %{public}s, ret: %{public}d",
+        DHLOGI("Local GetCaps success, deviceId: %{public}s, uuid: %{public}s, dhId: %{public}s, ret: %{public}d",
             GetAnonyString(deviceId).c_str(), GetAnonyString(uuid).c_str(), GetAnonyString(dhId).c_str(), ret);
         return ret;
     }
@@ -739,7 +720,7 @@ int32_t ComponentManager::GetMetaParam(const std::string &uuid, const std::strin
 {
     auto ret = MetaInfoManager::GetInstance()->GetMetaCapInfo(GetDeviceIdByUUID(uuid), dhId, metaCapPtr);
     if ((ret == DH_FWK_SUCCESS) && (metaCapPtr != nullptr)) {
-        DHLOGE("GetCapability success, uuid =%{public}s, dhId = %{public}s, errCode = %{public}d",
+        DHLOGI("GetCapability success, uuid =%{public}s, dhId = %{public}s, errCode = %{public}d",
             GetAnonyString(uuid).c_str(), GetAnonyString(dhId).c_str(), ret);
         return ret;
     }
@@ -911,6 +892,27 @@ void ComponentManager::RecoverDistributedHardware(DHType dhType)
 std::map<DHType, IDistributedHardwareSink*> ComponentManager::GetDHSinkInstance()
 {
     return compSink_;
+}
+
+bool ComponentManager::IsIdenticalAccount(const std::string &networkId)
+{
+    DmAuthForm authForm = DmAuthForm::INVALID_TYPE;
+    std::vector<DmDeviceInfo> deviceList;
+    DeviceManager::GetInstance().GetTrustedDeviceList(DH_FWK_PKG_NAME, "", deviceList);
+    if (deviceList.size() == 0 || deviceList.size() > MAX_ONLINE_DEVICE_SIZE) {
+        DHLOGE("DeviceList size is invalid!");
+        return false;
+    }
+    for (const auto &deviceInfo : deviceList) {
+        if (std::string(deviceInfo.networkId) == networkId) {
+            authForm = deviceInfo.authForm;
+            break;
+        }
+    }
+    if (authForm == DmAuthForm::IDENTICAL_ACCOUNT) {
+        return true;
+    }
+    return false;
 }
 
 void ComponentManager::UpdateBusinessState(const std::string &networkId, const std::string &dhId, BusinessState state)

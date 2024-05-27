@@ -176,9 +176,8 @@ void AccessManager::OnDeviceReady(const DmDeviceInfo &deviceInfo)
 void AccessManager::OnDeviceChanged(const DmDeviceInfo &deviceInfo)
 {
     std::lock_guard<std::mutex> lock(accessMutex_);
-    DHLOGI("start, networkId = %{public}s, deviceName = %{public}s, deviceTypeId = %{public}d",
-        GetAnonyString(deviceInfo.networkId).c_str(), GetAnonyString(deviceInfo.deviceName).c_str(),
-        deviceInfo.deviceTypeId);
+    DHLOGI("start, networkId = %{public}s, deviceName = %{public}s",
+        GetAnonyString(deviceInfo.networkId).c_str(), GetAnonyString(deviceInfo.deviceName).c_str());
 
     auto networkId = std::string(deviceInfo.networkId);
     if (networkId.size() == 0 || networkId.size() > MAX_ID_LEN) {
@@ -190,6 +189,7 @@ void AccessManager::OnDeviceChanged(const DmDeviceInfo &deviceInfo)
         DHLOGE("Uuid is invalid!");
         return;
     }
+
     auto ret =
         DistributedHardwareManagerFactory::GetInstance().SendDeviceChangedEvent(networkId, uuid, deviceInfo.deviceTypeId);
     DHLOGI("device changed result = %{public}d, networkId = %{public}s, uuid = %{public}s", ret,

@@ -29,7 +29,6 @@ public:
 
 private:
     void HandleDeviceChanged();
-    //void CreateEnableTask();
 };
 } // namespace DistributedHardware
 } // namespace OHOS
