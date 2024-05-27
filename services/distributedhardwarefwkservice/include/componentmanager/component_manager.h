@@ -76,7 +76,7 @@ public:
      * @return false if the task param not exist, return false.
      */
     bool FetchNeedRefreshTask(const std::pair<std::string, std::string> &taskKey, TaskParam &taskParam);
-
+    bool IsIdenticalAccount(const std::string &networkId);
     class ComponentManagerEventHandler : public AppExecFwk::EventHandler {
         public:
             ComponentManagerEventHandler(const std::shared_ptr<AppExecFwk::EventRunner> &runner);

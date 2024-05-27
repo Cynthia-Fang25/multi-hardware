@@ -22,6 +22,7 @@
 #include "offline_task.h"
 #include "online_task.h"
 #include "task_board.h"
+#include "device_changed_task.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -50,6 +51,10 @@ std::shared_ptr<Task> TaskFactory::CreateTask(TaskType taskType, TaskParam taskP
         }
         case TaskType::OFF_LINE: {
             task = std::make_shared<OffLineTask>(taskParam.networkId, taskParam.uuid, taskParam.dhId, taskParam.dhType);
+            break;
+        }
+        case TaskType::DEVICE_CHANGED: {
+            task = std::make_shared<DeviceChangedTask>(taskParam.networkId, taskParam.uuid, taskParam.dhId, taskParam.dhType);
             break;
         }
         default: {
