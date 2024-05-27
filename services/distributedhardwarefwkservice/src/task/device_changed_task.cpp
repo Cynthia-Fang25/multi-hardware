@@ -48,7 +48,8 @@ DeviceChangedTask::~DeviceChangedTask()
 
 void DeviceChangedTask::DoTask()
 {
-    DHLOGD("start device changed task, id = %{public}s, uuid = %{public}s", GetId().c_str(), GetAnonyString(GetUUID()).c_str());
+    DHLOGD("start device changed task, id = %{public}s, uuid = %{public}s", GetId().c_str(),
+        GetAnonyString(GetUUID()).c_str());
     this->SetTaskState(TaskState::RUNNING);
     for (const auto& step : this->GetTaskSteps()) {
         switch (step) {

@@ -23,7 +23,8 @@ namespace DistributedHardware {
 class DeviceChangedTask : public Task {
 public:
     DeviceChangedTask() = delete;
-    DeviceChangedTask(const std::string &networkId, const std::string &uuid, const std::string &dhId, const DHType dhType);
+    DeviceChangedTask(const std::string &networkId, const std::string &uuid,
+        const std::string &dhId, const DHType dhType);
     virtual ~DeviceChangedTask();
     virtual void DoTask();
 

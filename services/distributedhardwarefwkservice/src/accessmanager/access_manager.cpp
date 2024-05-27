@@ -191,7 +191,8 @@ void AccessManager::OnDeviceChanged(const DmDeviceInfo &deviceInfo)
     }
 
     auto ret =
-        DistributedHardwareManagerFactory::GetInstance().SendDeviceChangedEvent(networkId, uuid, deviceInfo.deviceTypeId);
+        DistributedHardwareManagerFactory::GetInstance().SendDeviceChangedEvent(networkId, uuid,
+            deviceInfo.deviceTypeId);
     DHLOGI("device changed result = %{public}d, networkId = %{public}s, uuid = %{public}s", ret,
         GetAnonyString(networkId).c_str(), GetAnonyString(uuid).c_str());
 }

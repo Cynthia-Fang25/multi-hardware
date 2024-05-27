@@ -54,7 +54,8 @@ std::shared_ptr<Task> TaskFactory::CreateTask(TaskType taskType, TaskParam taskP
             break;
         }
         case TaskType::DEVICE_CHANGED: {
-            task = std::make_shared<DeviceChangedTask>(taskParam.networkId, taskParam.uuid, taskParam.dhId, taskParam.dhType);
+            task = std::make_shared<DeviceChangedTask>(taskParam.networkId, taskParam.uuid,
+                taskParam.dhId, taskParam.dhType);
             break;
         }
         default: {
