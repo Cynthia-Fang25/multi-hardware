@@ -113,6 +113,7 @@ private:
     void DoRecover(DHType dhType);
     void ReStartSA(DHType dhType);
     void RecoverDistributedHardware(DHType dhType);
+    bool IsIdenticalAccount(const std::string &networkId);
     int32_t RetryGetEnableParam(const std::string &networkId, const std::string &uuid,
         const std::string &dhId, const DHType dhType, EnableParam &param);
     int32_t InitComponentHandler();

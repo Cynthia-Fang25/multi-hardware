@@ -17,7 +17,10 @@
 
 #include "anonymous_string.h"
 #include "capability_info_manager.h"
+<<<<<<< HEAD
 #include "component_manager.h"
+=======
+>>>>>>> de2ce406f757856b77320c864d71e5efd0d93a0b
 #include "dh_utils_tool.h"
 #include "capability_utils.h"
 #include "distributed_hardware_errno.h"
