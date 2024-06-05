@@ -43,7 +43,7 @@ void DHCommTool::Init()
     DHLOGI("Init DHCommTool");
     dhTransportPtr_ = std::make_shared<DHTransport>(shared_from_this());
     std::shared_ptr<AppExecFwk::EventRunner> runner = AppExecFwk::EventRunner::Create(true);
-    eventHandler_ = std::make_shared<DHCommTool::DHCommToolEventHandler>(runner);
+    eventHandler_ = std::make_shared<DHCommTool::DHCommToolEventHandler>(runner, shared_from_this());
     dhTransportPtr_->Init();
 }
 
@@ -110,6 +110,10 @@ void DHCommTool::GetAndSendLocalFullCaps(const std::string &reqNetworkId)
     cJSON *root = cJSON_CreateObject();
     ToJson(root, capsRsp);
     char *msg = cJSON_PrintUnformatted(root);
+    if (msg == nullptr) {
+        cJSON_Delete(root);
+        return;
+    }
     std::string fullCapsMsg(msg);
     cJSON_free(msg);
     cJSON_Delete(root);
@@ -146,8 +150,8 @@ FullCapsRsp DHCommTool::ParseAndSaveRemoteDHCaps(const std::string &remoteCaps)
     return capsRsp;
 }
 
-DHCommTool::DHCommToolEventHandler::DHCommToolEventHandler(
-    const std::shared_ptr<AppExecFwk::EventRunner> &runner) : AppExecFwk::EventHandler(runner)
+DHCommTool::DHCommToolEventHandler::DHCommToolEventHandler(const std::shared_ptr<AppExecFwk::EventRunner> &runner,
+    std::shared_ptr<DHCommTool> dhCommToolPtr) : AppExecFwk::EventHandler(runner), dhCommToolWPtr_(dhCommToolPtr)
 {
     DHLOGI("Ctor DHCommToolEventHandler");
 }
@@ -161,17 +165,26 @@ void DHCommTool::DHCommToolEventHandler::ProcessEvent(
         DHLOGE("ProcessEvent commMsg is null");
         return;
     }
+    if (dhCommToolWPtr_.expired()) {
+        DHLOGE("dhCommToolWPtr_ is expired");
+        return;
+    }
+    std::shared_ptr<DHCommTool> dhCommToolPtr = dhCommToolWPtr_.lock();
+    if (dhCommToolPtr == nullptr) {
+        DHLOGE("dhCommToolPtr is null");
+        return;
+    }
     switch (eventId) {
         case DH_COMM_REQ_FULL_CAPS: {
-            DHCommTool::GetInstance()->GetAndSendLocalFullCaps(commMsg->msg);
+            dhCommToolPtr->GetAndSendLocalFullCaps(commMsg->msg);
             break;
         }
         case DH_COMM_RSP_FULL_CAPS: {
             // parse remote rsp full attrs and save to local db
-            FullCapsRsp capsRsp = DHCommTool::GetInstance()->ParseAndSaveRemoteDHCaps(commMsg->msg);
+            FullCapsRsp capsRsp = dhCommToolPtr->ParseAndSaveRemoteDHCaps(commMsg->msg);
             DHLOGI("Receive full remote capabilities, remote networkid: %{public}s, caps size: %{public}" PRIu32,
                 GetAnonyString(capsRsp.networkId).c_str(), static_cast<uint32_t>(capsRsp.caps.size()));
-            ProcessFullCapsRsp(capsRsp);
+            ProcessFullCapsRsp(capsRsp, dhCommToolPtr);
             break;
         }
         default:
@@ -180,7 +193,8 @@ void DHCommTool::DHCommToolEventHandler::ProcessEvent(
     }
 }
 
-void DHCommTool::DHCommToolEventHandler::ProcessFullCapsRsp(const FullCapsRsp &capsRsp)
+void DHCommTool::DHCommToolEventHandler::ProcessFullCapsRsp(const FullCapsRsp &capsRsp,
+    const std::shared_ptr<DHCommTool> dhCommToolPtr)
 {
     if (capsRsp.networkId.empty() || capsRsp.caps.empty()) {
         DHLOGE("Receive remote caps info invalid");
@@ -189,7 +203,7 @@ void DHCommTool::DHCommToolEventHandler::ProcessFullCapsRsp(const FullCapsRsp &c
     // after receive rsp, close dsoftbus channel
     DHLOGI("we receive full remote capabilities, close channel, remote networkId: %{public}s",
         GetAnonyString(capsRsp.networkId).c_str());
-    DHCommTool::GetInstance()->GetDHTransportPtr()->StopSocket(capsRsp.networkId);
+    dhCommToolPtr->GetDHTransportPtr()->StopSocket(capsRsp.networkId);
 
     // trigger register dh by full attrs
     std::string uuid = DHContext::GetInstance().GetUUIDByNetworkId(capsRsp.networkId);
@@ -199,9 +213,9 @@ void DHCommTool::DHCommToolEventHandler::ProcessFullCapsRsp(const FullCapsRsp &c
     }
 
     for (auto const &cap : capsRsp.caps) {
-        BusinessState curState = ComponentManager::GetInstance().QueryBusinessState(uuid, cap->GetDHId());
-        DHLOGI("DH state: %{public}" PRIu32 ", uuid: %{public}s, dhId: %{public}s",
-            (uint32_t)curState, GetAnonyString(uuid).c_str(), GetAnonyString(cap->GetDHId()).c_str());
+        BusinessState curState = ComponentManager::GetInstance().QueryBusinessState(capsRsp.networkId, cap->GetDHId());
+        DHLOGI("DH state: %{public}" PRIu32 ", networkId: %{public}s, dhId: %{public}s",
+            (uint32_t)curState, GetAnonyString(capsRsp.networkId).c_str(), GetAnonyString(cap->GetDHId()).c_str());
         TaskParam taskParam = {
             .networkId = capsRsp.networkId,
             .uuid = uuid,

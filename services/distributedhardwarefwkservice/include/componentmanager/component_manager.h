@@ -34,7 +34,6 @@
 #include "idistributed_hardware_source.h"
 #include "impl_utils.h"
 #include "low_latency_listener.h"
-#include "monitor_task_timer.h"
 #include "meta_capability_info.h"
 #include "task_board.h"
 #include "task_factory.h"
@@ -108,8 +107,7 @@ private:
         DHType dhType, EnableParam &param);
     int32_t GetVersionFromVerMgr(const std::string &uuid, const DHType dhType, std::string &version, bool isSink);
     int32_t GetVersionFromVerInfoMgr(const std::string &uuid, const DHType dhType, std::string &version, bool isSink);
-    int32_t GetVersion(const std::string &networkId, const std::string &uuid,
-        DHType dhType, std::string &version, bool isSink);
+    int32_t GetVersion(const std::string &uuid, DHType dhType, std::string &version, bool isSink);
     void UpdateVersionCache(const std::string &uuid, const VersionInfo &versionInfo);
 
     void DoRecover(DHType dhType);
@@ -121,7 +119,6 @@ private:
     int32_t InitComponentHandler();
     int32_t InitSAMonitor();
     void StartComponent();
-    void StartTaskMonitor();
     void RegisterDHStateListener();
     void RegisterDataSyncTriggerListener();
     void InitDHCommTool();
@@ -130,7 +127,6 @@ private:
     void UnregisterDHStateListener();
     void UnregisterDataSyncTriggerListener();
     void UnInitDHCommTool();
-    void StopTaskMonitor();
     void StopComponent();
     void StopPrivacy();
     int32_t GetEnableCapParam(const std::string &networkId, const std::string &uuid, DHType dhType, EnableParam &param,
@@ -149,7 +145,6 @@ private:
     std::shared_ptr<ComponentPrivacy> cameraCompPrivacy_ = nullptr;
     std::shared_ptr<ComponentMonitor> compMonitorPtr_ = nullptr;
     sptr<LowLatencyListener> lowLatencyListener_ = nullptr;
-    std::shared_ptr<DHTimer> monitorTaskTimer_ = nullptr;
 
     std::atomic<bool> isUnInitTimeOut_;
     // record the remote device business state, {{deviceUUID, dhId}, BusinessState}.
@@ -161,7 +156,7 @@ private:
     std::shared_ptr<ComponentManager::ComponentManagerEventHandler> eventHandler_;
     std::shared_ptr<DHCommTool> dhCommToolPtr_;
 
-    // save those remote dh that need refresh by full capability, {{deviceUUID, dhId}, TaskParam}.
+    // save those remote dh that need refresh by full capability, {{device networkId, dhId}, TaskParam}.
     std::map<std::pair<std::string, std::string>, TaskParam> needRefreshTaskParams_;
     std::mutex needRefreshTaskParamsMtx_;
 };
