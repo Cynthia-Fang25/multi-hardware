@@ -62,7 +62,6 @@ ohos_shared_library("distributedhardwareutils") {
     "cJSON:cjson",
     "c_utils:utils",
     "dsoftbus:softbus_client",
-    "hilog:libhilog",
     "hisysevent:libhisysevent",
     "hitrace:hitrace_meter",
     "init:libbegetutil",
@@ -70,6 +69,7 @@ ohos_shared_library("distributedhardwareutils") {
     "safwk:system_ability_fwk",
     "zlib:shared_libz",
   ]
+  public_external_deps = [ "hilog:libhilog" ]
 
   innerapi_tags = [ "platformsdk" ]
   subsystem_name = "distributedhardware"

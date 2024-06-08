@@ -55,6 +55,7 @@ ohos_unittest("DistributedHardwareFwkKitTest") {
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
   ]
+  public_external_deps = [ "hilog:libhilog" ]
 }
 
 group("distributed_hardware_fwk_kit_test") {
