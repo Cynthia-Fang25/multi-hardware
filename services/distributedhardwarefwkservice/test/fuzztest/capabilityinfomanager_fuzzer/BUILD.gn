@@ -51,6 +51,7 @@ ohos_fuzztest("CapabilityInfoManagerFuzzTest") {
     "cJSON:cjson",
     "c_utils:utils",
     "device_manager:devicemanagersdk",
+    "hilog:libhilog",
     "init:libbegetutil",
     "kv_store:distributeddata_inner",
     "safwk:system_ability_fwk",

@@ -52,6 +52,7 @@ ohos_unittest("DistributedHardwareFwkKitTest") {
   external_deps = [
     "cJSON:cjson",
     "c_utils:utils",
+    "hilog:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
   ]

@@ -53,7 +53,10 @@ ohos_fuzztest("ComponentLoaderFuzzTest") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  external_deps = [ "cJSON:cjson" ]
+  external_deps = [
+    "cJSON:cjson",
+    "hilog:libhilog",
+  ]
 }
 
 ###############################################################################

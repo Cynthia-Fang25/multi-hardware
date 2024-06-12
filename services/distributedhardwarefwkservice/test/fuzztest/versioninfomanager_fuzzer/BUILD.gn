@@ -54,6 +54,7 @@ ohos_fuzztest("VersioninfoManagerFuzzTest") {
     "cJSON:cjson",
     "c_utils:utils",
     "eventhandler:libeventhandler",
+    "hilog:libhilog",
     "kv_store:distributeddata_inner",
   ]
 }
