@@ -163,7 +163,7 @@ void ComponentManager::StartComponent()
 void ComponentManager::RegisterDHStateListener()
 {
     for (const auto &item : compSource_) {
-        DHLOGI("Register DH State listener, dhType: %{public}" PRIu32, (uint32_t)item.first);
+        DHLOGI("Register DH State listener, dhType: %{public}#X", item.first);
         if (item.second == nullptr) {
             DHLOGE("comp source ptr is null");
             continue;
@@ -178,7 +178,7 @@ void ComponentManager::RegisterDataSyncTriggerListener()
     eventHandler_ = std::make_shared<ComponentManager::ComponentManagerEventHandler>(runner);
 
     for (const auto &item : compSource_) {
-        DHLOGI("Register Data Sync Trigger listener, dhType: %{public}" PRIu32, (uint32_t)item.first);
+        DHLOGI("Register Data Sync Trigger listener, dhType: %{public}#X", item.first);
         if (item.second == nullptr) {
             DHLOGE("comp source ptr is null");
             continue;
@@ -239,7 +239,7 @@ void ComponentManager::UnInitSAMonitor()
 void ComponentManager::UnregisterDHStateListener()
 {
     for (const auto &item : compSource_) {
-        DHLOGI("Unregister DH State listener, dhType: %{public}" PRIu32, (uint32_t)item.first);
+        DHLOGI("Unregister DH State listener, dhType: %{public}#X", item.first);
         if (item.second == nullptr) {
             DHLOGE("comp source ptr is null");
             continue;
@@ -251,7 +251,7 @@ void ComponentManager::UnregisterDHStateListener()
 void ComponentManager::UnregisterDataSyncTriggerListener()
 {
     for (const auto &item : compSource_) {
-        DHLOGI("Unregister Data Sync Trigger listener, dhType: %{public}" PRIu32, (uint32_t)item.first);
+        DHLOGI("Unregister Data Sync Trigger listener, dhType: %{public}#X", item.first);
         if (item.second == nullptr) {
             DHLOGE("comp source ptr is null");
             continue;
@@ -307,6 +307,10 @@ ActionResult ComponentManager::StartSource()
     std::unordered_map<DHType, std::shared_future<int32_t>> futures;
     std::string uuid = DHContext::GetInstance().GetDeviceInfo().uuid;
     for (const auto &item : compSource_) {
+        if (item.second == nullptr) {
+            DHLOGE("comp source ptr is null");
+            continue;
+        }
         CompVersion compversion;
         VersionManager::GetInstance().GetCompVersion(uuid, item.first, compversion);
         auto params = compversion.sourceVersion;
@@ -318,13 +322,16 @@ ActionResult ComponentManager::StartSource()
 
 ActionResult ComponentManager::StartSource(DHType dhType)
 {
-    DHLOGI("Start Source, dhType: %{public}" PRIu32, (uint32_t)dhType);
+    DHLOGI("Start Source, dhType: %{public}#X", dhType);
     std::unordered_map<DHType, std::shared_future<int32_t>> futures;
     if (compSource_.find(dhType) == compSource_.end()) {
-        DHLOGE("Component for DHType: %{public}" PRIu32 " not init source handler", (uint32_t)dhType);
+        DHLOGE("Component for DHType: %{public}#X not init source handler", dhType);
         return futures;
     }
-
+    if (compSource_[dhType] == nullptr) {
+        DHLOGE("comp source ptr is null");
+        return futures;
+    }
     std::string uuid = DHContext::GetInstance().GetDeviceInfo().uuid;
     CompVersion compVersion;
     VersionManager::GetInstance().GetCompVersion(uuid, dhType, compVersion);
@@ -343,6 +350,10 @@ ActionResult ComponentManager::StartSink()
     std::unordered_map<DHType, std::shared_future<int32_t>> futures;
     std::string uuid = DHContext::GetInstance().GetDeviceInfo().uuid;
     for (const auto &item : compSink_) {
+        if (item.second == nullptr) {
+            DHLOGE("comp sink ptr is null");
+            continue;
+        }
         CompVersion compversion;
         VersionManager::GetInstance().GetCompVersion(uuid, item.first, compversion);
         auto params = compversion.sinkVersion;
@@ -362,13 +373,16 @@ ActionResult ComponentManager::StartSink()
 
 ActionResult ComponentManager::StartSink(DHType dhType)
 {
-    DHLOGI("Start Sink, dhType: %{public}" PRIu32, (uint32_t)dhType);
+    DHLOGI("Start Sink, dhType: %{public}#X", dhType);
     std::unordered_map<DHType, std::shared_future<int32_t>> futures;
     if (compSink_.find(dhType) == compSink_.end()) {
-        DHLOGE("Component for DHType: %{public}" PRIu32 " not init sink handler", (uint32_t)dhType);
+        DHLOGE("Component for DHType: %{public}#X not init sink handler", dhType);
         return futures;
     }
-
+    if (compSink_[dhType] == nullptr) {
+        DHLOGE("comp sink ptr is null");
+        return futures;
+    }
     std::string uuid = DHContext::GetInstance().GetDeviceInfo().uuid;
     CompVersion compVersion;
     VersionManager::GetInstance().GetCompVersion(uuid, dhType, compVersion);
@@ -394,6 +408,10 @@ ActionResult ComponentManager::StopSource()
     DHLOGI("start.");
     std::unordered_map<DHType, std::shared_future<int32_t>> futures;
     for (const auto &item : compSource_) {
+        if (item.second == nullptr) {
+            DHLOGE("comp source ptr is null");
+            continue;
+        }
         auto future = std::async(std::launch::async, [item]() { return item.second->ReleaseSource(); });
         futures.emplace(item.first, future.share());
     }
@@ -405,6 +423,10 @@ ActionResult ComponentManager::StopSink()
     DHLOGI("start.");
     std::unordered_map<DHType, std::shared_future<int32_t>> futures;
     for (const auto &item : compSink_) {
+        if (item.second == nullptr) {
+            DHLOGE("comp sink ptr is null");
+            continue;
+        }
         auto future = std::async(std::launch::async, [item]() {
             int32_t status = item.second->ReleaseSink();
             IHardwareHandler *hardwareHandler = nullptr;
@@ -607,6 +629,10 @@ int32_t ComponentManager::Disable(const std::string &networkId, const std::strin
 DHType ComponentManager::GetDHType(const std::string &uuid, const std::string &dhId) const
 {
     std::shared_ptr<CapabilityInfo> capability = nullptr;
+    if (CapabilityInfoManager::GetInstance() == nullptr) {
+        DHLOGE("cap getinstance is nullptr");
+        return DHType::UNKNOWN;
+    }
     auto ret = CapabilityInfoManager::GetInstance()->GetCapability(GetDeviceIdByUUID(uuid), dhId, capability);
     if ((ret == DH_FWK_SUCCESS) && (capability != nullptr)) {
         return capability->GetDHType();
@@ -622,6 +648,10 @@ int32_t ComponentManager::GetEnableCapParam(const std::string &networkId, const 
     DeviceInfo sourceDeviceInfo = GetLocalDeviceInfo();
     std::vector<std::shared_ptr<CapabilityInfo>> sourceCapInfos;
     std::string sourceDHId;
+    if (CapabilityInfoManager::GetInstance() == nullptr) {
+        DHLOGE("cap getinstance is nullptr");
+        return ERR_DH_FWK_COMPONENT_CAP_GET_INSTANCE_IS_NULL;
+    }
     CapabilityInfoManager::GetInstance()->GetCapabilitiesByDeviceId(sourceDeviceInfo.deviceId, sourceCapInfos);
     for (const auto &capInfo : sourceCapInfos) {
         if (dhType == capInfo->GetDHType()) {
@@ -637,6 +667,10 @@ int32_t ComponentManager::GetEnableCapParam(const std::string &networkId, const 
     }
     param.sourceVersion = sourceVersion;
 
+    if (MetaInfoManager::GetInstance() == nullptr) {
+        DHLOGE("meta getinstance is nullptr");
+        return ERR_DH_FWK_COMPONENT_MATE_GET_INSTANCE_IS_NULL;
+    }
     param.sinkAttrs = capability->GetDHAttrs();
     std::string sinkVersion("");
     ret = GetVersion(uuid, dhType, sinkVersion, true);
@@ -665,6 +699,10 @@ int32_t ComponentManager::GetEnableCapParam(const std::string &networkId, const 
 int32_t ComponentManager::GetEnableMetaParam(const std::string &networkId, const std::string &uuid,
     DHType dhType, EnableParam &param, std::shared_ptr<MetaCapabilityInfo> &metaCapPtr)
 {
+    if (MetaInfoManager::GetInstance() == nullptr) {
+        DHLOGE("meta getinstance is nullptr");
+        return ERR_DH_FWK_COMPONENT_MATE_GET_INSTANCE_IS_NULL;
+    }
     DeviceInfo sourceDeviceInfo = GetLocalDeviceInfo();
     std::vector<std::shared_ptr<MetaCapabilityInfo>> sourceMetaInfos;
     std::string sourceDHId;
@@ -697,6 +735,10 @@ int32_t ComponentManager::GetEnableMetaParam(const std::string &networkId, const
 int32_t ComponentManager::GetCapParam(const std::string &uuid, const std::string &dhId,
     std::shared_ptr<CapabilityInfo> &capability)
 {
+    if (CapabilityInfoManager::GetInstance() == nullptr) {
+        DHLOGE("cap getinstance is nullptr");
+        return ERR_DH_FWK_COMPONENT_CAP_GET_INSTANCE_IS_NULL;
+    }
     std::string deviceId = GetDeviceIdByUUID(uuid);
     auto ret = CapabilityInfoManager::GetInstance()->GetCapability(deviceId, dhId, capability);
     if ((ret == DH_FWK_SUCCESS) && (capability != nullptr)) {
@@ -704,7 +746,10 @@ int32_t ComponentManager::GetCapParam(const std::string &uuid, const std::string
             GetAnonyString(deviceId).c_str(), GetAnonyString(uuid).c_str(), GetAnonyString(dhId).c_str(), ret);
         return ret;
     }
-
+    if (LocalCapabilityInfoManager::GetInstance() == nullptr) {
+        DHLOGE("local getinstance is nullptr");
+        return ERR_DH_FWK_COMPONENT_LOCAL_GET_INSTANCE_IS_NULL;
+    }
     ret = LocalCapabilityInfoManager::GetInstance()->GetCapability(deviceId, dhId, capability);
     if ((ret == DH_FWK_SUCCESS) && (capability != nullptr)) {
         DHLOGI("Local GetCaps success, deviceId: %{public}s, uuid: %{public}s, dhId: %{public}s, ret: %{public}d",
@@ -718,6 +763,10 @@ int32_t ComponentManager::GetCapParam(const std::string &uuid, const std::string
 int32_t ComponentManager::GetMetaParam(const std::string &uuid, const std::string &dhId,
     std::shared_ptr<MetaCapabilityInfo> &metaCapPtr)
 {
+    if (MetaInfoManager::GetInstance() == nullptr) {
+        DHLOGE("meta getinstance is nullptr");
+        return ERR_DH_FWK_COMPONENT_MATE_GET_INSTANCE_IS_NULL;
+    }
     auto ret = MetaInfoManager::GetInstance()->GetMetaCapInfo(DHContext::GetInstance().GetUdidHashIdByUUID(uuid),
         dhId, metaCapPtr);
     if ((ret == DH_FWK_SUCCESS) && (metaCapPtr != nullptr)) {
@@ -774,6 +823,10 @@ int32_t ComponentManager::GetVersionFromVerMgr(const std::string &uuid, const DH
 int32_t ComponentManager::GetVersionFromVerInfoMgr(const std::string &uuid, const DHType dhType,
     std::string &version, bool isSink)
 {
+    if (VersionInfoManager::GetInstance() == nullptr) {
+        DHLOGE("version getinstance is nullptr");
+        return ERR_DH_FWK_COMPONENT_VERSION_GET_INSTANCE_IS_NULL;
+    }
     VersionInfo versionInfo;
     int32_t ret =  VersionInfoManager::GetInstance()->GetVersionInfoByDeviceId(GetDeviceIdByUUID(uuid), versionInfo);
     if (ret != DH_FWK_SUCCESS) {
@@ -783,7 +836,7 @@ int32_t ComponentManager::GetVersionFromVerInfoMgr(const std::string &uuid, cons
     }
     auto iter = versionInfo.compVersions.find(dhType);
     if (iter == versionInfo.compVersions.end()) {
-        DHLOGE("can not find component version for dhType = %{public}d", dhType);
+        DHLOGE("can not find component version for dhType = %{public}#X", dhType);
         return ERR_DH_FWK_COMPONENT_DHTYPE_NOT_FOUND;
     }
     DHLOGI("Get version info mgr success, sinkVersion = %{public}s, sourceVersion = %{public}s, uuid = %{public}s, "
@@ -847,22 +900,26 @@ void ComponentManager::DoRecover(DHType dhType)
 
 void ComponentManager::ReStartSA(DHType dhType)
 {
-    DHLOGI("Restart SA for DHType %{public}" PRIu32, (uint32_t)dhType);
+    DHLOGI("Restart SA for DHType %{public}#X", dhType);
     auto sourceResult = StartSource(dhType);
     auto sinkResult = StartSink(dhType);
 
     if (!WaitForResult(Action::START_SOURCE, sourceResult)) {
-        DHLOGE("ReStartSource failed, DHType: %{public}" PRIu32, (uint32_t)dhType);
+        DHLOGE("ReStartSource failed, DHType: %{public}#X", dhType);
     }
 
     if (!WaitForResult(Action::START_SINK, sinkResult)) {
-        DHLOGE("ReStartSink failed, DHType: %{public}" PRIu32, (uint32_t)dhType);
+        DHLOGE("ReStartSink failed, DHType: %{public}#X", dhType);
     }
     DHLOGI("Finish Restart");
 }
 
 void ComponentManager::RecoverDistributedHardware(DHType dhType)
 {
+    if (CapabilityInfoManager::GetInstance() == nullptr) {
+        DHLOGE("cap getinstance is nullptr");
+        return;
+    }
     CapabilityInfoMap capabilityMap;
     CapabilityInfoManager::GetInstance()->GetDataByDHType(dhType, capabilityMap);
     for (const auto &capInfo : capabilityMap) {
@@ -919,7 +976,7 @@ bool ComponentManager::IsIdenticalAccount(const std::string &networkId)
 void ComponentManager::UpdateBusinessState(const std::string &networkId, const std::string &dhId, BusinessState state)
 {
     DHLOGI("UpdateBusinessState, networkId: %{public}s, dhId: %{public}s, state: %{public}" PRIu32,
-        GetAnonyString(networkId).c_str(), GetAnonyString(dhId).c_str(), (uint32_t)state);
+        GetAnonyString(networkId).c_str(), GetAnonyString(dhId).c_str(), static_cast<uint32_t>(state));
     {
         std::lock_guard<std::mutex> lock(bizStateMtx_);
         dhBizStates_[{networkId, dhId}] = state;
@@ -954,6 +1011,10 @@ void ComponentManager::TriggerFullCapsSync(const std::string &networkId)
         DHLOGE("Remote networkid is null");
         return;
     }
+    if (dhCommToolPtr_ == nullptr) {
+        DHLOGE("DH communication tool ptr is null");
+        return;
+    }
     dhCommToolPtr_->TriggerReqFullDHCaps(networkId);
 }
 
@@ -984,6 +1045,10 @@ ComponentManager::ComponentManagerEventHandler::ComponentManagerEventHandler(
 void ComponentManager::ComponentManagerEventHandler::ProcessEvent(
     const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is nullptr");
+        return;
+    }
     uint32_t eventId = event->GetInnerEventId();
     switch (eventId) {
         case EVENT_DATA_SYNC_MANUAL: {

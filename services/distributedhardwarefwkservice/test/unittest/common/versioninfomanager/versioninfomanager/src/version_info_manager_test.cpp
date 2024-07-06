@@ -131,6 +131,7 @@ void VersionInfoManagerTest::TearDown()
  */
 HWTEST_F(VersionInfoManagerTest, version_info_manager_test_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     EXPECT_EQ(VersionInfoManager::GetInstance()->Init(), DH_FWK_SUCCESS);
 }
 
@@ -142,6 +143,7 @@ HWTEST_F(VersionInfoManagerTest, version_info_manager_test_001, TestSize.Level0)
  */
 HWTEST_F(VersionInfoManagerTest, version_info_manager_test_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     for (const auto& verInfo : g_versionInfos) {
         EXPECT_EQ(VersionInfoManager::GetInstance()->AddVersion(verInfo), DH_FWK_SUCCESS);
     }
@@ -155,6 +157,7 @@ HWTEST_F(VersionInfoManagerTest, version_info_manager_test_002, TestSize.Level0)
  */
 HWTEST_F(VersionInfoManagerTest, version_info_manager_test_003, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     VersionInfo versionInfo;
     for (const auto& verInfo : g_versionInfos) {
         EXPECT_EQ(VersionInfoManager::GetInstance()->GetVersionInfoByDeviceId(verInfo.deviceId, versionInfo),
@@ -170,6 +173,7 @@ HWTEST_F(VersionInfoManagerTest, version_info_manager_test_003, TestSize.Level0)
  */
 HWTEST_F(VersionInfoManagerTest, version_info_manager_test_004, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     EXPECT_EQ(VersionInfoManager::GetInstance()->SyncVersionInfoFromDB(DEV_ID_1), DH_FWK_SUCCESS);
 }
 
@@ -181,6 +185,7 @@ HWTEST_F(VersionInfoManagerTest, version_info_manager_test_004, TestSize.Level0)
  */
 HWTEST_F(VersionInfoManagerTest, version_info_manager_test_005, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     EXPECT_EQ(VersionInfoManager::GetInstance()->UnInit(), DH_FWK_SUCCESS);
 }
 
@@ -192,6 +197,7 @@ HWTEST_F(VersionInfoManagerTest, version_info_manager_test_005, TestSize.Level0)
  */
 HWTEST_F(VersionInfoManagerTest, UpdateVersionCache_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     VersionInfo versionInfo;
     versionInfo.deviceId = "deviceId";
     versionInfo.dhVersion = "dhVersion";
@@ -207,6 +213,7 @@ HWTEST_F(VersionInfoManagerTest, UpdateVersionCache_001, TestSize.Level0)
  */
 HWTEST_F(VersionInfoManagerTest, UpdateVersionCache_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     VersionInfo versionInfo;
     VersionInfoManager::GetInstance()->UpdateVersionCache(versionInfo);
     EXPECT_EQ(DH_FWK_SUCCESS, VersionInfoManager::GetInstance()->Init());
@@ -220,6 +227,7 @@ HWTEST_F(VersionInfoManagerTest, UpdateVersionCache_002, TestSize.Level0)
  */
 HWTEST_F(VersionInfoManagerTest, RemoveVersionInfoByDeviceId_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     std::string deviceId;
     VersionInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;
     int32_t ret = VersionInfoManager::GetInstance()->RemoveVersionInfoByDeviceId(deviceId);
@@ -234,6 +242,7 @@ HWTEST_F(VersionInfoManagerTest, RemoveVersionInfoByDeviceId_001, TestSize.Level
  */
 HWTEST_F(VersionInfoManagerTest, RemoveVersionInfoByDeviceId_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     std::string deviceId = "deviceId";
     std::string appId;
     std::string storeId;
@@ -251,6 +260,7 @@ HWTEST_F(VersionInfoManagerTest, RemoveVersionInfoByDeviceId_002, TestSize.Level
  */
 HWTEST_F(VersionInfoManagerTest, SyncVersionInfoFromDB_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     std::string deviceId;
     VersionInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;
     int32_t ret = VersionInfoManager::GetInstance()->SyncVersionInfoFromDB(deviceId);
@@ -265,6 +275,7 @@ HWTEST_F(VersionInfoManagerTest, SyncVersionInfoFromDB_001, TestSize.Level0)
  */
 HWTEST_F(VersionInfoManagerTest, SyncVersionInfoFromDB_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     std::string deviceId = "deviceId";
     std::string appId;
     std::string storeId;
@@ -282,6 +293,7 @@ HWTEST_F(VersionInfoManagerTest, SyncVersionInfoFromDB_002, TestSize.Level0)
  */
 HWTEST_F(VersionInfoManagerTest, SyncVersionInfoFromDB_003, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     std::string deviceId = "device";
     int32_t ret =  VersionInfoManager::GetInstance()->SyncVersionInfoFromDB(deviceId);
     EXPECT_NE(DH_FWK_SUCCESS, ret);
@@ -295,6 +307,7 @@ HWTEST_F(VersionInfoManagerTest, SyncVersionInfoFromDB_003, TestSize.Level0)
  */
 HWTEST_F(VersionInfoManagerTest, SyncRemoteVersionInfos_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     VersionInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;
     int32_t ret = VersionInfoManager::GetInstance()->SyncRemoteVersionInfos();
     EXPECT_EQ(ERR_DH_FWK_RESOURCE_DB_ADAPTER_POINTER_NULL, ret);
@@ -308,6 +321,7 @@ HWTEST_F(VersionInfoManagerTest, SyncRemoteVersionInfos_001, TestSize.Level0)
  */
 HWTEST_F(VersionInfoManagerTest, SyncRemoteVersionInfos_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     std::string appId;
     std::string storeId;
     std::shared_ptr<DistributedKv::KvStoreObserver> changeListener = nullptr;
@@ -324,6 +338,7 @@ HWTEST_F(VersionInfoManagerTest, SyncRemoteVersionInfos_002, TestSize.Level0)
  */
 HWTEST_F(VersionInfoManagerTest, OnChange_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     DistributedKv::Entry insert, update, del;
     insert.key = "strBase";
     update.key = "strBase";
@@ -350,6 +365,7 @@ HWTEST_F(VersionInfoManagerTest, OnChange_001, TestSize.Level0)
  */
 HWTEST_F(VersionInfoManagerTest, HandleVersionAddChange_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     std::vector<DistributedKv::Entry> insertRecords;
     DistributedKv::Entry entry;
     entry.key = "strBase";
@@ -367,6 +383,7 @@ HWTEST_F(VersionInfoManagerTest, HandleVersionAddChange_001, TestSize.Level0)
  */
 HWTEST_F(VersionInfoManagerTest, HandleVersionUpdateChange_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     std::vector<DistributedKv::Entry> updateRecords;
     DistributedKv::Entry entry;
     entry.key = "strBase";
@@ -384,6 +401,7 @@ HWTEST_F(VersionInfoManagerTest, HandleVersionUpdateChange_001, TestSize.Level0)
  */
 HWTEST_F(VersionInfoManagerTest, HandleVersionDeleteChange_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     std::vector<DistributedKv::Entry> deleteRecords;
     DistributedKv::Entry entry;
     entry.key = "strBase";
@@ -401,6 +419,7 @@ HWTEST_F(VersionInfoManagerTest, HandleVersionDeleteChange_001, TestSize.Level0)
  */
 HWTEST_F(VersionInfoManagerTest, GetVersionInfoByDeviceId_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     std::string deviceId;
     VersionInfo versionInfo;
     VersionInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;

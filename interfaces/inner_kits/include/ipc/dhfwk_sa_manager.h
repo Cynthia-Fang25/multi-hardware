@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -57,12 +57,12 @@ private:
 
 private:
     std::atomic<bool> dhfwkOnLine_;
-    std::atomic<bool> isSubscribeDHFWKSAChangeListener;
+    std::atomic<bool> isSubscribeDHFWKSAChangeListener_;
     std::mutex proxyMutex_;
     sptr<IDistributedHardware> dhfwkProxy_;
     sptr<SystemAbilityListener> saListener_;
     std::mutex saStatCbMutex_;
-    DHFWKSAStateCb saStateCallback;
+    DHFWKSAStateCb saStateCallback_;
     std::mutex publisherListenersMutex_;
     std::unordered_map<DHTopic, std::set<sptr<IPublisherListener>>> publisherListenersCache_;
     std::mutex avTransControlCenterCbMutex_;

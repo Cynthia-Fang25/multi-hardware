@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -91,6 +91,7 @@ HWTEST_F(TaskTest, task_test_001, TestSize.Level0)
     std::shared_ptr<MockOnLineTask> onlineTask =
         std::static_pointer_cast<MockOnLineTask>(
         MockTaskFactory::GetInstance().CreateTask(TaskType::ON_LINE, TASK_PARAM_1, nullptr));
+    ASSERT_NE(nullptr, onlineTask);
     onlineTask->SetOnLineDevInfos({ DEV_INFO_11, DEV_INFO_12, DEV_INFO_13, DEV_INFO_14, DEV_INFO_15 });
     TaskExecutor::GetInstance().PushTask(onlineTask);
 
@@ -108,10 +109,12 @@ HWTEST_F(TaskTest, task_test_002, TestSize.Level0)
 {
     std::shared_ptr<MockOnLineTask> onlineTask1 = std::static_pointer_cast<MockOnLineTask>(
         MockTaskFactory::GetInstance().CreateTask(TaskType::ON_LINE, TASK_PARAM_1, nullptr));
+    ASSERT_NE(nullptr, onlineTask1);
     onlineTask1->SetOnLineDevInfos({ DEV_INFO_11, DEV_INFO_12, DEV_INFO_13, DEV_INFO_14, DEV_INFO_15 });
 
     std::shared_ptr<MockOnLineTask> onlineTask2 = std::static_pointer_cast<MockOnLineTask>(
         MockTaskFactory::GetInstance().CreateTask(TaskType::ON_LINE, TASK_PARAM_2, nullptr));
+    ASSERT_NE(nullptr, onlineTask2);
     onlineTask2->SetOnLineDevInfos({ DEV_INFO_21, DEV_INFO_22, DEV_INFO_23, DEV_INFO_24, DEV_INFO_25 });
 
     TaskExecutor::GetInstance().PushTask(onlineTask1);
@@ -132,6 +135,7 @@ HWTEST_F(TaskTest, task_test_003, TestSize.Level0)
     std::shared_ptr<MockOffLineTask> offlineTask =
         std::static_pointer_cast<MockOffLineTask>(
         MockTaskFactory::GetInstance().CreateTask(TaskType::OFF_LINE, TASK_PARAM_1, nullptr));
+    ASSERT_NE(nullptr, offlineTask);
     offlineTask->SetOffLineDevInfos({ DEV_INFO_11, DEV_INFO_12, DEV_INFO_13, DEV_INFO_14, DEV_INFO_15 });
     TaskExecutor::GetInstance().PushTask(offlineTask);
 
@@ -150,11 +154,13 @@ HWTEST_F(TaskTest, task_test_004, TestSize.Level0)
     std::shared_ptr<MockOnLineTask> onlineTask =
         std::static_pointer_cast<MockOnLineTask>(
         MockTaskFactory::GetInstance().CreateTask(TaskType::ON_LINE, TASK_PARAM_1, nullptr));
+    ASSERT_NE(nullptr, onlineTask);
     onlineTask->SetOnLineDevInfos({ DEV_INFO_11, DEV_INFO_12, DEV_INFO_13, DEV_INFO_14, DEV_INFO_15 });
 
     std::shared_ptr<MockOffLineTask> offlineTask =
         std::static_pointer_cast<MockOffLineTask>(
         MockTaskFactory::GetInstance().CreateTask(TaskType::OFF_LINE, TASK_PARAM_1, nullptr));
+    ASSERT_NE(nullptr, offlineTask);
     offlineTask->SetOffLineDevInfos({ DEV_INFO_11, DEV_INFO_12, DEV_INFO_13, DEV_INFO_14, DEV_INFO_15 });
 
     TaskExecutor::GetInstance().PushTask(onlineTask);
@@ -325,6 +331,7 @@ HWTEST_F(TaskTest, task_test_016, TestSize.Level0)
 {
     TaskParam taskParam;
     auto task = TaskFactory::GetInstance().CreateTask(TaskType::DISABLE, taskParam, nullptr);
+    ASSERT_NE(nullptr, task);
     task->DoTask();
     ASSERT_TRUE(task->childrenTasks_.empty());
 }
@@ -339,6 +346,7 @@ HWTEST_F(TaskTest, task_test_017, TestSize.Level0)
 {
     TaskParam taskParam;
     auto task = TaskFactory::GetInstance().CreateTask(TaskType::ENABLE, taskParam, nullptr);
+    ASSERT_NE(nullptr, task);
     task->DoTask();
     ASSERT_TRUE(task->childrenTasks_.empty());
 }
@@ -353,6 +361,7 @@ HWTEST_F(TaskTest, task_test_018, TestSize.Level0)
 {
     TaskParam taskParam;
     auto task = TaskFactory::GetInstance().CreateTask(TaskType::OFF_LINE, taskParam, nullptr);
+    ASSERT_NE(nullptr, task);
     std::vector<TaskStep> taskSteps;
     taskSteps.push_back(TaskStep::UNREGISTER_OFFLINE_DISTRIBUTED_HARDWARE);
     task->SetTaskSteps(taskSteps);
@@ -370,6 +379,7 @@ HWTEST_F(TaskTest, task_test_019, TestSize.Level0)
 {
     TaskParam taskParam;
     auto task = TaskFactory::GetInstance().CreateTask(TaskType::OFF_LINE, taskParam, nullptr);
+    ASSERT_NE(nullptr, task);
     std::vector<TaskStep> taskSteps;
     taskSteps.push_back(TaskStep::CLEAR_OFFLINE_INFO);
     task->SetTaskSteps(taskSteps);
@@ -389,6 +399,7 @@ HWTEST_F(TaskTest, task_test_020, TestSize.Level0)
         DHType::AUDIO);
     TaskParam taskParam;
     auto task = TaskFactory::GetInstance().CreateTask(TaskType::OFF_LINE, taskParam, nullptr);
+    ASSERT_NE(nullptr, task);
     task->AddChildrenTask(childrenTask);
     ASSERT_TRUE(task->childrenTasks_.empty());
 }

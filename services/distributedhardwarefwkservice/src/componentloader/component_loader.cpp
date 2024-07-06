@@ -245,7 +245,7 @@ bool ComponentLoader::CheckComponentEnable(const CompConfig &config)
         DHLOGE("sys para: %{public}s get failed.", (item->second).c_str());
         return false;
     }
-    DHLOGI("Component type: %{public}u, enable flag: %{public}d.", config.type, isEnable);
+    DHLOGI("Component type: %{public}#X, enable flag: %{public}d.", config.type, isEnable);
     return isEnable;
 }
 
@@ -408,7 +408,7 @@ void ComponentLoader::GetAllHandler(std::map<DHType, CompConfig> &dhtypeMap)
 int32_t ComponentLoader::GetHardwareHandler(const DHType dhType, IHardwareHandler *&hardwareHandlerPtr)
 {
     if (compHandlerMap_.find(dhType) == compHandlerMap_.end()) {
-        DHLOGE("DHType not exist, dhType: %{public}" PRIu32, (uint32_t)dhType);
+        DHLOGE("DHType not exist, dhType: %{public}#X", dhType);
         return ERR_DH_FWK_LOADER_HANDLER_IS_NULL;
     }
 
@@ -432,7 +432,7 @@ int32_t ComponentLoader::GetHardwareHandler(const DHType dhType, IHardwareHandle
 int32_t ComponentLoader::GetSource(const DHType dhType, IDistributedHardwareSource *&sourcePtr)
 {
     if (compHandlerMap_.find(dhType) == compHandlerMap_.end()) {
-        DHLOGE("DHType not exist, dhType: %{public}" PRIu32, (uint32_t)dhType);
+        DHLOGE("DHType not exist, dhType: %{public}#X", dhType);
         return ERR_DH_FWK_LOADER_HANDLER_IS_NULL;
     }
 
@@ -456,7 +456,7 @@ int32_t ComponentLoader::GetSource(const DHType dhType, IDistributedHardwareSour
 int32_t ComponentLoader::GetSink(const DHType dhType, IDistributedHardwareSink *&sinkPtr)
 {
     if (compHandlerMap_.find(dhType) == compHandlerMap_.end()) {
-        DHLOGE("DHType not exist, dhType: %{public}" PRIu32, (uint32_t)dhType);
+        DHLOGE("DHType not exist, dhType: %{public}#X", dhType);
         return ERR_DH_FWK_LOADER_HANDLER_IS_NULL;
     }
 
@@ -611,7 +611,7 @@ bool ComponentLoader::IsDHTypeExist(DHType dhType)
 int32_t ComponentLoader::GetSourceSaId(const DHType dhType)
 {
     if (compHandlerMap_.find(dhType) == compHandlerMap_.end()) {
-        DHLOGE("DHType not exist, dhType: %{public}" PRIu32, (uint32_t)dhType);
+        DHLOGE("DHType not exist, dhType: %{public}#X", dhType);
         return DEFAULT_SA_ID;
     }
     return compHandlerMap_[dhType].sourceSaId;

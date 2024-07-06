@@ -49,7 +49,7 @@ void LowLatency::EnableLowLatency(DHType dhType)
 {
     DHLOGI("Start EnableLowLatency dhType: %{public}#X", dhType);
     if (dhType <= DHType::UNKNOWN || dhType >= DHType::MAX_DH) {
-        DHLOGE("DHType is invalid, dhType: %{public}" PRIu32, (uint32_t)dhType);
+        DHLOGE("DHType is invalid, dhType: %{public}#X", dhType);
         return;
     }
     std::lock_guard<std::mutex> lock(lowLatencyMutex_);
@@ -70,7 +70,7 @@ void LowLatency::DisableLowLatency(DHType dhType)
 {
     DHLOGI("Start DisableLowLatency dhType: %{public}#X", dhType);
     if (dhType <= DHType::UNKNOWN || dhType >= DHType::MAX_DH) {
-        DHLOGE("DHType is invalid, dhType: %{public}" PRIu32, (uint32_t)dhType);
+        DHLOGE("DHType is invalid, dhType: %{public}#X", dhType);
         return;
     }
     std::lock_guard<std::mutex> lock(lowLatencyMutex_);

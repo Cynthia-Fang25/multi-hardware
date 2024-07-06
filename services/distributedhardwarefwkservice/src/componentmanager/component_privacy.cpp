@@ -254,6 +254,10 @@ bool ComponentPrivacy::GetPageFlag()
 
 void ComponentPrivacy::ComponentEventHandler::ProcessEvent(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is nullptr");
+        return;
+    }
     auto iter = eventFuncMap_.find(event->GetInnerEventId());
     if (iter == eventFuncMap_.end()) {
         DHLOGE("ComponentEventHandler Event Id %{public}d is undefined.", event->GetInnerEventId());
@@ -282,6 +286,10 @@ ComponentPrivacy::ComponentEventHandler::~ComponentEventHandler()
 void ComponentPrivacy::ComponentEventHandler::ProcessStartPage(const AppExecFwk::InnerEvent::Pointer &event)
 {
     DHLOGI("ProcessStartPage enter.");
+    if (event == nullptr) {
+        DHLOGE("event is nullptr");
+        return;
+    }
     std::shared_ptr<cJSON> dataMsg = event->GetSharedObject<cJSON>();
     cJSON *innerMsg = cJSON_GetArrayItem(dataMsg.get(), 0);
     if (!IsString(innerMsg, PRIVACY_SUBTYPE)) {
@@ -294,12 +302,21 @@ void ComponentPrivacy::ComponentEventHandler::ProcessStartPage(const AppExecFwk:
         return;
     }
     std::string networkId = cJSON_GetObjectItem(innerMsg, PRIVACY_NETWORKID.c_str())->valuestring;
+
+    if (comPrivacyObj_ == nullptr) {
+        DHLOGE("comPrivacyObj_ is nullptr");
+        return;
+    }
     comPrivacyObj_->StartPrivacePage(subtype, networkId);
 }
 
 void ComponentPrivacy::ComponentEventHandler::ProcessStopPage(const AppExecFwk::InnerEvent::Pointer &event)
 {
     DHLOGI("ProcessStopPage enter.");
+    if (event == nullptr) {
+        DHLOGE("event is nullptr");
+        return;
+    }
     std::shared_ptr<cJSON> dataMsg = event->GetSharedObject<cJSON>();
     cJSON *innerMsg = cJSON_GetArrayItem(dataMsg.get(), 0);
     if (!IsString(innerMsg, PRIVACY_SUBTYPE)) {
@@ -307,6 +324,11 @@ void ComponentPrivacy::ComponentEventHandler::ProcessStopPage(const AppExecFwk::
         return;
     }
     std::string subtype = cJSON_GetObjectItem(innerMsg, PRIVACY_SUBTYPE.c_str())->valuestring;
+
+    if (comPrivacyObj_ == nullptr) {
+        DHLOGE("comPrivacyObj_ is nullptr");
+        return;
+    }
     comPrivacyObj_->StopPrivacePage(subtype);
 }
 } // namespace DistributedHardware

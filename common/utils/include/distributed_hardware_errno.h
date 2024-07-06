@@ -31,6 +31,8 @@ namespace DistributedHardware {
     constexpr int32_t ERR_DH_FWK_TYPE_NOT_EXIST = -10003;
     constexpr int32_t ERR_DH_FWK_JSON_PARSE_FAILED = -10004;
     constexpr int32_t ERR_DH_FWK_POINTER_IS_NULL = -10005;
+    constexpr int32_t ERR_DH_FWK_SINK_HANDLE_IS_NULL = -10006;
+    constexpr int32_t ERR_DH_FWK_GET_INSTANCE_IS_NULL = -10007;
 
     /* VersionManager errno, range: [-10200, -10299] */
     constexpr int32_t ERR_DH_FWK_VERSION_DEVICE_ID_NOT_EXIST = -10200;
@@ -50,6 +52,10 @@ namespace DistributedHardware {
     constexpr int32_t ERR_DH_FWK_COMPONENT_MONITOR_NULL = -10011;
     constexpr int32_t ERR_DH_FWK_COMPONENT_TRANSPORT_OPT_FAILED = -10012;
     constexpr int32_t ERR_DH_FWK_COMPONENT_GET_ENABLE_PARAM_FAILED = -10013;
+    constexpr int32_t ERR_DH_FWK_COMPONENT_CAP_GET_INSTANCE_IS_NULL = -10014;
+    constexpr int32_t ERR_DH_FWK_COMPONENT_MATE_GET_INSTANCE_IS_NULL = -10015;
+    constexpr int32_t ERR_DH_FWK_COMPONENT_LOCAL_GET_INSTANCE_IS_NULL = -10016;
+    constexpr int32_t ERR_DH_FWK_COMPONENT_VERSION_GET_INSTANCE_IS_NULL = -10017;
 
     /* ResourceManager errno, range: [-10400, -10499] */
     constexpr int32_t ERR_DH_FWK_RESOURCE_DB_ADAPTER_POINTER_NULL = -10400;
@@ -95,6 +101,7 @@ namespace DistributedHardware {
     constexpr int32_t ERR_DH_FWK_SERVICE_WRITE_INFO_FAIL = -10807;
     constexpr int32_t ERR_DH_FWK_PUBLISHER_LISTENER_IS_NULL = -10808;
     constexpr int32_t ERR_DH_FWK_SERVICE_MSG_INVALID = -10809;
+    constexpr int32_t ERR_DH_FWK_AVTRANS_CALLBACK_IS_NULL = -10810;
 
     /* AccessManager errno, range: [-10900, -10999] */
     constexpr int32_t ERR_DH_FWK_ACCESS_INIT_DM_FAILED = -10900;

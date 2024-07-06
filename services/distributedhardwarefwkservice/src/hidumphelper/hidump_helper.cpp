@@ -257,6 +257,10 @@ int32_t HidumpHelper::ShowAllTaskInfos(std::string &result)
 int32_t HidumpHelper::ShowAllCapabilityInfos(std::string &result)
 {
     DHLOGI("Dump all capability infos.");
+    if (CapabilityInfoManager::GetInstance() == nullptr) {
+        DHLOGE("cap getinstance is nullptr");
+        return ERR_DH_FWK_COMPONENT_CAP_GET_INSTANCE_IS_NULL;
+    }
     std::vector<CapabilityInfo> capInfos;
     CapabilityInfoManager::GetInstance()->DumpCapabilityInfos(capInfos);
 

@@ -56,6 +56,9 @@ void DistributedHardwareFwkStubFuzzTest(const uint8_t *data, size_t size)
     }
     sptr<PublisherListenerStub> publisherListenerStub(new (std::nothrow)
         MyPublisherListenerStub());
+    if (publisherListenerStub == nullptr) {
+        return;
+    }
     publisherListenerStub->OnRemoteRequest(code, pdata, reply, option);
 }
 } // namespace DistributedHardware
