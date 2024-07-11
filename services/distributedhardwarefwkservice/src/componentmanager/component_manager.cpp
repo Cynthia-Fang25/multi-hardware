@@ -314,8 +314,12 @@ ActionResult ComponentManager::StartSource()
         CompVersion compversion;
         VersionManager::GetInstance().GetCompVersion(uuid, item.first, compversion);
         auto params = compversion.sourceVersion;
-        auto future = std::async(std::launch::async, [item, params]() { return item.second->InitSource(params); });
-        futures.emplace(item.first, future.share());
+        std::promise<int32_t> p;
+        std::future<int32_t> f = p.get_future();
+        std::thread([p = std::move(p), item, params] () mutable {
+            p.set_value(item.second->InitSource(params));
+        }).detach();
+        futures.emplace(item.first, f.share());
     }
     return futures;
 }
@@ -336,10 +340,12 @@ ActionResult ComponentManager::StartSource(DHType dhType)
     CompVersion compVersion;
     VersionManager::GetInstance().GetCompVersion(uuid, dhType, compVersion);
     auto params = compVersion.sourceVersion;
-    auto future = std::async(std::launch::async, [this, dhType, params]() {
-        return compSource_[dhType]->InitSource(params);
-    });
-    futures.emplace(dhType, future.share());
+    std::promise<int32_t> p;
+    std::future<int32_t> f = p.get_future();
+    std::thread([p = std::move(p), this, dhType, params] () mutable {
+        p.set_value(compSource_[dhType]->InitSource(params));
+    }).detach();
+    futures.emplace(dhType, f.share());
 
     return futures;
 }
@@ -357,8 +363,12 @@ ActionResult ComponentManager::StartSink()
         CompVersion compversion;
         VersionManager::GetInstance().GetCompVersion(uuid, item.first, compversion);
         auto params = compversion.sinkVersion;
-        auto future = std::async(std::launch::async, [item, params]() { return item.second->InitSink(params); });
-        futures.emplace(item.first, future.share());
+        std::promise<int32_t> p;
+        std::future<int32_t> f = p.get_future();
+        std::thread([p = std::move(p), item, params] () mutable {
+            p.set_value(item.second->InitSink(params));
+        }).detach();
+        futures.emplace(item.first, f.share());
         if (cameraCompPrivacy_ == nullptr && item.first == DHType::CAMERA) {
             cameraCompPrivacy_ = std::make_shared<ComponentPrivacy>();
             item.second->RegisterPrivacyResources(cameraCompPrivacy_);
@@ -387,10 +397,12 @@ ActionResult ComponentManager::StartSink(DHType dhType)
     CompVersion compVersion;
     VersionManager::GetInstance().GetCompVersion(uuid, dhType, compVersion);
     auto params = compVersion.sinkVersion;
-    auto future = std::async(std::launch::async, [this, dhType, params]() {
-        return compSink_[dhType]->InitSink(params);
-    });
-    futures.emplace(dhType, future.share());
+    std::promise<int32_t> p;
+    std::future<int32_t> f = p.get_future();
+    std::thread([p = std::move(p), this, dhType, params] () mutable {
+        p.set_value(compSink_[dhType]->InitSink(params));
+    }).detach();
+    futures.emplace(dhType, f.share());
     if (cameraCompPrivacy_ == nullptr && dhType == DHType::CAMERA) {
         cameraCompPrivacy_ = std::make_shared<ComponentPrivacy>();
         compSink_[dhType]->RegisterPrivacyResources(cameraCompPrivacy_);
@@ -412,8 +424,12 @@ ActionResult ComponentManager::StopSource()
             DHLOGE("comp source ptr is null");
             continue;
         }
-        auto future = std::async(std::launch::async, [item]() { return item.second->ReleaseSource(); });
-        futures.emplace(item.first, future.share());
+        std::promise<int32_t> p;
+        std::future<int32_t> f = p.get_future();
+        std::thread([p = std::move(p), item] () mutable {
+            p.set_value(item.second->ReleaseSource());
+        }).detach();
+        futures.emplace(item.first, f.share());
     }
     return futures;
 }
@@ -427,19 +443,20 @@ ActionResult ComponentManager::StopSink()
             DHLOGE("comp sink ptr is null");
             continue;
         }
-        auto future = std::async(std::launch::async, [item]() {
-            int32_t status = item.second->ReleaseSink();
+        std::promise<int32_t> p;
+        std::future<int32_t> f = p.get_future();
+        std::thread([p = std::move(p), item] () mutable {
+            p.set_value(item.second->ReleaseSink());
             IHardwareHandler *hardwareHandler = nullptr;
-            status = ComponentLoader::GetInstance().GetHardwareHandler(item.first, hardwareHandler);
+            int32_t status = ComponentLoader::GetInstance().GetHardwareHandler(item.first, hardwareHandler);
             if (status != DH_FWK_SUCCESS || hardwareHandler == nullptr) {
                 DHLOGE("GetHardwareHandler %{public}#X failed", item.first);
                 return status;
             }
             hardwareHandler->UnRegisterPluginListener();
             return status;
-        });
-
-        futures.emplace(item.first, future.share());
+        }).detach();
+        futures.emplace(item.first, f.share());
     }
     return futures;
 }
@@ -883,7 +900,7 @@ void ComponentManager::DumpLoadedComps(std::set<DHType> &compSourceType, std::se
 
 void ComponentManager::Recover(DHType dhType)
 {
-    std::thread(&ComponentManager::DoRecover, this, dhType).detach();
+    std::thread([this, dhType]() { this->DoRecover(dhType); }).detach();
 }
 
 void ComponentManager::DoRecover(DHType dhType)

@@ -54,7 +54,7 @@ HWTEST_F(PublisherItemTest, AddListener_001, TestSize.Level0)
 HWTEST_F(PublisherItemTest, AddListener_002, TestSize.Level0)
 {
     PublisherItem item(DHTopic::TOPIC_MIN);
-    sptr<IPublisherListener> listener = new MockIPublisherListener();
+    sptr<IPublisherListener> listener(new MockIPublisherListener());
     item.AddListener(listener);
     EXPECT_EQ(false, item.listeners_.empty());
 }
@@ -72,9 +72,9 @@ HWTEST_F(PublisherItemTest, RemoveListener_001, TestSize.Level0)
     item.RemoveListener(listener);
     EXPECT_EQ(true, item.listeners_.empty());
 
-    listener = new MockIPublisherListener();
-    item.AddListener(listener);
-    item.RemoveListener(listener);
+    sptr<IPublisherListener> listener1(new MockIPublisherListener());
+    item.AddListener(listener1);
+    item.RemoveListener(listener1);
     EXPECT_EQ(true, item.listeners_.empty());
 }
 
@@ -92,7 +92,7 @@ HWTEST_F(PublisherItemTest, PublishMessage_001, TestSize.Level0)
     EXPECT_EQ(true, item.listeners_.empty());
 
     std::string msg(MESSAGE_LEN, 'a');
-    item.PublishMessage(message);
+    item.PublishMessage(msg);
     EXPECT_EQ(true, item.listeners_.empty());
 }
 
@@ -106,7 +106,7 @@ HWTEST_F(PublisherItemTest, PublishMessage_002, TestSize.Level0)
 {
     PublisherItem item(DHTopic::TOPIC_MIN);
     std::string message = "message";
-    sptr<IPublisherListener> listener = new MockIPublisherListener();
+    sptr<IPublisherListener> listener(new MockIPublisherListener());
     item.AddListener(listener);
     item.PublishMessage(message);
     EXPECT_EQ(false, item.listeners_.empty());

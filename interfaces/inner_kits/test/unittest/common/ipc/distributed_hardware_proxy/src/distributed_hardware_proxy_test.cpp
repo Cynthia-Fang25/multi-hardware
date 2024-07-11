@@ -64,7 +64,7 @@ HWTEST_F(DistributedHardwareProxyTest, RegisterAbilityListener_002, TestSize.Lev
     ASSERT_NE(nullptr, hardwareProxy_);
     int32_t invalid = 7;
     DHTopic topic = static_cast<DHTopic>(invalid);
-    sptr<IPublisherListener> listener = new MockIPublisherListener();
+    sptr<IPublisherListener> listener(new MockIPublisherListener());
     int32_t ret = hardwareProxy_->RegisterPublisherListener(topic, listener);
     EXPECT_EQ(ERR_DH_FWK_SERVICE_REMOTE_IS_NULL, ret);
 }
@@ -79,7 +79,7 @@ HWTEST_F(DistributedHardwareProxyTest, RegisterAbilityListener_003, TestSize.Lev
 {
     ASSERT_NE(nullptr, hardwareProxy_);
     DHTopic topic = DHTopic::TOPIC_STOP_DSCREEN;
-    sptr<IPublisherListener> listener = new MockIPublisherListener();
+    sptr<IPublisherListener> listener(new MockIPublisherListener());
     int32_t ret = hardwareProxy_->RegisterPublisherListener(topic, listener);
     EXPECT_NE(DH_FWK_SUCCESS, ret);
 }
@@ -110,7 +110,7 @@ HWTEST_F(DistributedHardwareProxyTest, UnregisterPublisherListener_002, TestSize
     ASSERT_NE(nullptr, hardwareProxy_);
     int32_t invalid = 7;
     DHTopic topic = static_cast<DHTopic>(invalid);
-    sptr<IPublisherListener> listener = new MockIPublisherListener();
+    sptr<IPublisherListener> listener(new MockIPublisherListener());
     int32_t ret = hardwareProxy_->UnregisterPublisherListener(topic, listener);
     EXPECT_EQ(ERR_DH_FWK_SERVICE_REMOTE_IS_NULL, ret);
 }
@@ -125,7 +125,7 @@ HWTEST_F(DistributedHardwareProxyTest, UnregisterPublisherListener_003, TestSize
 {
     ASSERT_NE(nullptr, hardwareProxy_);
     DHTopic topic = DHTopic::TOPIC_STOP_DSCREEN;
-    sptr<IPublisherListener> listener = new MockIPublisherListener();
+    sptr<IPublisherListener> listener(new MockIPublisherListener());
     int32_t ret = hardwareProxy_->UnregisterPublisherListener(topic, listener);
     EXPECT_NE(DH_FWK_SUCCESS, ret);
 }
