@@ -55,7 +55,7 @@ ohos_fuzztest("OnStreamReceivedFuzzTest") {
 ohos_fuzztest("OnBytesReceivedFuzzTest") {
   module_out_path = fuzz_test_output_path
   fuzz_config_file =
-      "${control_center_path}/test/fuzztest/onstreamreceived_fuzzer"
+      "${control_center_path}/test/fuzztest/onbytesreceived_fuzzer"
 
   include_dirs = [
     "include",
@@ -90,7 +90,7 @@ ohos_fuzztest("OnBytesReceivedFuzzTest") {
 ohos_fuzztest("OnSoftbusTimeSyncResultFuzzTest") {
   module_out_path = fuzz_test_output_path
   fuzz_config_file =
-      "${control_center_path}/test/fuzztest/onstreamreceived_fuzzer"
+      "${control_center_path}/test/fuzztest/onsoftbustimesyncresult_fuzzer"
 
   include_dirs = [
     "include",
@@ -125,7 +125,7 @@ ohos_fuzztest("OnSoftbusTimeSyncResultFuzzTest") {
 ohos_fuzztest("AVTransOnSessionClosedFuzzTest") {
   module_out_path = fuzz_test_output_path
   fuzz_config_file =
-      "${control_center_path}/test/fuzztest/onstreamreceived_fuzzer"
+      "${control_center_path}/test/fuzztest/avtransonsessionclosed_fuzzer"
 
   include_dirs = [
     "include",
@@ -140,7 +140,7 @@ ohos_fuzztest("AVTransOnSessionClosedFuzzTest") {
     "-Wno-unused-variable",
     "-fno-omit-frame-pointer",
   ]
-  sources = [ "avtransOnSessionClosed_fuzzer.cpp" ]
+  sources = [ "avtransonsessionclosed_fuzzer.cpp" ]
 
   deps = [ "${engine_path}/av_sender:distributed_av_sender" ]
 
