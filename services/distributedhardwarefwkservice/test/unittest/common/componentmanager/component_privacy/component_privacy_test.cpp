@@ -58,6 +58,7 @@ void ComponentPrivacyTest::TearDown()
 
 HWTEST_F(ComponentPrivacyTest, OnPrivaceResourceMessage_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, compPrivacy_);
     ResourceEventType type = ResourceEventType::EVENT_TYPE_QUERY_RESOURCE;
     std::string subtype = "mic";
     std::string networkId = "networkId_test";
@@ -69,6 +70,7 @@ HWTEST_F(ComponentPrivacyTest, OnPrivaceResourceMessage_001, TestSize.Level0)
 
 HWTEST_F(ComponentPrivacyTest, OnPrivaceResourceMessage_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, compPrivacy_);
     ResourceEventType type = ResourceEventType::EVENT_TYPE_PULL_UP_PAGE;
     std::string subtype = "mic";
     std::string networkId = "networkId_test";
@@ -80,6 +82,7 @@ HWTEST_F(ComponentPrivacyTest, OnPrivaceResourceMessage_002, TestSize.Level0)
 
 HWTEST_F(ComponentPrivacyTest, OnPrivaceResourceMessage_003, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, compPrivacy_);
     ResourceEventType type = ResourceEventType::EVENT_TYPE_CLOSE_PAGE;
     std::string subtype = "mic";
     std::string networkId = "networkId_test";
@@ -91,6 +94,7 @@ HWTEST_F(ComponentPrivacyTest, OnPrivaceResourceMessage_003, TestSize.Level0)
 
 HWTEST_F(ComponentPrivacyTest, OnResourceInfoCallback_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, compPrivacy_);
     std::string subtype = "mic";
     std::string networkId = "networkId_test";
     bool isSensitive = true;
@@ -102,6 +106,7 @@ HWTEST_F(ComponentPrivacyTest, OnResourceInfoCallback_001, TestSize.Level0)
 
 HWTEST_F(ComponentPrivacyTest, DeviceTypeToString_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, compPrivacy_);
     uint16_t deviceTypeId = 0x08;
     std::string ret = compPrivacy_->DeviceTypeToString(deviceTypeId);
     EXPECT_EQ("camera", ret);

@@ -46,6 +46,7 @@ void LowLatencyListenerTest::TearDown()
  */
 HWTEST_F(LowLatencyListenerTest, OnMessage_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, listener_);
     DHTopic topic = DHTopic::TOPIC_MIN;
     std::string message;
     listener_->OnMessage(topic, message);
@@ -60,6 +61,7 @@ HWTEST_F(LowLatencyListenerTest, OnMessage_001, TestSize.Level0)
  */
 HWTEST_F(LowLatencyListenerTest, OnMessage_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, listener_);
     DHTopic topic = DHTopic::TOPIC_START_DSCREEN;
     std::string message;
     listener_->OnMessage(topic, message);
@@ -74,6 +76,7 @@ HWTEST_F(LowLatencyListenerTest, OnMessage_002, TestSize.Level0)
  */
 HWTEST_F(LowLatencyListenerTest, OnMessage_003, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, listener_);
     DHTopic topic = DHTopic::TOPIC_START_DSCREEN;
     std::string message = "message";
     listener_->OnMessage(topic, message);
@@ -88,6 +91,7 @@ HWTEST_F(LowLatencyListenerTest, OnMessage_003, TestSize.Level0)
  */
 HWTEST_F(LowLatencyListenerTest, OnMessage_004, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, listener_);
     DHTopic topic = DHTopic::TOPIC_START_DSCREEN;
 
     cJSON* json = cJSON_CreateObject();
@@ -112,6 +116,7 @@ HWTEST_F(LowLatencyListenerTest, OnMessage_004, TestSize.Level0)
  */
 HWTEST_F(LowLatencyListenerTest, OnMessage_005, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, listener_);
     DHTopic topic = DHTopic::TOPIC_START_DSCREEN;
     std::string message;
     uint32_t MAX_MESSAGE_LEN = 40 * 1024 * 1024;
@@ -128,6 +133,7 @@ HWTEST_F(LowLatencyListenerTest, OnMessage_005, TestSize.Level0)
  */
 HWTEST_F(LowLatencyListenerTest, OnMessage_006, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, listener_);
     DHTopic topic = DHTopic::TOPIC_START_DSCREEN;
     cJSON* json = cJSON_CreateObject();
     const char* DH_TYPE = "dh_type";
@@ -150,6 +156,7 @@ HWTEST_F(LowLatencyListenerTest, OnMessage_006, TestSize.Level0)
  */
 HWTEST_F(LowLatencyListenerTest, OnMessage_007, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, listener_);
     DHTopic topic = DHTopic::TOPIC_START_DSCREEN;
     cJSON* json = cJSON_CreateObject();
     const char* DH_TYPE = "dh_type";
@@ -172,6 +179,7 @@ HWTEST_F(LowLatencyListenerTest, OnMessage_007, TestSize.Level0)
  */
 HWTEST_F(LowLatencyListenerTest, ExecuteInner_008, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, listener_);
     std::string timerId;
     int32_t delayTimeMs = 1;
     LowLatencyTimer timer(timerId, delayTimeMs);
@@ -187,6 +195,7 @@ HWTEST_F(LowLatencyListenerTest, ExecuteInner_008, TestSize.Level0)
  */
 HWTEST_F(LowLatencyListenerTest, HandleStopTimer_008, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, listener_);
     std::string timerId;
     int32_t delayTimeMs = 1;
     LowLatencyTimer timer(timerId, delayTimeMs);

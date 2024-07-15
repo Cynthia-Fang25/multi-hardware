@@ -46,6 +46,7 @@ void PublisherListenerProxyTest::TearDown()
  */
 HWTEST_F(PublisherListenerProxyTest, OnMessage_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, proxy_);
     uint32_t invalid = 8;
     DHTopic topic = static_cast<DHTopic>(invalid);
     std::string message;
@@ -61,6 +62,7 @@ HWTEST_F(PublisherListenerProxyTest, OnMessage_001, TestSize.Level0)
  */
 HWTEST_F(PublisherListenerProxyTest, OnMessage_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, proxy_);
     DHTopic topic = DHTopic::TOPIC_START_DSCREEN;
     std::string message;
     proxy_->OnMessage(topic, message);
@@ -75,6 +77,7 @@ HWTEST_F(PublisherListenerProxyTest, OnMessage_002, TestSize.Level0)
  */
 HWTEST_F(PublisherListenerProxyTest, OnMessage_003, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, proxy_);
     DHTopic topic = DHTopic::TOPIC_START_DSCREEN;
     std::string message = "message";
     proxy_->OnMessage(topic, message);

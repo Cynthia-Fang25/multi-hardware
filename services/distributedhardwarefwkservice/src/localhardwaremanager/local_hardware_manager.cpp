@@ -89,6 +89,10 @@ void LocalHardwareManager::Init()
         AddLocalCapabilityInfo(localDHItems.second, localDHItems.first, capabilityInfos);
         AddLocalMetaCapInfo(localDHItems.second, localDHItems.first, metaCapInfos);
     }
+    if (CapabilityInfoManager::GetInstance() == nullptr || MetaInfoManager::GetInstance() == nullptr) {
+        DHLOGE("getinstance is nullptr");
+        return;
+    }
     CapabilityInfoManager::GetInstance()->AddCapability(capabilityInfos);
     MetaInfoManager::GetInstance()->AddMetaCapInfos(metaCapInfos);
 }
@@ -106,7 +110,9 @@ void LocalHardwareManager::QueryLocalHardware(const DHType dhType, IHardwareHand
     int32_t retryTimes = QUERY_RETRY_MAX_TIMES;
     while (retryTimes > 0) {
         DHLOGI("Query hardwareHandler retry times left: %{public}d, dhType: %{public}#X", retryTimes, dhType);
-        dhItems = hardwareHandler->Query();
+        if (hardwareHandler != nullptr) {
+            dhItems = hardwareHandler->Query();
+        }
         if (dhItems.empty()) {
             DHLOGE("Query hardwareHandler and obtain empty, dhType: %{public}#X", dhType);
             usleep(QUERY_INTERVAL_TIME);
@@ -187,7 +193,9 @@ void LocalHardwareManager::CheckNonExistCapabilityInfo(const std::vector<DHItem>
         if (!isExist) {
             DHLOGI("This data is non-exist, it should be removed, key: %{public}s",
                 capabilityValue->GetAnonymousKey().c_str());
-            CapabilityInfoManager::GetInstance()->RemoveCapabilityInfoByKey(capabilityValue->GetKey());
+            if (CapabilityInfoManager::GetInstance() != nullptr) {
+                CapabilityInfoManager::GetInstance()->RemoveCapabilityInfoByKey(capabilityValue->GetKey());
+            }
         }
     }
     DHLOGI("end");
@@ -206,7 +214,9 @@ void LocalHardwareManager::GetLocalCapabilityMapByPrefix(const DHType dhType, Ca
     }
     std::string prefix = DHTypePrefixMap.find(dhType)->second;
     std::string localCapabilityPrefix = localDeviceId + RESOURCE_SEPARATOR + prefix;
-    CapabilityInfoManager::GetInstance()->GetDataByKeyPrefix(localCapabilityPrefix, capabilityInfoMap);
+    if (CapabilityInfoManager::GetInstance() != nullptr) {
+        CapabilityInfoManager::GetInstance()->GetDataByKeyPrefix(localCapabilityPrefix, capabilityInfoMap);
+    }
 }
 } // namespace DistributedHardware
 } // namespace OHOS

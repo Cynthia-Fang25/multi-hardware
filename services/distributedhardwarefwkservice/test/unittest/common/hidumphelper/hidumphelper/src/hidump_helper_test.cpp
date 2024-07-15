@@ -214,6 +214,7 @@ HWTEST_F(HidumpHelperTest, ShowAllCapabilityInfos_001, TestSize.Level0)
  */
 HWTEST_F(HidumpHelperTest, ShowAllCapabilityInfos_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::string result;
     std::string key  = "1";
     std::string devId = "devId_test";

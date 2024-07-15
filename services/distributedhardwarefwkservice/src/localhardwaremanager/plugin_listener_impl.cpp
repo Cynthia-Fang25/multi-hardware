@@ -47,7 +47,10 @@ void PluginListenerImpl::PluginHardware(const std::string &dhId, const std::stri
     std::shared_ptr<CapabilityInfo> dhCapabilityInfo =
         std::make_shared<CapabilityInfo>(dhId, deviceId, devName, devType, dhType_, attrs, subtype);
     capabilityInfos.push_back(dhCapabilityInfo);
-
+    if (CapabilityInfoManager::GetInstance() == nullptr) {
+        DHLOGE("cap getinstance is nullptr");
+        return;
+    }
     CapabilityInfoManager::GetInstance()->AddCapability(capabilityInfos);
     Publisher::GetInstance().PublishMessage(DHTopic::TOPIC_PHY_DEV_PLUGIN, dhId);
     DHLOGI("plugin end, dhId: %{public}s", GetAnonyString(dhId).c_str());
@@ -62,6 +65,10 @@ void PluginListenerImpl::UnPluginHardware(const std::string &dhId)
     DHLOGI("unplugin start, dhId: %{public}s", GetAnonyString(dhId).c_str());
     if (DHContext::GetInstance().IsSleeping()) {
         DHLOGI("System is in sleeping, drop it");
+        return;
+    }
+    if (CapabilityInfoManager::GetInstance() == nullptr) {
+        DHLOGE("cap getinstance is nullptr");
         return;
     }
     std::string deviceId = DHContext::GetInstance().GetDeviceInfo().deviceId;

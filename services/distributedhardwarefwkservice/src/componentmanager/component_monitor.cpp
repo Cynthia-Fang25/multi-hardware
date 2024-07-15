@@ -67,7 +67,7 @@ void ComponentMonitor::CompSystemAbilityListener::OnRemoveSystemAbility(int32_t 
     ServiceWaitForStatus(((*processNameIter).second).c_str(),
         ServiceStatus::SERVICE_STOPPED, WAIT_SERVICE_STATUS_TIMEOUT);
     
-    DHLOGI("Try Recover Component, dhType: %{public}" PRIu32, (uint32_t)dhType);
+    DHLOGI("Try Recover Component, dhType: %{public}#X", dhType);
     ComponentManager::GetInstance().Recover(dhType);
 }
 

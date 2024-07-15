@@ -60,6 +60,7 @@ void DhTransportTest::TearDown()
 
 HWTEST_F(DhTransportTest, OnSocketClosed_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, dhTransportTest_);
     ShutdownReason reason = ShutdownReason::SHUTDOWN_REASON_UNKNOWN;
     dhTransportTest_->remoteDevSocketIds_[g_networkid] = g_socketid;
     dhTransportTest_->OnSocketClosed(2, reason);
@@ -70,6 +71,7 @@ HWTEST_F(DhTransportTest, OnSocketClosed_001, TestSize.Level0)
 
 HWTEST_F(DhTransportTest, OnBytesReceived_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, dhTransportTest_);
     int32_t sessionId = -1;
     char *data = nullptr;
     uint32_t dataLen = 0;
@@ -101,6 +103,7 @@ HWTEST_F(DhTransportTest, OnBytesReceived_001, TestSize.Level0)
 
 HWTEST_F(DhTransportTest, Init_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, dhTransportTest_);
     dhTransportTest_->isSocketSvrCreateFlag_ = true;
     auto ret = dhTransportTest_->Init();
     EXPECT_EQ(DH_FWK_SUCCESS, ret);
@@ -112,6 +115,7 @@ HWTEST_F(DhTransportTest, Init_001, TestSize.Level0)
 
 HWTEST_F(DhTransportTest, UnInit_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, dhTransportTest_);
     auto ret = dhTransportTest_->UnInit();
     EXPECT_EQ(DH_FWK_SUCCESS, ret);
 
@@ -122,6 +126,7 @@ HWTEST_F(DhTransportTest, UnInit_001, TestSize.Level0)
 
 HWTEST_F(DhTransportTest, IsDeviceSessionOpened_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, dhTransportTest_);
     dhTransportTest_->remoteDevSocketIds_.clear();
     auto ret = dhTransportTest_->IsDeviceSessionOpened(g_networkid, g_socketid);
     EXPECT_EQ(false, ret);
@@ -133,6 +138,7 @@ HWTEST_F(DhTransportTest, IsDeviceSessionOpened_001, TestSize.Level0)
 
 HWTEST_F(DhTransportTest, StartSocket_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, dhTransportTest_);
     dhTransportTest_->remoteDevSocketIds_[g_networkid] = g_socketid;
     auto ret = dhTransportTest_->StartSocket(g_networkid);
     EXPECT_EQ(DH_FWK_SUCCESS, ret);
@@ -144,6 +150,7 @@ HWTEST_F(DhTransportTest, StartSocket_001, TestSize.Level0)
 
 HWTEST_F(DhTransportTest, StopSocket_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, dhTransportTest_);
     dhTransportTest_->remoteDevSocketIds_.clear();
     auto ret = dhTransportTest_->StopSocket(g_networkid);
     EXPECT_EQ(ERR_DH_FWK_COMPONENT_TRANSPORT_OPT_FAILED, ret);
@@ -155,6 +162,7 @@ HWTEST_F(DhTransportTest, StopSocket_001, TestSize.Level0)
 
 HWTEST_F(DhTransportTest, Send_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, dhTransportTest_);
     std::string payload = "payload_test";
     dhTransportTest_->remoteDevSocketIds_.clear();
     auto ret = dhTransportTest_->Send(g_networkid, payload);

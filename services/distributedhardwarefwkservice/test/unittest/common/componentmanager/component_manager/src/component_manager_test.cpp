@@ -238,6 +238,7 @@ HWTEST_F(ComponentManagerTest, get_enableparam_test_001, TestSize.Level0)
         std::make_shared<CapabilityInfo>(DH_ID_1, devInfo.deviceId, DEVICE_NAME,
         TEST_DEV_TYPE_PAD, DHType::CAMERA, DH_ATTR_1, DH_SUBTYPE_TEST);
 
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     CapabilityInfoManager::GetInstance()->Init();
     std::vector<std::shared_ptr<CapabilityInfo>> resInfos { CAP_INFO_1 };
     CapabilityInfoManager::GetInstance()->AddCapability(resInfos);
@@ -254,6 +255,7 @@ HWTEST_F(ComponentManagerTest, get_enableparam_test_001, TestSize.Level0)
     verInfo1.dhVersion = VERSION_1;
     verInfo1.compVersions.insert(std::pair<DHType, CompVersion>(compVersions1.dhType, compVersions1));
 
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     VersionInfoManager::GetInstance()->Init();
     VersionInfoManager::GetInstance()->AddVersion(verInfo1);
 
@@ -520,6 +522,7 @@ HWTEST_F(ComponentManagerTest, GetDHType_001, TestSize.Level0)
  */
 HWTEST_F(ComponentManagerTest, GetDHType_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::string key = Sha256(UUID_TEST) + RESOURCE_SEPARATOR + DH_ID_1;
     CapabilityInfoManager::GetInstance()->globalCapInfoMap_[key] = CAP_INFO_TEST;
     auto ret = ComponentManager::GetInstance().GetDHType(UUID_TEST, DH_ID_1);
@@ -551,6 +554,7 @@ HWTEST_F(ComponentManagerTest, GetEnableParam_001, TestSize.Level0)
  */
 HWTEST_F(ComponentManagerTest, GetEnableParam_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     DHType dhType = DHType::CAMERA;
     EnableParam param;
     CapabilityInfoManager::GetInstance()->globalCapInfoMap_.clear();
@@ -631,6 +635,7 @@ HWTEST_F(ComponentManagerTest, GetVersionFromVerInfoMgr_001, TestSize.Level0)
  */
 HWTEST_F(ComponentManagerTest, GetVersionFromVerInfoMgr_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, VersionInfoManager::GetInstance());
     DHType dhType = DHType::CAMERA;
     std::string sinkVersion;
     VersionInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;

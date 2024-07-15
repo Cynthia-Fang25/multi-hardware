@@ -360,6 +360,11 @@ int32_t DistributedHardwareProxy::RegisterCtlCenterCallback(int32_t engineId,
         return ERR_DH_AVT_SERVICE_REMOTE_IS_NULL;
     }
 
+    if (callback == nullptr) {
+        DHLOGE("callback is null");
+        return ERR_DH_FWK_AVTRANS_CALLBACK_IS_NULL;
+    }
+
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;

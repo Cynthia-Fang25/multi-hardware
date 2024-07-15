@@ -120,6 +120,7 @@ void ResourceManagerTest::TearDownTestCase(void)
 
 void ResourceManagerTest::SetUp()
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     vector<shared_ptr<CapabilityInfo>> resInfos { CAP_INFO_0, CAP_INFO_1, CAP_INFO_2, CAP_INFO_3, CAP_INFO_4,
         CAP_INFO_5, CAP_INFO_6, CAP_INFO_7, CAP_INFO_8, CAP_INFO_9 };
     CapabilityInfoManager::GetInstance()->AddCapability(resInfos);
@@ -127,6 +128,7 @@ void ResourceManagerTest::SetUp()
 
 void ResourceManagerTest::TearDown()
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     CapabilityInfoManager::GetInstance()->RemoveCapabilityInfoByKey(CAP_INFO_0->GetKey());
     CapabilityInfoManager::GetInstance()->RemoveCapabilityInfoByKey(CAP_INFO_1->GetKey());
     CapabilityInfoManager::GetInstance()->RemoveCapabilityInfoByKey(CAP_INFO_2->GetKey());
@@ -147,6 +149,7 @@ void ResourceManagerTest::TearDown()
  */
 HWTEST_F(ResourceManagerTest, resource_manager_test_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     EXPECT_EQ(CapabilityInfoManager::GetInstance()->Init(), DH_FWK_SUCCESS);
     EXPECT_EQ(CapabilityInfoManager::GetInstance()->UnInit(), DH_FWK_SUCCESS);
 }
@@ -159,6 +162,7 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_001, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, resource_manager_test_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     EXPECT_EQ(CapabilityInfoManager::GetInstance()->Init(), DH_FWK_SUCCESS);
 }
 
@@ -170,6 +174,7 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_002, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, resource_manager_test_003, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     CapabilityInfoManager::GetInstance()->globalCapInfoMap_.clear();
     EXPECT_EQ(CapabilityInfoManager::GetInstance()->SyncDeviceInfoFromDB(DEV_ID_0), DH_FWK_SUCCESS);
     EXPECT_EQ(CapabilityInfoManager::GetInstance()->globalCapInfoMap_.size(), TEST_SIZE_5);
@@ -185,6 +190,7 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_003, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, resource_manager_test_004, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     CapabilityInfoManager::GetInstance()->globalCapInfoMap_.clear();
     EXPECT_EQ(CapabilityInfoManager::GetInstance()->SyncRemoteCapabilityInfos(), DH_FWK_SUCCESS);
 }
@@ -197,6 +203,7 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_004, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, resource_manager_test_005, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     vector<shared_ptr<CapabilityInfo>> resInfos { CAP_INFO_0, CAP_INFO_1, CAP_INFO_2, CAP_INFO_3, CAP_INFO_4,
         CAP_INFO_5, CAP_INFO_6, CAP_INFO_7, CAP_INFO_8, CAP_INFO_9 };
     EXPECT_EQ(CapabilityInfoManager::GetInstance()->AddCapability(resInfos), DH_FWK_SUCCESS);
@@ -211,6 +218,7 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_005, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, resource_manager_test_006, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     vector<shared_ptr<CapabilityInfo>> resInfos { CAP_INFO_0, CAP_INFO_1, CAP_INFO_2, CAP_INFO_3, CAP_INFO_4,
         CAP_INFO_5, CAP_INFO_6, CAP_INFO_7, CAP_INFO_8, CAP_INFO_9 };
     EXPECT_EQ(CapabilityInfoManager::GetInstance()->AddCapabilityInMem(resInfos), DH_FWK_SUCCESS);
@@ -226,6 +234,7 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_006, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, resource_manager_test_007, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     EXPECT_EQ(CapabilityInfoManager::GetInstance()->RemoveCapabilityInfoByKey(CAP_INFO_0->GetKey()), DH_FWK_SUCCESS);
     EXPECT_EQ(CapabilityInfoManager::GetInstance()->RemoveCapabilityInfoByKey(CAP_INFO_1->GetKey()), DH_FWK_SUCCESS);
     EXPECT_EQ(CapabilityInfoManager::GetInstance()->RemoveCapabilityInfoByKey(CAP_INFO_2->GetKey()), DH_FWK_SUCCESS);
@@ -247,6 +256,7 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_007, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, resource_manager_test_008, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     map<CapabilityInfoFilter, string> queryMap0 { { CapabilityInfoFilter::FILTER_DEVICE_ID, DEV_ID_0 } };
     map<CapabilityInfoFilter, string> queryMap1 { { CapabilityInfoFilter::FILTER_DEVICE_ID, DEV_ID_1 } };
     map<CapabilityInfoFilter, string> queryMap2 { { CapabilityInfoFilter::FILTER_DEVICE_NAME, TEST_DEV_NAME } };
@@ -291,6 +301,7 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_008, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, resource_manager_test_009, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     EXPECT_EQ(CapabilityInfoManager::GetInstance()->HasCapability(DEV_ID_0, DH_ID_0), true);
     EXPECT_EQ(CapabilityInfoManager::GetInstance()->HasCapability(DEV_ID_0, DH_ID_1), true);
     EXPECT_EQ(CapabilityInfoManager::GetInstance()->HasCapability(DEV_ID_0, DH_ID_2), true);
@@ -311,6 +322,7 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_009, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, resource_manager_test_010, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     vector<shared_ptr<CapabilityInfo>> capInfos;
     CapabilityInfoManager::GetInstance()->GetCapabilitiesByDeviceId(DEV_ID_0, capInfos);
     EXPECT_EQ(capInfos.size(), TEST_SIZE_5);
@@ -326,6 +338,7 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_010, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, resource_manager_test_011, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     shared_ptr<CapabilityInfo> capInfo;
     EXPECT_EQ(CapabilityInfoManager::GetInstance()->GetCapability(DEV_ID_0, DH_ID_0, capInfo), DH_FWK_SUCCESS);
     EXPECT_EQ(CapabilityInfoManager::GetInstance()->GetCapability(DEV_ID_0, DH_ID_1, capInfo), DH_FWK_SUCCESS);
@@ -347,6 +360,7 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_011, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, resource_manager_test_012, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     shared_ptr<CapabilityInfo> capInfo;
     EXPECT_EQ(CapabilityInfoManager::GetInstance()->GetDataByKey(CAP_INFO_0->GetKey(), capInfo), DH_FWK_SUCCESS);
     EXPECT_EQ(CapabilityInfoManager::GetInstance()->GetDataByKey(CAP_INFO_1->GetKey(), capInfo), DH_FWK_SUCCESS);
@@ -368,6 +382,7 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_012, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, resource_manager_test_013, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     CapabilityInfoMap capMap;
     EXPECT_EQ(CapabilityInfoManager::GetInstance()->GetDataByKeyPrefix(CAP_INFO_0->GetDeviceId(), capMap),
         DH_FWK_SUCCESS);
@@ -400,6 +415,7 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_013, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, resource_manager_test_014, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::string deviceIdEmpty = "";
     int32_t ret = CapabilityInfoManager::GetInstance()->RemoveCapabilityInfoInDB(deviceIdEmpty);
     EXPECT_EQ(ERR_DH_FWK_PARA_INVALID, ret);
@@ -495,6 +511,7 @@ HWTEST_F(ResourceManagerTest, resource_manager_test_020, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, OnChange_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     DistributedKv::Entry insert, update, del;
     insert.key = "strBase";
     update.key = "strBase";
@@ -521,6 +538,7 @@ HWTEST_F(ResourceManagerTest, OnChange_001, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, OnChange_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     DistributedKv::DataOrigin origin;
     origin.id = {};
     origin.store = "";
@@ -540,6 +558,7 @@ HWTEST_F(ResourceManagerTest, OnChange_002, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, HandleCapabilityAddChange_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::vector<DistributedKv::Entry> insertRecords;
     DistributedKv::Entry entry;
     entry.key = "strBase";
@@ -557,6 +576,7 @@ HWTEST_F(ResourceManagerTest, HandleCapabilityAddChange_001, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, HandleCapabilityUpdateChange_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::vector<DistributedKv::Entry> updateRecords;
     DistributedKv::Entry entry;
     entry.key = "strBase";
@@ -574,6 +594,7 @@ HWTEST_F(ResourceManagerTest, HandleCapabilityUpdateChange_001, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, IsCapabilityMatchFilter_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::shared_ptr<CapabilityInfo> cap = nullptr;
     CapabilityInfoFilter filter = CapabilityInfoFilter::FILTER_DH_ID;
     std::string value;
@@ -589,6 +610,7 @@ HWTEST_F(ResourceManagerTest, IsCapabilityMatchFilter_001, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, IsCapabilityMatchFilter_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::shared_ptr<CapabilityInfo> cap = std::make_shared<CapabilityInfo>("", "", "", 0, DHType::UNKNOWN, "", "");
     CapabilityInfoFilter filter = CapabilityInfoFilter::FILTER_DH_ID;
     std::string value;
@@ -604,6 +626,7 @@ HWTEST_F(ResourceManagerTest, IsCapabilityMatchFilter_002, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, IsCapabilityMatchFilter_003, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::shared_ptr<CapabilityInfo> cap = std::make_shared<CapabilityInfo>("", "", "", 0, DHType::UNKNOWN, "", "");
     CapabilityInfoFilter filter = CapabilityInfoFilter::FILTER_DEVICE_ID;
     std::string value;
@@ -619,6 +642,7 @@ HWTEST_F(ResourceManagerTest, IsCapabilityMatchFilter_003, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, IsCapabilityMatchFilter_004, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::shared_ptr<CapabilityInfo> cap = std::make_shared<CapabilityInfo>("", "", "", 0, DHType::UNKNOWN, "", "");
     CapabilityInfoFilter filter = CapabilityInfoFilter::FILTER_DEVICE_NAME;
     std::string value;
@@ -634,6 +658,7 @@ HWTEST_F(ResourceManagerTest, IsCapabilityMatchFilter_004, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, IsCapabilityMatchFilter_005, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::shared_ptr<CapabilityInfo> cap = std::make_shared<CapabilityInfo>("", "", "", 0, DHType::UNKNOWN, "", "");
     CapabilityInfoFilter filter = CapabilityInfoFilter::FILTER_DEVICE_TYPE;
     uint16_t devType = 123;
@@ -650,6 +675,7 @@ HWTEST_F(ResourceManagerTest, IsCapabilityMatchFilter_005, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, IsCapabilityMatchFilter_006, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::shared_ptr<CapabilityInfo> cap = std::make_shared<CapabilityInfo>("", "", "", 0, DHType::UNKNOWN, "", "");
     CapabilityInfoFilter filter = CapabilityInfoFilter::FILTER_DH_TYPE;
     DHType dhType = DHType::AUDIO;
@@ -666,6 +692,7 @@ HWTEST_F(ResourceManagerTest, IsCapabilityMatchFilter_006, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, IsCapabilityMatchFilter_007, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::shared_ptr<CapabilityInfo> cap = std::make_shared<CapabilityInfo>("", "", "", 0, DHType::UNKNOWN, "", "");
     CapabilityInfoFilter filter = CapabilityInfoFilter::FILTER_DH_ATTRS;
     std::string value;
@@ -681,6 +708,7 @@ HWTEST_F(ResourceManagerTest, IsCapabilityMatchFilter_007, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, IsCapabilityMatchFilter_008, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::shared_ptr<CapabilityInfo> cap = std::make_shared<CapabilityInfo>("", "", "", 0, DHType::UNKNOWN, "", "");
     uint32_t invalid = 6;
     CapabilityInfoFilter filter = static_cast<CapabilityInfoFilter>(invalid);
@@ -697,6 +725,7 @@ HWTEST_F(ResourceManagerTest, IsCapabilityMatchFilter_008, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, GetCapabilitiesByDeviceId_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::string deviceId;
     std::vector<std::shared_ptr<CapabilityInfo>> resInfos;
     CapabilityInfoManager::GetInstance()->GetCapabilitiesByDeviceId(deviceId, resInfos);
@@ -711,6 +740,7 @@ HWTEST_F(ResourceManagerTest, GetCapabilitiesByDeviceId_001, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, HasCapability_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::string deviceId;
     std::string dhId;
     bool ret = CapabilityInfoManager::GetInstance()->HasCapability(deviceId, dhId);
@@ -725,6 +755,7 @@ HWTEST_F(ResourceManagerTest, HasCapability_001, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, SyncRemoteCapabilityInfos_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     CapabilityInfoManager::GetInstance()->globalCapInfoMap_.clear();
     CapabilityInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;
     int32_t ret = CapabilityInfoManager::GetInstance()->SyncRemoteCapabilityInfos();
@@ -739,6 +770,7 @@ HWTEST_F(ResourceManagerTest, SyncRemoteCapabilityInfos_001, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, RemoveCapabilityInfoInDB_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::string deviceIdEmpty;
     uint32_t MAX_ID_LEN = 257;
     deviceIdEmpty.resize(MAX_ID_LEN);
@@ -754,6 +786,7 @@ HWTEST_F(ResourceManagerTest, RemoveCapabilityInfoInDB_001, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, RemoveCapabilityInfoInDB_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::string deviceIdEmpty = "deviceIdEmpty";
     CapabilityInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;
     int32_t ret = CapabilityInfoManager::GetInstance()->RemoveCapabilityInfoInDB(deviceIdEmpty);
@@ -768,6 +801,7 @@ HWTEST_F(ResourceManagerTest, RemoveCapabilityInfoInDB_002, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, HandleCapabilityDeleteChange_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::vector<DistributedKv::Entry> deleteRecords;
     DistributedKv::Entry entry;
     entry.key = "strBase";
@@ -785,6 +819,7 @@ HWTEST_F(ResourceManagerTest, HandleCapabilityDeleteChange_001, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, GetDataByKey_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::string key;
     std::shared_ptr<CapabilityInfo> capInfoPtr;
     CapabilityInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;
@@ -800,6 +835,7 @@ HWTEST_F(ResourceManagerTest, GetDataByKey_001, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, GetDataByKeyPrefix_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::string keyPrefix;
     CapabilityInfoMap capabilityMap;
     CapabilityInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;
@@ -815,6 +851,7 @@ HWTEST_F(ResourceManagerTest, GetDataByKeyPrefix_001, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, DumpCapabilityInfos_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::vector<CapabilityInfo> capInfos;
     std::string dhId;
     std::string devId;
@@ -878,6 +915,7 @@ HWTEST_F(ResourceManagerTest, FromJson_001, TestSize.Level0)
  */
 HWTEST_F(ResourceManagerTest, GetEntriesByKeys_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, CapabilityInfoManager::GetInstance());
     std::vector<std::string> keys {};
     auto entries = CapabilityInfoManager::GetInstance()->GetEntriesByKeys(keys);
     EXPECT_EQ(0, entries.size());
@@ -885,12 +923,14 @@ HWTEST_F(ResourceManagerTest, GetEntriesByKeys_001, TestSize.Level0)
 
 HWTEST_F(ResourceManagerTest, Init_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, LocalCapabilityInfoManager::GetInstance());
     auto ret = LocalCapabilityInfoManager::GetInstance()->Init();
     EXPECT_EQ(DH_FWK_SUCCESS, ret);
 }
 
 HWTEST_F(ResourceManagerTest, UnInit_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, LocalCapabilityInfoManager::GetInstance());
     LocalCapabilityInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;
     auto ret = LocalCapabilityInfoManager::GetInstance()->UnInit();
     EXPECT_EQ(ERR_DH_FWK_RESOURCE_UNINIT_DB_FAILED, ret);
@@ -898,6 +938,7 @@ HWTEST_F(ResourceManagerTest, UnInit_001, TestSize.Level0)
 
 HWTEST_F(ResourceManagerTest, UnInit_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, LocalCapabilityInfoManager::GetInstance());
     LocalCapabilityInfoManager::GetInstance()->Init();
     auto ret = LocalCapabilityInfoManager::GetInstance()->UnInit();
     EXPECT_EQ(DH_FWK_SUCCESS, ret);
@@ -905,6 +946,7 @@ HWTEST_F(ResourceManagerTest, UnInit_002, TestSize.Level0)
 
 HWTEST_F(ResourceManagerTest, SyncDeviceInfoFromDB_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, LocalCapabilityInfoManager::GetInstance());
     std::string deviceId = "deviceId_test";
     LocalCapabilityInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;
     auto ret = LocalCapabilityInfoManager::GetInstance()->SyncDeviceInfoFromDB(deviceId);
@@ -917,6 +959,7 @@ HWTEST_F(ResourceManagerTest, SyncDeviceInfoFromDB_001, TestSize.Level0)
 
 HWTEST_F(ResourceManagerTest, RemoveCapabilityInfoByKey_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, LocalCapabilityInfoManager::GetInstance());
     std::string key = "deviceId_test";
     LocalCapabilityInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;
     auto ret = LocalCapabilityInfoManager::GetInstance()->RemoveCapabilityInfoByKey(key);
@@ -929,6 +972,7 @@ HWTEST_F(ResourceManagerTest, RemoveCapabilityInfoByKey_001, TestSize.Level0)
 
 HWTEST_F(ResourceManagerTest, GetCapability_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, LocalCapabilityInfoManager::GetInstance());
     std::string deviceId = "deviceId_test";
     std::string dhId = "dhId_test";
     std::shared_ptr<CapabilityInfo> capPtr;
@@ -947,6 +991,7 @@ HWTEST_F(ResourceManagerTest, GetCapability_001, TestSize.Level0)
 
 HWTEST_F(ResourceManagerTest, GetDataByKey_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, LocalCapabilityInfoManager::GetInstance());
     std::string key = "key_test";
     std::shared_ptr<CapabilityInfo> capPtr;
     LocalCapabilityInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;
@@ -960,6 +1005,7 @@ HWTEST_F(ResourceManagerTest, GetDataByKey_002, TestSize.Level0)
 
 HWTEST_F(ResourceManagerTest, GetDataByDHType_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, LocalCapabilityInfoManager::GetInstance());
     CapabilityInfoMap capabilityMap;
     std::string deviceId = "deviceId_test";
     std::shared_ptr<CapabilityInfo> capbilityInfo = std::make_shared<CapabilityInfo>(
@@ -976,6 +1022,7 @@ HWTEST_F(ResourceManagerTest, GetDataByDHType_001, TestSize.Level0)
 
 HWTEST_F(ResourceManagerTest, GetDataByKeyPrefix_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, LocalCapabilityInfoManager::GetInstance());
     std::string keyPrefix = "keyPrefix_test";
     CapabilityInfoMap capabilityMap;
     LocalCapabilityInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;
@@ -989,6 +1036,7 @@ HWTEST_F(ResourceManagerTest, GetDataByKeyPrefix_002, TestSize.Level0)
 
 HWTEST_F(ResourceManagerTest, UnInit_003, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, MetaInfoManager::GetInstance());
     MetaInfoManager::GetInstance()->Init();
     auto ret = MetaInfoManager::GetInstance()->UnInit();
     EXPECT_EQ(DH_FWK_SUCCESS, ret);
@@ -996,6 +1044,7 @@ HWTEST_F(ResourceManagerTest, UnInit_003, TestSize.Level0)
 
 HWTEST_F(ResourceManagerTest, AddMetaCapInfos_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, MetaInfoManager::GetInstance());
     std::string deviceId = "deviceId_test";
     std::string udidHash = "udidHash_test";
     std::string dhId = "dhId_test";
@@ -1010,6 +1059,7 @@ HWTEST_F(ResourceManagerTest, AddMetaCapInfos_001, TestSize.Level0)
 
 HWTEST_F(ResourceManagerTest, SyncMetaInfoFromDB_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, MetaInfoManager::GetInstance());
     std::string deviceId = "deviceId_test";
     MetaInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;
     auto ret = MetaInfoManager::GetInstance()->SyncMetaInfoFromDB(deviceId);
@@ -1022,6 +1072,7 @@ HWTEST_F(ResourceManagerTest, SyncMetaInfoFromDB_001, TestSize.Level0)
 
 HWTEST_F(ResourceManagerTest, SyncRemoteMetaInfos_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, MetaInfoManager::GetInstance());
     MetaInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;
     auto ret = MetaInfoManager::GetInstance()->SyncRemoteMetaInfos();
     EXPECT_EQ(ERR_DH_FWK_RESOURCE_DB_ADAPTER_POINTER_NULL, ret);
@@ -1033,6 +1084,7 @@ HWTEST_F(ResourceManagerTest, SyncRemoteMetaInfos_001, TestSize.Level0)
 
 HWTEST_F(ResourceManagerTest, GetDataByKeyPrefix_003, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, MetaInfoManager::GetInstance());
     std::string keyPrefix = "keyPrefix_test";
     MetaCapInfoMap metaCapMap;
     MetaInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;
@@ -1046,6 +1098,7 @@ HWTEST_F(ResourceManagerTest, GetDataByKeyPrefix_003, TestSize.Level0)
 
 HWTEST_F(ResourceManagerTest, RemoveMetaInfoByKey_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, MetaInfoManager::GetInstance());
     std::string key = "key_test";
     MetaInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;
     auto ret = MetaInfoManager::GetInstance()->RemoveMetaInfoByKey(key);
@@ -1058,6 +1111,7 @@ HWTEST_F(ResourceManagerTest, RemoveMetaInfoByKey_001, TestSize.Level0)
 
 HWTEST_F(ResourceManagerTest, GetMetaCapInfo_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, MetaInfoManager::GetInstance());
     std::string deviceId = "deviceId_test";
     std::string udidHash = "udidHash_test";
     std::string dhId = "dhId_test";
@@ -1086,6 +1140,7 @@ HWTEST_F(ResourceManagerTest, GetMetaCapInfo_001, TestSize.Level0)
 
 HWTEST_F(ResourceManagerTest, GetMetaCapByValue_001, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, MetaInfoManager::GetInstance());
     std::string value = "";
     std::shared_ptr<MetaCapabilityInfo> metaCapPtr = nullptr;
     auto ret = MetaInfoManager::GetInstance()->GetMetaCapByValue(value, metaCapPtr);
@@ -1102,6 +1157,7 @@ HWTEST_F(ResourceManagerTest, GetMetaCapByValue_001, TestSize.Level0)
 
 HWTEST_F(ResourceManagerTest, GetEntriesByKeys_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, MetaInfoManager::GetInstance());
     std::vector<std::string> keys;
     auto ret = MetaInfoManager::GetInstance()->GetEntriesByKeys(keys);
     EXPECT_EQ(0, ret.size());
@@ -1118,6 +1174,7 @@ HWTEST_F(ResourceManagerTest, GetEntriesByKeys_002, TestSize.Level0)
 
 HWTEST_F(ResourceManagerTest, FromJson_002, TestSize.Level0)
 {
+    ASSERT_NE(nullptr, MetaInfoManager::GetInstance());
     MetaCapabilityInfo metaCapInfo;
     std::string dhId = "dhId_test";
     std::string dveId = "devId_test";
