@@ -40,7 +40,7 @@ void PublisherListenerProxy::OnMessage(const DHTopic topic, const std::string& m
         return;
     }
     if (message.size() == 0 || message.size() > MAX_MESSAGE_LEN) {
-        DHLOGE("Message is invalid");
+        DHLOGE("Message is invalid!");
         return;
     }
 

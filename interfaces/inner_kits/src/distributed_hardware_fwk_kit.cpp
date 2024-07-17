@@ -203,6 +203,10 @@ int32_t DistributedHardwareFwkKit::RegisterCtlCenterCallback(int32_t engineId,
 
 int32_t DistributedHardwareFwkKit::PauseDistributedHardware(DHType dhType, const std::string &networkId)
 {
+    if (networkId.empty() || networkId.length() > MAX_ID_LEN){
+        DHLOGE("Network ID is invalid!"); 
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("Pause distributed hardware dhType %{public}u, networkId %{public}s", (uint32_t)dhType,
         GetAnonyString(networkId).c_str());
 
@@ -217,6 +221,10 @@ int32_t DistributedHardwareFwkKit::PauseDistributedHardware(DHType dhType, const
 
 int32_t DistributedHardwareFwkKit::ResumeDistributedHardware(DHType dhType, const std::string &networkId)
 {
+    if (networkId.empty() || networkId.length() > MAX_ID_LEN){
+        DHLOGE("Network ID is invalid!"); 
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("Resume distributed hardware dhType %{public}u, networkId %{public}s", (uint32_t)dhType,
         GetAnonyString(networkId).c_str());
 
@@ -231,6 +239,10 @@ int32_t DistributedHardwareFwkKit::ResumeDistributedHardware(DHType dhType, cons
 
 int32_t DistributedHardwareFwkKit::StopDistributedHardware(DHType dhType, const std::string &networkId)
 {
+    if (networkId.empty() || networkId.length() > MAX_ID_LEN){
+        DHLOGE("Network ID is invalid!"); 
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("Stop distributed hardware dhType %{public}u, networkId %{public}s", (uint32_t)dhType,
         GetAnonyString(networkId).c_str());
 

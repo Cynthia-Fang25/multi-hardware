@@ -69,6 +69,7 @@ namespace DistributedHardware {
     constexpr int32_t ERR_DH_FWK_RESOURCE_CAPINFO_POINTER_NULL = -10414;
     constexpr int32_t ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID = -10415;
 
+
     /* DistributedHardwareManager errno, range: [-10500, -10599] */
     constexpr int32_t ERR_DH_FWK_HARDWARE_MANAGER_DEVICE_REPEAT_ONLINE = -10500;
     constexpr int32_t ERR_DH_FWK_HARDWARE_MANAGER_DEVICE_REPEAT_OFFLINE = -10501;

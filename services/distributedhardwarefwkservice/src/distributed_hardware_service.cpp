@@ -306,6 +306,10 @@ int DistributedHardwareService::Dump(int32_t fd, const std::vector<std::u16strin
 
 int32_t DistributedHardwareService::PauseDistributedHardware(DHType dhType, const std::string &networkId)
 {
+    if (networkId.empty() || networkId.length() > MAX_ID_LEN){
+        DHLOGE("Network ID is invalid!"); 
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     std::map<DHType, IDistributedHardwareSink*> sinkMap = ComponentManager::GetInstance().GetDHSinkInstance();
     if (sinkMap.find(dhType) == sinkMap.end()) {
         DHLOGE("PauseDistributedHardware for DHType: %{public}u not init sink handler", (uint32_t)dhType);
@@ -321,6 +325,10 @@ int32_t DistributedHardwareService::PauseDistributedHardware(DHType dhType, cons
 
 int32_t DistributedHardwareService::ResumeDistributedHardware(DHType dhType, const std::string &networkId)
 {
+    if (networkId.empty() || networkId.length() > MAX_ID_LEN){
+        DHLOGE("Network ID is invalid!"); 
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     std::map<DHType, IDistributedHardwareSink*> sinkMap = ComponentManager::GetInstance().GetDHSinkInstance();
     if (sinkMap.find(dhType) == sinkMap.end()) {
         DHLOGE("ResumeDistributedHardware for DHType: %{public}u not init sink handler", (uint32_t)dhType);
@@ -336,6 +344,10 @@ int32_t DistributedHardwareService::ResumeDistributedHardware(DHType dhType, con
 
 int32_t DistributedHardwareService::StopDistributedHardware(DHType dhType, const std::string &networkId)
 {
+    if (networkId.empty() || networkId.length() > MAX_ID_LEN){
+        DHLOGE("Network ID is invalid!"); 
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     std::map<DHType, IDistributedHardwareSink*> sinkMap = ComponentManager::GetInstance().GetDHSinkInstance();
     if (sinkMap.find(dhType) == sinkMap.end()) {
         DHLOGE("StopDistributedHardware for DHType: %{public}u not init sink handler", (uint32_t)dhType);

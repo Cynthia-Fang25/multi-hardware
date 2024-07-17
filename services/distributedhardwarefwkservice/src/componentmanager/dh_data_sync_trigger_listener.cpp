@@ -39,6 +39,10 @@ DHDataSyncTriggerListener::~DHDataSyncTriggerListener()
 
 void DHDataSyncTriggerListener::OnDataSyncTrigger(const std::string &networkId)
 {
+    if (networkId.empty() || networkId.length() > MAX_ID_LEN){
+        DHLOGE("Network ID is invalid!"); 
+        return;
+    }
     DHLOGI("Receive data sync trigger, networkId: %{public}s", GetAnonyString(networkId).c_str());
     if (networkId.empty()) {
         DHLOGE("OnDataSyncTrigger networkId is empty");

@@ -15,6 +15,8 @@
 
 #include "mock_hardware_handler.h"
 
+#include "constants.h"
+#include "distributed_hardware_log.h"
 #include "distributed_hardware_errno.h"
 
 namespace OHOS {
@@ -60,6 +62,10 @@ void MockHardwareHandler::UnRegisterPluginListener()
 int32_t MockHardwareHandler::PluginHardware(const std::string &dhId, const std::string &attr,
     const std::string &subtype)
 {
+    if (dhId.empty() || dhId.length() > MAX_ID_LEN){
+        DHLOGE("DHID is invalide!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     if (listener_ != nullptr) {
         listener_->PluginHardware(dhId, attr, subtype);
     }
@@ -68,6 +74,10 @@ int32_t MockHardwareHandler::PluginHardware(const std::string &dhId, const std::
 
 int32_t MockHardwareHandler::UnPluginHardware(const std::string &dhId)
 {
+    if (udidHash.length() <= 0 || udidHash.length() > MAX_HASH_SIZE){
+        DHLOGE("UDID hash value is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     if (listener_ != nullptr) {
         listener_->UnPluginHardware(dhId);
     }

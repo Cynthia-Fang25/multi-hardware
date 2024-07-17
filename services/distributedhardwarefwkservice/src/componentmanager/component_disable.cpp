@@ -33,6 +33,14 @@ ComponentDisable::~ComponentDisable() {}
 int32_t ComponentDisable::Disable(const std::string &networkId, const std::string &dhId,
     IDistributedHardwareSource *handler)
 {
+    if (networkId.empty() || networkId.length() > MAX_ID_LEN){
+        DHLOGE("Network ID is invalid!"); 
+        return ERR_DH_FWK_PARA_INVALID;
+    }
+    if (dhId.empty() || dhId.length() > MAX_ID_LEN){
+        DHLOGE("DHID is invalide!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGD("networkId = %{public}s dhId = %{public}s.", GetAnonyString(networkId).c_str(),
         GetAnonyString(dhId).c_str());
     if (handler == nullptr) {
@@ -68,6 +76,14 @@ int32_t ComponentDisable::Disable(const std::string &networkId, const std::strin
 int32_t ComponentDisable::OnUnregisterResult(const std::string &networkId, const std::string &dhId, int32_t status,
     const std::string &data)
 {
+    if (networkId.empty() || networkId.length() > MAX_ID_LEN){
+        DHLOGE("Network ID is invalid!"); 
+        return ERR_DH_FWK_PARA_INVALID;
+    }
+    if (dhId.empty() || dhId.length() > MAX_ID_LEN){
+        DHLOGE("DHID is invalide!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     if (status == DH_FWK_SUCCESS) {
         DHLOGI("disable success, networkId = %{public}s, dhId = %{public}s.", GetAnonyString(networkId).c_str(),
             GetAnonyString(dhId).c_str());

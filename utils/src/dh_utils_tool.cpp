@@ -82,7 +82,8 @@ std::string GetRandomID()
 
 std::string GetUUIDByDm(const std::string &networkId)
 {
-    if (networkId.empty()) {
+    if (networkId.empty() || networkId.length() > MAX_ID_LEN){
+        DHLOGE("Network ID is invalid!"); 
         return "";
     }
     std::string uuid = "";
@@ -92,7 +93,8 @@ std::string GetUUIDByDm(const std::string &networkId)
 
 std::string GetUDIDByDm(const std::string &networkId)
 {
-    if (networkId.empty()) {
+    if (networkId.empty() || networkId.length() > MAX_ID_LEN){
+        DHLOGE("Network ID is invalid!"); 
         return "";
     }
     std::string udid = "";
@@ -102,8 +104,8 @@ std::string GetUDIDByDm(const std::string &networkId)
 
 std::string GetDeviceIdByUUID(const std::string &uuid)
 {
-    if (uuid.size() == 0 || uuid.size() > MAX_ID_LEN) {
-        DHLOGE("uuid is invalid!");
+    if ( uuid.empty() || uuid.length() > MAX_ID_LEN ){
+        DHLOGE("UUID is invalid!");
         return "";
     }
     return Sha256(uuid);

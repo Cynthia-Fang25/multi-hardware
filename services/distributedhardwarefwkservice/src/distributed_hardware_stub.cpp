@@ -25,7 +25,6 @@
 #include "distributed_hardware_log.h"
 #include "ipc_skeleton.h"
 #include "publisher_listener_proxy.h"
-#include "tokenid_kit.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -310,11 +309,6 @@ int32_t DistributedHardwareStub::StopDistributedHardwareInner(MessageParcel &dat
 
 bool DistributedHardwareStub::HasAccessDHPermission()
 {
-    uint64_t fullTokenId = IPCSkeleton::GetCallingFullTokenID();
-    if (!OHOS::Security::AccessToken::TokenIdKit::IsSystemAppByFullTokenID(fullTokenId)) {
-        DHLOGE("GetCallerProcessName not system hap.");
-        return false;
-    }
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
     const std::string permissionName = "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE";
     int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,

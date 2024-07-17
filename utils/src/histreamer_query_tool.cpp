@@ -38,7 +38,7 @@ const std::string QueryAudioDecoderFuncName = "QueryAudioDecoderAbilityStr";
 const std::string QueryVideoEncoderFuncName = "QueryVideoEncoderAbilityStr";
 const std::string QueryVideoDecoderFuncName = "QueryVideoDecoderAbilityStr";
 
-const uint32_t MAX_MESSAGES_LEN = 1 * 1024 * 1024;
+const uint32_t MAX_MESSAGE_LEN = 1 * 1024 * 1024;
 
 #ifdef __LP64__
 const std::string LIB_LOAD_PATH = "/system/lib64/libhistreamer_ability_querier.z.so";
@@ -104,7 +104,7 @@ std::string HiStreamerQueryTool::QueryHiStreamerPluginInfo(HISTREAM_PLUGIN_TYPE 
     }
 
     int32_t len = 0;
-    char* res = reinterpret_cast<char *>(malloc(MAX_MESSAGES_LEN));
+    char* res = reinterpret_cast<char *>(malloc(MAX_MESSAGE_LEN));
     if (res == nullptr) {
         DHLOGE("Malloc memory failed");
         return "";

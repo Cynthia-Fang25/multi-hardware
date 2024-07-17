@@ -52,6 +52,10 @@ void MetaCapabilityInfo::SetSinkVersion(const std::string &sinkVersion)
 
 int32_t MetaCapabilityInfo::FromJsonString(const std::string &jsonStr)
 {
+    if (jsonStr.empty() || jsonStr.length() > MAX_JSON_SIZE){
+        DHLOGE("Json string is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     cJSON *jsonObj = cJSON_Parse(jsonStr.c_str());
     if (jsonObj == NULL) {
         DHLOGE("jsonStr parse failed");
@@ -143,6 +147,10 @@ std::string MetaCapabilityInfo::GetAnonymousKey() const
 
 void ToJson(cJSON *jsonObject, const MetaCapabilityInfo &metaCapInfo)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     cJSON_AddStringToObject(jsonObject, DH_ID.c_str(), metaCapInfo.GetDHId().c_str());
     cJSON_AddStringToObject(jsonObject, DEV_ID.c_str(), metaCapInfo.GetDeviceId().c_str());
     cJSON_AddStringToObject(jsonObject, DEV_NAME.c_str(), metaCapInfo.GetDeviceName().c_str());
@@ -156,6 +164,10 @@ void ToJson(cJSON *jsonObject, const MetaCapabilityInfo &metaCapInfo)
 
 void FromJson(const cJSON *jsonObject, MetaCapabilityInfo &metaCapInfo)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     if (!IsString(jsonObject, DH_ID)) {
         DHLOGE("DH_ID is invalid!");
         return;

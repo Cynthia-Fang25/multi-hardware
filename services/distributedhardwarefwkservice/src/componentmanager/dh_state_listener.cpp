@@ -38,6 +38,14 @@ DHStateListener::~DHStateListener()
 
 void DHStateListener::OnStateChanged(const std::string &networkId, const std::string &dhId, const BusinessState state)
 {
+    if (networkId.empty() || networkId.length() > MAX_ID_LEN){
+        DHLOGE("Network ID is invalid!"); 
+        return;
+    }
+    if (dhId.empty() || dhId.length() > MAX_ID_LEN){
+        DHLOGE("DHID is invalide!");
+        return;
+    }
     DHLOGI("Receive business state change, networkId: %{public}s, dhId: %{public}s, state: %{public}" PRIu32,
         GetAnonyString(networkId).c_str(), GetAnonyString(dhId).c_str(), (uint32_t)state);
     ComponentManager::GetInstance().UpdateBusinessState(networkId, dhId, state);

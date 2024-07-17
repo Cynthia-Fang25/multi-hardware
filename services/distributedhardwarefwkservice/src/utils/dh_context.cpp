@@ -114,8 +114,16 @@ const DeviceInfo& DHContext::GetDeviceInfo()
 
 void DHContext::AddOnlineDevice(const std::string &udid, const std::string &uuid, const std::string &networkId)
 {
-    if (udid.empty() || uuid.empty() || networkId.empty()) {
-        DHLOGE("Add online device id invalid");
+    if (networkId.empty() || networkId.length() > MAX_ID_LEN){
+        DHLOGE("Network ID is invalid!"); 
+        return;
+    }
+    if ( uuid.empty() || uuid.length() > MAX_ID_LEN ){
+        DHLOGE("UUID is invalid!");
+        return;
+    }
+    if ( udid.empty() || udid.length() > MAX_ID_LEN ){
+        DHLOGE("UDID is invalid!");
         return;
     }
     std::unique_lock<std::shared_mutex> lock(onlineDevMutex_);
@@ -137,6 +145,10 @@ void DHContext::AddOnlineDevice(const std::string &udid, const std::string &uuid
 
 void DHContext::RemoveOnlineDeviceByUUID(const std::string &uuid)
 {
+    if ( uuid.empty() || uuid.length() > MAX_ID_LEN ){
+        DHLOGE("UUID is invalid!");
+        return;
+    }
     std::unique_lock<std::shared_mutex> lock(onlineDevMutex_);
     for (auto iter = devIdEntrySet_.begin(); iter != devIdEntrySet_.end(); iter++) {
         if (iter->uuid == uuid) {
@@ -148,6 +160,10 @@ void DHContext::RemoveOnlineDeviceByUUID(const std::string &uuid)
 
 bool DHContext::IsDeviceOnline(const std::string &uuid)
 {
+    if ( uuid.empty() || uuid.length() > MAX_ID_LEN ){
+        DHLOGE("UUID is invalid!");
+        return false;
+    }
     if (uuid.empty()) {
         return false;
     }
@@ -170,6 +186,11 @@ size_t DHContext::GetOnlineCount()
 
 std::string DHContext::GetNetworkIdByUUID(const std::string &uuid)
 {
+    if ( uuid.length() <= 0 || uuid.length() > MAX_ID_LEN )
+    {
+        DHLOGD("UUID is invalid!");
+        return "";
+    }
     std::unique_lock<std::shared_mutex> lock(onlineDevMutex_);
     std::string networkId = "";
     for (auto iter = devIdEntrySet_.begin(); iter != devIdEntrySet_.end(); iter++) {
@@ -183,6 +204,10 @@ std::string DHContext::GetNetworkIdByUUID(const std::string &uuid)
 
 std::string DHContext::GetUdidHashIdByUUID(const std::string &uuid)
 {
+    if ( uuid.empty() || uuid.length() > MAX_ID_LEN ){
+        DHLOGE("UUID is invalid!");
+        return "";
+    }
     std::unique_lock<std::shared_mutex> lock(onlineDevMutex_);
     std::string udidHash = "";
     for (auto iter = devIdEntrySet_.begin(); iter != devIdEntrySet_.end(); iter++) {
@@ -196,6 +221,10 @@ std::string DHContext::GetUdidHashIdByUUID(const std::string &uuid)
 
 std::string DHContext::GetUUIDByNetworkId(const std::string &networkId)
 {
+    if (networkId.empty() || networkId.length() > MAX_ID_LEN){
+        DHLOGE("Network ID is invalid!"); 
+        return "";
+    }
     std::unique_lock<std::shared_mutex> lock(onlineDevMutex_);
     std::string uuid = "";
     for (auto iter = devIdEntrySet_.begin(); iter != devIdEntrySet_.end(); iter++) {
@@ -209,6 +238,10 @@ std::string DHContext::GetUUIDByNetworkId(const std::string &networkId)
 
 std::string DHContext::GetUDIDByNetworkId(const std::string &networkId)
 {
+    if (networkId.empty() || networkId.length() > MAX_ID_LEN){
+        DHLOGE("Network ID is invalid!"); 
+        return "";
+    }
     std::unique_lock<std::shared_mutex> lock(onlineDevMutex_);
     std::string udid = "";
     for (auto iter = devIdEntrySet_.begin(); iter != devIdEntrySet_.end(); iter++) {
@@ -222,6 +255,10 @@ std::string DHContext::GetUDIDByNetworkId(const std::string &networkId)
 
 std::string DHContext::GetUUIDByDeviceId(const std::string &deviceId)
 {
+    if (deviceId.empty() || deviceId.length() > MAX_ID_LEN){
+        DHLOGE("Device ID is invalid!");
+        return "";
+    }
     std::unique_lock<std::shared_mutex> lock(onlineDevMutex_);
     std::string uuid = "";
     for (auto iter = devIdEntrySet_.begin(); iter != devIdEntrySet_.end(); iter++) {
@@ -235,6 +272,10 @@ std::string DHContext::GetUUIDByDeviceId(const std::string &deviceId)
 
 std::string DHContext::GetNetworkIdByDeviceId(const std::string &deviceId)
 {
+    if (deviceId.empty() || deviceId.length() > MAX_ID_LEN){
+        DHLOGE("Device ID is invalid!");
+        return "";
+    }
     std::unique_lock<std::shared_mutex> lock(onlineDevMutex_);
     std::string networkId = "";
     for (auto iter = devIdEntrySet_.begin(); iter != devIdEntrySet_.end(); iter++) {
@@ -246,8 +287,12 @@ std::string DHContext::GetNetworkIdByDeviceId(const std::string &deviceId)
     return networkId;
 }
 
-std::string DHContext::GetDeviceIdByDBGetPrefix(const std::string &prefix)
+std::string DHContext::GetDeviceIdByDBGetPrefix(const std::string &prefix) /// max length of prefix
 {
+    if (prefix.empty() || prefix.length() > MAX_ID_LEN){
+        DHLOGE("ID prefix is invalid!");
+        return "";
+    }
     std::string id = "";
     if (prefix.empty()) {
         return id;
@@ -274,6 +319,10 @@ void DHContext::RegisDHFWKIsomerismListener()
 
 void DHContext::DHFWKIsomerismListener::OnMessage(const DHTopic topic, const std::string &message)
 {
+    if ( message.length() <= 0 || message.length() > MAX_MESSAGE_LEN ){
+        DHLOGE("Message is invalide!");
+        return;
+    }
     DHLOGI("OnMessage topic: %{public}u", static_cast<uint32_t>(topic));
     if (topic != DHTopic::TOPIC_ISOMERISM) {
         DHLOGE("OnMessage topic is wrong");
@@ -313,6 +362,10 @@ void DHContext::DHFWKIsomerismListener::OnMessage(const DHTopic topic, const std
 
 void DHContext::AddIsomerismConnectDev(const std::string &IsomerismDeviceId)
 {
+    if (IsomerismDeviceId.length() <=0 || IsomerismDeviceId.length() > MAX_ID_LEN){
+        DHLOGE("Isomerism device ID is invalide!");
+        return;
+    }
     DHLOGI("AddIsomerismConnectDev id = %{public}s", GetAnonyString(IsomerismDeviceId).c_str());
     std::shared_lock<std::shared_mutex> lock(connectDevMutex_);
     connectedDevIds_.insert(IsomerismDeviceId);
@@ -320,6 +373,10 @@ void DHContext::AddIsomerismConnectDev(const std::string &IsomerismDeviceId)
 
 void DHContext::DelIsomerismConnectDev(const std::string &IsomerismDeviceId)
 {
+    if (IsomerismDeviceId.length() <=0 || IsomerismDeviceId.length() > MAX_ID_LEN){
+        DHLOGE("Isomerism device ID is invalide!");
+        return;
+    }
     DHLOGI("DelIsomerismConnectDev id = %{public}s", GetAnonyString(IsomerismDeviceId).c_str());
     std::shared_lock<std::shared_mutex> lock(connectDevMutex_);
     if (connectedDevIds_.find(IsomerismDeviceId) == connectedDevIds_.end()) {

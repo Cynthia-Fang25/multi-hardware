@@ -25,6 +25,7 @@
 #include "component_loader.h"
 #include "component_manager.h"
 #include "device_type.h"
+#include "constants.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
 
@@ -47,6 +48,10 @@ ComponentMonitor::~ComponentMonitor()
 
 void ComponentMonitor::CompSystemAbilityListener::OnAddSystemAbility(int32_t saId, const std::string &deviceId)
 {
+    if (deviceId.empty() || deviceId.length() > MAX_ID_LEN){
+        DHLOGE("Device ID is invalid!");
+        return;
+    }
     DHLOGI("OnAddSystemAbility, saId: %{public}d, deviceId: %{public}s", saId, GetAnonyString(deviceId).c_str());
 }
 

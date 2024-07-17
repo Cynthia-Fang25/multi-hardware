@@ -197,7 +197,7 @@ void LocalHardwareManager::GetLocalCapabilityMapByPrefix(const DHType dhType, Ca
 {
     std::string localDeviceId = DHContext::GetInstance().GetDeviceInfo().deviceId;
     if (localDeviceId.size() == 0 || localDeviceId.size() > MAX_ID_LEN) {
-        DHLOGE("LocalDeviceId is invalid");
+        DHLOGE("LocalDeviceId is invalid!");
         return;
     }
     if (DHTypePrefixMap.find(dhType) == DHTypePrefixMap.end()) {

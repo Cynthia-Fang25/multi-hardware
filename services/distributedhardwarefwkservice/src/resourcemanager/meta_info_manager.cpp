@@ -156,6 +156,10 @@ int32_t MetaInfoManager::AddMetaCapInfos(const std::vector<std::shared_ptr<MetaC
 
 int32_t MetaInfoManager::SyncMetaInfoFromDB(const std::string &udidHash)
 {
+    if ( udidHash.empty() || udidHash.length() > MAX_HASH_SIZE ){
+        DHLOGE("UDID hash is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("Sync MetaInfo from DB, udidHash: %{public}s", GetAnonyString(udidHash).c_str());
     std::lock_guard<std::mutex> lock(metaInfoMgrMutex_);
     if (dbAdapterPtr_ == nullptr) {
@@ -224,6 +228,10 @@ int32_t MetaInfoManager::SyncRemoteMetaInfos()
 
 int32_t MetaInfoManager::GetDataByKeyPrefix(const std::string &keyPrefix, MetaCapInfoMap &metaCapMap)
 {
+    if ( keyPrefix.empty() || keyPrefix.length() > MAX_KEY_SIZE ){
+        DHLOGE("Key orefix is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     std::lock_guard<std::mutex> lock(metaInfoMgrMutex_);
     if (dbAdapterPtr_ == nullptr) {
         DHLOGE("dbAdapterPtr is null");
@@ -251,6 +259,10 @@ int32_t MetaInfoManager::GetDataByKeyPrefix(const std::string &keyPrefix, MetaCa
 
 int32_t MetaInfoManager::RemoveMetaInfoByKey(const std::string &key)
 {
+    if ( key.empty() || key.length() > MAX_KEY_SIZE ){
+        DHLOGE("Key is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("Remove device metaInfo, key: %{public}s", GetAnonyString(key).c_str());
     std::lock_guard<std::mutex> lock(metaInfoMgrMutex_);
     if (dbAdapterPtr_ == nullptr) {
@@ -269,6 +281,14 @@ int32_t MetaInfoManager::RemoveMetaInfoByKey(const std::string &key)
 int32_t MetaInfoManager::GetMetaCapInfo(const std::string &udidHash,
     const std::string &dhId, std::shared_ptr<MetaCapabilityInfo> &metaCapPtr)
 {
+    if ( udidHash.empty() || udidHash.length() > MAX_HASH_SIZE ){
+        DHLOGE("UDID hash is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
+    if (dhId.empty() || dhId.length() > MAX_ID_LEN){
+        DHLOGE("DHID is invalide!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     std::lock_guard<std::mutex> lock(metaInfoMgrMutex_);
     std::string key = GetCapabilityKey(udidHash, dhId);
     if (globalMetaInfoMap_.find(key) == globalMetaInfoMap_.end()) {
@@ -282,6 +302,10 @@ int32_t MetaInfoManager::GetMetaCapInfo(const std::string &udidHash,
 void MetaInfoManager::GetMetaCapInfosByUdidHash(const std::string &udidHash,
     std::vector<std::shared_ptr<MetaCapabilityInfo>> &metaCapInfos)
 {
+    if ( udidHash.empty() || udidHash.length() > MAX_HASH_SIZE ){
+        DHLOGE("UDID hash is invalid!");
+        return;
+    }
     std::lock_guard<std::mutex> lock(metaInfoMgrMutex_);
     for (auto &metaCapInfo : globalMetaInfoMap_) {
         if (IsCapKeyMatchDeviceId(metaCapInfo.first, udidHash)) {
@@ -292,6 +316,10 @@ void MetaInfoManager::GetMetaCapInfosByUdidHash(const std::string &udidHash,
 
 int32_t MetaInfoManager::GetMetaCapByValue(const std::string &value, std::shared_ptr<MetaCapabilityInfo> &metaCapPtr)
 {
+    if (value.empty() || value.length() > MAX_MESSAGE_LEN){
+        DHLOGE("Value is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     if (metaCapPtr == nullptr) {
         metaCapPtr = std::make_shared<MetaCapabilityInfo>();
     }
@@ -347,6 +375,10 @@ void MetaInfoManager::OnChange(const DistributedKv::DataOrigin &origin, Keys &&k
 
 void MetaInfoManager::HandleMetaCapabilityAddChange(const std::vector<DistributedKv::Entry> &insertRecords)
 {
+    if (insertRecords.empty() || insertRecords.size() > MAX_DB_RECORD_SIZE){
+        DHLOGE("Records vector is invalide!");
+        return;
+    }
     std::lock_guard<std::mutex> lock(metaInfoMgrMutex_);
     for (const auto &item : insertRecords) {
         const std::string value = item.value.ToString();
@@ -381,6 +413,10 @@ void MetaInfoManager::HandleMetaCapabilityAddChange(const std::vector<Distribute
 
 void MetaInfoManager::HandleMetaCapabilityUpdateChange(const std::vector<DistributedKv::Entry> &updateRecords)
 {
+    if (updateRecords.empty() || updateRecords.size() > MAX_DB_RECORD_SIZE){
+        DHLOGE("Records vector is invalide!");
+        return;
+    }
     std::lock_guard<std::mutex> lock(metaInfoMgrMutex_);
     for (const auto &item : updateRecords) {
         const std::string value = item.value.ToString();
@@ -397,6 +433,10 @@ void MetaInfoManager::HandleMetaCapabilityUpdateChange(const std::vector<Distrib
 
 void MetaInfoManager::HandleMetaCapabilityDeleteChange(const std::vector<DistributedKv::Entry> &deleteRecords)
 {
+    if (deleteRecords.empty() || deleteRecords.size() > MAX_DB_RECORD_SIZE){
+        DHLOGE("Records vector is invalide!");
+        return;
+    }
     std::lock_guard<std::mutex> lock(metaInfoMgrMutex_);
     for (const auto &item : deleteRecords) {
         const std::string value = item.value.ToString();
@@ -413,6 +453,10 @@ void MetaInfoManager::HandleMetaCapabilityDeleteChange(const std::vector<Distrib
 
 std::vector<DistributedKv::Entry> MetaInfoManager::GetEntriesByKeys(const std::vector<std::string> &keys)
 {
+    if (keys.empty() || keys.size() > MAX_ARR_SIZE){
+        DHLOGE("Length of vactor of keys is invalid!");
+        return {};
+    }
     DHLOGI("call");
     if (keys.empty()) {
         DHLOGE("keys empty.");
