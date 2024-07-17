@@ -31,6 +31,10 @@ std::string GetCapabilityKey(const std::string &deviceId, const std::string &dhI
 
 bool IsCapKeyMatchDeviceId(const std::string &key, const std::string &deviceId)
 {
+    if (deviceId.empty() || deviceId.length() > MAX_ID_LEN){
+        DHLOGE("Device ID is invalid!");
+        return false;
+    }
     std::size_t separatorPos = key.find(RESOURCE_SEPARATOR);
     if (separatorPos == std::string::npos) {
         return false;

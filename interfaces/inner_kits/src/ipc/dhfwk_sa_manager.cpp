@@ -102,6 +102,10 @@ void DHFWKSAManager::RegisterSAStateCallback(DHFWKSAStateCb callback)
 
 void DHFWKSAManager::SystemAbilityListener::OnAddSystemAbility(int32_t systemAbilityId, const std::string &deviceId)
 {
+    if (deviceId.empty() || deviceId.length() > MAX_ID_LEN){
+        DHLOGE("Device ID is invalid!");
+        return;
+    }
     (void)deviceId;
     if (systemAbilityId != DISTRIBUTED_HARDWARE_SA_ID) {
         DHLOGW("Receive SA Start, but sa id is not DHFWK, id: %{public}" PRId32, systemAbilityId);
@@ -123,6 +127,10 @@ void DHFWKSAManager::SystemAbilityListener::OnAddSystemAbility(int32_t systemAbi
 
 void DHFWKSAManager::SystemAbilityListener::OnRemoveSystemAbility(int32_t systemAbilityId, const std::string &deviceId)
 {
+    if (deviceId.empty() || deviceId.length() > MAX_ID_LEN){
+        DHLOGE("Device ID is invalid!");
+        return;
+    }
     (void)deviceId;
     if (systemAbilityId != DISTRIBUTED_HARDWARE_SA_ID) {
         DHLOGW("Receive SA Stop, but sa id is not DHFWK, id: %{public}" PRId32, systemAbilityId);

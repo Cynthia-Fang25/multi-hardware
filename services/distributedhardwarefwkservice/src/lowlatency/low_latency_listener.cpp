@@ -46,7 +46,7 @@ void LowLatencyListener::OnMessage(const DHTopic topic, const std::string& messa
         return;
     }
     if (message.size() == 0 || message.size() > MAX_MESSAGE_LEN) {
-        DHLOGE("Message is invalid");
+        DHLOGE("Message is invalid!");
         return;
     }
     cJSON *jsonObj = cJSON_Parse(message.c_str());
@@ -55,12 +55,12 @@ void LowLatencyListener::OnMessage(const DHTopic topic, const std::string& messa
         return;
     }
     if (!IsUInt32(jsonObj, DH_TYPE)) {
-        DHLOGE("The DH_TYPE key is invalid");
+        DHLOGE("The DH_TYPE key is invalid!");
         cJSON_Delete(jsonObj);
         return;
     }
     if (!IsBool(jsonObj, LOW_LATENCY_ENABLE)) {
-        DHLOGE("The LOW_LATENCY_ENABLE key is invalid");
+        DHLOGE("The LOW_LATENCY_ENABLE key is invalid!");
         cJSON_Delete(jsonObj);
         return;
     }

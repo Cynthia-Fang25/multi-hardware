@@ -97,6 +97,18 @@ int32_t DistributedHardwareManager::Release()
 int32_t DistributedHardwareManager::SendOnLineEvent(const std::string &networkId, const std::string &uuid,
     const std::string &udid, uint16_t deviceType)
 {
+    if (networkId.empty() || networkId.length() > MAX_ID_LEN){
+        DHLOGE("Network ID is invalid!"); 
+        return ERR_DH_FWK_PARA_INVALID;
+    }
+    if ( uuid.empty() || uuid.length() > MAX_ID_LEN ){
+        DHLOGE("UUID is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
+    if ( udid.empty() || udid.length() > MAX_ID_LEN ){
+        DHLOGE("UDID is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     (void)deviceType;
     DHLOGI("SendOnLineEvent networkId = %{public}s, uuid = %{public}s, udid = %{public}s",
         GetAnonyString(networkId).c_str(), GetAnonyString(uuid).c_str(), GetAnonyString(udid).c_str());
@@ -116,6 +128,18 @@ int32_t DistributedHardwareManager::SendOnLineEvent(const std::string &networkId
 int32_t DistributedHardwareManager::SendOffLineEvent(const std::string &networkId, const std::string &uuid,
     const std::string &udid, uint16_t deviceType)
 {
+    if (networkId.empty() || networkId.length() > MAX_ID_LEN){
+        DHLOGE("Network ID is invalid!"); 
+        return ERR_DH_FWK_PARA_INVALID;
+    }
+    if ( uuid.empty() || uuid.length() > MAX_ID_LEN ){
+        DHLOGE("UUID is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
+    if ( udid.empty() || udid.length() > MAX_ID_LEN ){
+        DHLOGE("UDID is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     (void)deviceType;
     DHLOGI("SendOffLineEvent networkId = %{public}s, uuid = %{public}s, udid = %{public}s",
         GetAnonyString(networkId).c_str(), GetAnonyString(uuid).c_str(), GetAnonyString(udid).c_str());

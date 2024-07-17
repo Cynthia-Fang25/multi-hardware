@@ -190,6 +190,10 @@ int32_t DBAdapter::ReInit(bool isAutoSync)
 
 std::string DBAdapter::GetNetworkIdByKey(const std::string &key)
 {
+    if ( key.empty() || key.length() > MAX_ID_LEN ){
+        DHLOGE("Key is invalid!");
+        return "";
+    }
     DHLOGI("Get networkId by key: %{public}s", GetAnonyString(key).c_str());
     std::string deviceId = DHContext::GetInstance().GetDeviceIdByDBGetPrefix(key);
     if (deviceId.empty()) {
@@ -217,6 +221,10 @@ std::string DBAdapter::GetNetworkIdByKey(const std::string &key)
 
 void DBAdapter::SyncByNotFound(const std::string &key)
 {
+    if ( key.empty() || key.length() > MAX_ID_LEN ){
+        DHLOGE("Key is invalid!");
+        return;
+    }
     std::string networkId = GetNetworkIdByKey(key);
     if (networkId.empty()) {
         DHLOGW("The networkId emtpy.");
@@ -232,6 +240,14 @@ void DBAdapter::SyncByNotFound(const std::string &key)
 
 int32_t DBAdapter::GetDataByKey(const std::string &key, std::string &data)
 {
+    if ( key.empty() || key.length() > MAX_ID_LEN ){
+        DHLOGE("Key is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
+    if ( data.empty() || data.length() > MAX_MESSAGE_LEN ){
+        DHLOGE("Key is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("Get data by key: %{public}s, storeId: %{public}s, dataType: %{public}d",
         GetAnonyString(key).c_str(), storeId_.storeId.c_str(), static_cast<int32_t>(this->dataType));
     std::lock_guard<std::mutex> lock(dbAdapterMutex_);
@@ -262,6 +278,10 @@ int32_t DBAdapter::GetDataByKey(const std::string &key, std::string &data)
 
 int32_t DBAdapter::GetDataByKeyPrefix(const std::string &keyPrefix, std::vector<std::string> &values)
 {
+    if ( keyPrefix.empty() || keyPrefix.length() > MAX_ID_LEN ){
+        DHLOGE("Keyprefix is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("Get data by key prefix: %{public}s, storeId: %{public}s, dataType: %{public}d",
         GetAnonyString(keyPrefix).c_str(), storeId_.storeId.c_str(), static_cast<int32_t>(this->dataType));
     std::lock_guard<std::mutex> lock(dbAdapterMutex_);
@@ -300,8 +320,12 @@ int32_t DBAdapter::GetDataByKeyPrefix(const std::string &keyPrefix, std::vector<
 
 int32_t DBAdapter::PutData(const std::string &key, const std::string &value)
 {
-    if (key.empty() || key.size() > MAX_MESSAGE_LEN || value.empty() || value.size() > MAX_MESSAGE_LEN) {
-        DHLOGI("Param is invalid!");
+    if ( key.empty() || key.length() > MAX_ID_LEN ){
+        DHLOGE("Key is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
+    if (value.empty() || value.length() > MAX_MESSAGE_LEN){
+        DHLOGE("Value is invalid!");
         return ERR_DH_FWK_PARA_INVALID;
     }
     std::lock_guard<std::mutex> lock(dbAdapterMutex_);
@@ -321,6 +345,14 @@ int32_t DBAdapter::PutData(const std::string &key, const std::string &value)
 
 int32_t DBAdapter::PutDataBatch(const std::vector<std::string> &keys, const std::vector<std::string> &values)
 {
+    if (keys.empty() || keys.size() > MAX_ARR_SIZE){
+        DHLOGE("Length of vactor of keys is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
+    if ( values.empty() || values.size() > MAX_ARR_SIZE ){
+        DHLOGE("Length of array of value is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     std::lock_guard<std::mutex> lock(dbAdapterMutex_);
     if (kvStoragePtr_ == nullptr) {
         DHLOGE("kvStoragePtr_ is null");
@@ -471,6 +503,10 @@ void DBAdapter::DeleteKvStore()
 
 int32_t DBAdapter::RemoveDeviceData(const std::string &deviceId)
 {
+    if (deviceId.empty() || deviceId.length() > MAX_ID_LEN){
+        DHLOGE("Device ID is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     std::lock_guard<std::mutex> lock(dbAdapterMutex_);
     if (kvStoragePtr_ == nullptr) {
         DHLOGE("kvStoragePtr_ is null");
@@ -487,6 +523,10 @@ int32_t DBAdapter::RemoveDeviceData(const std::string &deviceId)
 
 int32_t DBAdapter::RemoveDataByKey(const std::string &key)
 {
+    if ( key.length() <= 0 || key.length() > MAX_ID_LEN){
+        DHLOGE("Key is invalide!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     std::lock_guard<std::mutex> lock(dbAdapterMutex_);
     if (kvStoragePtr_ == nullptr) {
         DHLOGE("kvStoragePtr_ is null");
@@ -504,6 +544,10 @@ int32_t DBAdapter::RemoveDataByKey(const std::string &key)
 
 std::vector<DistributedKv::Entry> DBAdapter::GetEntriesByKeys(const std::vector<std::string> &keys)
 {
+    if (keys.empty() || keys.size() > MAX_ARR_SIZE){
+        DHLOGE("Length of vactor of keys is invalid!");
+        return {};
+    }
     DHLOGI("call");
     std::vector<DistributedKv::Entry> entries;
     if (keys.empty()) {

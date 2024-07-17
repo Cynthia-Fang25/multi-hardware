@@ -20,6 +20,10 @@
 
 #include "securec.h"
 
+#include "constants.h"
+#include "distributed_hardware_errno.h"
+#include "distributed_hardware_log.h"
+
 namespace OHOS {
 namespace DistributedHardware {
 namespace {
@@ -30,7 +34,8 @@ namespace {
 }
 std::string GetAnonyString(const std::string &value)
 {
-    if (value.empty()) {
+    if (value.empty() || value.length() > MAX_MESSAGE_LEN){
+        DHLOGE("Value is invalid!");
         return "";
     }
     std::string res;

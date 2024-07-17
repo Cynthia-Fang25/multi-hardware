@@ -15,12 +15,24 @@
 
 #include "enabled_comps_dump.h"
 
+#include "constants.h"
+#include "distributed_hardware_log.h"
+#include "distributed_hardware_errno.h"
+
 namespace OHOS {
 namespace DistributedHardware {
 IMPLEMENT_SINGLE_INSTANCE(EnabledCompsDump);
 
 void EnabledCompsDump::DumpEnabledComp(const std::string &networkId, const DHType dhType, const std::string &dhId)
 {
+    if (networkId.empty() || networkId.length() > MAX_ID_LEN){
+        DHLOGE("Network ID is invalid!"); 
+        return;
+    }
+    if (dhId.empty() || dhId.length() > MAX_ID_LEN){
+        DHLOGE("DHID is invalide!");
+        return;
+    }
     HidumpCompInfo info(networkId, dhType, dhId);
 
     std::lock_guard<std::mutex> lock(compInfosMutex_);
@@ -29,6 +41,14 @@ void EnabledCompsDump::DumpEnabledComp(const std::string &networkId, const DHTyp
 
 void EnabledCompsDump::DumpDisabledComp(const std::string &networkId, const DHType dhType, const std::string &dhId)
 {
+    if (networkId.empty() || networkId.length() > MAX_ID_LEN){
+        DHLOGE("Network ID is invalid!"); 
+        return;
+    }
+    if (dhId.empty() || dhId.length() > MAX_ID_LEN){
+        DHLOGE("DHID is invalide!");
+        return;
+    }
     HidumpCompInfo info(networkId, dhType, dhId);
 
     std::lock_guard<std::mutex> lock(compInfosMutex_);

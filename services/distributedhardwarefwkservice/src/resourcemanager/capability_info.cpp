@@ -47,6 +47,10 @@ std::string CapabilityInfo::GetDeviceId() const
 
 void CapabilityInfo::SetDeviceId(const std::string &deviceId)
 {
+    if (deviceId.empty() || deviceId.length() > MAX_ID_LEN){
+        DHLOGE("Device ID is invalid!");
+        return;
+    }
     this->deviceId_ = deviceId;
 }
 
@@ -120,6 +124,10 @@ std::string CapabilityInfo::GetAnonymousKey() const
 
 int32_t CapabilityInfo::FromJsonString(const std::string &jsonStr)
 {
+    if (jsonStr.empty() || jsonStr.length() > MAX_JSON_SIZE){
+        DHLOGE("Json string is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     cJSON *jsonObj = cJSON_Parse(jsonStr.c_str());
     if (jsonObj == NULL) {
         DHLOGE("jsonStr parse failed");
@@ -185,6 +193,10 @@ bool CapabilityInfo::Compare(const CapabilityInfo& capInfo)
 
 void ToJson(cJSON *jsonObject, const CapabilityInfo &capability)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     cJSON_AddStringToObject(jsonObject, DH_ID.c_str(), capability.GetDHId().c_str());
     cJSON_AddStringToObject(jsonObject, DEV_ID.c_str(), capability.GetDeviceId().c_str());
     cJSON_AddStringToObject(jsonObject, DEV_NAME.c_str(), capability.GetDeviceName().c_str());
@@ -196,6 +208,10 @@ void ToJson(cJSON *jsonObject, const CapabilityInfo &capability)
 
 void FromJson(const cJSON *jsonObject, CapabilityInfo &capability)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     if (!IsString(jsonObject, DH_ID)) {
         DHLOGE("DH_ID is invalid!");
         return;

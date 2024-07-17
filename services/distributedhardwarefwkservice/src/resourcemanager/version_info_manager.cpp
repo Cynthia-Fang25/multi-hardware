@@ -138,6 +138,10 @@ int32_t VersionInfoManager::AddVersion(const VersionInfo &versionInfo)
 
 int32_t VersionInfoManager::GetVersionInfoByDeviceId(const std::string &deviceId, VersionInfo &versionInfo)
 {
+    if (deviceId.empty() || deviceId.length() > MAX_ID_LEN){
+        DHLOGE("Device ID is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     std::lock_guard<std::mutex> lock(verInfoMgrMutex_);
     if (dbAdapterPtr_ == nullptr) {
         DHLOGE("dbAdapterPtr_ is null");
@@ -167,6 +171,10 @@ void VersionInfoManager::UpdateVersionCache(const VersionInfo &versionInfo)
 
 int32_t VersionInfoManager::RemoveVersionInfoByDeviceId(const std::string &deviceId)
 {
+    if (deviceId.empty() || deviceId.length() > MAX_ID_LEN){
+        DHLOGE("Device ID is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("Remove version device info, key: %{public}s", GetAnonyString(deviceId).c_str());
     std::lock_guard<std::mutex> lock(verInfoMgrMutex_);
     if (dbAdapterPtr_ == nullptr) {
@@ -192,6 +200,10 @@ int32_t VersionInfoManager::RemoveVersionInfoByDeviceId(const std::string &devic
 
 int32_t VersionInfoManager::SyncVersionInfoFromDB(const std::string &deviceId)
 {
+    if (deviceId.empty() || deviceId.length() > MAX_ID_LEN){
+        DHLOGE("Device ID is invalid!");
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("Sync versionInfo from DB, deviceId: %{public}s", GetAnonyString(deviceId).c_str());
     std::lock_guard<std::mutex> lock(verInfoMgrMutex_);
     if (dbAdapterPtr_ == nullptr) {
@@ -274,6 +286,10 @@ void VersionInfoManager::OnChange(const DistributedKv::ChangeNotification &chang
 
 void VersionInfoManager::HandleVersionAddChange(const std::vector<DistributedKv::Entry> &insertRecords)
 {
+    if (insertRecords.empty() || insertRecords.size() > MAX_DB_RECORD_SIZE){
+        DHLOGE("Records vector is invalide!");
+        return;
+    }
     DHLOGI("Version add change");
     for (const auto &item : insertRecords) {
         const std::string value = item.value.ToString();
@@ -287,6 +303,10 @@ void VersionInfoManager::HandleVersionAddChange(const std::vector<DistributedKv:
 
 void VersionInfoManager::HandleVersionUpdateChange(const std::vector<DistributedKv::Entry> &updateRecords)
 {
+    if (updateRecords.empty() || updateRecords.size() > MAX_DB_RECORD_SIZE){
+        DHLOGE("Records vector is invalide!");
+        return;
+    }
     DHLOGI("Version update change");
     for (const auto &item : updateRecords) {
         const std::string value = item.value.ToString();
@@ -300,6 +320,10 @@ void VersionInfoManager::HandleVersionUpdateChange(const std::vector<Distributed
 
 void VersionInfoManager::HandleVersionDeleteChange(const std::vector<DistributedKv::Entry> &deleteRecords)
 {
+    if (deleteRecords.empty() || deleteRecords.size() > MAX_DB_RECORD_SIZE){
+        DHLOGE("Records vector is invalide!");
+        return;
+    }
     DHLOGI("Version delete change");
     for (const auto &item : deleteRecords) {
         const std::string value = item.value.ToString();
