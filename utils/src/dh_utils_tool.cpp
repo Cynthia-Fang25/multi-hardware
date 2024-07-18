@@ -283,9 +283,7 @@ bool IdLengthInvalid(const std::string & input)
         DHLOGE("On parameter length error, maybe empty or beyond MAX_ID_LEN!");
         return true;
     }
-    else {
-        return false;
-    }
+    return false;
 }
 
 bool MessageLengthInvalid(const std::string &input)
@@ -294,9 +292,7 @@ bool MessageLengthInvalid(const std::string &input)
         DHLOGE("On parameter error, maybe empty or beyond MAX_MESSAGE_LEN!");
         return true;
     }
-    else {
-        return false;
-    }
+    return false;
 }
 
 template<typename Ty>
@@ -306,9 +302,8 @@ bool RecordSizeInvalid(const std::vector<Ty> &input)
         DHLOGE("On parameter error, maybe empty or beyond MAX_DE_RECORD_SIZE!");
         return true;
     }
-    else {
-        return false;
-    }
+    return false;
+
 }
 
 bool JsonLengthInvalid(const std::string &jsonStr)
@@ -317,9 +312,7 @@ bool JsonLengthInvalid(const std::string &jsonStr)
         DHLOGE("On parameter error, maybe empty or beyond MAX_JSON_SIZE");
         return true;
     }
-    else {
-        return false;
-    }
+    return false;
 }
 
 template<typename Ty>
@@ -329,9 +322,7 @@ bool ArrayLengthInvalid(const std::vector<Ty> &array)
         DHLOGE("On parameter error, maybe empty or beyond MAX_ARR_SIZE");
         return true;
     }
-    else {
-        return false;
-    }
+    return false;
 }
 
 bool KeySizeInvalid(const std::string &key)
@@ -340,9 +331,7 @@ bool KeySizeInvalid(const std::string &key)
         DHLOGE("On parameter error, maybe empty or beyond MAX_KEY_SIZE");
         return true;
     }
-    else {
-        return false;
-    }
+    return false;
 }
 
 bool HashSizeInvalid(const std::string &hashValue)
@@ -351,9 +340,7 @@ bool HashSizeInvalid(const std::string &hashValue)
         DHLOGE("On parameter error, maybe empty or beyond MAX_HASH_SIZE");
         return true;
     }
-    else {
-        return false;
-    }
+    return false;
 }
 } // namespace DistributedHardware
 } // namespace OHOS
