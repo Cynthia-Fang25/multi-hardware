@@ -132,7 +132,7 @@ void AccessManager::OnDeviceOffline(const DmDeviceInfo &deviceInfo)
     auto networkId = std::string(deviceInfo.networkId);
     std::string uuid = DHContext::GetInstance().GetUUIDByNetworkId(networkId);
     std::string udid = DHContext::GetInstance().GetUDIDByNetworkId(networkId);
-    if (IdLengthInvalid(networkId || IdLengthInvalid(uuid) || IdLengthInvalid(udid)) {
+    if (IdLengthInvalid(networkId) || IdLengthInvalid(uuid) || IdLengthInvalid(udid)) {
         return;
     }
 
