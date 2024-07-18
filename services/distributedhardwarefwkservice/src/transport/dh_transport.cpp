@@ -208,7 +208,7 @@ void OnFile(int32_t socket, FileEvent *event)
 
 void OnQos(int32_t socket, QoSEvent eventId, const QosTV *qos, uint32_t qosCount)
 {
-    if (qosCount < 0 || qosCount > MAX_ROUND_SIZE){
+    if (qosCount <= 0 || qosCount > MAX_ROUND_SIZE) {
         DHLOGE("qosCount is invalid!");
         return;
     }

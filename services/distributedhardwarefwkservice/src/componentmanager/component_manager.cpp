@@ -520,8 +520,7 @@ int32_t ComponentManager::Enable(const std::string &networkId, const std::string
         return ERR_DH_FWK_PARA_INVALID;
     }
     DHLOGI("start.");
-    auto find = compSource_.find(dhType);
-    if (find == compSource_.end()) {
+    if (compSource_.find(dhType) == compSource_.end()) {
         DHLOGE("can not find handler for dhId = %{public}s.", GetAnonyString(dhId).c_str());
         return ERR_DH_FWK_PARA_INVALID;
     }
@@ -540,22 +539,20 @@ int32_t ComponentManager::Enable(const std::string &networkId, const std::string
         DHLOGE("GetCompResourceDesc failed, subtype: %{public}s", subtype.c_str());
         return ERR_DH_FWK_RESOURCE_KEY_IS_EMPTY;
     }
-    bool sensitiveVal = resourceDesc[subtype];
-    bool isSameAuthForm = IsIdenticalAccount(networkId);
-    if (sensitiveVal && !isSameAuthForm) {
+    if (resourceDesc[subtype] && !IsIdenticalAccount(networkId)) {
         DHLOGE("Privacy resources must be logged in with the same account.");
         return ERR_DH_FWK_COMPONENT_ENABLE_FAILED;
     }
 
     auto compEnable = std::make_shared<ComponentEnable>();
-    auto result = compEnable->Enable(networkId, dhId, param, find->second);
+    auto result = compEnable->Enable(networkId, dhId, param, (compSource_.find(dhType))->second);
     if (result != DH_FWK_SUCCESS) {
         for (int32_t retryCount = 0; retryCount < ENABLE_RETRY_MAX_TIMES; retryCount++) {
             if (!DHContext::GetInstance().IsDeviceOnline(uuid)) {
                 DHLOGE("device is already offline, no need try enable, uuid= %{public}s", GetAnonyString(uuid).c_str());
                 return result;
             }
-            if (compEnable->Enable(networkId, dhId, param, find->second) == DH_FWK_SUCCESS) {
+            if (compEnable->Enable(networkId, dhId, param, (compSource_.find(dhType))->second) == DH_FWK_SUCCESS) {
                 DHLOGE("enable success, retryCount = %{public}d", retryCount);
                 EnabledCompsDump::GetInstance().DumpEnabledComp(networkId, dhType, dhId);
                 return DH_FWK_SUCCESS;
@@ -645,7 +642,7 @@ DHType ComponentManager::GetDHType(const std::string &uuid, const std::string &d
 int32_t ComponentManager::GetEnableCapParam(const std::string &networkId, const std::string &uuid,
     DHType dhType, EnableParam &param, std::shared_ptr<CapabilityInfo> &capability)
 {
-    if (IdLengthInvalid(networkId,uuid)) {
+    if (IdLengthInvalid(networkId) || IdLengthInvalid(uuid)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     DeviceInfo sourceDeviceInfo = GetLocalDeviceInfo();
@@ -694,7 +691,7 @@ int32_t ComponentManager::GetEnableCapParam(const std::string &networkId, const 
 int32_t ComponentManager::GetEnableMetaParam(const std::string &networkId, const std::string &uuid,
     DHType dhType, EnableParam &param, std::shared_ptr<MetaCapabilityInfo> &metaCapPtr)
 {
-    if (IdLengthInvalid(networkId,uuid)) {
+    if (IdLengthInvalid(networkId) || IdLengthInvalid(uuid)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     DeviceInfo sourceDeviceInfo = GetLocalDeviceInfo();
@@ -729,7 +726,7 @@ int32_t ComponentManager::GetEnableMetaParam(const std::string &networkId, const
 int32_t ComponentManager::GetCapParam(const std::string &uuid, const std::string &dhId,
     std::shared_ptr<CapabilityInfo> &capability)
 {
-    if (IdLengthInvalid(uuid,dhId)) {
+    if (IdLengthInvalid(uuid) || IdLengthInvalid(dhId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     std::string deviceId = GetDeviceIdByUUID(uuid);
@@ -753,7 +750,7 @@ int32_t ComponentManager::GetCapParam(const std::string &uuid, const std::string
 int32_t ComponentManager::GetMetaParam(const std::string &uuid, const std::string &dhId,
     std::shared_ptr<MetaCapabilityInfo> &metaCapPtr)
 {
-    if (IdLengthInvalid(uuid,dhId)) {
+    if (IdLengthInvalid(uuid) || IdLengthInvalid(dhId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     auto ret = MetaInfoManager::GetInstance()->GetMetaCapInfo(DHContext::GetInstance().GetUdidHashIdByUUID(uuid),
@@ -998,7 +995,7 @@ void ComponentManager::UpdateBusinessState(const std::string &networkId, const s
 
 BusinessState ComponentManager::QueryBusinessState(const std::string &uuid, const std::string &dhId)
 {
-    if (IdLengthInvalid(uuid,dhId)) {
+    if (IdLengthInvalid(uuid) || IdLengthInvalid(dhId)) {
         return BusinessState::UNKNOWN;
     }
     std::lock_guard<std::mutex> lock(bizStateMtx_);

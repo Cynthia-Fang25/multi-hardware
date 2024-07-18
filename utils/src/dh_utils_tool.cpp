@@ -277,9 +277,9 @@ bool GetSysPara(const char *key, bool &value)
     return true;
 }
 
-bool IdLengthInvalid(const std::string &input) 
+bool IdLengthInvalid(const std::string & input) 
 {
-    if (input.empty() || input.length()) {
+    if (input.empty() || input.length() > MAX_ID_LEN) {
         DHLOGE("On parameter length error, maybe empty or beyond MAX_ID_LEN!");
         return true;
     }
@@ -290,7 +290,7 @@ bool IdLengthInvalid(const std::string &input)
 
 bool MessageLengthInvalid(const std::string &input)
 {
-    if (input.empty() || input.length() > MAX_MESSAGE_LEN){
+    if (input.empty() || input.length() > MAX_MESSAGE_LEN) {
         DHLOGE("On parameter error, maybe empty or beyond MAX_MESSAGE_LEN!");
         return true;
     }
@@ -302,7 +302,7 @@ bool MessageLengthInvalid(const std::string &input)
 template<typename Ty>
 bool RecordSizeInvalid(const std::vector<Ty> &input)
 {
-    if (input.empty() || input.size() > MAX_DB_RECORD_SIZE){
+    if (input.empty() || input.size() > MAX_DB_RECORD_SIZE) {
         DHLOGE("On parameter error, maybe empty or beyond MAX_DE_RECORD_SIZE!");
         return true;
     }
@@ -313,7 +313,7 @@ bool RecordSizeInvalid(const std::vector<Ty> &input)
 
 bool JsonLengthInvalid(const std::string &jsonStr)
 {
-    if (jsonStr.empty() || jsonStr.length() > MAX_JSON_SIZE){
+    if (jsonStr.empty() || jsonStr.length() > MAX_JSON_SIZE) {
         DHLOGE("On parameter error, maybe empty or beyond MAX_JSON_SIZE");
         return true;
     }
@@ -325,7 +325,7 @@ bool JsonLengthInvalid(const std::string &jsonStr)
 template<typename Ty>
 bool ArrayLengthInvalid(const std::vector<Ty> &array)
 {
-    if (array.empty() || array.size() > MAX_ARR_SIZE){
+    if (array.empty() || array.size() > MAX_ARR_SIZE) {
         DHLOGE("On parameter error, maybe empty or beyond MAX_ARR_SIZE");
         return true;
     }
@@ -336,7 +336,7 @@ bool ArrayLengthInvalid(const std::vector<Ty> &array)
 
 bool KeySizeInvalid(const std::string &key)
 {
-    if (key.empty() || key.length() > MAX_KEY_SIZE){
+    if (key.empty() || key.length() > MAX_KEY_SIZE) {
         DHLOGE("On parameter error, maybe empty or beyond MAX_KEY_SIZE");
         return true;
     }
@@ -347,7 +347,7 @@ bool KeySizeInvalid(const std::string &key)
 
 bool HashSizeInvalid(const std::string &hashValue)
 {
-    if (hashValue.empty() || hashValue.length() > MAX_HASH_SIZE){
+    if (hashValue.empty() || hashValue.length() > MAX_HASH_SIZE) {
         DHLOGE("On parameter error, maybe empty or beyond MAX_HASH_SIZE");
         return true;
     }

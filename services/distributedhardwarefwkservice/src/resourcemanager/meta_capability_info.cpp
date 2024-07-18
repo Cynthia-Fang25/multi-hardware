@@ -163,10 +163,6 @@ void ToJson(cJSON *jsonObject, const MetaCapabilityInfo &metaCapInfo)
 
 void FromJson(const cJSON *jsonObject, MetaCapabilityInfo &metaCapInfo)
 {
-    if (jsonObject == nullptr) {
-        DHLOGE("Json pointer is nullptr!");
-        return;
-    }
     if (!IsString(jsonObject, DH_ID)) {
         DHLOGE("DH_ID is invalid!");
         return;

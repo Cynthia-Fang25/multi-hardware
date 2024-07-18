@@ -188,7 +188,7 @@ std::string DHContext::GetNetworkIdByUUID(const std::string &uuid)
 
 std::string DHContext::GetUdidHashIdByUUID(const std::string &uuid)
 {
-    if ( IdLengthInvalid(uuid)) {
+    if (IdLengthInvalid(uuid)) {
         return "";
     }
     std::unique_lock<std::shared_mutex> lock(onlineDevMutex_);
