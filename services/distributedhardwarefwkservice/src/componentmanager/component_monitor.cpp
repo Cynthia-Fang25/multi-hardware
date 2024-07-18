@@ -25,8 +25,10 @@
 #include "component_loader.h"
 #include "component_manager.h"
 #include "device_type.h"
+#include "constants.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
+#include "dh_utils_tool.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -47,11 +49,17 @@ ComponentMonitor::~ComponentMonitor()
 
 void ComponentMonitor::CompSystemAbilityListener::OnAddSystemAbility(int32_t saId, const std::string &deviceId)
 {
+    if (IdLengthInvalid(deviceId)) {
+        return;
+    }
     DHLOGI("OnAddSystemAbility, saId: %{public}d, deviceId: %{public}s", saId, GetAnonyString(deviceId).c_str());
 }
 
 void ComponentMonitor::CompSystemAbilityListener::OnRemoveSystemAbility(int32_t saId, const std::string &deviceId)
 {
+    if (IdLengthInvalid(deviceId)) {
+        return;
+    }
     DHLOGI("OnRemoveSystemAbility, saId: %{public}d, deviceId: %{public}s", saId, GetAnonyString(deviceId).c_str());
     DHType dhType = ComponentLoader::GetInstance().GetDHTypeBySrcSaId(saId);
     if (dhType == DHType::UNKNOWN) {
