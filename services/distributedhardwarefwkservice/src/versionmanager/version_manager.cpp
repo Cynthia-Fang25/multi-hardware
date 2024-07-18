@@ -19,6 +19,7 @@
 #include "component_loader.h"
 #include "dh_context.h"
 #include "distributed_hardware_log.h"
+#include "dh_utils_tool.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -60,6 +61,9 @@ void VersionManager::ShowLocalVersion(const DHVersion &dhVersion) const
 
 int32_t VersionManager::AddDHVersion(const std::string &uuid, const DHVersion &dhVersion)
 {
+    if (IdLengthInvalid(uuid)){
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("addDHVersion uuid: %{public}s", GetAnonyString(uuid).c_str());
     std::lock_guard<std::mutex> lock(versionMutex_);
     dhVersions_[uuid] = dhVersion;
@@ -68,6 +72,9 @@ int32_t VersionManager::AddDHVersion(const std::string &uuid, const DHVersion &d
 
 int32_t VersionManager::RemoveDHVersion(const std::string &uuid)
 {
+    if (IdLengthInvalid(uuid)){
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("uuid: %{public}s", GetAnonyString(uuid).c_str());
     std::lock_guard<std::mutex> lock(versionMutex_);
     std::unordered_map<std::string, DHVersion>::iterator iter = dhVersions_.find(uuid);
@@ -81,6 +88,9 @@ int32_t VersionManager::RemoveDHVersion(const std::string &uuid)
 
 int32_t VersionManager::GetDHVersion(const std::string &uuid, DHVersion &dhVersion)
 {
+    if (IdLengthInvalid(uuid)){
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("uuid: %{public}s", GetAnonyString(uuid).c_str());
     std::lock_guard<std::mutex> lock(versionMutex_);
     std::unordered_map<std::string, DHVersion>::iterator iter = dhVersions_.find(uuid);
@@ -95,6 +105,9 @@ int32_t VersionManager::GetDHVersion(const std::string &uuid, DHVersion &dhVersi
 
 int32_t VersionManager::GetCompVersion(const std::string &uuid, const DHType dhType, CompVersion &compVersion)
 {
+    if (IdLengthInvalid(uuid)){
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHVersion dhVersion;
     int32_t ret = GetDHVersion(uuid, dhVersion);
     if (ret != DH_FWK_SUCCESS) {

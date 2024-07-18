@@ -65,6 +65,23 @@ std::string Compress(const std::string& data);
 std::string Decompress(const std::string& data);
 
 bool GetSysPara(const char *key, bool &value);
+
+template<typename ...Args>
+bool IdLengthInvalid(const Args &...args);
+
+bool MessageLengthInvalid(const std::string &input);
+
+template<typename Ty>
+bool RecordSizeInvalid(const std::vector<Ty> &input);
+
+bool JsonLengthInvalid(const std::string &jsonStr);
+
+template<typename Ty>
+bool ArrayLengthInvalid(const std::vector<Ty> &array);
+
+bool KeySizeInvalid(const std::string &key);
+
+bool HashSizeInvalid(const std::string &hashValue);
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

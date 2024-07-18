@@ -516,6 +516,9 @@ bool ComponentManager::InitCompSink()
 int32_t ComponentManager::Enable(const std::string &networkId, const std::string &uuid, const std::string &dhId,
     const DHType dhType)
 {
+    if (IdLengthInvalid(networkId,uuid,dhId)){
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("start.");
     auto find = compSource_.find(dhType);
     if (find == compSource_.end()) {
@@ -571,6 +574,9 @@ int32_t ComponentManager::Enable(const std::string &networkId, const std::string
 int32_t ComponentManager::RetryGetEnableParam(const std::string &networkId, const std::string &uuid,
     const std::string &dhId, const DHType dhType, EnableParam &param)
 {
+    if (IdLengthInvalid(networkId,uuid,dhId)){
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     for (int32_t retryCount = 0; retryCount < ENABLE_RETRY_MAX_TIMES; retryCount++) {
         if (!DHContext::GetInstance().IsDeviceOnline(uuid)) {
             DHLOGE("device is already offline, no need try GetEnableParam, uuid = %{public}s",
@@ -590,12 +596,15 @@ int32_t ComponentManager::RetryGetEnableParam(const std::string &networkId, cons
 int32_t ComponentManager::Disable(const std::string &networkId, const std::string &uuid, const std::string &dhId,
     const DHType dhType)
 {
+    if (IdLengthInvalid(networkId,uuid,dhId)){
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     auto find = compSource_.find(dhType);
     if (find == compSource_.end()) {
         DHLOGE("can not find handler for dhId = %{public}s.", GetAnonyString(dhId).c_str());
         return ERR_DH_FWK_PARA_INVALID;
     }
-
+    
     auto compDisable = std::make_shared<ComponentDisable>();
     auto result = compDisable->Disable(networkId, dhId, find->second);
     if (result != DH_FWK_SUCCESS) {
@@ -636,6 +645,9 @@ DHType ComponentManager::GetDHType(const std::string &uuid, const std::string &d
 int32_t ComponentManager::GetEnableCapParam(const std::string &networkId, const std::string &uuid,
     DHType dhType, EnableParam &param, std::shared_ptr<CapabilityInfo> &capability)
 {
+    if (IdLengthInvalid(networkId,uuid)){
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DeviceInfo sourceDeviceInfo = GetLocalDeviceInfo();
     std::vector<std::shared_ptr<CapabilityInfo>> sourceCapInfos;
     std::string sourceDHId;
@@ -682,6 +694,9 @@ int32_t ComponentManager::GetEnableCapParam(const std::string &networkId, const 
 int32_t ComponentManager::GetEnableMetaParam(const std::string &networkId, const std::string &uuid,
     DHType dhType, EnableParam &param, std::shared_ptr<MetaCapabilityInfo> &metaCapPtr)
 {
+    if (IdLengthInvalid(networkId,uuid)){
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DeviceInfo sourceDeviceInfo = GetLocalDeviceInfo();
     std::vector<std::shared_ptr<MetaCapabilityInfo>> sourceMetaInfos;
     std::string sourceDHId;
@@ -714,6 +729,9 @@ int32_t ComponentManager::GetEnableMetaParam(const std::string &networkId, const
 int32_t ComponentManager::GetCapParam(const std::string &uuid, const std::string &dhId,
     std::shared_ptr<CapabilityInfo> &capability)
 {
+    if (IdLengthInvalid(uuid,dhId)){
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     std::string deviceId = GetDeviceIdByUUID(uuid);
     auto ret = CapabilityInfoManager::GetInstance()->GetCapability(deviceId, dhId, capability);
     if ((ret == DH_FWK_SUCCESS) && (capability != nullptr)) {
@@ -735,6 +753,9 @@ int32_t ComponentManager::GetCapParam(const std::string &uuid, const std::string
 int32_t ComponentManager::GetMetaParam(const std::string &uuid, const std::string &dhId,
     std::shared_ptr<MetaCapabilityInfo> &metaCapPtr)
 {
+    if (IdLengthInvalid(uuid,dhId)){
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     auto ret = MetaInfoManager::GetInstance()->GetMetaCapInfo(DHContext::GetInstance().GetUdidHashIdByUUID(uuid),
         dhId, metaCapPtr);
     if ((ret == DH_FWK_SUCCESS) && (metaCapPtr != nullptr)) {
@@ -748,6 +769,9 @@ int32_t ComponentManager::GetMetaParam(const std::string &uuid, const std::strin
 int32_t ComponentManager::GetEnableParam(const std::string &networkId, const std::string &uuid,
     const std::string &dhId, DHType dhType, EnableParam &param)
 {
+    if (IdLengthInvalid(networkId,uuid,dhId)){
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("GetEnableParam start, networkId= %{public}s, uuid = %{public}s, dhId = %{public}s, dhType = %{public}#X,",
         GetAnonyString(networkId).c_str(), GetAnonyString(uuid).c_str(), GetAnonyString(dhId).c_str(), dhType);
     std::shared_ptr<CapabilityInfo> capability = nullptr;
@@ -774,6 +798,9 @@ int32_t ComponentManager::GetEnableParam(const std::string &networkId, const std
 int32_t ComponentManager::GetVersionFromVerMgr(const std::string &uuid, const DHType dhType,
     std::string &version, bool isSink)
 {
+    if (IdLengthInvalid(uuid)){
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     CompVersion compversion;
     int32_t ret = VersionManager::GetInstance().GetCompVersion(uuid, dhType, compversion);
     if (ret != DH_FWK_SUCCESS) {
@@ -791,6 +818,9 @@ int32_t ComponentManager::GetVersionFromVerMgr(const std::string &uuid, const DH
 int32_t ComponentManager::GetVersionFromVerInfoMgr(const std::string &uuid, const DHType dhType,
     std::string &version, bool isSink)
 {
+    if (IdLengthInvalid(uuid)){
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     VersionInfo versionInfo;
     int32_t ret =  VersionInfoManager::GetInstance()->GetVersionInfoByDeviceId(GetDeviceIdByUUID(uuid), versionInfo);
     if (ret != DH_FWK_SUCCESS) {
@@ -813,6 +843,9 @@ int32_t ComponentManager::GetVersionFromVerInfoMgr(const std::string &uuid, cons
 
 int32_t ComponentManager::GetVersion(const std::string &uuid, DHType dhType, std::string &version, bool isSink)
 {
+    if (IdLengthInvalid(uuid)){
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     int32_t ret = GetVersionFromVerMgr(uuid, dhType, version, isSink);
     if ((ret == DH_FWK_SUCCESS) && (!version.empty())) {
         return DH_FWK_SUCCESS;
@@ -828,6 +861,9 @@ int32_t ComponentManager::GetVersion(const std::string &uuid, DHType dhType, std
 
 void ComponentManager::UpdateVersionCache(const std::string &uuid, const VersionInfo &versionInfo)
 {
+    if (IdLengthInvalid(uuid)){
+        return;
+    }
     DHVersion dhVersion;
     dhVersion.uuid = uuid;
     dhVersion.dhVersion = versionInfo.dhVersion;
@@ -914,6 +950,9 @@ std::map<DHType, IDistributedHardwareSink*> ComponentManager::GetDHSinkInstance(
 
 bool ComponentManager::IsIdenticalAccount(const std::string &networkId)
 {
+    if (IdLengthInvalid(networkId)){
+        return false;
+    }
     DmAuthForm authForm = DmAuthForm::INVALID_TYPE;
     std::vector<DmDeviceInfo> deviceList;
     DeviceManager::GetInstance().GetTrustedDeviceList(DH_FWK_PKG_NAME, "", deviceList);
@@ -935,6 +974,9 @@ bool ComponentManager::IsIdenticalAccount(const std::string &networkId)
 
 void ComponentManager::UpdateBusinessState(const std::string &networkId, const std::string &dhId, BusinessState state)
 {
+    if (IdLengthInvalid(networkId,dhId)){
+        return;
+    }
     DHLOGI("UpdateBusinessState, networkId: %{public}s, dhId: %{public}s, state: %{public}" PRIu32,
         GetAnonyString(networkId).c_str(), GetAnonyString(dhId).c_str(), (uint32_t)state);
     {
@@ -956,6 +998,9 @@ void ComponentManager::UpdateBusinessState(const std::string &networkId, const s
 
 BusinessState ComponentManager::QueryBusinessState(const std::string &uuid, const std::string &dhId)
 {
+    if (IdLengthInvalid(uuid,dhId)){
+        return BusinessState::UNKNOWN;
+    }
     std::lock_guard<std::mutex> lock(bizStateMtx_);
     std::pair<std::string, std::string> key = {uuid, dhId};
     if (dhBizStates_.find(key) == dhBizStates_.end()) {
@@ -967,8 +1012,7 @@ BusinessState ComponentManager::QueryBusinessState(const std::string &uuid, cons
 
 void ComponentManager::TriggerFullCapsSync(const std::string &networkId)
 {
-    if (networkId.empty()) {
-        DHLOGE("Remote networkid is null");
+    if (IdLengthInvalid(networkId)){
         return;
     }
     dhCommToolPtr_->TriggerReqFullDHCaps(networkId);
@@ -1007,7 +1051,7 @@ void ComponentManager::ComponentManagerEventHandler::ProcessEvent(
             // do muanul sync with remote
             auto sharedObjPtr = event->GetSharedObject<std::string>();
             if (sharedObjPtr == nullptr) {
-                DHLOGE("The data sync param invalid");
+                DHLOGE("The data sync param invalid!");
                 break;
             }
             std::string networkId = *sharedObjPtr;

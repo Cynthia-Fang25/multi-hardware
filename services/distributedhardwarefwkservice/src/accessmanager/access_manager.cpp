@@ -130,14 +130,9 @@ void AccessManager::OnDeviceOffline(const DmDeviceInfo &deviceInfo)
         deviceInfo.deviceTypeId);
 
     auto networkId = std::string(deviceInfo.networkId);
-    if (networkId.size() == 0 || networkId.size() > MAX_ID_LEN) {
-        DHLOGE("NetworkId is invalid!");
-        return;
-    }
     std::string uuid = DHContext::GetInstance().GetUUIDByNetworkId(networkId);
     std::string udid = DHContext::GetInstance().GetUDIDByNetworkId(networkId);
-    if (uuid.empty() || uuid.size() > MAX_ID_LEN || udid.empty() || udid.size() > MAX_ID_LEN) {
-        DHLOGE("uuid or udid is invalid!");
+    if (IdLengthInvalid(networkId,uuid,udid)){
         return;
     }
 
@@ -155,18 +150,9 @@ void AccessManager::OnDeviceReady(const DmDeviceInfo &deviceInfo)
         deviceInfo.deviceTypeId);
 
     auto networkId = std::string(deviceInfo.networkId);
-    if (networkId.size() == 0 || networkId.size() > MAX_ID_LEN) {
-        DHLOGE("NetworkId is invalid!");
-        return;
-    }
     auto uuid = GetUUIDByDm(networkId);
-    if (uuid.size() == 0 || uuid.size() > MAX_ID_LEN) {
-        DHLOGE("Uuid is invalid!");
-        return;
-    }
     auto udid = GetUDIDByDm(networkId);
-    if (udid.size() == 0 || udid.size() > MAX_ID_LEN) {
-        DHLOGE("Udid is invalid!");
+    if (IdLengthInvalid(networkId,uuid,udid)){
         return;
     }
     auto ret =

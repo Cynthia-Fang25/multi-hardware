@@ -16,6 +16,7 @@
 #include "constants.h"
 #include "distributed_hardware_log.h"
 #include "publisher_listener_proxy.h"
+#include "dh_utils_tool.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -39,8 +40,7 @@ void PublisherListenerProxy::OnMessage(const DHTopic topic, const std::string& m
         DHLOGE("Topic is invalid!");
         return;
     }
-    if (message.size() == 0 || message.size() > MAX_MESSAGE_LEN) {
-        DHLOGE("Message is invalid");
+    if (MessageLengthInvalid(message)) {
         return;
     }
 

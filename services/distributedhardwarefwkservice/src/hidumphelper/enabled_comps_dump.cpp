@@ -14,6 +14,7 @@
  */
 
 #include "enabled_comps_dump.h"
+#include "dh_utils_tool.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -21,6 +22,9 @@ IMPLEMENT_SINGLE_INSTANCE(EnabledCompsDump);
 
 void EnabledCompsDump::DumpEnabledComp(const std::string &networkId, const DHType dhType, const std::string &dhId)
 {
+    if (IdLengthInvalid(networkId,dhId)){
+        return;
+    }
     HidumpCompInfo info(networkId, dhType, dhId);
 
     std::lock_guard<std::mutex> lock(compInfosMutex_);
@@ -29,6 +33,9 @@ void EnabledCompsDump::DumpEnabledComp(const std::string &networkId, const DHTyp
 
 void EnabledCompsDump::DumpDisabledComp(const std::string &networkId, const DHType dhType, const std::string &dhId)
 {
+    if (IdLengthInvalid(networkId,dhId)){
+        return;
+    }
     HidumpCompInfo info(networkId, dhType, dhId);
 
     std::lock_guard<std::mutex> lock(compInfosMutex_);
