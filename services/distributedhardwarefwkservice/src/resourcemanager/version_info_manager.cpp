@@ -138,7 +138,7 @@ int32_t VersionInfoManager::AddVersion(const VersionInfo &versionInfo)
 
 int32_t VersionInfoManager::GetVersionInfoByDeviceId(const std::string &deviceId, VersionInfo &versionInfo)
 {
-    if (IdLengthInvalid(deviceId)){
+    if (IdLengthInvalid(deviceId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     std::lock_guard<std::mutex> lock(verInfoMgrMutex_);
@@ -170,7 +170,7 @@ void VersionInfoManager::UpdateVersionCache(const VersionInfo &versionInfo)
 
 int32_t VersionInfoManager::RemoveVersionInfoByDeviceId(const std::string &deviceId)
 {
-    if (IdLengthInvalid(deviceId)){
+    if (IdLengthInvalid(deviceId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     DHLOGI("Remove version device info, key: %{public}s", GetAnonyString(deviceId).c_str());
@@ -198,7 +198,7 @@ int32_t VersionInfoManager::RemoveVersionInfoByDeviceId(const std::string &devic
 
 int32_t VersionInfoManager::SyncVersionInfoFromDB(const std::string &deviceId)
 {
-    if (IdLengthInvalid(deviceId)){
+    if (IdLengthInvalid(deviceId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     DHLOGI("Sync versionInfo from DB, deviceId: %{public}s", GetAnonyString(deviceId).c_str());
@@ -236,7 +236,7 @@ int32_t VersionInfoManager::SyncRemoteVersionInfos()
         DHLOGE("Query all data from DB failed");
         return ERR_DH_FWK_RESOURCE_DB_ADAPTER_OPERATION_FAIL;
     }
-    if (RecordSizeInvalid(dataVector)){
+    if (RecordSizeInvalid(dataVector)) {
         return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
     }
     for (const auto &data : dataVector) {
@@ -282,7 +282,7 @@ void VersionInfoManager::OnChange(const DistributedKv::ChangeNotification &chang
 
 void VersionInfoManager::HandleVersionAddChange(const std::vector<DistributedKv::Entry> &insertRecords)
 {
-    if (RecordSizeInvalid(insertRecords)){
+    if (RecordSizeInvalid(insertRecords)) {
         return;
     }
     DHLOGI("Version add change");
@@ -298,7 +298,7 @@ void VersionInfoManager::HandleVersionAddChange(const std::vector<DistributedKv:
 
 void VersionInfoManager::HandleVersionUpdateChange(const std::vector<DistributedKv::Entry> &updateRecords)
 {
-    if (RecordSizeInvalid(updateRecords)){
+    if (RecordSizeInvalid(updateRecords)) {
         return;
     }
     DHLOGI("Version update change");
@@ -314,7 +314,7 @@ void VersionInfoManager::HandleVersionUpdateChange(const std::vector<Distributed
 
 void VersionInfoManager::HandleVersionDeleteChange(const std::vector<DistributedKv::Entry> &deleteRecords)
 {
-    if (RecordSizeInvalid(deleteRecords)){
+    if (RecordSizeInvalid(deleteRecords)) {
         return;
     }
     DHLOGI("Version delete change");

@@ -45,7 +45,7 @@ void LowLatencyListener::OnMessage(const DHTopic topic, const std::string& messa
         DHLOGE("Topic is invalid, topic: %{public}" PRIu32, (uint32_t)topic);
         return;
     }
-    if (MessageLengthInvalid(message)){
+    if (MessageLengthInvalid(message)) {
         return;
     }
     cJSON *jsonObj = cJSON_Parse(message.c_str());

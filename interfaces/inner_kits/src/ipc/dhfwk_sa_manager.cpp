@@ -103,7 +103,7 @@ void DHFWKSAManager::RegisterSAStateCallback(DHFWKSAStateCb callback)
 
 void DHFWKSAManager::SystemAbilityListener::OnAddSystemAbility(int32_t systemAbilityId, const std::string &deviceId)
 {
-    if (IdLengthInvalid(deviceId)){
+    if (IdLengthInvalid(deviceId)) {
         return;
     }
     (void)deviceId;
@@ -127,7 +127,7 @@ void DHFWKSAManager::SystemAbilityListener::OnAddSystemAbility(int32_t systemAbi
 
 void DHFWKSAManager::SystemAbilityListener::OnRemoveSystemAbility(int32_t systemAbilityId, const std::string &deviceId)
 {
-    if (IdLengthInvalid(deviceId)){
+    if (IdLengthInvalid(deviceId)) {
         return;
     }
     (void)deviceId;

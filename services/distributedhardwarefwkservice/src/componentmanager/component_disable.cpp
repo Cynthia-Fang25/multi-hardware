@@ -34,7 +34,7 @@ ComponentDisable::~ComponentDisable() {}
 int32_t ComponentDisable::Disable(const std::string &networkId, const std::string &dhId,
     IDistributedHardwareSource *handler)
 {
-    if (IdLengthInvalid(networkId,dhId)){
+    if (IdLengthInvalid(networkId) || IdLengthInvalid(dhId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     DHLOGD("networkId = %{public}s dhId = %{public}s.", GetAnonyString(networkId).c_str(),
@@ -72,7 +72,7 @@ int32_t ComponentDisable::Disable(const std::string &networkId, const std::strin
 int32_t ComponentDisable::OnUnregisterResult(const std::string &networkId, const std::string &dhId, int32_t status,
     const std::string &data)
 {
-    if (IdLengthInvalid(networkId,dhId)){
+    if (IdLengthInvalid(networkId) || IdLengthInvalid(dhId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     if (status == DH_FWK_SUCCESS) {

@@ -90,7 +90,7 @@ int32_t DistributedHardwareFwkKit::PublishMessage(const DHTopic topic, const std
         DHLOGE("Topic invalid, topic: %{public}" PRIu32, (uint32_t)topic);
         return ERR_DH_FWK_PARA_INVALID;
     }
-    if (MessageLengthInvalid(message)){
+    if (MessageLengthInvalid(message)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
 
@@ -203,7 +203,7 @@ int32_t DistributedHardwareFwkKit::RegisterCtlCenterCallback(int32_t engineId,
 
 int32_t DistributedHardwareFwkKit::PauseDistributedHardware(DHType dhType, const std::string &networkId)
 {
-    if (IdLengthInvalid(networkId)){
+    if (IdLengthInvalid(networkId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     DHLOGI("Pause distributed hardware dhType %{public}u, networkId %{public}s", (uint32_t)dhType,
@@ -220,7 +220,7 @@ int32_t DistributedHardwareFwkKit::PauseDistributedHardware(DHType dhType, const
 
 int32_t DistributedHardwareFwkKit::ResumeDistributedHardware(DHType dhType, const std::string &networkId)
 {
-    if (IdLengthInvalid(networkId)){
+    if (IdLengthInvalid(networkId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     DHLOGI("Resume distributed hardware dhType %{public}u, networkId %{public}s", (uint32_t)dhType,
@@ -237,7 +237,7 @@ int32_t DistributedHardwareFwkKit::ResumeDistributedHardware(DHType dhType, cons
 
 int32_t DistributedHardwareFwkKit::StopDistributedHardware(DHType dhType, const std::string &networkId)
 {
-    if (IdLengthInvalid(networkId)){
+    if (IdLengthInvalid(networkId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     DHLOGI("Stop distributed hardware dhType %{public}u, networkId %{public}s", (uint32_t)dhType,

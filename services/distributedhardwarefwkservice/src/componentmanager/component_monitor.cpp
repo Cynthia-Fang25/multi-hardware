@@ -49,7 +49,7 @@ ComponentMonitor::~ComponentMonitor()
 
 void ComponentMonitor::CompSystemAbilityListener::OnAddSystemAbility(int32_t saId, const std::string &deviceId)
 {
-    if (IdLengthInvalid(deviceId)){
+    if (IdLengthInvalid(deviceId)) {
         return;
     }
     DHLOGI("OnAddSystemAbility, saId: %{public}d, deviceId: %{public}s", saId, GetAnonyString(deviceId).c_str());
@@ -57,7 +57,7 @@ void ComponentMonitor::CompSystemAbilityListener::OnAddSystemAbility(int32_t saI
 
 void ComponentMonitor::CompSystemAbilityListener::OnRemoveSystemAbility(int32_t saId, const std::string &deviceId)
 {
-    if (IdLengthInvalid(deviceId)){
+    if (IdLengthInvalid(deviceId)) {
         return;
     }
     DHLOGI("OnRemoveSystemAbility, saId: %{public}d, deviceId: %{public}s", saId, GetAnonyString(deviceId).c_str());

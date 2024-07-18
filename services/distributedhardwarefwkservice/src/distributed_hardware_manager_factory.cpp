@@ -148,7 +148,7 @@ bool DistributedHardwareManagerFactory::IsInit()
 int32_t DistributedHardwareManagerFactory::SendOnLineEvent(const std::string &networkId, const std::string &uuid,
     const std::string &udid, uint16_t deviceType)
 {
-    if (IdLengthInvalid(networkId,uuid,udid)){
+    if (IdLengthInvalid(networkId) || IdLengthInvalid(uuid) || IdLengthInvalid(udid)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     int32_t ret = pthread_setname_np(pthread_self(), SEND_ONLINE);
@@ -179,7 +179,7 @@ int32_t DistributedHardwareManagerFactory::SendOnLineEvent(const std::string &ne
 int32_t DistributedHardwareManagerFactory::SendOffLineEvent(const std::string &networkId, const std::string &uuid,
     const std::string &udid, uint16_t deviceType)
 {
-    if (IdLengthInvalid(networkId,uuid,udid)){
+    if (IdLengthInvalid(networkId) || IdLengthInvalid(uuid) || IdLengthInvalid(udid)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     if (!isInit && !Init()) {

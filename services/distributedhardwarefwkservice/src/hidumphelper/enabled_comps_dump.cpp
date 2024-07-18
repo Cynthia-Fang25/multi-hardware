@@ -22,7 +22,7 @@ IMPLEMENT_SINGLE_INSTANCE(EnabledCompsDump);
 
 void EnabledCompsDump::DumpEnabledComp(const std::string &networkId, const DHType dhType, const std::string &dhId)
 {
-    if (IdLengthInvalid(networkId,dhId)){
+    if (IdLengthInvalid(networkId) || IdLengthInvalid(dhId)) {
         return;
     }
     HidumpCompInfo info(networkId, dhType, dhId);
@@ -33,7 +33,7 @@ void EnabledCompsDump::DumpEnabledComp(const std::string &networkId, const DHTyp
 
 void EnabledCompsDump::DumpDisabledComp(const std::string &networkId, const DHType dhType, const std::string &dhId)
 {
-    if (IdLengthInvalid(networkId,dhId)){
+    if (IdLengthInvalid(networkId) || IdLengthInvalid(dhId)) {
         return;
     }
     HidumpCompInfo info(networkId, dhType, dhId);

@@ -66,8 +66,7 @@ std::string Decompress(const std::string& data);
 
 bool GetSysPara(const char *key, bool &value);
 
-template<typename ...Args>
-bool IdLengthInvalid(const Args &...args);
+bool IdLengthInvalid(const std::string &input);
 
 bool MessageLengthInvalid(const std::string &input);
 

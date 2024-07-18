@@ -34,7 +34,7 @@ namespace {
 }
 std::string GetAnonyString(const std::string &value)
 {
-    if (MessageLengthInvalid(value)){
+    if (MessageLengthInvalid(value)) {
         return "";
     }
     std::string res;

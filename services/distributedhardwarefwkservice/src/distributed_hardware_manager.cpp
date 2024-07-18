@@ -97,7 +97,7 @@ int32_t DistributedHardwareManager::Release()
 int32_t DistributedHardwareManager::SendOnLineEvent(const std::string &networkId, const std::string &uuid,
     const std::string &udid, uint16_t deviceType)
 {
-    if (IdLengthInvalid(networkId,uuid,udid)){
+    if (IdLengthInvalid(networkId) || IdLengthInvalid(uuid) || IdLengthInvalid(udid)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     (void)deviceType;
@@ -119,7 +119,7 @@ int32_t DistributedHardwareManager::SendOnLineEvent(const std::string &networkId
 int32_t DistributedHardwareManager::SendOffLineEvent(const std::string &networkId, const std::string &uuid,
     const std::string &udid, uint16_t deviceType)
 {
-    if (IdLengthInvalid(networkId,uuid,udid)){
+    if (IdLengthInvalid(networkId) || IdLengthInvalid(uuid) || IdLengthInvalid(udid)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     (void)deviceType;

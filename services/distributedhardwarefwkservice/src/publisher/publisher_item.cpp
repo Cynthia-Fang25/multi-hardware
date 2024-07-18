@@ -65,7 +65,7 @@ void PublisherItem::RemoveListener(const sptr<IPublisherListener> &listener)
 
 void PublisherItem::PublishMessage(const std::string &message)
 {
-    if (MessageLengthInvalid(message)){
+    if (MessageLengthInvalid(message)) {
         return;
     }
     std::lock_guard<std::mutex> lock(mutex_);

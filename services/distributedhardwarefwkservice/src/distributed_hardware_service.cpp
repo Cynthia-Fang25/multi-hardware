@@ -306,7 +306,7 @@ int DistributedHardwareService::Dump(int32_t fd, const std::vector<std::u16strin
 
 int32_t DistributedHardwareService::PauseDistributedHardware(DHType dhType, const std::string &networkId)
 {
-    if (IdLengthInvalid(networkId)){
+    if (IdLengthInvalid(networkId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     std::map<DHType, IDistributedHardwareSink*> sinkMap = ComponentManager::GetInstance().GetDHSinkInstance();
@@ -324,7 +324,7 @@ int32_t DistributedHardwareService::PauseDistributedHardware(DHType dhType, cons
 
 int32_t DistributedHardwareService::ResumeDistributedHardware(DHType dhType, const std::string &networkId)
 {
-    if (IdLengthInvalid(networkId)){
+    if (IdLengthInvalid(networkId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     std::map<DHType, IDistributedHardwareSink*> sinkMap = ComponentManager::GetInstance().GetDHSinkInstance();
@@ -342,7 +342,7 @@ int32_t DistributedHardwareService::ResumeDistributedHardware(DHType dhType, con
 
 int32_t DistributedHardwareService::StopDistributedHardware(DHType dhType, const std::string &networkId)
 {
-    if (IdLengthInvalid(networkId)){
+    if (IdLengthInvalid(networkId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     std::map<DHType, IDistributedHardwareSink*> sinkMap = ComponentManager::GetInstance().GetDHSinkInstance();

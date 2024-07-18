@@ -40,7 +40,7 @@ DHDataSyncTriggerListener::~DHDataSyncTriggerListener()
 
 void DHDataSyncTriggerListener::OnDataSyncTrigger(const std::string &networkId)
 {
-    if (IdLengthInvalid(networkId)){
+    if (IdLengthInvalid(networkId)) {
         return;
     }
     DHLOGI("Receive data sync trigger, networkId: %{public}s", GetAnonyString(networkId).c_str());

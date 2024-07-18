@@ -120,7 +120,7 @@ std::string CapabilityInfo::GetAnonymousKey() const
 
 int32_t CapabilityInfo::FromJsonString(const std::string &jsonStr)
 {
-    if (JsonLengthInvalid(jsonStr)){
+    if (JsonLengthInvalid(jsonStr)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     cJSON *jsonObj = cJSON_Parse(jsonStr.c_str());

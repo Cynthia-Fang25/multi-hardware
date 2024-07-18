@@ -32,7 +32,7 @@ namespace DistributedHardware {
 
 int32_t VersionInfo::FromJsonString(const std::string &jsonStr)
 {
-    if (JsonLengthInvalid(jsonStr)){
+    if (JsonLengthInvalid(jsonStr)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     cJSON *jsonObj = cJSON_Parse(jsonStr.c_str());

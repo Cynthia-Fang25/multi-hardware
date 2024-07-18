@@ -61,7 +61,7 @@ void MockHardwareHandler::UnRegisterPluginListener()
 int32_t MockHardwareHandler::PluginHardware(const std::string &dhId, const std::string &attr,
     const std::string &subtype)
 {
-    if (IdLengthInvalid(dhId)){
+    if (IdLengthInvalid(dhId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     if (listener_ != nullptr) {
@@ -72,7 +72,7 @@ int32_t MockHardwareHandler::PluginHardware(const std::string &dhId, const std::
 
 int32_t MockHardwareHandler::UnPluginHardware(const std::string &dhId)
 {
-    if (HashSizeInvalid(udidHash)){
+    if (HashSizeInvalid(udidHash)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     if (listener_ != nullptr) {

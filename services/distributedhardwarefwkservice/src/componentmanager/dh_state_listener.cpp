@@ -39,7 +39,7 @@ DHStateListener::~DHStateListener()
 
 void DHStateListener::OnStateChanged(const std::string &networkId, const std::string &dhId, const BusinessState state)
 {
-    if (IdLengthInvalid(networkId)){
+    if (IdLengthInvalid(networkId)) {
         return;
     }
     DHLOGI("Receive business state change, networkId: %{public}s, dhId: %{public}s, state: %{public}" PRIu32,

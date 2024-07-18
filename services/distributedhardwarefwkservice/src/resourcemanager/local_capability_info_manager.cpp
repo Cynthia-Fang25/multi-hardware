@@ -83,7 +83,7 @@ int32_t LocalCapabilityInfoManager::UnInit()
 
 int32_t LocalCapabilityInfoManager::SyncDeviceInfoFromDB(const std::string &deviceId)
 {
-    if (IdLengthInvalid(deviceId)){
+    if (IdLengthInvalid(deviceId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     DHLOGI("Sync DeviceInfo from DB, deviceId: %{public}s", GetAnonyString(deviceId).c_str());
@@ -97,7 +97,7 @@ int32_t LocalCapabilityInfoManager::SyncDeviceInfoFromDB(const std::string &devi
         DHLOGE("Query data from DB by deviceId failed, id: %{public}s", GetAnonyString(deviceId).c_str());
         return ERR_DH_FWK_RESOURCE_DB_ADAPTER_OPERATION_FAIL;
     }
-    if (RecordSizeInvalid(dataVector)){
+    if (RecordSizeInvalid(dataVector)) {
         return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
     }
     for (const auto &data : dataVector) {
@@ -113,7 +113,7 @@ int32_t LocalCapabilityInfoManager::SyncDeviceInfoFromDB(const std::string &devi
 
 int32_t LocalCapabilityInfoManager::AddCapability(const std::vector<std::shared_ptr<CapabilityInfo>> &resInfos)
 {
-    if (RecordSizeInvalid(resInfos)){
+    if (RecordSizeInvalid(resInfos)) {
         return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
     }
     std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
@@ -147,7 +147,7 @@ int32_t LocalCapabilityInfoManager::AddCapability(const std::vector<std::shared_
 
 int32_t LocalCapabilityInfoManager::RemoveCapabilityInfoByKey(const std::string &key)
 {
-    if (KeySizeInvalid(key)){
+    if (KeySizeInvalid(key)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     DHLOGI("Remove capability device info, key: %{public}s", GetAnonyString(key).c_str());
@@ -170,7 +170,7 @@ int32_t LocalCapabilityInfoManager::RemoveCapabilityInfoByKey(const std::string 
 void LocalCapabilityInfoManager::GetCapabilitiesByDeviceId(const std::string &deviceId,
     std::vector<std::shared_ptr<CapabilityInfo>> &resInfos)
 {
-    if (IdLengthInvalid(deviceId) || RecordSizeInvalid(resInfos)){
+    if (IdLengthInvalid(deviceId) || RecordSizeInvalid(resInfos)) {
         return;
     }
     std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
@@ -184,7 +184,7 @@ void LocalCapabilityInfoManager::GetCapabilitiesByDeviceId(const std::string &de
 int32_t LocalCapabilityInfoManager::GetCapability(const std::string &deviceId, const std::string &dhId,
     std::shared_ptr<CapabilityInfo> &capPtr)
 {
-    if (IdLengthInvalid(deviceId,dhId)){
+    if (IdLengthInvalid(deviceId) || IdLengthInvalid(dhId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
@@ -199,7 +199,7 @@ int32_t LocalCapabilityInfoManager::GetCapability(const std::string &deviceId, c
 
 int32_t LocalCapabilityInfoManager::GetDataByKey(const std::string &key, std::shared_ptr<CapabilityInfo> &capInfoPtr)
 {
-    if (IdLengthInvalid(key)){
+    if (IdLengthInvalid(key)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
@@ -229,7 +229,7 @@ int32_t LocalCapabilityInfoManager::GetDataByDHType(const DHType dhType, Capabil
 
 int32_t LocalCapabilityInfoManager::GetDataByKeyPrefix(const std::string &keyPrefix, CapabilityInfoMap &capabilityMap)
 {
-    if (KeySizeInvalid(keyPrefix)){
+    if (KeySizeInvalid(keyPrefix)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
@@ -242,7 +242,7 @@ int32_t LocalCapabilityInfoManager::GetDataByKeyPrefix(const std::string &keyPre
         DHLOGE("Query capability info from db failed, key: %{public}s", GetAnonyString(keyPrefix).c_str());
         return ERR_DH_FWK_RESOURCE_DB_ADAPTER_OPERATION_FAIL;
     }
-    if (RecordSizeInvalid(dataVector)){
+    if (RecordSizeInvalid(dataVector)) {
         return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
     }
     for (const auto &data : dataVector) {

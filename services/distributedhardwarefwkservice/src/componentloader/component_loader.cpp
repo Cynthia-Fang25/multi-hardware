@@ -252,7 +252,7 @@ bool ComponentLoader::CheckComponentEnable(const CompConfig &config)
 
 int32_t ComponentLoader::GetCompPathAndVersion(const std::string &jsonStr, std::map<DHType, CompConfig> &dhtypeMap)
 {
-    if (JsonLengthInvalid(jsonStr)){
+    if (JsonLengthInvalid(jsonStr)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     cJSON *root = cJSON_Parse(jsonStr.c_str());
@@ -517,7 +517,7 @@ int32_t ComponentLoader::ParseConfig()
     }
     std::string componentProfilePath(path);
     std::string jsonStr = Readfile(componentProfilePath);
-    if (MessageLengthInvalid(jsonStr)){
+    if (MessageLengthInvalid(jsonStr)) {
         return ERR_DH_FWK_LOADER_CONFIG_JSON_INVALID;
     }
     ret = GetCompPathAndVersion(jsonStr, dhtypeMap);

@@ -32,7 +32,7 @@ std::string GetCapabilityKey(const std::string &deviceId, const std::string &dhI
 
 bool IsCapKeyMatchDeviceId(const std::string &key, const std::string &deviceId)
 {
-    if (IdLengthInvalid(key,deviceId)){
+    if (IdLengthInvalid(key) || IdLengthInvalid(deviceId)) {
         return false;
     }
     std::size_t separatorPos = key.find(RESOURCE_SEPARATOR);

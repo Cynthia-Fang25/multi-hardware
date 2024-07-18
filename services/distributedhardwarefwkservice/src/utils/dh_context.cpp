@@ -114,7 +114,7 @@ const DeviceInfo& DHContext::GetDeviceInfo()
 
 void DHContext::AddOnlineDevice(const std::string &udid, const std::string &uuid, const std::string &networkId)
 {
-    if (IdLengthInvalid(udid,uuid,networkId)){
+    if (IdLengthInvalid(udid) || IdLengthInvalid(uuid) || IdLengthInvalid(networkId)) {
         return;
     }
     std::unique_lock<std::shared_mutex> lock(onlineDevMutex_);
@@ -136,7 +136,7 @@ void DHContext::AddOnlineDevice(const std::string &udid, const std::string &uuid
 
 void DHContext::RemoveOnlineDeviceByUUID(const std::string &uuid)
 {
-    if (IdLengthInvalid(uuid)){
+    if (IdLengthInvalid(uuid)) {
         return;
     }
     std::unique_lock<std::shared_mutex> lock(onlineDevMutex_);
@@ -172,7 +172,7 @@ size_t DHContext::GetOnlineCount()
 
 std::string DHContext::GetNetworkIdByUUID(const std::string &uuid)
 {
-    if (IdLengthInvalid(uuid)){
+    if (IdLengthInvalid(uuid)) {
         return "";
     }
     std::unique_lock<std::shared_mutex> lock(onlineDevMutex_);
@@ -188,7 +188,7 @@ std::string DHContext::GetNetworkIdByUUID(const std::string &uuid)
 
 std::string DHContext::GetUdidHashIdByUUID(const std::string &uuid)
 {
-    if ( IdLengthInvalid(uuid)){
+    if ( IdLengthInvalid(uuid)) {
         return "";
     }
     std::unique_lock<std::shared_mutex> lock(onlineDevMutex_);
@@ -204,7 +204,7 @@ std::string DHContext::GetUdidHashIdByUUID(const std::string &uuid)
 
 std::string DHContext::GetUUIDByNetworkId(const std::string &networkId)
 {
-    if (IdLengthInvalid(networkId)){
+    if (IdLengthInvalid(networkId)) {
         return "";
     }
     std::unique_lock<std::shared_mutex> lock(onlineDevMutex_);
@@ -220,7 +220,7 @@ std::string DHContext::GetUUIDByNetworkId(const std::string &networkId)
 
 std::string DHContext::GetUDIDByNetworkId(const std::string &networkId)
 {
-    if (IdLengthInvalid(networkId)){
+    if (IdLengthInvalid(networkId)) {
         return "";
     }
     std::unique_lock<std::shared_mutex> lock(onlineDevMutex_);
@@ -236,7 +236,7 @@ std::string DHContext::GetUDIDByNetworkId(const std::string &networkId)
 
 std::string DHContext::GetUUIDByDeviceId(const std::string &deviceId)
 {
-    if (IdLengthInvalid(deviceId)){
+    if (IdLengthInvalid(deviceId)) {
         return "";
     }
     std::unique_lock<std::shared_mutex> lock(onlineDevMutex_);
@@ -252,7 +252,7 @@ std::string DHContext::GetUUIDByDeviceId(const std::string &deviceId)
 
 std::string DHContext::GetNetworkIdByDeviceId(const std::string &deviceId)
 {
-    if (IdLengthInvalid(deviceId)){
+    if (IdLengthInvalid(deviceId)) {
         return "";
     }
     std::unique_lock<std::shared_mutex> lock(onlineDevMutex_);
@@ -268,7 +268,7 @@ std::string DHContext::GetNetworkIdByDeviceId(const std::string &deviceId)
 
 std::string DHContext::GetDeviceIdByDBGetPrefix(const std::string &prefix)
 {
-    if (IdLengthInvalid(prefix)){
+    if (IdLengthInvalid(prefix)) {
         return "";
     }
     std::string id = "";
@@ -297,7 +297,7 @@ void DHContext::RegisDHFWKIsomerismListener()
 
 void DHContext::DHFWKIsomerismListener::OnMessage(const DHTopic topic, const std::string &message)
 {
-    if (MessageLengthInvalid(message)){
+    if (MessageLengthInvalid(message)) {
         return;
     }
     DHLOGI("OnMessage topic: %{public}u", static_cast<uint32_t>(topic));
@@ -335,7 +335,7 @@ void DHContext::DHFWKIsomerismListener::OnMessage(const DHTopic topic, const std
 
 void DHContext::AddIsomerismConnectDev(const std::string &IsomerismDeviceId)
 {
-    if (IdLengthInvalid(IsomerismDeviceId)){
+    if (IdLengthInvalid(IsomerismDeviceId)) {
         return;
     }
     DHLOGI("AddIsomerismConnectDev id = %{public}s", GetAnonyString(IsomerismDeviceId).c_str());
@@ -345,7 +345,7 @@ void DHContext::AddIsomerismConnectDev(const std::string &IsomerismDeviceId)
 
 void DHContext::DelIsomerismConnectDev(const std::string &IsomerismDeviceId)
 {
-    if (IdLengthInvalid(IsomerismDeviceId)){
+    if (IdLengthInvalid(IsomerismDeviceId)) {
         return;
     }
     DHLOGI("DelIsomerismConnectDev id = %{public}s", GetAnonyString(IsomerismDeviceId).c_str());

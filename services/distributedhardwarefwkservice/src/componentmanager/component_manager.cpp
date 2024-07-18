@@ -516,7 +516,7 @@ bool ComponentManager::InitCompSink()
 int32_t ComponentManager::Enable(const std::string &networkId, const std::string &uuid, const std::string &dhId,
     const DHType dhType)
 {
-    if (IdLengthInvalid(networkId,uuid,dhId)){
+    if (IdLengthInvalid(networkId) || IdLengthInvalid(uuid) || IdLengthInvalid(dhId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     DHLOGI("start.");
@@ -574,7 +574,7 @@ int32_t ComponentManager::Enable(const std::string &networkId, const std::string
 int32_t ComponentManager::RetryGetEnableParam(const std::string &networkId, const std::string &uuid,
     const std::string &dhId, const DHType dhType, EnableParam &param)
 {
-    if (IdLengthInvalid(networkId,uuid,dhId)){
+    if (IdLengthInvalid(networkId) || IdLengthInvalid(uuid) || IdLengthInvalid(dhId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     for (int32_t retryCount = 0; retryCount < ENABLE_RETRY_MAX_TIMES; retryCount++) {
@@ -596,7 +596,7 @@ int32_t ComponentManager::RetryGetEnableParam(const std::string &networkId, cons
 int32_t ComponentManager::Disable(const std::string &networkId, const std::string &uuid, const std::string &dhId,
     const DHType dhType)
 {
-    if (IdLengthInvalid(networkId,uuid,dhId)){
+    if (IdLengthInvalid(networkId) || IdLengthInvalid(uuid) || IdLengthInvalid(dhId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     auto find = compSource_.find(dhType);
@@ -645,7 +645,7 @@ DHType ComponentManager::GetDHType(const std::string &uuid, const std::string &d
 int32_t ComponentManager::GetEnableCapParam(const std::string &networkId, const std::string &uuid,
     DHType dhType, EnableParam &param, std::shared_ptr<CapabilityInfo> &capability)
 {
-    if (IdLengthInvalid(networkId,uuid)){
+    if (IdLengthInvalid(networkId,uuid)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     DeviceInfo sourceDeviceInfo = GetLocalDeviceInfo();
@@ -694,7 +694,7 @@ int32_t ComponentManager::GetEnableCapParam(const std::string &networkId, const 
 int32_t ComponentManager::GetEnableMetaParam(const std::string &networkId, const std::string &uuid,
     DHType dhType, EnableParam &param, std::shared_ptr<MetaCapabilityInfo> &metaCapPtr)
 {
-    if (IdLengthInvalid(networkId,uuid)){
+    if (IdLengthInvalid(networkId,uuid)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     DeviceInfo sourceDeviceInfo = GetLocalDeviceInfo();
@@ -729,7 +729,7 @@ int32_t ComponentManager::GetEnableMetaParam(const std::string &networkId, const
 int32_t ComponentManager::GetCapParam(const std::string &uuid, const std::string &dhId,
     std::shared_ptr<CapabilityInfo> &capability)
 {
-    if (IdLengthInvalid(uuid,dhId)){
+    if (IdLengthInvalid(uuid,dhId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     std::string deviceId = GetDeviceIdByUUID(uuid);
@@ -753,7 +753,7 @@ int32_t ComponentManager::GetCapParam(const std::string &uuid, const std::string
 int32_t ComponentManager::GetMetaParam(const std::string &uuid, const std::string &dhId,
     std::shared_ptr<MetaCapabilityInfo> &metaCapPtr)
 {
-    if (IdLengthInvalid(uuid,dhId)){
+    if (IdLengthInvalid(uuid,dhId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     auto ret = MetaInfoManager::GetInstance()->GetMetaCapInfo(DHContext::GetInstance().GetUdidHashIdByUUID(uuid),
@@ -769,7 +769,7 @@ int32_t ComponentManager::GetMetaParam(const std::string &uuid, const std::strin
 int32_t ComponentManager::GetEnableParam(const std::string &networkId, const std::string &uuid,
     const std::string &dhId, DHType dhType, EnableParam &param)
 {
-    if (IdLengthInvalid(networkId,uuid,dhId)){
+    if (IdLengthInvalid(networkId) || IdLengthInvalid(uuid) || IdLengthInvalid(dhId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     DHLOGI("GetEnableParam start, networkId= %{public}s, uuid = %{public}s, dhId = %{public}s, dhType = %{public}#X,",
@@ -798,7 +798,7 @@ int32_t ComponentManager::GetEnableParam(const std::string &networkId, const std
 int32_t ComponentManager::GetVersionFromVerMgr(const std::string &uuid, const DHType dhType,
     std::string &version, bool isSink)
 {
-    if (IdLengthInvalid(uuid)){
+    if (IdLengthInvalid(uuid)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     CompVersion compversion;
@@ -818,7 +818,7 @@ int32_t ComponentManager::GetVersionFromVerMgr(const std::string &uuid, const DH
 int32_t ComponentManager::GetVersionFromVerInfoMgr(const std::string &uuid, const DHType dhType,
     std::string &version, bool isSink)
 {
-    if (IdLengthInvalid(uuid)){
+    if (IdLengthInvalid(uuid)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     VersionInfo versionInfo;
@@ -843,7 +843,7 @@ int32_t ComponentManager::GetVersionFromVerInfoMgr(const std::string &uuid, cons
 
 int32_t ComponentManager::GetVersion(const std::string &uuid, DHType dhType, std::string &version, bool isSink)
 {
-    if (IdLengthInvalid(uuid)){
+    if (IdLengthInvalid(uuid)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     int32_t ret = GetVersionFromVerMgr(uuid, dhType, version, isSink);
@@ -861,7 +861,7 @@ int32_t ComponentManager::GetVersion(const std::string &uuid, DHType dhType, std
 
 void ComponentManager::UpdateVersionCache(const std::string &uuid, const VersionInfo &versionInfo)
 {
-    if (IdLengthInvalid(uuid)){
+    if (IdLengthInvalid(uuid)) {
         return;
     }
     DHVersion dhVersion;
@@ -950,7 +950,7 @@ std::map<DHType, IDistributedHardwareSink*> ComponentManager::GetDHSinkInstance(
 
 bool ComponentManager::IsIdenticalAccount(const std::string &networkId)
 {
-    if (IdLengthInvalid(networkId)){
+    if (IdLengthInvalid(networkId)) {
         return false;
     }
     DmAuthForm authForm = DmAuthForm::INVALID_TYPE;
@@ -974,7 +974,7 @@ bool ComponentManager::IsIdenticalAccount(const std::string &networkId)
 
 void ComponentManager::UpdateBusinessState(const std::string &networkId, const std::string &dhId, BusinessState state)
 {
-    if (IdLengthInvalid(networkId,dhId)){
+    if (IdLengthInvalid(networkId) || IdLengthInvalid(dhId)) {
         return;
     }
     DHLOGI("UpdateBusinessState, networkId: %{public}s, dhId: %{public}s, state: %{public}" PRIu32,
@@ -998,7 +998,7 @@ void ComponentManager::UpdateBusinessState(const std::string &networkId, const s
 
 BusinessState ComponentManager::QueryBusinessState(const std::string &uuid, const std::string &dhId)
 {
-    if (IdLengthInvalid(uuid,dhId)){
+    if (IdLengthInvalid(uuid,dhId)) {
         return BusinessState::UNKNOWN;
     }
     std::lock_guard<std::mutex> lock(bizStateMtx_);
@@ -1012,7 +1012,7 @@ BusinessState ComponentManager::QueryBusinessState(const std::string &uuid, cons
 
 void ComponentManager::TriggerFullCapsSync(const std::string &networkId)
 {
-    if (IdLengthInvalid(networkId)){
+    if (IdLengthInvalid(networkId)) {
         return;
     }
     dhCommToolPtr_->TriggerReqFullDHCaps(networkId);

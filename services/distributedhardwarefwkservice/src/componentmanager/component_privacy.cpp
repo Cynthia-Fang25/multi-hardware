@@ -47,7 +47,7 @@ ComponentPrivacy::~ComponentPrivacy()
 int32_t ComponentPrivacy::OnPrivaceResourceMessage(const ResourceEventType &type, const std::string &subtype,
     const std::string &networkId, bool &isSensitive, bool &isSameAccout)
 {
-    if (IdLengthInvalid(networkId)){
+    if (IdLengthInvalid(networkId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     DHLOGI("OnPrivaceResourceMessage start.");
@@ -64,7 +64,7 @@ int32_t ComponentPrivacy::OnPrivaceResourceMessage(const ResourceEventType &type
 
 void ComponentPrivacy::HandlePullUpPage(const std::string &subtype, const std::string &networkId)
 {
-    if (IdLengthInvalid(networkId)){
+    if (IdLengthInvalid(networkId)) {
         return;
     }
     cJSON *jsonArrayMsg = cJSON_CreateArray();
@@ -125,7 +125,7 @@ void ComponentPrivacy::HandleClosePage(const std::string &subtype)
 int32_t ComponentPrivacy::OnResourceInfoCallback(const std::string &subtype, const std::string &networkId,
     bool &isSensitive, bool &isSameAccout)
 {
-    if (IdLengthInvalid(networkId)){
+    if (IdLengthInvalid(networkId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     DHLOGI("OnResourceInfoCallback start.");
@@ -158,7 +158,7 @@ int32_t ComponentPrivacy::OnResourceInfoCallback(const std::string &subtype, con
 
 int32_t ComponentPrivacy::StartPrivacePage(const std::string &subtype, const std::string &networkId)
 {
-    if (IdLengthInvalid(networkId)){
+    if (IdLengthInvalid(networkId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     DHLOGI("StartPrivacePage start.");

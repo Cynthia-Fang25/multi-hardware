@@ -55,7 +55,7 @@ void PluginListenerImpl::PluginHardware(const std::string &dhId, const std::stri
 
 void PluginListenerImpl::UnPluginHardware(const std::string &dhId)
 {
-    if (IdLengthInvalid(dhId)){
+    if (IdLengthInvalid(dhId)) {
         return;
     }
     DHLOGI("unplugin start, dhId: %{public}s", GetAnonyString(dhId).c_str());

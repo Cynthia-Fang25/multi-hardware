@@ -108,7 +108,7 @@ void DHTransport::OnBytesReceived(int32_t socketId, const void *data, uint32_t d
 
 void DHTransport::HandleReceiveMessage(const std::string &payload)
 {
-    if (MessageLengthInvalid(payload)){
+    if (MessageLengthInvalid(payload)) {
         return;
     }
     std::string rawPayload = Decompress(payload);
@@ -248,7 +248,7 @@ int32_t DHTransport::CreateServerSocket()
 
 int32_t DHTransport::CreateClientSocket(const std::string &remoteNetworkId)
 {
-    if (IdLengthInvalid(remoteNetworkId)){
+    if (IdLengthInvalid(remoteNetworkId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     DHLOGI("CreateClientSocket start, peerNetworkId: %{public}s", GetAnonyString(remoteNetworkId).c_str());
@@ -315,7 +315,7 @@ int32_t DHTransport::UnInit()
 
 bool DHTransport::IsDeviceSessionOpened(const std::string &remoteNetworkId, int32_t &socketId)
 {
-    if (IdLengthInvalid(remoteNetworkId)){
+    if (IdLengthInvalid(remoteNetworkId)) {
         return false;
     }
     std::lock_guard<std::mutex> lock(rmtSocketIdMtx_);
@@ -343,7 +343,7 @@ std::string DHTransport::GetRemoteNetworkIdBySocketId(int32_t socketId)
 
 void DHTransport::ClearDeviceSocketOpened(const std::string &remoteDevId)
 {
-    if (IdLengthInvalid(remoteDevId)){
+    if (IdLengthInvalid(remoteDevId)) {
         return;
     }
     std::lock_guard<std::mutex> lock(rmtSocketIdMtx_);
@@ -352,7 +352,7 @@ void DHTransport::ClearDeviceSocketOpened(const std::string &remoteDevId)
 
 int32_t DHTransport::StartSocket(const std::string &remoteNetworkId)
 {
-    if (IdLengthInvalid(remoteNetworkId)){
+    if (IdLengthInvalid(remoteNetworkId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     int32_t socketId = -1;
@@ -390,7 +390,7 @@ int32_t DHTransport::StartSocket(const std::string &remoteNetworkId)
 
 int32_t DHTransport::StopSocket(const std::string &remoteNetworkId)
 {
-    if (IdLengthInvalid(remoteNetworkId)){
+    if (IdLengthInvalid(remoteNetworkId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     int32_t socketId = -1;
@@ -408,7 +408,7 @@ int32_t DHTransport::StopSocket(const std::string &remoteNetworkId)
 
 int32_t DHTransport::Send(const std::string &remoteNetworkId, const std::string &payload)
 {
-    if (IdLengthInvalid(remoteNetworkId) || MessageLengthInvalid(payload)){
+    if (IdLengthInvalid(remoteNetworkId) || MessageLengthInvalid(payload)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     int32_t socketId = -1;

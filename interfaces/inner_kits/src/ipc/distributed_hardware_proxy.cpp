@@ -416,7 +416,7 @@ int32_t DistributedHardwareProxy::NotifySourceRemoteSinkStarted(std::string &dev
 
 int32_t DistributedHardwareProxy::PauseDistributedHardware(DHType dhType, const std::string &networkId)
 {
-    if (IdLengthInvalid(networkId)){
+    if (IdLengthInvalid(networkId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     sptr<IRemoteObject> remote = Remote();
@@ -454,7 +454,7 @@ int32_t DistributedHardwareProxy::PauseDistributedHardware(DHType dhType, const 
 
 int32_t DistributedHardwareProxy::ResumeDistributedHardware(DHType dhType, const std::string &networkId)
 {
-    if (IdLengthInvalid(networkId)){
+    if (IdLengthInvalid(networkId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     sptr<IRemoteObject> remote = Remote();
@@ -492,7 +492,7 @@ int32_t DistributedHardwareProxy::ResumeDistributedHardware(DHType dhType, const
 
 int32_t DistributedHardwareProxy::StopDistributedHardware(DHType dhType, const std::string &networkId)
 {
-    if (IdLengthInvalid(networkId)){
+    if (IdLengthInvalid(networkId)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     sptr<IRemoteObject> remote = Remote();

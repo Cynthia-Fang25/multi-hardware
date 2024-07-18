@@ -277,17 +277,14 @@ bool GetSysPara(const char *key, bool &value)
     return true;
 }
 
-template<typename ...Args>
-bool IdLengthInvalid(const Args &...args) 
+bool IdLengthInvalid(const std::string &input) 
 {
-    std::vector<bool> flag{ args.empty()..., (args.length() > MAX_ID_LEN)... };
-
-    if (std::all_of(flag.begin(),flag.end(),[](bool i) {return !i; })) {
-        return false;
-    }
-    else {
+    if (input.empty() || input.length()) {
         DHLOGE("On parameter length error, maybe empty or beyond MAX_ID_LEN!");
         return true;
+    }
+    else {
+        return false;
     }
 }
 
@@ -296,7 +293,8 @@ bool MessageLengthInvalid(const std::string &input)
     if (input.empty() || input.length() > MAX_MESSAGE_LEN){
         DHLOGE("On parameter error, maybe empty or beyond MAX_MESSAGE_LEN!");
         return true;
-    }else{
+    }
+    else {
         return false;
     }
 }
@@ -307,7 +305,8 @@ bool RecordSizeInvalid(const std::vector<Ty> &input)
     if (input.empty() || input.size() > MAX_DB_RECORD_SIZE){
         DHLOGE("On parameter error, maybe empty or beyond MAX_DE_RECORD_SIZE!");
         return true;
-    }else{
+    }
+    else {
         return false;
     }
 }
@@ -317,7 +316,8 @@ bool JsonLengthInvalid(const std::string &jsonStr)
     if (jsonStr.empty() || jsonStr.length() > MAX_JSON_SIZE){
         DHLOGE("On parameter error, maybe empty or beyond MAX_JSON_SIZE");
         return true;
-    }else{
+    }
+    else {
         return false;
     }
 }
@@ -328,7 +328,8 @@ bool ArrayLengthInvalid(const std::vector<Ty> &array)
     if (array.empty() || array.size() > MAX_ARR_SIZE){
         DHLOGE("On parameter error, maybe empty or beyond MAX_ARR_SIZE");
         return true;
-    }else{
+    }
+    else {
         return false;
     }
 }
@@ -338,7 +339,8 @@ bool KeySizeInvalid(const std::string &key)
     if (key.empty() || key.length() > MAX_KEY_SIZE){
         DHLOGE("On parameter error, maybe empty or beyond MAX_KEY_SIZE");
         return true;
-    }else{
+    }
+    else {
         return false;
     }
 }
@@ -348,7 +350,8 @@ bool HashSizeInvalid(const std::string &hashValue)
     if (hashValue.empty() || hashValue.length() > MAX_HASH_SIZE){
         DHLOGE("On parameter error, maybe empty or beyond MAX_HASH_SIZE");
         return true;
-    }else{
+    }
+    else {
         return false;
     }
 }
