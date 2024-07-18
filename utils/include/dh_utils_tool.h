@@ -75,8 +75,7 @@ bool RecordSizeInvalid(const std::vector<Ty> &input);
 
 bool JsonLengthInvalid(const std::string &jsonStr);
 
-template<typename Ty>
-bool ArrayLengthInvalid(const std::vector<Ty> &array);
+bool ArrayLengthInvalid(const std::vector<std::string> &array);
 
 bool KeySizeInvalid(const std::string &key);
 

@@ -277,7 +277,7 @@ bool GetSysPara(const char *key, bool &value)
     return true;
 }
 
-bool IdLengthInvalid(const std::string &input) 
+bool IdLengthInvalid(const std::string &input)
 {
     if (input.empty() || input.length() > MAX_ID_LEN) {
         DHLOGE("On parameter length error, maybe empty or beyond MAX_ID_LEN!");
@@ -314,8 +314,7 @@ bool JsonLengthInvalid(const std::string &jsonStr)
     return false;
 }
 
-template<typename Ty>
-bool ArrayLengthInvalid(const std::vector<Ty> &array)
+bool ArrayLengthInvalid(const std::vector<std::string> &array)
 {
     if (array.empty() || array.size() > MAX_ARR_SIZE) {
         DHLOGE("On parameter error, maybe empty or beyond MAX_ARR_SIZE");
