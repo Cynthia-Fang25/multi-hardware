@@ -21,6 +21,9 @@
 #include "cJSON.h"
 
 #include "device_type.h"
+#include "constants.h"
+#include "distributed_hardware_errno.h"
+#include "distributed_hardware_log.h"
 
 namespace OHOS {
 namespace DistributedHardware {
