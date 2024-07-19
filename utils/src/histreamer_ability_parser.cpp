@@ -21,7 +21,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 
-static const std::string NAME = "name";
+// static const std::string NAME = "name"; defined in common/utils/include/constants.h
 static const std::string INS = "ins";
 static const std::string OUTS = "outs";
 static const std::string MIME = "mime";
