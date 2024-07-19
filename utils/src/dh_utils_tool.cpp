@@ -295,16 +295,6 @@ bool MessageLengthInvalid(const std::string &input)
     return false;
 }
 
-template<typename Ty>
-bool RecordSizeInvalid(const std::vector<Ty> &input)
-{
-    if (input.empty() || input.size() > MAX_DB_RECORD_SIZE) {
-        DHLOGE("On parameter error, maybe empty or beyond MAX_DE_RECORD_SIZE!");
-        return true;
-    }
-    return false;
-}
-
 bool JsonLengthInvalid(const std::string &jsonStr)
 {
     if (jsonStr.empty() || jsonStr.length() > MAX_JSON_SIZE) {
