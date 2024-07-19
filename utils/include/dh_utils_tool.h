@@ -70,9 +70,8 @@ bool IdLengthInvalid(const std::string &input);
 
 bool MessageLengthInvalid(const std::string &input);
 
-bool RecordSizeInvalid(const std::vector<std::string> &input);
-bool RecordSizeInvalid(const std::vector<std::shared_ptr<CapabilityInfo>> &input);
-bool RecordSizeInvalid(const std::vector<DistributedKv::Entry> &input);
+template<typename Ty>
+bool RecordSizeInvalid(const std::vector<Ty> &input)
 
 bool JsonLengthInvalid(const std::string &jsonStr);
 
