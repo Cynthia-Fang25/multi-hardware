@@ -518,7 +518,7 @@ bool CapabilityInfoManager::IsCapabilityMatchFilter(const std::shared_ptr<Capabi
 void CapabilityInfoManager::GetCapabilitiesByDeviceId(const std::string &deviceId,
     std::vector<std::shared_ptr<CapabilityInfo>> &resInfos)
 {
-    if (IdLengthInvalid(deviceId) || RecordSizeInvalid(resInfos)) {
+    if (IdLengthInvalid(deviceId) || RecordSizeInvalid<std::shared_ptr<CapabilityInfo>>(resInfos)) {
         return;
     }
     std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
