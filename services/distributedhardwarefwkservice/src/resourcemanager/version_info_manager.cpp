@@ -237,7 +237,7 @@ int32_t VersionInfoManager::SyncRemoteVersionInfos()
         return ERR_DH_FWK_RESOURCE_DB_ADAPTER_OPERATION_FAIL;
     }
     if (dataVector.empty() || dataVector.size() > MAX_DB_RECORD_SIZE) {
-        DHLOGE("On dataVector error, maybe empty or too large.");;
+        DHLOGE("On dataVector error, maybe empty or too large.");
         return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
     }
     for (const auto &data : dataVector) {
