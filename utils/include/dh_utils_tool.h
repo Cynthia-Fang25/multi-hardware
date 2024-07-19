@@ -71,7 +71,7 @@ bool IdLengthInvalid(const std::string &input);
 bool MessageLengthInvalid(const std::string &input);
 
 template<typename Ty>
-bool RecordSizeInvalid(const std::vector<Ty> &input)
+bool RecordSizeInvalid(const std::vector<Ty> &input);
 
 bool JsonLengthInvalid(const std::string &jsonStr);
 
