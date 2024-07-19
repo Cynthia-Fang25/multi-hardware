@@ -236,7 +236,8 @@ int32_t VersionInfoManager::SyncRemoteVersionInfos()
         DHLOGE("Query all data from DB failed");
         return ERR_DH_FWK_RESOURCE_DB_ADAPTER_OPERATION_FAIL;
     }
-    if (RecordSizeInvalid<std::string>(dataVector)) {
+    if (dataVector.empty() || dataVector.size() > MAX_DB_RECORD_SIZE) {
+        DHLOGE("On dataVector error, maybe empty or too large.")
         return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
     }
     for (const auto &data : dataVector) {
@@ -282,7 +283,8 @@ void VersionInfoManager::OnChange(const DistributedKv::ChangeNotification &chang
 
 void VersionInfoManager::HandleVersionAddChange(const std::vector<DistributedKv::Entry> &insertRecords)
 {
-    if (RecordSizeInvalid<DistributedKv::Entry>(insertRecords)) {
+    if (insertRecords.empty() || insertRecords.size() > MAX_DB_RECORD_SIZE) {
+        DHLOGE("Records is empty or too large!");
         return;
     }
     DHLOGI("Version add change");
@@ -298,7 +300,8 @@ void VersionInfoManager::HandleVersionAddChange(const std::vector<DistributedKv:
 
 void VersionInfoManager::HandleVersionUpdateChange(const std::vector<DistributedKv::Entry> &updateRecords)
 {
-    if (RecordSizeInvalid<DistributedKv::Entry>(updateRecords)) {
+    if (updateRecords.empty() || updateRecords.size() > MAX_DB_RECORD_SIZE) {
+        DHLOGE("Records is empty or too large!");
         return;
     }
     DHLOGI("Version update change");
@@ -314,7 +317,8 @@ void VersionInfoManager::HandleVersionUpdateChange(const std::vector<Distributed
 
 void VersionInfoManager::HandleVersionDeleteChange(const std::vector<DistributedKv::Entry> &deleteRecords)
 {
-    if (RecordSizeInvalid<DistributedKv::Entry>(deleteRecords)) {
+    if (deleteRecords.empty() || deleteRecords.size() > MAX_DB_RECORD_SIZE) {
+        DHLOGE("Records is empty or too large!");
         return;
     }
     DHLOGI("Version delete change");

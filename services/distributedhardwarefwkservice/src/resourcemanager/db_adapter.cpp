@@ -301,7 +301,8 @@ int32_t DBAdapter::GetDataByKeyPrefix(const std::string &keyPrefix, std::vector<
             GetAnonyString(keyPrefix).c_str());
         return ERR_DH_FWK_RESOURCE_KV_STORAGE_OPERATION_FAIL;
     }
-    if (RecordSizeInvalid<DistributedKv::Entry>(allEntries)) {
+    if (allEntries.empty() || allEntries.size() > MAX_DB_RECORD_SIZE) {
+        DHLOGE("AllEntries is empty or too large!");
         return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
     }
     for (const auto& item : allEntries) {

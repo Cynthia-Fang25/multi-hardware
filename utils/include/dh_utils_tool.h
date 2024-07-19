@@ -21,9 +21,6 @@
 #include "cJSON.h"
 
 #include "device_type.h"
-#include "constants.h"
-#include "distributed_hardware_errno.h"
-#include "distributed_hardware_log.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -81,16 +78,6 @@ bool ArrayLengthInvalid(const std::vector<std::string> &array);
 bool KeySizeInvalid(const std::string &key);
 
 bool HashSizeInvalid(const std::string &hashValue);
-
-template<typename Ty>
-bool RecordSizeInvalid(const std::vector<Ty> &input)
-{
-    if (input.empty() || input.size() > MAX_DB_RECORD_SIZE) {
-        DHLOGE("On parameter error, maybe empty or beyond MAX_DE_RECORD_SIZE!");
-        return true;
-    }
-    return false;
-}
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

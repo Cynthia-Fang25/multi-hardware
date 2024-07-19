@@ -116,8 +116,9 @@ int32_t MetaInfoManager::UnInit()
 
 int32_t MetaInfoManager::AddMetaCapInfos(const std::vector<std::shared_ptr<MetaCapabilityInfo>> &metaCapInfos)
 {
-    if (RecordSizeInvalid<std::shared_ptr<MetaCapabilityInfo>>(metaCapInfos)) {
-        return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
+    if (metaCapInfos.empty() || metaCapInfos.size() > MAX_DB_RECORD_SIZE) {
+        DHLOGE("MetaCapInfos is empty or too large!");
+        return;
     }
     std::lock_guard<std::mutex> lock(metaInfoMgrMutex_);
     if (dbAdapterPtr_ == nullptr) {
@@ -169,7 +170,8 @@ int32_t MetaInfoManager::SyncMetaInfoFromDB(const std::string &udidHash)
         DHLOGE("Query Metadata from DB by udidHash failed, udidHash: %{public}s", GetAnonyString(udidHash).c_str());
         return ERR_DH_FWK_RESOURCE_DB_ADAPTER_OPERATION_FAIL;
     }
-    if (RecordSizeInvalid<std::string>(dataVector)) {
+    if (dataVector.empty() || dataVector.size() > MAX_DB_RECORD_SIZE) {
+        DHLOGE("On dataVector error, maybe empty or too large.")
         return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
     }
     for (const auto &data : dataVector) {
@@ -196,7 +198,8 @@ int32_t MetaInfoManager::SyncRemoteMetaInfos()
         DHLOGE("Query all Metadata from DB failed");
         return ERR_DH_FWK_RESOURCE_DB_ADAPTER_OPERATION_FAIL;
     }
-    if (RecordSizeInvalid<std::string>(dataVector)) {
+    if (dataVector.empty() || dataVector.size() > MAX_DB_RECORD_SIZE) {
+        DHLOGE("On dataVector error, maybe empty or too large.")
         return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
     }
     for (const auto &data : dataVector) {
@@ -237,7 +240,8 @@ int32_t MetaInfoManager::GetDataByKeyPrefix(const std::string &keyPrefix, MetaCa
         DHLOGE("Query metaInfo from db failed, keyPrefix: %{public}s", GetAnonyString(keyPrefix).c_str());
         return ERR_DH_FWK_RESOURCE_DB_ADAPTER_OPERATION_FAIL;
     }
-    if (RecordSizeInvalid<std::string>(dataVector)) {
+    if (dataVector.empty() || dataVector.size() > MAX_DB_RECORD_SIZE) {
+        DHLOGE("On dataVector error, maybe empty or too large.")
         return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
     }
     for (const auto &data : dataVector) {
@@ -361,7 +365,8 @@ void MetaInfoManager::OnChange(const DistributedKv::DataOrigin &origin, Keys &&k
 
 void MetaInfoManager::HandleMetaCapabilityAddChange(const std::vector<DistributedKv::Entry> &insertRecords)
 {
-    if (RecordSizeInvalid<DistributedKv::Entry>(insertRecords)) {
+    if (insertRecords.empty() || insertRecords.size() > MAX_DB_RECORD_SIZE) {
+        DHLOGE("Records is empty or too large!");
         return;
     }
     std::lock_guard<std::mutex> lock(metaInfoMgrMutex_);
@@ -398,7 +403,8 @@ void MetaInfoManager::HandleMetaCapabilityAddChange(const std::vector<Distribute
 
 void MetaInfoManager::HandleMetaCapabilityUpdateChange(const std::vector<DistributedKv::Entry> &updateRecords)
 {
-    if (RecordSizeInvalid<DistributedKv::Entry>(updateRecords)) {
+    if (updateRecords.empty() || updateRecords.size() > MAX_DB_RECORD_SIZE) {
+        DHLOGE("Records is empty or too large!");
         return;
     }
     std::lock_guard<std::mutex> lock(metaInfoMgrMutex_);
@@ -417,7 +423,8 @@ void MetaInfoManager::HandleMetaCapabilityUpdateChange(const std::vector<Distrib
 
 void MetaInfoManager::HandleMetaCapabilityDeleteChange(const std::vector<DistributedKv::Entry> &deleteRecords)
 {
-    if (RecordSizeInvalid<DistributedKv::Entry>(deleteRecords)) {
+    if (deleteRecords.empty() || deleteRecords.size() > MAX_DB_RECORD_SIZE) {
+        DHLOGE("Records is empty or too large!");
         return;
     }
     std::lock_guard<std::mutex> lock(metaInfoMgrMutex_);

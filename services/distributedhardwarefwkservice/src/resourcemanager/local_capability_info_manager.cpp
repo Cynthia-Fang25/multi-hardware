@@ -97,7 +97,8 @@ int32_t LocalCapabilityInfoManager::SyncDeviceInfoFromDB(const std::string &devi
         DHLOGE("Query data from DB by deviceId failed, id: %{public}s", GetAnonyString(deviceId).c_str());
         return ERR_DH_FWK_RESOURCE_DB_ADAPTER_OPERATION_FAIL;
     }
-    if (RecordSizeInvalid<std::string>(dataVector)) {
+    if (dataVector.empty() || dataVector.size() > MAX_DB_RECORD_SIZE) {
+        DHLOGE("On dataVector error, maybe empty or too large.")
         return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
     }
     for (const auto &data : dataVector) {
@@ -113,7 +114,8 @@ int32_t LocalCapabilityInfoManager::SyncDeviceInfoFromDB(const std::string &devi
 
 int32_t LocalCapabilityInfoManager::AddCapability(const std::vector<std::shared_ptr<CapabilityInfo>> &resInfos)
 {
-    if (RecordSizeInvalid<std::shared_ptr<CapabilityInfo>>(resInfos)) {
+    if (resInfos.empty() || resInfos.size() > MAX_DB_RECORD_SIZE) {
+        DHLOGE("resInfo is empty or too large!");
         return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
     }
     std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
@@ -170,7 +172,8 @@ int32_t LocalCapabilityInfoManager::RemoveCapabilityInfoByKey(const std::string 
 void LocalCapabilityInfoManager::GetCapabilitiesByDeviceId(const std::string &deviceId,
     std::vector<std::shared_ptr<CapabilityInfo>> &resInfos)
 {
-    if (IdLengthInvalid(deviceId) || RecordSizeInvalid<std::shared_ptr<CapabilityInfo>>(resInfos)) {
+    if (IdLengthInvalid(deviceId) || resInfos.empty() || resInfos.size() > MAX_DB_RECORD_SIZE) {
+        DHLOGE("On parameter error, maybe empty or too large!");
         return;
     }
     std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
@@ -242,7 +245,8 @@ int32_t LocalCapabilityInfoManager::GetDataByKeyPrefix(const std::string &keyPre
         DHLOGE("Query capability info from db failed, key: %{public}s", GetAnonyString(keyPrefix).c_str());
         return ERR_DH_FWK_RESOURCE_DB_ADAPTER_OPERATION_FAIL;
     }
-    if (RecordSizeInvalid<std::string>(dataVector)) {
+    if (dataVector.empty() || dataVector.size() > MAX_DB_RECORD_SIZE) {
+        DHLOGE("On dataVector error, maybe empty or too large!")
         return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
     }
     for (const auto &data : dataVector) {
