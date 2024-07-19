@@ -116,7 +116,7 @@ int32_t MetaInfoManager::UnInit()
 
 int32_t MetaInfoManager::AddMetaCapInfos(const std::vector<std::shared_ptr<MetaCapabilityInfo>> &metaCapInfos)
 {
-    if (RecordSizeInvalid(metaCapInfos)) {
+    if (RecordSizeInvalid<std::shared_ptr<MetaCapabilityInfo>>(metaCapInfos)) {
         return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
     }
     std::lock_guard<std::mutex> lock(metaInfoMgrMutex_);
@@ -169,7 +169,7 @@ int32_t MetaInfoManager::SyncMetaInfoFromDB(const std::string &udidHash)
         DHLOGE("Query Metadata from DB by udidHash failed, udidHash: %{public}s", GetAnonyString(udidHash).c_str());
         return ERR_DH_FWK_RESOURCE_DB_ADAPTER_OPERATION_FAIL;
     }
-    if (RecordSizeInvalid(dataVector)) {
+    if (RecordSizeInvalid<std::string>(dataVector)) {
         return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
     }
     for (const auto &data : dataVector) {
@@ -196,7 +196,7 @@ int32_t MetaInfoManager::SyncRemoteMetaInfos()
         DHLOGE("Query all Metadata from DB failed");
         return ERR_DH_FWK_RESOURCE_DB_ADAPTER_OPERATION_FAIL;
     }
-    if (RecordSizeInvalid(dataVector)) {
+    if (RecordSizeInvalid<std::string>(dataVector)) {
         return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
     }
     for (const auto &data : dataVector) {
@@ -237,7 +237,7 @@ int32_t MetaInfoManager::GetDataByKeyPrefix(const std::string &keyPrefix, MetaCa
         DHLOGE("Query metaInfo from db failed, keyPrefix: %{public}s", GetAnonyString(keyPrefix).c_str());
         return ERR_DH_FWK_RESOURCE_DB_ADAPTER_OPERATION_FAIL;
     }
-    if (RecordSizeInvalid(dataVector)) {
+    if (RecordSizeInvalid<std::string>(dataVector)) {
         return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
     }
     for (const auto &data : dataVector) {
@@ -361,7 +361,7 @@ void MetaInfoManager::OnChange(const DistributedKv::DataOrigin &origin, Keys &&k
 
 void MetaInfoManager::HandleMetaCapabilityAddChange(const std::vector<DistributedKv::Entry> &insertRecords)
 {
-    if (RecordSizeInvalid(insertRecords)) {
+    if (RecordSizeInvalid<DistributedKv::Entry>(insertRecords)) {
         return;
     }
     std::lock_guard<std::mutex> lock(metaInfoMgrMutex_);
@@ -398,7 +398,7 @@ void MetaInfoManager::HandleMetaCapabilityAddChange(const std::vector<Distribute
 
 void MetaInfoManager::HandleMetaCapabilityUpdateChange(const std::vector<DistributedKv::Entry> &updateRecords)
 {
-    if (RecordSizeInvalid(updateRecords)) {
+    if (RecordSizeInvalid<DistributedKv::Entry>(updateRecords)) {
         return;
     }
     std::lock_guard<std::mutex> lock(metaInfoMgrMutex_);
@@ -417,7 +417,7 @@ void MetaInfoManager::HandleMetaCapabilityUpdateChange(const std::vector<Distrib
 
 void MetaInfoManager::HandleMetaCapabilityDeleteChange(const std::vector<DistributedKv::Entry> &deleteRecords)
 {
-    if (RecordSizeInvalid(deleteRecords)) {
+    if (RecordSizeInvalid<DistributedKv::Entry>(deleteRecords)) {
         return;
     }
     std::lock_guard<std::mutex> lock(metaInfoMgrMutex_);

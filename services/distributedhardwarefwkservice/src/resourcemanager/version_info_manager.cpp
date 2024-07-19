@@ -236,7 +236,7 @@ int32_t VersionInfoManager::SyncRemoteVersionInfos()
         DHLOGE("Query all data from DB failed");
         return ERR_DH_FWK_RESOURCE_DB_ADAPTER_OPERATION_FAIL;
     }
-    if (RecordSizeInvalid(dataVector)) {
+    if (RecordSizeInvalid<std::string>(dataVector)) {
         return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
     }
     for (const auto &data : dataVector) {
@@ -282,7 +282,7 @@ void VersionInfoManager::OnChange(const DistributedKv::ChangeNotification &chang
 
 void VersionInfoManager::HandleVersionAddChange(const std::vector<DistributedKv::Entry> &insertRecords)
 {
-    if (RecordSizeInvalid(insertRecords)) {
+    if (RecordSizeInvalid<DistributedKv::Entry>(insertRecords)) {
         return;
     }
     DHLOGI("Version add change");
@@ -298,7 +298,7 @@ void VersionInfoManager::HandleVersionAddChange(const std::vector<DistributedKv:
 
 void VersionInfoManager::HandleVersionUpdateChange(const std::vector<DistributedKv::Entry> &updateRecords)
 {
-    if (RecordSizeInvalid(updateRecords)) {
+    if (RecordSizeInvalid<DistributedKv::Entry>(updateRecords)) {
         return;
     }
     DHLOGI("Version update change");
@@ -314,7 +314,7 @@ void VersionInfoManager::HandleVersionUpdateChange(const std::vector<Distributed
 
 void VersionInfoManager::HandleVersionDeleteChange(const std::vector<DistributedKv::Entry> &deleteRecords)
 {
-    if (RecordSizeInvalid(deleteRecords)) {
+    if (RecordSizeInvalid<DistributedKv::Entry>(deleteRecords)) {
         return;
     }
     DHLOGI("Version delete change");
