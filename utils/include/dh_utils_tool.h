@@ -21,6 +21,7 @@
 #include "cJSON.h"
 
 #include "device_type.h"
+#include "capability_utils.h"
 
 namespace OHOS {
 namespace DistributedHardware {
