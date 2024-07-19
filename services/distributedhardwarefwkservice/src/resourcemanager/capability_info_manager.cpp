@@ -433,7 +433,7 @@ void CapabilityInfoManager::HandleCapabilityUpdateChange(const std::vector<Distr
 
 void CapabilityInfoManager::HandleCapabilityDeleteChange(const std::vector<DistributedKv::Entry> &deleteRecords)
 {
-    if (<DistributedKv::Entry>(deleteRecords)) {
+    if (RecordSizeInvalid<DistributedKv::Entry>(deleteRecords)) {
         return;
     }
     std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
