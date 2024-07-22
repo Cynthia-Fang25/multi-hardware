@@ -445,7 +445,7 @@ void CapabilityInfoManager::HandleCapabilityUpdateChange(const std::vector<Distr
 void CapabilityInfoManager::HandleCapabilityDeleteChange(const std::vector<DistributedKv::Entry> &deleteRecords)
 {
     if (deleteRecords.empty() || deleteRecords.size() > MAX_DB_RECORD_SIZE) {
-        DHLOGE("Records is empty or too large!"); 
+        DHLOGE("Records is empty or too large!");
         return;
     }
     if (DistributedHardwareManagerFactory::GetInstance().GetUnInitFlag()) {
