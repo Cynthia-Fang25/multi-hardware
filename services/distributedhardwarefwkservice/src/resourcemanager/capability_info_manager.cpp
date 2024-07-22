@@ -23,6 +23,7 @@
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
 #include "distributed_hardware_manager.h"
+#include "distributed_hardware_manager_factory.h"
 #include "task_executor.h"
 #include "task_factory.h"
 
@@ -423,6 +424,10 @@ void CapabilityInfoManager::HandleCapabilityUpdateChange(const std::vector<Distr
         DHLOGE("Records is empty or too large!");
         return;
     }
+    if (DistributedHardwareManagerFactory::GetInstance().GetUnInitFlag()) {
+        DHLOGE("no need Update, is in uniniting.");
+        return;
+    }
     std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
     for (const auto &item : updateRecords) {
         const std::string value = item.value.ToString();
@@ -440,7 +445,11 @@ void CapabilityInfoManager::HandleCapabilityUpdateChange(const std::vector<Distr
 void CapabilityInfoManager::HandleCapabilityDeleteChange(const std::vector<DistributedKv::Entry> &deleteRecords)
 {
     if (deleteRecords.empty() || deleteRecords.size() > MAX_DB_RECORD_SIZE) {
-        DHLOGE("Records is empty or too large!");
+        DHLOGE("Records is empty or too large!"); 
+        return;
+    }
+    if (DistributedHardwareManagerFactory::GetInstance().GetUnInitFlag()) {
+        DHLOGE("no need Update, is in uniniting.");
         return;
     }
     std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
