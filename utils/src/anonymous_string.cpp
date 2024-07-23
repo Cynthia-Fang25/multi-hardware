@@ -19,6 +19,10 @@
 #include <string>
 
 #include "securec.h"
+#include "constants.h"
+#include "distributed_hardware_errno.h"
+#include "distributed_hardware_log.h"
+#include "dh_utils_tool.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -30,7 +34,7 @@ namespace {
 }
 std::string GetAnonyString(const std::string &value)
 {
-    if (value.empty()) {
+    if (MessageLengthInvalid(value)) {
         return "";
     }
     std::string res;

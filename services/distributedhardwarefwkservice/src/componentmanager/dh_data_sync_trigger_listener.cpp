@@ -21,6 +21,7 @@
 #include "component_manager.h"
 #include "distributed_hardware_log.h"
 #include "event_handler.h"
+#include "dh_utils_tool.h"
 
 class ComponentManager;
 namespace OHOS {
@@ -39,6 +40,9 @@ DHDataSyncTriggerListener::~DHDataSyncTriggerListener()
 
 void DHDataSyncTriggerListener::OnDataSyncTrigger(const std::string &networkId)
 {
+    if (IdLengthInvalid(networkId)) {
+        return;
+    }
     DHLOGI("Receive data sync trigger, networkId: %{public}s", GetAnonyString(networkId).c_str());
     if (networkId.empty()) {
         DHLOGE("OnDataSyncTrigger networkId is empty");

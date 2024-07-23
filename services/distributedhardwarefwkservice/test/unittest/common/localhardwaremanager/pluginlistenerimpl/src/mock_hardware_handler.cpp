@@ -15,6 +15,7 @@
 
 #include "mock_hardware_handler.h"
 
+#include "distributed_hardware_log.h"
 #include "distributed_hardware_errno.h"
 
 namespace OHOS {

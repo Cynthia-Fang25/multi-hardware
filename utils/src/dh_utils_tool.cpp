@@ -29,7 +29,6 @@
 #include "parameter.h"
 #include "device_manager.h"
 #include "dm_device_info.h"
-
 #include "constants.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
@@ -82,9 +81,6 @@ std::string GetRandomID()
 
 std::string GetUUIDByDm(const std::string &networkId)
 {
-    if (networkId.empty()) {
-        return "";
-    }
     std::string uuid = "";
     auto ret = DeviceManager::GetInstance().GetUuidByNetworkId(DH_FWK_PKG_NAME, networkId, uuid);
     return (ret == DH_FWK_SUCCESS) ? uuid : "";
@@ -92,9 +88,6 @@ std::string GetUUIDByDm(const std::string &networkId)
 
 std::string GetUDIDByDm(const std::string &networkId)
 {
-    if (networkId.empty()) {
-        return "";
-    }
     std::string udid = "";
     auto ret = DeviceManager::GetInstance().GetUdidByNetworkId(DH_FWK_PKG_NAME, networkId, udid);
     return (ret == DH_FWK_SUCCESS) ? udid : "";
@@ -102,10 +95,6 @@ std::string GetUDIDByDm(const std::string &networkId)
 
 std::string GetDeviceIdByUUID(const std::string &uuid)
 {
-    if (uuid.size() == 0 || uuid.size() > MAX_ID_LEN) {
-        DHLOGE("uuid is invalid!");
-        return "";
-    }
     return Sha256(uuid);
 }
 
@@ -285,6 +274,60 @@ bool GetSysPara(const char *key, bool &value)
     valueStr << paraValue;
     valueStr >> std::boolalpha >> value;
     return true;
+}
+
+bool IdLengthInvalid(const std::string &input)
+{
+    if (input.empty() || input.length() > MAX_ID_LEN) {
+        DHLOGE("On parameter length error, maybe empty or beyond MAX_ID_LEN!");
+        return true;
+    }
+    return false;
+}
+
+bool MessageLengthInvalid(const std::string &input)
+{
+    if (input.empty() || input.length() > MAX_MESSAGE_LEN) {
+        DHLOGE("On parameter error, maybe empty or beyond MAX_MESSAGE_LEN!");
+        return true;
+    }
+    return false;
+}
+
+bool JsonLengthInvalid(const std::string &jsonStr)
+{
+    if (jsonStr.empty() || jsonStr.length() > MAX_JSON_SIZE) {
+        DHLOGE("On parameter error, maybe empty or beyond MAX_JSON_SIZE");
+        return true;
+    }
+    return false;
+}
+
+bool ArrayLengthInvalid(const std::vector<std::string> &array)
+{
+    if (array.empty() || array.size() > MAX_ARR_SIZE) {
+        DHLOGE("On parameter error, maybe empty or beyond MAX_ARR_SIZE");
+        return true;
+    }
+    return false;
+}
+
+bool KeySizeInvalid(const std::string &key)
+{
+    if (key.empty() || key.length() > MAX_KEY_SIZE) {
+        DHLOGE("On parameter error, maybe empty or beyond MAX_KEY_SIZE");
+        return true;
+    }
+    return false;
+}
+
+bool HashSizeInvalid(const std::string &hashValue)
+{
+    if (hashValue.empty() || hashValue.length() > MAX_HASH_SIZE) {
+        DHLOGE("On parameter error, maybe empty or beyond MAX_HASH_SIZE");
+        return true;
+    }
+    return false;
 }
 } // namespace DistributedHardware
 } // namespace OHOS
