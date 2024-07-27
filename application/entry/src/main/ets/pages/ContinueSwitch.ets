@@ -21,6 +21,8 @@ import { BusinessError } from '@ohos.base';
 import { EditableLeftIconType, EditableTitleBar } from '@ohos.arkui.advanced.EditableTitleBar';
 import mediaQuery from '@ohos.mediaquery';
 import ConfigurationConstant from '@ohos.app.ability.ConfigurationConstant';
+import CommonConstants from '../common/constants/CommonConstants';
+import { Logger } from '../utils/Logger';
 
 const TAG = '[ContinueSwitch_Page] : ';
 let context = getContext(this) as common.UIAbilityContext;
@@ -32,8 +34,8 @@ interface switchStatus {
 }
 
 let switchState: switchStatus = {
-  open: '1',
-  close: '0'
+  open: CommonConstants.SWITCH_STATUS_OPEN,
+  close: CommonConstants.SWITCH_STATUS_CLOSE
 }
 
 @Entry
@@ -45,8 +47,8 @@ struct ContinueSwitch {
   @State screenHeight: number = 0;
   @State screenWidth: number = 0;
   @State shortSideSize: number = 0;
-  @State videoHeight: number = 0;
-  @State videoWidth: number = 0;
+  @State imageAnimatorHeight: number = 0;
+  @State imageAnimatorWidth: number = 0;
   @State textWidth: number = 0;
   @State gapLength: number = 0;
   @State videoSrc: Resource = $rawfile('continue_center.mp4');
@@ -55,13 +57,17 @@ struct ContinueSwitch {
   @State portraitFunc: mediaQuery.MediaQueryResult | void | null = null;
   @State isVideoVisible: Visibility = Visibility.Hidden;
   @State contentHeight: number = 0;
+  @State imageArray: Array<ImageFrameInfo> = [];
+  @State animationState: AnimationStatus = AnimationStatus.Running;
+  @State reverse: boolean = false;
+  @State iterations: number = -1;
   private videoController: VideoController | undefined = undefined;
   private listener: mediaQuery.MediaQueryListener = mediaQuery.matchMediaSync('(dark-mode:true)');
   private extContext?: common.UIExtensionContext;
   private scroller: Scroller = new Scroller();
 
   onPortrait(mediaQueryResult: mediaQuery.MediaQueryResult) {
-    console.log(TAG + 'onPortrait in');
+    Logger.info(TAG + 'onPortrait in');
     if (mediaQueryResult.matches as boolean) {
       this.videoSrc = $rawfile('continue_dark_center.mp4');
       this.extContext?.getApplicationContext().setColorMode(ConfigurationConstant.ColorMode.COLOR_MODE_DARK);
@@ -71,25 +77,36 @@ struct ContinueSwitch {
     }
   }
 
-  getVideoSize() {
-    console.log(TAG + 'getVideoSize in, deviceInfo.deviceType : ' + deviceInfo.deviceType);
+  /**
+   * @description Calculate the ImageAnimator size
+   *   Calculation rule:
+   *    1.general phone & pad : screen height/2 compare with width,shorter is ImageAnimator width
+   *    2.pc: screen height/2 compare with width,shorter is ImageAnimator height
+   *    3.ratio: 3:2
+   * @param height
+   * @param width
+   */
+  getImageAnimatorSize(height: Length, width: Length) {
+    Logger.info(TAG + 'getImageAnimatorSize in, deviceInfo.deviceType : ' + deviceInfo.deviceType);
+    let totalHeight = height as number;
+    this.shortSideSize = width < totalHeight / 2 ? width as number : totalHeight / 2 as number;
     if (deviceInfo.deviceType === 'phone' || deviceInfo.deviceType === 'tablet') {
-      this.videoWidth = this.shortSideSize * 0.8;
-      this.videoHeight = this.shortSideSize * 0.8 * 2 / 3;
+      this.imageAnimatorWidth = this.shortSideSize * 0.8;
+      this.imageAnimatorHeight = this.shortSideSize * 0.8 * 2 / 3;
     } else if (deviceInfo.deviceType === '2in1') {
-      this.videoWidth = this.shortSideSize * 0.8 * 3 / 2;
-      this.videoHeight = this.shortSideSize * 0.8;
+      this.imageAnimatorWidth = this.shortSideSize * 0.8 * 3 / 2;
+      this.imageAnimatorHeight = this.shortSideSize * 0.8;
     }
-    console.log(TAG + 'this.shortSideSize = ' + this.shortSideSize + ', this.videoWidth = ' + this.videoWidth + ', this.videoHeight = ' + this.videoHeight);
+    Logger.info(TAG + 'this.shortSideSize = ' + this.shortSideSize + ', this.imageAnimatorWidth = ' + this.imageAnimatorWidth + ', this.imageAnimatorHeight = ' + this.imageAnimatorHeight);
   }
 
   getStringSync() {
-    console.log(TAG + 'getStringSync in');
+    Logger.info(TAG + 'getStringSync in');
     try {
       context.resourceManager.getStringValue($r('app.string.continue_title')
         .id, (error: BusinessError, value: string) => {
         if (error != null) {
-          console.error(TAG + 'error is ' + error);
+          Logger.error(TAG + 'error is ' + error);
         } else {
           this.title = value;
           console.info(TAG + '<aboutToAppear> this.title : ' + this.title);
@@ -98,7 +115,17 @@ struct ContinueSwitch {
     } catch (error) {
       let code: number = (error as BusinessError).code;
       let message: string = (error as BusinessError).message;
-      console.error(TAG + `callback getStringValue failed,error code: ${code},message: ${message}.`);
+      Logger.error(TAG + `callback getStringValue failed,error code: ${code},message: ${message}.`);
+    }
+  }
+
+  getImageArray() {
+    Logger.info(TAG + 'getStringSync in');
+    for (let i = 0; i <= CommonConstants.IMAGE_COUNT; ++i) {
+      this.imageArray.push({
+        src: $r(`app.media.continue_${i}`),
+        duration: (i == CommonConstants.IMAGE_COUNT) ? CommonConstants.IMG_ANIMATOR_OVER_DURATION : CommonConstants.IMG_ANIMATOR_NORMAL_DURATION
+      })
     }
   }
 
@@ -114,13 +141,13 @@ struct ContinueSwitch {
   }
 
   onPageShow() {
-    console.log(TAG + 'onPageShow in');
+    Logger.info(TAG + 'onPageShow in');
     this.getGapLength();
     display.getAllDisplays((err, data) => {
       this.screenWidth = px2vp(data[0].width);
       this.screenHeight = px2vp(data[0].height);
       this.contentHeight = this.screenHeight;
-      console.log(TAG + 'screenWidth = ' + this.screenWidth + '; screenHeight = ' + this.screenHeight);
+      Logger.info(TAG + 'screenWidth = ' + this.screenWidth + '; screenHeight = ' + this.screenHeight);
     })
     if (this.videoController) {
       this.videoController.start();
@@ -129,20 +156,21 @@ struct ContinueSwitch {
   }
 
   aboutToAppear() {
-    console.log(TAG + 'aboutToAppear in');
+    Logger.info(TAG + 'aboutToAppear in');
     let value = settings.getValueSync(context, 'Continue_Switch_Status', switchState.open);
     this.isSwitchOn = value != switchState.close ? true : false;
-    console.log(TAG + '<aboutToAppear> this.isSwitchOn : ' + this.isSwitchOn + '; value: ' + value);
+    Logger.info(TAG + '<aboutToAppear> this.isSwitchOn : ' + this.isSwitchOn + '; value: ' + value);
 
     AppStorage.setOrCreate('isSwitchOn', this.isSwitchOn);
-    console.log(TAG + 'AppStorage.get<boolean>(isSwitchOn) : ' + AppStorage.get<boolean>('isSwitchOn'));
+    Logger.info(TAG + 'AppStorage.get<boolean>(isSwitchOn) : ' + AppStorage.get<boolean>('isSwitchOn'));
 
     if (this.isSwitchOn) {
       let status: boolean = settings.setValueSync(context, 'Continue_Switch_Status', switchState.open);
-      console.log(TAG + 'set value success :' + status + '; set:Continue_Switch_Status is 1');
+      Logger.info(TAG + 'set value success :' + status + '; set:Continue_Switch_Status is 1');
     }
 
     this.getStringSync();
+    this.getImageArray();
 
     this.listener.on('change', (mediaQueryResult: mediaQuery.MediaQueryResult) => {
       this.onPortrait(mediaQueryResult);
@@ -151,22 +179,22 @@ struct ContinueSwitch {
   }
 
   getGapLength() {
-    console.log(TAG + 'getGapLength in, deviceInfo.deviceType : ' + deviceInfo.deviceType);
+    Logger.info(TAG + 'getGapLength in, deviceInfo.deviceType : ' + deviceInfo.deviceType);
     if (deviceInfo.deviceType == 'phone') {
-      this.gapLength = 16;
+      this.gapLength = CommonConstants.GENERAL_PHONE_GAP_LENGTH;
     } else if (deviceInfo.deviceType == '2in1' || deviceInfo.deviceType == 'tablet') {
-      this.gapLength = 24;
+      this.gapLength = CommonConstants.PC_PAD_GAP_LENGTH;
     }
-    console.log(TAG + 'this.gapLength : ' + this.gapLength);
+    Logger.info(TAG + 'this.gapLength : ' + this.gapLength);
   }
 
   onBackPress() {
-    console.log(TAG + 'onBackPress in');
+    Logger.info(TAG + 'onBackPress in');
   }
 
   async awaitTime(time: number) {
     setTimeout(() => {
-      console.log(TAG, 'awaitTime is' + time);
+      Logger.info(TAG + 'awaitTime is' + time);
     }, time)
   }
 
@@ -181,7 +209,7 @@ struct ContinueSwitch {
             if (this.continueSession) {
               this.continueSession.sendData({ 'action': 'pop' })
             } else {
-              console.error(TAG + 'continueSession is undefined');
+              Logger.error(TAG + 'continueSession is undefined');
             }
           }
         })
@@ -189,26 +217,19 @@ struct ContinueSwitch {
 
       Scroll(this.scroller) {
         Column() {
-          Video({ src: this.videoSrc, controller: this.videoController })
-            .autoPlay(true)
-            .loop(true)
-            .objectFit(ImageFit.Contain)
-            .muted(true)
-            .controls(false)
-            .width(this.videoWidth)
-            .height(this.videoHeight)
-            .margin({ left: 35, right: 35, bottom: 24 })
-            .backgroundColor($r('sys.color.ohos_id_color_sub_background'))
-            .visibility(this.isVideoVisible)
-            .onPrepared(async (event) => {
-              console.info(TAG + 'onPrepared is ' + event.duration);
-              if (this.videoController) {
-                this.videoController.start();
-              }
-            })
+          ImageAnimator()
+            .images(this.imageArray)
+            .state(this.animationState)
+            .reverse(this.reverse)
+            .fillMode(this.iterations)
+            .iterations(this.iterations)
+            .width(this.imageAnimatorWidth)
+            .height(this.imageAnimatorHeight)
             .onStart(() => {
-              console.info(TAG + 'onStart in');
-              this.isVideoVisible = Visibility.Visible;
+              console.info(TAG + 'ImageAnimator Start');
+            })
+            .onFinish(() => {
+              console.info(TAG + 'ImageAnimator Finish');
             })
 
           Text($r('app.string.continue_desc'))
@@ -220,7 +241,7 @@ struct ContinueSwitch {
             .width('100%')
             .maxLines(10)
             .onAreaChange((oldArea: Area, newArea: Area) => {
-              console.log(TAG + 'Text:continue desc, oldArea.height = ' + oldArea.height + ', newArea.height = ' + newArea.height);
+              Logger.info(TAG + 'Text:continue desc, oldArea.height = ' + oldArea.height + ', newArea.height = ' + newArea.height);
             })
 
           Column() {
@@ -240,19 +261,19 @@ struct ContinueSwitch {
                 .height(20)
                 .hoverEffect(HoverEffect.None)
                 .onChange((isOn: boolean) => {
-                  console.log(TAG + 'isOn:' + isOn);
+                  Logger.info(TAG + 'isOn:' + isOn);
                   this.isSwitchOn = isOn;
                   AppStorage.setAndLink('isSwitchOn', isOn);
                   if (isOn) {
                     let status: boolean = settings.setValueSync(context, 'Continue_Switch_Status', switchState.open);
-                    console.log(TAG + 'is set success :' + status + '; set:Continue_Switch_Status is on');
+                    Logger.info(TAG + 'is set success :' + status + '; set:Continue_Switch_Status is on');
                   } else {
                     let status: boolean = settings.setValueSync(context, 'Continue_Switch_Status', switchState.close);
-                    console.log(TAG + 'is set success :' + status + '; set:Continue_Switch_Status is close');
+                    Logger.info(TAG + 'is set success :' + status + '; set:Continue_Switch_Status is close');
                   }
                 })
             }
-            .height(this.is2in1 ? 48 : 56)
+            .height(this.is2in1 ? CommonConstants.PC_LIST_HEIGHT : CommonConstants.PHONE_LIST_HEIGHT)
             .width('100%')
             .padding({ left: 12, right: 12 })
             .backgroundColor($r('sys.color.ohos_id_color_list_card_bg'))
@@ -270,7 +291,7 @@ struct ContinueSwitch {
                 .textAlign(TextAlign.Start)
                 .width('100%')
                 .onAreaChange((oldArea: Area, newArea: Area) => {
-                  console.log(TAG + 'Text:continue_privacy_text, continue desc, oldArea.height = ' + oldArea.height + ', newArea.height = ' + newArea.height);
+                  Logger.info(TAG + 'Text:continue_privacy_text, continue desc, oldArea.height = ' + oldArea.height + ', newArea.height = ' + newArea.height);
                 })
             }
             .padding({ left: 8, right: 8 })
@@ -299,18 +320,16 @@ struct ContinueSwitch {
         console.info('Scroll Stop');
       })
       .onAreaChange((oldArea: Area, newArea: Area) => {
-        console.log(TAG + 'Scroll, oldArea.height = ' + oldArea.height + ', newArea.height = ' + newArea.height);
+        Logger.info(TAG + 'Scroll, oldArea.height = ' + oldArea.height + ', newArea.height = ' + newArea.height);
       })
     }
     .width('100%')
     .height('100%')
     .backgroundColor($r('sys.color.ohos_id_color_sub_background'))
     .onAreaChange((oldArea: Area, newArea: Area) => {
-      console.log(TAG + 'build column , oldArea.height = ' + oldArea.height + ', newArea.height = ' + newArea.height);
-      let fullHeight = newArea.height as number;
-      this.shortSideSize = newArea.width < fullHeight / 2 ? newArea.width as number : fullHeight / 2 as number;
-      this.getVideoSize();
-      console.log(TAG + 'this.shortSideSize = ' + this.shortSideSize + ', this.videoWidth = ' + this.videoWidth + ', this.videoHeight = ' + this.videoHeight);
+      Logger.info(TAG + 'build column , oldArea.height = ' + oldArea.height + ', newArea.height = ' + newArea.height);
+      this.getImageAnimatorSize(newArea.height, newArea.width);
+      Logger.info(TAG + 'this.shortSideSize = ' + this.shortSideSize + ', this.imageAnimatorWidth = ' + this.imageAnimatorWidth + ', this.imageAnimatorHeight = ' + this.imageAnimatorHeight);
     })
   }
 }
