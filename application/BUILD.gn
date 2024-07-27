@@ -14,8 +14,7 @@
 import("//build/ohos.gni")
 import("./DHardware_UI.gni")
 
-ohos_hap("DHardware_UI") {
-  hap_profile = "entry/src/main/module.json"
+ohos_app("DHardware_UI") {
   deps = [
     ":DHardware_UI_js_assets",
     ":DHardware_UI_resources",
@@ -27,6 +26,11 @@ ohos_hap("DHardware_UI") {
   subsystem_name = "applications"
   js_build_mode = "release"
   module_install_dir = "app/DHardware_UI"
+  sdk_home = "//prebuilts/ohos-sdk/linux"
+  sdk_type_name = [ "sdk.dir" ]
+  assemble_type = "assembleHap"
+  build_level = "module"
+  build_modules = [ "entry" ]
   if (defined(sign_hap_py_path)) {
     certificate_profile = "${certificate_profile_path}"
     key_alias = "DHardwareUI Release"
