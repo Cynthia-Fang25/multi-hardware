@@ -97,7 +97,8 @@ struct ContinueSwitch {
       this.imageAnimatorWidth = this.shortSideSize * 0.8 * 3 / 2;
       this.imageAnimatorHeight = this.shortSideSize * 0.8;
     }
-    logger.info(TAG + 'this.shortSideSize = ' + this.shortSideSize + ', this.imageAnimatorWidth = ' + this.imageAnimatorWidth + ', this.imageAnimatorHeight = ' + this.imageAnimatorHeight);
+    logger.info(TAG + 'this.shortSideSize = ' + this.shortSideSize + ', this.imageAnimatorWidth = ' +
+    this.imageAnimatorWidth + ', this.imageAnimatorHeight = ' + this.imageAnimatorHeight);
   }
 
   getStringSync() {
@@ -236,13 +237,14 @@ struct ContinueSwitch {
           Text($r('app.string.continue_desc'))
             .fontSize($r('sys.float.ohos_id_text_size_body2'))
             .fontWeight(FontWeight.Regular)
-            .margin({ bottom: 32 })
+            .margin({ bottom: CommonConstants.CONTINUE_DESC_TEXT_MARGIN_BOTTOM })
             .fontColor($r('sys.color.ohos_id_color_text_secondary'))
             .textAlign(TextAlign.Center)
             .width('100%')
             .maxLines(10)
             .onAreaChange((oldArea: Area, newArea: Area) => {
-              logger.info(TAG + 'Text:continue desc, oldArea.height = ' + oldArea.height + ', newArea.height = ' + newArea.height);
+              logger.info(TAG + 'Text:continue desc, oldArea.height = ' + oldArea.height +
+                ', newArea.height = ' + newArea.height);
             })
 
           Column() {
@@ -258,8 +260,8 @@ struct ContinueSwitch {
                 .accessibilityLevel('no')
 
               Toggle({ type: ToggleType.Switch, isOn: this.isSwitchOn })
-                .width(36)
-                .height(20)
+                .width(CommonConstants.CONTINUE_SWITCH_WIDTH)
+                .height(CommonConstants.CONTINUE_SWITCH_HEIGHT)
                 .hoverEffect(HoverEffect.None)
                 .onChange((isOn: boolean) => {
                   logger.info(TAG + 'isOn:' + isOn);
@@ -276,9 +278,12 @@ struct ContinueSwitch {
             }
             .height(this.is2in1 ? CommonConstants.PC_LIST_HEIGHT : CommonConstants.PHONE_LIST_HEIGHT)
             .width('100%')
-            .padding({ left: 12, right: 12 })
+            .padding({
+              left: CommonConstants.TEXT_LIST_ALIGN_DISTANCE,
+              right: CommonConstants.TEXT_LIST_ALIGN_DISTANCE
+            })
             .backgroundColor($r('sys.color.ohos_id_color_list_card_bg'))
-            .borderRadius(this.is2in1 ? 16 : 20)
+            .borderRadius(this.is2in1 ? CommonConstants.PC_BORDER_RADIUS : CommonConstants.NON_PC_BORDER_RADIUS)
             .accessibilityText(this.title)
           }.width('100%')
 
@@ -287,15 +292,19 @@ struct ContinueSwitch {
               Text($r('app.string.continue_privacy_text'))
                 .fontSize($r('sys.float.ohos_id_text_size_body3'))
                 .fontWeight(FontWeight.Regular)
-                .margin({ top: 8 })
+                .margin({ top: CommonConstants.CONTINUE_PRIVACY_TEXT_MARGIN_TOP})
                 .fontColor($r('sys.color.ohos_id_color_text_secondary'))
                 .textAlign(TextAlign.Start)
                 .width('100%')
                 .onAreaChange((oldArea: Area, newArea: Area) => {
-                  logger.info(TAG + 'Text:continue_privacy_text, continue desc, oldArea.height = ' + oldArea.height + ', newArea.height = ' + newArea.height);
+                  logger.info(TAG + 'Text:continue_privacy_text, continue desc, oldArea.height = ' + oldArea.height +
+                    ', newArea.height = ' + newArea.height);
                 })
             }
-            .padding({ left: 8, right: 8 })
+            .padding({
+              left: CommonConstants.TEXT_LIST_ALIGN_DISTANCE,
+              right: CommonConstants.TEXT_LIST_ALIGN_DISTANCE
+            })
           }.width('100%')
 
         }
@@ -330,7 +339,8 @@ struct ContinueSwitch {
     .onAreaChange((oldArea: Area, newArea: Area) => {
       logger.info(TAG + 'build column , oldArea.height = ' + oldArea.height + ', newArea.height = ' + newArea.height);
       this.getImageAnimatorSize(newArea.height, newArea.width);
-      logger.info(TAG + 'this.shortSideSize = ' + this.shortSideSize + ', this.imageAnimatorWidth = ' + this.imageAnimatorWidth + ', this.imageAnimatorHeight = ' + this.imageAnimatorHeight);
+      logger.info(TAG + 'this.shortSideSize = ' + this.shortSideSize + ', this.imageAnimatorWidth = ' +
+      this.imageAnimatorWidth + ', this.imageAnimatorHeight = ' + this.imageAnimatorHeight);
     })
   }
 }
