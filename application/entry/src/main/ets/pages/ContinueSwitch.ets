@@ -22,7 +22,7 @@ import { EditableLeftIconType, EditableTitleBar } from '@ohos.arkui.advanced.Edi
 import mediaQuery from '@ohos.mediaquery';
 import ConfigurationConstant from '@ohos.app.ability.ConfigurationConstant';
 import CommonConstants from '../common/constants/CommonConstants';
-import { Logger } from '../utils/Logger';
+import { logger } from '../utils/logger';
 
 const TAG = '[ContinueSwitch_Page] : ';
 let context = getContext(this) as common.UIAbilityContext;
@@ -67,7 +67,7 @@ struct ContinueSwitch {
   private scroller: Scroller = new Scroller();
 
   onPortrait(mediaQueryResult: mediaQuery.MediaQueryResult) {
-    Logger.info(TAG + 'onPortrait in');
+    logger.info(TAG + 'onPortrait in');
     if (mediaQueryResult.matches as boolean) {
       this.videoSrc = $rawfile('continue_dark_center.mp4');
       this.extContext?.getApplicationContext().setColorMode(ConfigurationConstant.ColorMode.COLOR_MODE_DARK);
@@ -87,7 +87,7 @@ struct ContinueSwitch {
    * @param width
    */
   getImageAnimatorSize(height: Length, width: Length) {
-    Logger.info(TAG + 'getImageAnimatorSize in, deviceInfo.deviceType : ' + deviceInfo.deviceType);
+    logger.info(TAG + 'getImageAnimatorSize in, deviceInfo.deviceType : ' + deviceInfo.deviceType);
     let totalHeight = height as number;
     this.shortSideSize = width < totalHeight / 2 ? width as number : totalHeight / 2 as number;
     if (deviceInfo.deviceType === 'phone' || deviceInfo.deviceType === 'tablet') {
@@ -97,16 +97,16 @@ struct ContinueSwitch {
       this.imageAnimatorWidth = this.shortSideSize * 0.8 * 3 / 2;
       this.imageAnimatorHeight = this.shortSideSize * 0.8;
     }
-    Logger.info(TAG + 'this.shortSideSize = ' + this.shortSideSize + ', this.imageAnimatorWidth = ' + this.imageAnimatorWidth + ', this.imageAnimatorHeight = ' + this.imageAnimatorHeight);
+    logger.info(TAG + 'this.shortSideSize = ' + this.shortSideSize + ', this.imageAnimatorWidth = ' + this.imageAnimatorWidth + ', this.imageAnimatorHeight = ' + this.imageAnimatorHeight);
   }
 
   getStringSync() {
-    Logger.info(TAG + 'getStringSync in');
+    logger.info(TAG + 'getStringSync in');
     try {
       context.resourceManager.getStringValue($r('app.string.continue_title')
         .id, (error: BusinessError, value: string) => {
         if (error != null) {
-          Logger.error(TAG + 'error is ' + error);
+          logger.error(TAG + 'error is ' + error);
         } else {
           this.title = value;
           console.info(TAG + '<aboutToAppear> this.title : ' + this.title);
@@ -115,16 +115,17 @@ struct ContinueSwitch {
     } catch (error) {
       let code: number = (error as BusinessError).code;
       let message: string = (error as BusinessError).message;
-      Logger.error(TAG + `callback getStringValue failed,error code: ${code},message: ${message}.`);
+      logger.error(TAG + `callback getStringValue failed,error code: ${code},message: ${message}.`);
     }
   }
 
   getImageArray() {
-    Logger.info(TAG + 'getStringSync in');
+    logger.info(TAG + 'getStringSync in');
     for (let i = 0; i <= CommonConstants.IMAGE_COUNT; ++i) {
       this.imageArray.push({
         src: $r(`app.media.continue_${i}`),
-        duration: (i == CommonConstants.IMAGE_COUNT) ? CommonConstants.IMG_ANIMATOR_OVER_DURATION : CommonConstants.IMG_ANIMATOR_NORMAL_DURATION
+        duration: (i == CommonConstants.IMAGE_COUNT) ? CommonConstants.IMG_ANIMATOR_OVER_DURATION
+          : CommonConstants.IMG_ANIMATOR_NORMAL_DURATION
       })
     }
   }
@@ -141,13 +142,13 @@ struct ContinueSwitch {
   }
 
   onPageShow() {
-    Logger.info(TAG + 'onPageShow in');
+    logger.info(TAG + 'onPageShow in');
     this.getGapLength();
     display.getAllDisplays((err, data) => {
       this.screenWidth = px2vp(data[0].width);
       this.screenHeight = px2vp(data[0].height);
       this.contentHeight = this.screenHeight;
-      Logger.info(TAG + 'screenWidth = ' + this.screenWidth + '; screenHeight = ' + this.screenHeight);
+      logger.info(TAG + 'screenWidth = ' + this.screenWidth + '; screenHeight = ' + this.screenHeight);
     })
     if (this.videoController) {
       this.videoController.start();
@@ -156,17 +157,17 @@ struct ContinueSwitch {
   }
 
   aboutToAppear() {
-    Logger.info(TAG + 'aboutToAppear in');
+    logger.info(TAG + 'aboutToAppear in');
     let value = settings.getValueSync(context, 'Continue_Switch_Status', switchState.open);
     this.isSwitchOn = value != switchState.close ? true : false;
-    Logger.info(TAG + '<aboutToAppear> this.isSwitchOn : ' + this.isSwitchOn + '; value: ' + value);
+    logger.info(TAG + '<aboutToAppear> this.isSwitchOn : ' + this.isSwitchOn + '; value: ' + value);
 
     AppStorage.setOrCreate('isSwitchOn', this.isSwitchOn);
-    Logger.info(TAG + 'AppStorage.get<boolean>(isSwitchOn) : ' + AppStorage.get<boolean>('isSwitchOn'));
+    logger.info(TAG + 'AppStorage.get<boolean>(isSwitchOn) : ' + AppStorage.get<boolean>('isSwitchOn'));
 
     if (this.isSwitchOn) {
       let status: boolean = settings.setValueSync(context, 'Continue_Switch_Status', switchState.open);
-      Logger.info(TAG + 'set value success :' + status + '; set:Continue_Switch_Status is 1');
+      logger.info(TAG + 'set value success :' + status + '; set:Continue_Switch_Status is 1');
     }
 
     this.getStringSync();
@@ -179,22 +180,22 @@ struct ContinueSwitch {
   }
 
   getGapLength() {
-    Logger.info(TAG + 'getGapLength in, deviceInfo.deviceType : ' + deviceInfo.deviceType);
+    logger.info(TAG + 'getGapLength in, deviceInfo.deviceType : ' + deviceInfo.deviceType);
     if (deviceInfo.deviceType == 'phone') {
       this.gapLength = CommonConstants.GENERAL_PHONE_GAP_LENGTH;
     } else if (deviceInfo.deviceType == '2in1' || deviceInfo.deviceType == 'tablet') {
       this.gapLength = CommonConstants.PC_PAD_GAP_LENGTH;
     }
-    Logger.info(TAG + 'this.gapLength : ' + this.gapLength);
+    logger.info(TAG + 'this.gapLength : ' + this.gapLength);
   }
 
   onBackPress() {
-    Logger.info(TAG + 'onBackPress in');
+    logger.info(TAG + 'onBackPress in');
   }
 
   async awaitTime(time: number) {
     setTimeout(() => {
-      Logger.info(TAG + 'awaitTime is' + time);
+      logger.info(TAG + 'awaitTime is' + time);
     }, time)
   }
 
@@ -209,7 +210,7 @@ struct ContinueSwitch {
             if (this.continueSession) {
               this.continueSession.sendData({ 'action': 'pop' })
             } else {
-              Logger.error(TAG + 'continueSession is undefined');
+              logger.error(TAG + 'continueSession is undefined');
             }
           }
         })
@@ -241,7 +242,7 @@ struct ContinueSwitch {
             .width('100%')
             .maxLines(10)
             .onAreaChange((oldArea: Area, newArea: Area) => {
-              Logger.info(TAG + 'Text:continue desc, oldArea.height = ' + oldArea.height + ', newArea.height = ' + newArea.height);
+              logger.info(TAG + 'Text:continue desc, oldArea.height = ' + oldArea.height + ', newArea.height = ' + newArea.height);
             })
 
           Column() {
@@ -261,15 +262,15 @@ struct ContinueSwitch {
                 .height(20)
                 .hoverEffect(HoverEffect.None)
                 .onChange((isOn: boolean) => {
-                  Logger.info(TAG + 'isOn:' + isOn);
+                  logger.info(TAG + 'isOn:' + isOn);
                   this.isSwitchOn = isOn;
                   AppStorage.setAndLink('isSwitchOn', isOn);
                   if (isOn) {
                     let status: boolean = settings.setValueSync(context, 'Continue_Switch_Status', switchState.open);
-                    Logger.info(TAG + 'is set success :' + status + '; set:Continue_Switch_Status is on');
+                    logger.info(TAG + 'is set success :' + status + '; set:Continue_Switch_Status is on');
                   } else {
                     let status: boolean = settings.setValueSync(context, 'Continue_Switch_Status', switchState.close);
-                    Logger.info(TAG + 'is set success :' + status + '; set:Continue_Switch_Status is close');
+                    logger.info(TAG + 'is set success :' + status + '; set:Continue_Switch_Status is close');
                   }
                 })
             }
@@ -291,7 +292,7 @@ struct ContinueSwitch {
                 .textAlign(TextAlign.Start)
                 .width('100%')
                 .onAreaChange((oldArea: Area, newArea: Area) => {
-                  Logger.info(TAG + 'Text:continue_privacy_text, continue desc, oldArea.height = ' + oldArea.height + ', newArea.height = ' + newArea.height);
+                  logger.info(TAG + 'Text:continue_privacy_text, continue desc, oldArea.height = ' + oldArea.height + ', newArea.height = ' + newArea.height);
                 })
             }
             .padding({ left: 8, right: 8 })
@@ -320,16 +321,16 @@ struct ContinueSwitch {
         console.info('Scroll Stop');
       })
       .onAreaChange((oldArea: Area, newArea: Area) => {
-        Logger.info(TAG + 'Scroll, oldArea.height = ' + oldArea.height + ', newArea.height = ' + newArea.height);
+        logger.info(TAG + 'Scroll, oldArea.height = ' + oldArea.height + ', newArea.height = ' + newArea.height);
       })
     }
     .width('100%')
     .height('100%')
     .backgroundColor($r('sys.color.ohos_id_color_sub_background'))
     .onAreaChange((oldArea: Area, newArea: Area) => {
-      Logger.info(TAG + 'build column , oldArea.height = ' + oldArea.height + ', newArea.height = ' + newArea.height);
+      logger.info(TAG + 'build column , oldArea.height = ' + oldArea.height + ', newArea.height = ' + newArea.height);
       this.getImageAnimatorSize(newArea.height, newArea.width);
-      Logger.info(TAG + 'this.shortSideSize = ' + this.shortSideSize + ', this.imageAnimatorWidth = ' + this.imageAnimatorWidth + ', this.imageAnimatorHeight = ' + this.imageAnimatorHeight);
+      logger.info(TAG + 'this.shortSideSize = ' + this.shortSideSize + ', this.imageAnimatorWidth = ' + this.imageAnimatorWidth + ', this.imageAnimatorHeight = ' + this.imageAnimatorHeight);
     })
   }
 }

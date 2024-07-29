@@ -41,4 +41,4 @@ class LoggerModel {
   }
 }
 
-export let Logger = new LoggerModel('[DHardware_UI]');
+export let logger = new LoggerModel('[DHardware_UI]');
