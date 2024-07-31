@@ -35,7 +35,7 @@ PublisherItem::~PublisherItem()
     listeners_.clear();
 }
 
-void PublisherItem::AddListener(const sptr<IPublisherListener> &listener)
+void PublisherItem::AddListener(const sptr<IPublisherListener> listener)
 {
     if (listener == nullptr) {
         DHLOGE("Add null publisher listener");
@@ -46,7 +46,7 @@ void PublisherItem::AddListener(const sptr<IPublisherListener> &listener)
     listeners_.insert(listener);
 }
 
-void PublisherItem::RemoveListener(const sptr<IPublisherListener> &listener)
+void PublisherItem::RemoveListener(const sptr<IPublisherListener> listener)
 {
     if (listener == nullptr) {
         DHLOGE("Remove null publisher listener");

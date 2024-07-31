@@ -175,7 +175,7 @@ void LocalCapabilityInfoManager::GetCapabilitiesByDeviceId(const std::string &de
 }
 
 int32_t LocalCapabilityInfoManager::GetCapability(const std::string &deviceId, const std::string &dhId,
-    std::shared_ptr<CapabilityInfo> &capPtr)
+    std::shared_ptr<CapabilityInfo> capPtr)
 {
     std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
     std::string key = GetCapabilityKey(deviceId, dhId);
@@ -187,7 +187,7 @@ int32_t LocalCapabilityInfoManager::GetCapability(const std::string &deviceId, c
     return DH_FWK_SUCCESS;
 }
 
-int32_t LocalCapabilityInfoManager::GetDataByKey(const std::string &key, std::shared_ptr<CapabilityInfo> &capInfoPtr)
+int32_t LocalCapabilityInfoManager::GetDataByKey(const std::string &key, std::shared_ptr<CapabilityInfo> capInfoPtr)
 {
     std::lock_guard<std::mutex> lock(capInfoMgrMutex_);
     if (dbAdapterPtr_ == nullptr) {

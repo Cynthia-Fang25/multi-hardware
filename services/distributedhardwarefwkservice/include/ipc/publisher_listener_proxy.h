@@ -24,7 +24,7 @@ namespace OHOS {
 namespace DistributedHardware {
 class PublisherListenerProxy : public IRemoteProxy<IPublisherListener> {
 public:
-    explicit PublisherListenerProxy(const sptr<IRemoteObject> &object);
+    explicit PublisherListenerProxy(const sptr<IRemoteObject> object);
 
     virtual ~PublisherListenerProxy() override;
 

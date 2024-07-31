@@ -54,7 +54,7 @@ std::shared_ptr<MetaInfoManager> MetaInfoManager::GetInstance()
 }
 
 MetaInfoManager::MetaInfoManagerEventHandler::MetaInfoManagerEventHandler(
-    const std::shared_ptr<AppExecFwk::EventRunner> &runner, std::shared_ptr<MetaInfoManager> metaInfoMgrPtr)
+    const std::shared_ptr<AppExecFwk::EventRunner> runner, std::shared_ptr<MetaInfoManager> metaInfoMgrPtr)
     : AppExecFwk::EventHandler(runner), metaInfoMgrWPtr_(metaInfoMgrPtr)
 {
     DHLOGI("Ctor MetaInfoManagerEventHandler");
@@ -268,7 +268,7 @@ int32_t MetaInfoManager::RemoveMetaInfoByKey(const std::string &key)
 }
 
 int32_t MetaInfoManager::GetMetaCapInfo(const std::string &udidHash,
-    const std::string &dhId, std::shared_ptr<MetaCapabilityInfo> &metaCapPtr)
+    const std::string &dhId, std::shared_ptr<MetaCapabilityInfo> metaCapPtr)
 {
     std::lock_guard<std::mutex> lock(metaInfoMgrMutex_);
     std::string key = GetCapabilityKey(udidHash, dhId);
@@ -291,7 +291,7 @@ void MetaInfoManager::GetMetaCapInfosByUdidHash(const std::string &udidHash,
     }
 }
 
-int32_t MetaInfoManager::GetMetaCapByValue(const std::string &value, std::shared_ptr<MetaCapabilityInfo> &metaCapPtr)
+int32_t MetaInfoManager::GetMetaCapByValue(const std::string &value, std::shared_ptr<MetaCapabilityInfo> metaCapPtr)
 {
     if (metaCapPtr == nullptr) {
         metaCapPtr = std::make_shared<MetaCapabilityInfo>();
