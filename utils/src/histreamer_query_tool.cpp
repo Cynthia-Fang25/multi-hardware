@@ -48,6 +48,12 @@ void HiStreamerQueryTool::Init()
         return;
     }
     DHLOGI("Start Init HiStreamer Query SO");
+    char path[PATH_MAX + 1] = {0x00};
+    if (LOAD_SO.length() == 0 || LOAD_SO.length() > PATH_MAX || realpath(LOAD_SO.c_str(), path) == nullptr) {
+        std::string loadPath(path);
+        DHLOGE("File canonicalization failed, loadPath: %{public}s", loadPath.c_str());
+        return;
+    }
     void *pHandler = dlopen(LOAD_SO.c_str(), RTLD_LAZY | RTLD_NODELETE);
     if (pHandler == nullptr) {
         DHLOGE("libhistreamer_ability_querier.z.so handler load failed, failed reason : %{public}s", dlerror());

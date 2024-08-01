@@ -365,11 +365,14 @@ void ComponentLoader::StoreLocalDHVersionInDB()
 
 void *ComponentLoader::GetHandler(const std::string &soName)
 {
-    if (soName.length() == 0 || soName.length() > PATH_MAX) {
-        DHLOGE("File canonicalization failed, soName: %{public}s", soName.c_str());
+    char path[PATH_MAX + 1] = {0x00};
+    if (soName.length() == 0 || soName.length() > PATH_MAX || realpath(soName.c_str(), path) == nullptr) {
+        std::string loadPath(path);
+        DHLOGE("File canonicalization failed, soName: %{public}s, loadPath:%{public}s", soName.c_str(),
+            loadPath.c_str());
         return nullptr;
     }
-    void *pHandler = dlopen(soName.c_str(), RTLD_LAZY | RTLD_NODELETE);
+    void *pHandler = dlopen(path, RTLD_LAZY | RTLD_NODELETE);
     if (pHandler == nullptr) {
         DHLOGE("so: %{public}s load failed, failed reason: %{public}s", soName.c_str(), dlerror());
         HiSysEventWriteMsg(DHFWK_INIT_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
