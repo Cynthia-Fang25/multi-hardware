@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -970,7 +970,7 @@ template<typename T>
 void FromJson(const std::string &key, const cJSON *jsonObject, std::vector<T> &objs)
 {
     cJSON *objJson = cJSON_GetObjectItemCaseSensitive(jsonObject, key.c_str());
-    if (objJson == nullptr) {
+    if (objJson == nullptr || !cJSON_IsArray(objJson)) {
         AVTRANS_LOGE("JSONObject key invalid, key: %{public}s", key.c_str());
         return;
     }
