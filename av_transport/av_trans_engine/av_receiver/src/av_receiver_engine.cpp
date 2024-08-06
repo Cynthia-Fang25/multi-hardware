@@ -94,9 +94,9 @@ int32_t AVReceiverEngine::InitPipeline()
         }
     } else if ((ownerName_ == OWNER_NAME_D_MIC) || (ownerName_ == OWNER_NAME_D_SPEAKER) ||
                (ownerName_ == OWNER_NAME_D_VIRMODEM_MIC) || (ownerName_ == OWNER_NAME_D_VIRMODEM_SPEAKER)) {
-        ret = pipeline_->AddFilters({avInput_.get(), avOutput_.get()});
+        ret = pipeline_->AddFilters({avInput_.get(), audioDecoder_.get(), avOutput_.get()});
         if (ret == ErrorCode::SUCCESS) {
-            ret = pipeline_->LinkFilters({avInput_.get(), avOutput_.get()});
+            ret = pipeline_->LinkFilters({avInput_.get(), audioDecoder_.get(), avOutput_.get()});
         }
     } else {
         AVTRANS_LOGI("unsupport ownerName:%{public}s", ownerName_.c_str());
@@ -425,11 +425,11 @@ void AVReceiverEngine::SetAudioCodecType(const std::string &value)
         AVTRANS_LOGE("avInput_ or avOutput_ is nullptr.");
         return;
     }
-    std::string mime = MEDIA_MIME_AUDIO_AAC;
+    std::string mime = MEDIA_MIME_AUDIO_OPUS;
     avInput_->SetParameter(static_cast<int32_t>(Plugin::Tag::MIME), mime);
     mime = MEDIA_MIME_AUDIO_RAW;
     avOutput_->SetParameter(static_cast<int32_t>(Plugin::Tag::MIME), mime);
-    AVTRANS_LOGI("SetParameter AUDIO_CODEC_TYPE = AAC success");
+    AVTRANS_LOGI("SetParameter AUDIO_CODEC_TYPE = OPUS success");
 }
 
 void AVReceiverEngine::SetAudioChannelMask(const std::string &value)
