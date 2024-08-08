@@ -39,7 +39,7 @@ enum class CapabilityInfoFilter : uint32_t {
 };
 
 template<typename T>
-int32_t GetCapabilityByValue(const std::string &value, std::shared_ptr<T> &capPtr)
+int32_t GetCapabilityByValue(const std::string &value, std::shared_ptr<T> capPtr)
 {
     if (capPtr == nullptr) {
         capPtr = std::make_shared<T>();

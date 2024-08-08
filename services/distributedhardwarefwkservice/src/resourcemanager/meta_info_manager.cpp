@@ -54,7 +54,7 @@ std::shared_ptr<MetaInfoManager> MetaInfoManager::GetInstance()
 }
 
 MetaInfoManager::MetaInfoManagerEventHandler::MetaInfoManagerEventHandler(
-    const std::shared_ptr<AppExecFwk::EventRunner> &runner, std::shared_ptr<MetaInfoManager> metaInfoMgrPtr)
+    const std::shared_ptr<AppExecFwk::EventRunner> runner, std::shared_ptr<MetaInfoManager> metaInfoMgrPtr)
     : AppExecFwk::EventHandler(runner), metaInfoMgrWPtr_(metaInfoMgrPtr)
 {
     DHLOGI("Ctor MetaInfoManagerEventHandler");
@@ -277,7 +277,7 @@ int32_t MetaInfoManager::RemoveMetaInfoByKey(const std::string &key)
 }
 
 int32_t MetaInfoManager::GetMetaCapInfo(const std::string &udidHash,
-    const std::string &dhId, std::shared_ptr<MetaCapabilityInfo> &metaCapPtr)
+    const std::string &dhId, std::shared_ptr<MetaCapabilityInfo> metaCapPtr)
 {
     if (!IsHashSizeValid(udidHash) || !IsIdLengthValid(dhId)) {
         return ERR_DH_FWK_PARA_INVALID;
@@ -306,7 +306,7 @@ void MetaInfoManager::GetMetaCapInfosByUdidHash(const std::string &udidHash,
     }
 }
 
-int32_t MetaInfoManager::GetMetaCapByValue(const std::string &value, std::shared_ptr<MetaCapabilityInfo> &metaCapPtr)
+int32_t MetaInfoManager::GetMetaCapByValue(const std::string &value, std::shared_ptr<MetaCapabilityInfo> metaCapPtr)
 {
     if (!IsMessageLengthValid(value)) {
         return ERR_DH_FWK_PARA_INVALID;

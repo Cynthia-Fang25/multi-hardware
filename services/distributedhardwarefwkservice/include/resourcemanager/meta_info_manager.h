@@ -45,7 +45,7 @@ public:
     int32_t GetDataByKeyPrefix(const std::string &keyPrefix, MetaCapInfoMap &metaCapMap);
     int32_t RemoveMetaInfoByKey(const std::string &key);
     int32_t GetMetaCapInfo(const std::string &udidHash, const std::string &dhId,
-        std::shared_ptr<MetaCapabilityInfo> &metaCapPtr);
+        std::shared_ptr<MetaCapabilityInfo> metaCapPtr);
     void GetMetaCapInfosByUdidHash(const std::string &udidHash,
         std::vector<std::shared_ptr<MetaCapabilityInfo>> &metaCapInfos);
     /* Database data changes callback */
@@ -55,7 +55,7 @@ public:
 
     class MetaInfoManagerEventHandler : public AppExecFwk::EventHandler {
         public:
-            MetaInfoManagerEventHandler(const std::shared_ptr<AppExecFwk::EventRunner> &runner,
+            MetaInfoManagerEventHandler(const std::shared_ptr<AppExecFwk::EventRunner> runner,
                 std::shared_ptr<MetaInfoManager> metaInfoMgrPtr);
             ~MetaInfoManagerEventHandler() override = default;
             void ProcessEvent(const AppExecFwk::InnerEvent::Pointer &event) override;
@@ -66,7 +66,7 @@ public:
 
 private:
     MetaInfoManager();
-    int32_t GetMetaCapByValue(const std::string &value, std::shared_ptr<MetaCapabilityInfo> &metaCapPtr);
+    int32_t GetMetaCapByValue(const std::string &value, std::shared_ptr<MetaCapabilityInfo> metaCapPtr);
     void HandleMetaCapabilityAddChange(const std::vector<DistributedKv::Entry> &insertRecords);
     void HandleMetaCapabilityUpdateChange(const std::vector<DistributedKv::Entry> &updateRecords);
     void HandleMetaCapabilityDeleteChange(const std::vector<DistributedKv::Entry> &deleteRecords);

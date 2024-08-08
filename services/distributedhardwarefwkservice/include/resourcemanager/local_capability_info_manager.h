@@ -50,8 +50,8 @@ public:
         std::vector<std::shared_ptr<CapabilityInfo>> &resInfos);
     /* Queries capability information based on deviceId and dhId. */
     int32_t GetCapability(const std::string &deviceId, const std::string &dhId,
-        std::shared_ptr<CapabilityInfo> &capPtr);
-    int32_t GetDataByKey(const std::string &key, std::shared_ptr<CapabilityInfo>& capInfoPtr);
+        std::shared_ptr<CapabilityInfo> capPtr);
+    int32_t GetDataByKey(const std::string &key, std::shared_ptr<CapabilityInfo> capInfoPtr);
     /* Query batch records by dhtype */
     int32_t GetDataByDHType(const DHType dhType, CapabilityInfoMap &capabilityMap);
     /* Queries batch records in the database based on the prefix of the key. */
