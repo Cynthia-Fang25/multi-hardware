@@ -167,16 +167,19 @@ int32_t CapabilityInfoManager::SyncRemoteCapabilityInfos()
         std::shared_ptr<CapabilityInfo> capabilityInfo;
         if (GetCapabilityByValue<CapabilityInfo>(data, capabilityInfo) != DH_FWK_SUCCESS) {
             DHLOGE("Get capability ptr by value failed");
+            capabilityInfo = nullptr;
             continue;
         }
         const std::string &deviceId = capabilityInfo->GetDeviceId();
         const std::string &localDeviceId = DHContext::GetInstance().GetDeviceInfo().deviceId;
         if (deviceId.compare(localDeviceId) == 0) {
             DHLOGE("local device info not need sync from db");
+            capabilityInfo = nullptr;
             continue;
         }
         if (!DHContext::GetInstance().IsDeviceOnline(DHContext::GetInstance().GetUUIDByDeviceId(deviceId))) {
             DHLOGE("offline device, no need sync to memory, deviceId : %{public}s ", GetAnonyString(deviceId).c_str());
+            capabilityInfo = nullptr;
             continue;
         }
         globalCapInfoMap_[capabilityInfo->GetKey()] = capabilityInfo;
@@ -385,17 +388,20 @@ void CapabilityInfoManager::HandleCapabilityAddChange(const std::vector<Distribu
         std::shared_ptr<CapabilityInfo> capPtr;
         if (GetCapabilityByValue<CapabilityInfo>(value, capPtr) != DH_FWK_SUCCESS) {
             DHLOGE("Get capability by value failed");
+            capPtr = nullptr;
             continue;
         }
         std::string uuid = DHContext::GetInstance().GetUUIDByDeviceId(capPtr->GetDeviceId());
         if (uuid.empty()) {
             DHLOGE("Find uuid failed and never enable, deviceId: %{public}s",
                 GetAnonyString(capPtr->GetDeviceId()).c_str());
+            capPtr = nullptr;
             continue;
         }
         std::string networkId = DHContext::GetInstance().GetNetworkIdByUUID(uuid);
         if (networkId.empty()) {
             DHLOGE("Find network failed and never enable, uuid: %{public}s", GetAnonyString(uuid).c_str());
+            capPtr = nullptr;
             continue;
         }
 
@@ -425,22 +431,26 @@ void CapabilityInfoManager::HandleCapabilityUpdateChange(const std::vector<Distr
         std::shared_ptr<CapabilityInfo> capPtr;
         if (GetCapabilityByValue<CapabilityInfo>(value, capPtr) != DH_FWK_SUCCESS) {
             DHLOGE("Get capability by value failed");
+            capPtr = nullptr;
             continue;
         }
         std::string uuid = DHContext::GetInstance().GetUUIDByDeviceId(capPtr->GetDeviceId());
         if (uuid.empty()) {
             DHLOGE("Find uuid failed and never enable, deviceId: %{public}s",
                 GetAnonyString(capPtr->GetDeviceId()).c_str());
+            capPtr = nullptr;
             continue;
         }
         std::string networkId = DHContext::GetInstance().GetNetworkIdByUUID(uuid);
         if (networkId.empty()) {
             DHLOGE("Find network failed and never enable, uuid: %{public}s", GetAnonyString(uuid).c_str());
+            capPtr = nullptr;
             continue;
         }
         std::string enabledDeviceKey = GetCapabilityKey(capPtr->GetDeviceId(), capPtr->GetDHId());
         if (TaskBoard::GetInstance().IsEnabledDevice(enabledDeviceKey)) {
             DHLOGI("The deviceKey: %{public}s is enabled.", GetAnonyString(enabledDeviceKey).c_str());
+            capPtr = nullptr;
             continue;
         }
         const auto keyString = capPtr->GetKey();
@@ -469,17 +479,20 @@ void CapabilityInfoManager::HandleCapabilityDeleteChange(const std::vector<Distr
         std::shared_ptr<CapabilityInfo> capPtr;
         if (GetCapabilityByValue<CapabilityInfo>(value, capPtr) != DH_FWK_SUCCESS) {
             DHLOGE("Get capability by value failed");
+            capPtr = nullptr;
             continue;
         }
         const auto keyString = capPtr->GetKey();
         std::string uuid = DHContext::GetInstance().GetUUIDByDeviceId(capPtr->GetDeviceId());
         if (uuid.empty()) {
             DHLOGI("Find uuid failed and never disable");
+            capPtr = nullptr;
             continue;
         }
         std::string networkId = DHContext::GetInstance().GetNetworkIdByUUID(uuid);
         if (networkId.empty()) {
             DHLOGI("Find network failed and never disable, uuid: %{public}s", GetAnonyString(uuid).c_str());
+            capPtr = nullptr;
             continue;
         }
         TaskParam taskParam = {

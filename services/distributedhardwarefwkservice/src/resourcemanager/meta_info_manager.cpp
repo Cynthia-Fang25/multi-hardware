@@ -203,18 +203,21 @@ int32_t MetaInfoManager::SyncRemoteMetaInfos()
         std::shared_ptr<MetaCapabilityInfo> metaCapInfo;
         if (GetMetaCapByValue(data, metaCapInfo) != DH_FWK_SUCCESS) {
             DHLOGE("Get Metainfo ptr by value failed");
+            metaCapInfo = nullptr;
             continue;
         }
         const std::string &udidHash = metaCapInfo->GetUdidHash();
         const std::string &localUdidHash = DHContext::GetInstance().GetDeviceInfo().udidHash;
         if (udidHash.compare(localUdidHash) == 0) {
             DHLOGE("device MetaInfo not need sync from db");
+            metaCapInfo = nullptr;
             continue;
         }
         if (!DHContext::GetInstance().IsDeviceOnline(
             DHContext::GetInstance().GetUUIDByDeviceId(metaCapInfo->GetDeviceId()))) {
             DHLOGE("offline device, no need sync to memory, udidHash : %{public}s",
                 GetAnonyString(metaCapInfo->GetUdidHash()).c_str());
+            metaCapInfo = nullptr;
             continue;
         }
         globalMetaInfoMap_[metaCapInfo->GetKey()] = metaCapInfo;
@@ -380,17 +383,20 @@ void MetaInfoManager::HandleMetaCapabilityAddChange(const std::vector<Distribute
         std::shared_ptr<MetaCapabilityInfo> capPtr;
         if (GetCapabilityByValue<MetaCapabilityInfo>(value, capPtr) != DH_FWK_SUCCESS) {
             DHLOGE("Get Meta capability by value failed");
+            capPtr = nullptr;
             continue;
         }
         std::string uuid = DHContext::GetInstance().GetUUIDByDeviceId(capPtr->GetDeviceId());
         if (uuid.empty()) {
             DHLOGE("Find uuid failed and never enable, deviceId: %{public}s",
                 GetAnonyString(capPtr->GetDeviceId()).c_str());
+            capPtr = nullptr;
             continue;
         }
         std::string networkId = DHContext::GetInstance().GetNetworkIdByUUID(uuid);
         if (networkId.empty()) {
             DHLOGE("Find network failed and never enable, uuid: %{public}s", GetAnonyString(uuid).c_str());
+            capPtr = nullptr;
             continue;
         }
 
@@ -416,22 +422,26 @@ void MetaInfoManager::HandleMetaCapabilityUpdateChange(const std::vector<Distrib
         std::shared_ptr<MetaCapabilityInfo> capPtr;
         if (GetCapabilityByValue<MetaCapabilityInfo>(value, capPtr) != DH_FWK_SUCCESS) {
             DHLOGE("Get Meta capability by value failed");
+            capPtr = nullptr;
             continue;
         }
         std::string uuid = DHContext::GetInstance().GetUUIDByDeviceId(capPtr->GetDeviceId());
         if (uuid.empty()) {
             DHLOGE("Find uuid failed and never enable, deviceId: %{public}s",
                 GetAnonyString(capPtr->GetDeviceId()).c_str());
+            capPtr = nullptr;
             continue;
         }
         std::string networkId = DHContext::GetInstance().GetNetworkIdByUUID(uuid);
         if (networkId.empty()) {
             DHLOGE("Find network failed and never enable, uuid: %{public}s", GetAnonyString(uuid).c_str());
+            capPtr = nullptr;
             continue;
         }
         std::string enabledDeviceKey = GetCapabilityKey(capPtr->GetDeviceId(), capPtr->GetDHId());
         if (TaskBoard::GetInstance().IsEnabledDevice(enabledDeviceKey)) {
             DHLOGI("The deviceKey: %{public}s is enabled.", GetAnonyString(enabledDeviceKey).c_str());
+            capPtr = nullptr;
             continue;
         }
         const auto keyString = capPtr->GetKey();
