@@ -219,10 +219,9 @@ int32_t DistributedHardwareManagerFactory::SendOffLineEvent(const std::string &n
 }
 
 int32_t DistributedHardwareManagerFactory::SendDeviceChangedEvent(const std::string &networkId, const std::string &uuid,
-    uint16_t deviceType)
+    const std::string &udid, uint16_t deviceType)
 {
-    if (networkId.empty() || networkId.size() > MAX_ID_LEN || uuid.empty() || uuid.size() > MAX_ID_LEN) {
-        DHLOGE("NetworkId or uuid is invalid");
+    if (!IsIdLengthValid(networkId) || !IsIdLengthValid(uuid) || !IsIdLengthValid(udid)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
 
@@ -237,7 +236,7 @@ int32_t DistributedHardwareManagerFactory::SendDeviceChangedEvent(const std::str
         return ERR_DH_FWK_HARDWARE_MANAGER_DEVICE_NOT_ONLINE;
     }
 
-    auto result = DistributedHardwareManager::GetInstance().SendDeviceChangedEvent(networkId, uuid, deviceType);
+    auto result = DistributedHardwareManager::GetInstance().SendDeviceChangedEvent(networkId, uuid, udid, deviceType);
     if (result != DH_FWK_SUCCESS) {
         DHLOGE("offline failed, errCode = %{public}d", result);
         return result;
