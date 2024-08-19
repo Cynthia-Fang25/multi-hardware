@@ -37,6 +37,9 @@ AVSenderEngineProvider::~AVSenderEngineProvider()
     AVTRANS_LOGI("AVSenderEngineProvider dctor.");
     std::lock_guard<std::mutex> lock(listMutex_);
     for (auto &sender : senderEngineList_) {
+        if (sender == nullptr) {
+            continue;
+        }
         sender->Release();
     }
     if (ownerName_ == OWNER_NAME_D_MIC || ownerName_ == OWNER_NAME_D_VIRMODEM_MIC) {
@@ -72,6 +75,7 @@ std::vector<std::shared_ptr<IAVSenderEngine>> AVSenderEngineProvider::GetAVSende
 
 int32_t AVSenderEngineProvider::RegisterProviderCallback(const std::shared_ptr<IAVEngineProviderCallback> &callback)
 {
+    std::lock_guard<std::mutex> lock(callbackMutex_);
     providerCallback_ = callback;
     return DH_AVT_SUCCESS;
 }
@@ -79,6 +83,7 @@ int32_t AVSenderEngineProvider::RegisterProviderCallback(const std::shared_ptr<I
 void AVSenderEngineProvider::OnChannelEvent(const AVTransEvent &event)
 {
     if (providerCallback_ == nullptr) {
+        AVTRANS_LOGE("providerCallback_ is nullptr");
         return;
     }
     if ((event.type == EventType::EVENT_CHANNEL_OPENED) || (event.type == EventType::EVENT_CHANNEL_CLOSED)) {

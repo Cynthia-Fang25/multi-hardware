@@ -21,10 +21,12 @@
 #include "anonymous_string.h"
 #include "constants.h"
 #include "dhardware_ipc_interface_code.h"
+#include "dh_context.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
 #include "ipc_skeleton.h"
 #include "publisher_listener_proxy.h"
+#include "tokenid_kit.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -83,6 +85,11 @@ int32_t DistributedHardwareStub::OnRemoteRequest(uint32_t code, MessageParcel &d
 
 int32_t DistributedHardwareStub::RegisterPublisherListenerInner(MessageParcel &data, MessageParcel &reply)
 {
+    if (!HasAccessDHPermission()) {
+        DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
+        return ERR_DH_FWK_ACCESS_PERMISSION_CHECK_FAIL;
+    }
+
     uint32_t topicInt = data.ReadUint32();
     if (!ValidTopic(topicInt)) {
         DHLOGE("Topic invalid: %{public}" PRIu32, topicInt);
@@ -105,6 +112,11 @@ int32_t DistributedHardwareStub::RegisterPublisherListenerInner(MessageParcel &d
 
 int32_t DistributedHardwareStub::UnregisterPublisherListenerInner(MessageParcel &data, MessageParcel &reply)
 {
+    if (!HasAccessDHPermission()) {
+        DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
+        return ERR_DH_FWK_ACCESS_PERMISSION_CHECK_FAIL;
+    }
+
     uint32_t topicInt = data.ReadUint32();
     if (!ValidTopic(topicInt)) {
         DHLOGE("Topic invalid: %{public}" PRIu32, topicInt);
@@ -127,6 +139,11 @@ int32_t DistributedHardwareStub::UnregisterPublisherListenerInner(MessageParcel 
 
 int32_t DistributedHardwareStub::PublishMessageInner(MessageParcel &data, MessageParcel &reply)
 {
+    if (!HasAccessDHPermission()) {
+        DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
+        return ERR_DH_FWK_ACCESS_PERMISSION_CHECK_FAIL;
+    }
+
     uint32_t topicInt = data.ReadUint32();
     if (!ValidTopic(topicInt)) {
         DHLOGE("Topic invalid: %{public}" PRIu32, topicInt);
@@ -144,6 +161,11 @@ int32_t DistributedHardwareStub::PublishMessageInner(MessageParcel &data, Messag
 
 int32_t DistributedHardwareStub::QueryLocalSysSpecInner(MessageParcel &data, MessageParcel &reply)
 {
+    if (!HasAccessDHPermission()) {
+        DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
+        return ERR_DH_FWK_ACCESS_PERMISSION_CHECK_FAIL;
+    }
+
     uint32_t specInt = data.ReadUint32();
     if (!ValidQueryLocalSpec(specInt)) {
         DHLOGE("Spec invalid: %{public}" PRIu32, specInt);
@@ -161,6 +183,11 @@ int32_t DistributedHardwareStub::QueryLocalSysSpecInner(MessageParcel &data, Mes
 
 int32_t DistributedHardwareStub::InitializeAVCenterInner(MessageParcel &data, MessageParcel &reply)
 {
+    if (!HasAccessDHPermission()) {
+        DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
+        return ERR_DH_FWK_ACCESS_PERMISSION_CHECK_FAIL;
+    }
+
     TransRole transRole = (TransRole)(data.ReadUint32());
     int32_t engineId = 0;
     int32_t ret = InitializeAVCenter(transRole, engineId);
@@ -177,6 +204,11 @@ int32_t DistributedHardwareStub::InitializeAVCenterInner(MessageParcel &data, Me
 
 int32_t DistributedHardwareStub::ReleaseAVCenterInner(MessageParcel &data, MessageParcel &reply)
 {
+    if (!HasAccessDHPermission()) {
+        DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
+        return ERR_DH_FWK_ACCESS_PERMISSION_CHECK_FAIL;
+    }
+
     int32_t engineId = data.ReadInt32();
     int32_t ret = ReleaseAVCenter(engineId);
     if (!reply.WriteInt32(ret)) {
@@ -188,6 +220,11 @@ int32_t DistributedHardwareStub::ReleaseAVCenterInner(MessageParcel &data, Messa
 
 int32_t DistributedHardwareStub::CreateControlChannelInner(MessageParcel &data, MessageParcel &reply)
 {
+    if (!HasAccessDHPermission()) {
+        DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
+        return ERR_DH_FWK_ACCESS_PERMISSION_CHECK_FAIL;
+    }
+
     int32_t engineId = data.ReadInt32();
     std::string peerDevId = data.ReadString();
     int32_t ret = CreateControlChannel(engineId, peerDevId);
@@ -200,6 +237,11 @@ int32_t DistributedHardwareStub::CreateControlChannelInner(MessageParcel &data, 
 
 int32_t DistributedHardwareStub::NotifyAVCenterInner(MessageParcel &data, MessageParcel &reply)
 {
+    if (!HasAccessDHPermission()) {
+        DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
+        return ERR_DH_FWK_ACCESS_PERMISSION_CHECK_FAIL;
+    }
+
     int32_t engineId = data.ReadInt32();
     uint32_t type = data.ReadUint32();
     std::string content = data.ReadString();
@@ -214,6 +256,11 @@ int32_t DistributedHardwareStub::NotifyAVCenterInner(MessageParcel &data, Messag
 
 int32_t DistributedHardwareStub::RegisterControlCenterCallbackInner(MessageParcel &data, MessageParcel &reply)
 {
+    if (!HasAccessDHPermission()) {
+        DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
+        return ERR_DH_FWK_ACCESS_PERMISSION_CHECK_FAIL;
+    }
+
     int32_t engineId = data.ReadInt32();
     sptr<IAVTransControlCenterCallback> callback = iface_cast<IAVTransControlCenterCallback>(data.ReadRemoteObject());
     if (callback == nullptr) {
@@ -232,9 +279,21 @@ int32_t DistributedHardwareStub::RegisterControlCenterCallbackInner(MessageParce
 int32_t OHOS::DistributedHardware::DistributedHardwareStub::HandleNotifySourceRemoteSinkStarted(MessageParcel &data,
     MessageParcel &reply)
 {
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    std::string udid = data.ReadString();
+    std::string networkId = DHContext::GetInstance().GetNetworkIdByUDID(udid);
+    uint32_t dAccessToken = Security::AccessToken::AccessTokenKit::AllocLocalTokenID(networkId,
+        callerToken);
+    const std::string permissionName = "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE";
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(dAccessToken,
+        permissionName);
+    if (result != Security::AccessToken::PERMISSION_GRANTED) {
+        DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
+        return ERR_DH_FWK_ACCESS_PERMISSION_CHECK_FAIL;
+    }
+
     DHLOGI("DistributedHardwareStub HandleNotifySourceRemoteSinkStarted Start.");
-    std::string deviceId = data.ReadString();
-    int32_t ret = NotifySourceRemoteSinkStarted(deviceId);
+    int32_t ret = NotifySourceRemoteSinkStarted(udid);
     if (!reply.WriteInt32(ret)) {
         DHLOGE("write ret failed.");
         return ERR_DH_FWK_SERVICE_WRITE_INFO_FAIL;
@@ -261,6 +320,10 @@ bool DistributedHardwareStub::ValidQueryLocalSpec(uint32_t spec)
 
 int32_t DistributedHardwareStub::PauseDistributedHardwareInner(MessageParcel &data, MessageParcel &reply)
 {
+    if (!IsSystemHap()) {
+        DHLOGE("GetCallerProcessName not system hap.");
+        return ERR_DH_FWK_IS_SYSTEM_HAP_CHECK_FAIL;
+    }
     if (!HasAccessDHPermission()) {
         DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
         return ERR_DH_FWK_ACCESS_PERMISSION_CHECK_FAIL;
@@ -277,6 +340,10 @@ int32_t DistributedHardwareStub::PauseDistributedHardwareInner(MessageParcel &da
 
 int32_t DistributedHardwareStub::ResumeDistributedHardwareInner(MessageParcel &data, MessageParcel &reply)
 {
+    if (!IsSystemHap()) {
+        DHLOGE("GetCallerProcessName not system hap.");
+        return ERR_DH_FWK_IS_SYSTEM_HAP_CHECK_FAIL;
+    }
     if (!HasAccessDHPermission()) {
         DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
         return ERR_DH_FWK_ACCESS_PERMISSION_CHECK_FAIL;
@@ -293,6 +360,10 @@ int32_t DistributedHardwareStub::ResumeDistributedHardwareInner(MessageParcel &d
 
 int32_t DistributedHardwareStub::StopDistributedHardwareInner(MessageParcel &data, MessageParcel &reply)
 {
+    if (!IsSystemHap()) {
+        DHLOGE("GetCallerProcessName not system hap.");
+        return ERR_DH_FWK_IS_SYSTEM_HAP_CHECK_FAIL;
+    }
     if (!HasAccessDHPermission()) {
         DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
         return ERR_DH_FWK_ACCESS_PERMISSION_CHECK_FAIL;
@@ -314,6 +385,15 @@ bool DistributedHardwareStub::HasAccessDHPermission()
     int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
         permissionName);
     return (result == Security::AccessToken::PERMISSION_GRANTED);
+}
+
+bool DistributedHardwareStub::IsSystemHap()
+{
+    uint64_t fullTokenId = IPCSkeleton::GetCallingFullTokenID();
+    if (!OHOS::Security::AccessToken::TokenIdKit::IsSystemAppByFullTokenID(fullTokenId)) {
+        return false;
+    }
+    return true;
 }
 } // namespace DistributedHardware
 } // namespace OHOS

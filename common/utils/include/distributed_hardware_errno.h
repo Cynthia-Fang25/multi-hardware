@@ -96,6 +96,7 @@ namespace DistributedHardware {
     constexpr int32_t ERR_DH_FWK_SERVICE_WRITE_INFO_FAIL = -10807;
     constexpr int32_t ERR_DH_FWK_PUBLISHER_LISTENER_IS_NULL = -10808;
     constexpr int32_t ERR_DH_FWK_SERVICE_MSG_INVALID = -10809;
+    constexpr int32_t ERR_DH_FWK_AVTRANS_CALLBACK_IS_NULL = -10810;
 
     /* AccessManager errno, range: [-10900, -10999] */
     constexpr int32_t ERR_DH_FWK_ACCESS_INIT_DM_FAILED = -10900;
@@ -114,6 +115,7 @@ namespace DistributedHardware {
 
     /* DHFWK Check Permission errno, range: [-11200, -11299] */
     constexpr int32_t ERR_DH_FWK_ACCESS_PERMISSION_CHECK_FAIL = -11200;
+    constexpr int32_t ERR_DH_FWK_IS_SYSTEM_HAP_CHECK_FAIL = -11201;
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif // OHOS_DISTRIBUTED_HARDWARE_ERRNO

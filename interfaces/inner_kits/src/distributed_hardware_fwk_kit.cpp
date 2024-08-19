@@ -19,6 +19,7 @@
 
 #include "anonymous_string.h"
 #include "constants.h"
+#include "dh_utils_tool.h"
 #include "dhfwk_sa_manager.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
@@ -30,8 +31,7 @@ namespace DistributedHardware {
 DistributedHardwareFwkKit::DistributedHardwareFwkKit() : isDHFWKOnLine_(false)
 {
     DHLOGI("Ctor DistributedHardwareFwkKit");
-    DHFWKSAManager::GetInstance().RegisterSAStateCallback(
-        std::bind(&DistributedHardwareFwkKit::OnDHFWKOnLine, this, std::placeholders::_1));
+    DHFWKSAManager::GetInstance().RegisterSAStateCallback([this](bool isOnLine) { this->OnDHFWKOnLine(isOnLine); });
     DHFWKSAManager::GetInstance().RegisterAbilityListener();
 }
 
@@ -90,8 +90,7 @@ int32_t DistributedHardwareFwkKit::PublishMessage(const DHTopic topic, const std
         DHLOGE("Topic invalid, topic: %{public}" PRIu32, (uint32_t)topic);
         return ERR_DH_FWK_PARA_INVALID;
     }
-    if (message.empty() || message.size() > MAX_MESSAGE_LEN) {
-        DHLOGE("Message size is invalid!");
+    if (!IsMessageLengthValid(message)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
 
@@ -204,6 +203,9 @@ int32_t DistributedHardwareFwkKit::RegisterCtlCenterCallback(int32_t engineId,
 
 int32_t DistributedHardwareFwkKit::PauseDistributedHardware(DHType dhType, const std::string &networkId)
 {
+    if (!IsIdLengthValid(networkId)) {
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("Pause distributed hardware dhType %{public}u, networkId %{public}s", (uint32_t)dhType,
         GetAnonyString(networkId).c_str());
 
@@ -218,6 +220,9 @@ int32_t DistributedHardwareFwkKit::PauseDistributedHardware(DHType dhType, const
 
 int32_t DistributedHardwareFwkKit::ResumeDistributedHardware(DHType dhType, const std::string &networkId)
 {
+    if (!IsIdLengthValid(networkId)) {
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("Resume distributed hardware dhType %{public}u, networkId %{public}s", (uint32_t)dhType,
         GetAnonyString(networkId).c_str());
 
@@ -232,6 +237,9 @@ int32_t DistributedHardwareFwkKit::ResumeDistributedHardware(DHType dhType, cons
 
 int32_t DistributedHardwareFwkKit::StopDistributedHardware(DHType dhType, const std::string &networkId)
 {
+    if (!IsIdLengthValid(networkId)) {
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("Stop distributed hardware dhType %{public}u, networkId %{public}s", (uint32_t)dhType,
         GetAnonyString(networkId).c_str());
 

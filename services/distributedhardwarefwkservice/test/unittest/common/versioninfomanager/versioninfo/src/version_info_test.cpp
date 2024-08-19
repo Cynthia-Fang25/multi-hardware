@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,11 +19,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#define private public
 #include "version_info_manager.h"
 #include "version_manager.h"
 #include "version_info.h"
-#undef private
 #include "dh_context.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
@@ -104,6 +102,9 @@ HWTEST_F(VersionInfoTest, FromJson_001, TestSize.Level0)
     const char* DH_ATTRS = "dh_attrs";
 
     cJSON* json = cJSON_CreateObject();
+    if (json == nullptr) {
+        return;
+    }
     cJSON_AddStringToObject(json, DH_ID, "dh_id");
     cJSON_AddStringToObject(json, DEV_ID, "dev_id");
     cJSON_AddStringToObject(json, DEV_NAME, "dev_name");
@@ -111,6 +112,10 @@ HWTEST_F(VersionInfoTest, FromJson_001, TestSize.Level0)
     cJSON_AddStringToObject(json, DH_TYPE, "dh_type");
     cJSON_AddStringToObject(json, DH_ATTRS, "dh_attrs");
     char* cjson = cJSON_PrintUnformatted(json);
+    if (cjson == nullptr) {
+        cJSON_Delete(json);
+        return;
+    }
     std::string jsonStr(cjson);
     cJSON_free(cjson);
     cJSON_Delete(json);
@@ -133,6 +138,9 @@ HWTEST_F(VersionInfoTest, FromJson_002, TestSize.Level0)
     const char* DH_TYPE = "dh_type";
     const char* DH_ATTRS = "dh_attrs";
     cJSON* json = cJSON_CreateObject();
+    if (json == nullptr) {
+        return;
+    }
     cJSON_AddStringToObject(json, DH_ID, "dh_id");
     cJSON_AddStringToObject(json, DEV_ID, "dev_id");
     cJSON_AddStringToObject(json, DEV_NAME, "dev_name");
@@ -140,6 +148,10 @@ HWTEST_F(VersionInfoTest, FromJson_002, TestSize.Level0)
     cJSON_AddStringToObject(json, DH_TYPE, "dh_type");
     cJSON_AddStringToObject(json, DH_ATTRS, "dh_attrs");
     char* cjson = cJSON_PrintUnformatted(json);
+    if (cjson == nullptr) {
+        cJSON_Delete(json);
+        return;
+    }
     std::string jsonStr(cjson);
     cJSON_free(cjson);
     cJSON_Delete(json);

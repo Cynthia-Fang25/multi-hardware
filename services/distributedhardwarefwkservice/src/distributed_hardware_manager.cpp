@@ -24,6 +24,7 @@
 #include "dh_utils_tool.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
+#include "device_param_mgr.h"
 #include "hidump_helper.h"
 #include "local_capability_info_manager.h"
 #include "local_hardware_manager.h"
@@ -57,6 +58,7 @@ int32_t DistributedHardwareManager::LocalInit()
     ComponentLoader::GetInstance().Init();
     VersionManager::GetInstance().Init();
     LocalHardwareManager::GetInstance().Init();
+    DeviceParamMgr::GetInstance().QueryDeviceDataSyncMode();
     DHLOGI("DHFWK Local Init end");
     isLocalInit = true;
     return DH_FWK_SUCCESS;
@@ -65,6 +67,7 @@ int32_t DistributedHardwareManager::LocalInit()
 int32_t DistributedHardwareManager::Initialize()
 {
     DHLOGI("DHFWK Normal Init begin");
+    std::lock_guard<std::mutex> lock(dhInitMgrMutex_);
     if (isAllInit) {
         DHLOGI("DHMgr init already finish");
         return DH_FWK_SUCCESS;
@@ -79,7 +82,6 @@ int32_t DistributedHardwareManager::Initialize()
 int32_t DistributedHardwareManager::Release()
 {
     DHLOGI("start");
-    TaskBoard::GetInstance().WaitForALLTaskFinish();
     LocalHardwareManager::GetInstance().UnInit();
     ComponentManager::GetInstance().UnInit();
     VersionManager::GetInstance().UnInit();
@@ -94,21 +96,19 @@ int32_t DistributedHardwareManager::Release()
 }
 
 int32_t DistributedHardwareManager::SendOnLineEvent(const std::string &networkId, const std::string &uuid,
-    uint16_t deviceType)
+    const std::string &udid, uint16_t deviceType)
 {
-    (void)deviceType;
-
-    if (networkId.size() == 0 || networkId.size() > MAX_ID_LEN || uuid.size() == 0 || uuid.size() > MAX_ID_LEN) {
-        DHLOGE("NetworkId or uuid is invalid");
+    if (!IsIdLengthValid(networkId) || !IsIdLengthValid(uuid) || !IsIdLengthValid(udid)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
-
-    DHLOGI("networkId = %{public}s, uuid = %{public}s", GetAnonyString(networkId).c_str(),
-        GetAnonyString(uuid).c_str());
+    (void)deviceType;
+    DHLOGI("SendOnLineEvent networkId = %{public}s, uuid = %{public}s, udid = %{public}s",
+        GetAnonyString(networkId).c_str(), GetAnonyString(uuid).c_str(), GetAnonyString(udid).c_str());
 
     TaskParam taskParam = {
         .networkId = networkId,
         .uuid = uuid,
+        .udid = udid,
         .dhId = "",
         .dhType = DHType::UNKNOWN
     };
@@ -118,21 +118,19 @@ int32_t DistributedHardwareManager::SendOnLineEvent(const std::string &networkId
 }
 
 int32_t DistributedHardwareManager::SendOffLineEvent(const std::string &networkId, const std::string &uuid,
-    uint16_t deviceType)
+    const std::string &udid, uint16_t deviceType)
 {
-    (void)deviceType;
-
-    if (networkId.empty() || networkId.size() > MAX_ID_LEN || uuid.empty() || uuid.size() > MAX_ID_LEN) {
-        DHLOGE("NetworkId or uuid is invalid");
+    if (!IsIdLengthValid(networkId) || !IsIdLengthValid(uuid) || !IsIdLengthValid(udid)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
-
-    DHLOGI("networkId = %{public}s, uuid = %{public}s", GetAnonyString(networkId).c_str(),
-        GetAnonyString(uuid).c_str());
+    (void)deviceType;
+    DHLOGI("SendOffLineEvent networkId = %{public}s, uuid = %{public}s, udid = %{public}s",
+        GetAnonyString(networkId).c_str(), GetAnonyString(uuid).c_str(), GetAnonyString(udid).c_str());
 
     TaskParam taskParam = {
         .networkId = networkId,
         .uuid = uuid,
+        .udid = udid,
         .dhId = "",
         .dhType = DHType::UNKNOWN
     };

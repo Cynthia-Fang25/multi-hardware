@@ -20,6 +20,7 @@ ohos_hap("DHardware_UI") {
     ":DHardware_UI_js_assets",
     ":DHardware_UI_resources",
   ]
+  publicity_file = "../publicity.xml"
   certificate_profile = "signature/DHardware_UI.p7b"
   hap_name = "DHardware_UI"
   part_name = "prebuilt_hap"
@@ -30,7 +31,7 @@ ohos_hap("DHardware_UI") {
     certificate_profile = "${certificate_profile_path}"
     key_alias = "DHardwareUI Release"
     private_key_path = "DHardwareUI Release"
-    compatible_version = "11"
+    compatible_version = "12"
   }
 }
 

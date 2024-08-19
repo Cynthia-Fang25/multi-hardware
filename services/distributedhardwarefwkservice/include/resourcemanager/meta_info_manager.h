@@ -36,18 +36,21 @@ public:
     MetaInfoManager(MetaInfoManager &&) = delete;
     MetaInfoManager &operator = (MetaInfoManager &&) = delete;
     static std::shared_ptr<MetaInfoManager> GetInstance();
+    MetaInfoManager();
     virtual ~MetaInfoManager();
     int32_t Init();
     int32_t UnInit();
     int32_t AddMetaCapInfos(const std::vector<std::shared_ptr<MetaCapabilityInfo>> &meatCapInfos);
-    int32_t SyncMetaInfoFromDB(const std::string &deviceId);
+    int32_t SyncMetaInfoFromDB(const std::string &udidHash);
     int32_t SyncRemoteMetaInfos();
     int32_t GetDataByKeyPrefix(const std::string &keyPrefix, MetaCapInfoMap &metaCapMap);
     int32_t RemoveMetaInfoByKey(const std::string &key);
-    int32_t GetMetaCapInfo(const std::string &deviceId, const std::string &dhId,
+    int32_t GetMetaCapInfo(const std::string &udidHash, const std::string &dhId,
         std::shared_ptr<MetaCapabilityInfo> &metaCapPtr);
-    void GetMetaCapInfosByDeviceId(const std::string &deviceId,
+    void GetMetaCapInfosByUdidHash(const std::string &udidHash,
         std::vector<std::shared_ptr<MetaCapabilityInfo>> &metaCapInfos);
+    int32_t GetMetaDataByDHType(const DHType dhType, MetaCapInfoMap &metaInfoMap);
+    int32_t SyncDataByNetworkId(const std::string &networkId);
     /* Database data changes callback */
     virtual void OnChange(const DistributedKv::ChangeNotification &changeNotification) override;
     /* Cloud data changes callback */
@@ -65,7 +68,6 @@ public:
     std::shared_ptr<MetaInfoManager::MetaInfoManagerEventHandler> GetEventHandler();
 
 private:
-    MetaInfoManager();
     int32_t GetMetaCapByValue(const std::string &value, std::shared_ptr<MetaCapabilityInfo> &metaCapPtr);
     void HandleMetaCapabilityAddChange(const std::vector<DistributedKv::Entry> &insertRecords);
     void HandleMetaCapabilityUpdateChange(const std::vector<DistributedKv::Entry> &updateRecords);

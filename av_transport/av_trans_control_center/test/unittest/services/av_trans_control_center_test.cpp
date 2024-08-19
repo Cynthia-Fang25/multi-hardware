@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -29,7 +29,6 @@ void AVTransControlCenterTest::TearDownTestCase(void)
 
 void AVTransControlCenterTest::SetUp()
 {
-    center_ = std::make_shared<AVTransControlCenter>();
 }
 
 void AVTransControlCenterTest::TearDown()
@@ -44,6 +43,7 @@ void AVTransControlCenterTest::TearDown()
  */
 HWTEST_F(AVTransControlCenterTest, initialize_av_center_001, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     TransRole transRole = TransRole::UNKNOWN;
     int32_t engineId = BASE_ENGINE_ID;
     int32_t ret = center_->InitializeAVCenter(transRole, engineId);
@@ -58,10 +58,14 @@ HWTEST_F(AVTransControlCenterTest, initialize_av_center_001, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, initialize_av_center_002, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     TransRole transRole = TransRole::AV_SENDER;
     int32_t engineId = BASE_ENGINE_ID;
     center_->initialized_= true;
     int32_t ret = center_->InitializeAVCenter(transRole, engineId);
+    EXPECT_EQ(DH_AVT_SUCCESS, ret);
+    transRole = TransRole::AV_RECEIVER;
+    ret = center_->InitializeAVCenter(transRole, engineId);
     EXPECT_EQ(DH_AVT_SUCCESS, ret);
 }
 
@@ -73,6 +77,7 @@ HWTEST_F(AVTransControlCenterTest, initialize_av_center_002, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, initialize_av_center_003, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     TransRole transRole = TransRole::AV_SENDER;
     int32_t engineId = BASE_ENGINE_ID;
     center_->initialized_= false;
@@ -88,6 +93,7 @@ HWTEST_F(AVTransControlCenterTest, initialize_av_center_003, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, release_av_center_001, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     int32_t engineId = INVALID_ENGINE_ID;
     int32_t ret = center_->ReleaseAVCenter(engineId);
     EXPECT_EQ(ERR_DH_AVT_INVALID_PARAM_VALUE, ret);
@@ -101,11 +107,16 @@ HWTEST_F(AVTransControlCenterTest, release_av_center_001, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, release_av_center_002, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     int32_t engineId = BASE_ENGINE_ID;
     int32_t engineIdSecond = BASE_ENGINE_ID + 1 ;
+
+    int32_t ret = center_->ReleaseAVCenter(engineId);
+    EXPECT_EQ(DH_AVT_SUCCESS, ret);
+
     center_->engine2DevIdMap_.insert(std::make_pair(engineId, "engineId"));
     center_->engine2DevIdMap_.insert(std::make_pair(engineIdSecond, "engineId"));
-    int32_t ret = center_->ReleaseAVCenter(engineId);
+    ret = center_->ReleaseAVCenter(engineId);
     EXPECT_EQ(DH_AVT_SUCCESS, ret);
 }
 
@@ -117,6 +128,7 @@ HWTEST_F(AVTransControlCenterTest, release_av_center_002, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, release_av_center_003, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     int32_t engineId = BASE_ENGINE_ID;
     center_->engine2DevIdMap_.insert(std::make_pair(engineId, "engineId"));
     int32_t ret = center_->ReleaseAVCenter(engineId);
@@ -131,6 +143,7 @@ HWTEST_F(AVTransControlCenterTest, release_av_center_003, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, release_av_center_004, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     int32_t engineId = BASE_ENGINE_ID;
     center_->engine2DevIdMap_.insert(std::make_pair(engineId, "engineId"));
     center_->connectedDevIds_.push_back("engineId");
@@ -146,6 +159,7 @@ HWTEST_F(AVTransControlCenterTest, release_av_center_004, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, create_control_channel_001, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     int32_t engineId = INVALID_ENGINE_ID;
     std::string peerDevId = "peerDevId";
     int32_t ret = center_->CreateControlChannel(engineId, peerDevId);
@@ -160,6 +174,7 @@ HWTEST_F(AVTransControlCenterTest, create_control_channel_001, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, create_control_channel_002, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     int32_t engineId = BASE_ENGINE_ID;
     std::string peerDevId = "peerDevId";
     center_->initialized_ = false;
@@ -175,6 +190,7 @@ HWTEST_F(AVTransControlCenterTest, create_control_channel_002, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, create_control_channel_003, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     int32_t engineId = BASE_ENGINE_ID;
     std::string peerDevId = "peerDevId";
     center_->initialized_ = true;
@@ -191,6 +207,7 @@ HWTEST_F(AVTransControlCenterTest, create_control_channel_003, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, create_control_channel_004, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     int32_t engineId = BASE_ENGINE_ID;
     std::string peerDevId = "peerDevId";
     center_->initialized_ = true;
@@ -206,6 +223,7 @@ HWTEST_F(AVTransControlCenterTest, create_control_channel_004, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, notify_av_center_001, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     int32_t engineId = BASE_ENGINE_ID;
     AVTransEvent event;
     event.type = EventType::EVENT_ADD_STREAM;
@@ -222,6 +240,7 @@ HWTEST_F(AVTransControlCenterTest, notify_av_center_001, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, notify_av_center_002, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     int32_t engineId = BASE_ENGINE_ID;
     AVTransEvent event;
     event.type = EventType::EVENT_REMOVE_STREAM;
@@ -238,6 +257,7 @@ HWTEST_F(AVTransControlCenterTest, notify_av_center_002, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, notify_av_center_003, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     int32_t engineId = BASE_ENGINE_ID;
     AVTransEvent event;
     event.type = EventType::EVENT_CHANNEL_OPENED;
@@ -254,6 +274,7 @@ HWTEST_F(AVTransControlCenterTest, notify_av_center_003, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, register_ctl_center_callback_001, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     int32_t engineId = INVALID_ENGINE_ID;
     sptr<CenterCallback> callback = nullptr;
     int32_t ret = center_->RegisterCtlCenterCallback(engineId, callback);
@@ -268,6 +289,7 @@ HWTEST_F(AVTransControlCenterTest, register_ctl_center_callback_001, TestSize.Le
  */
 HWTEST_F(AVTransControlCenterTest, register_ctl_center_callback_002, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     int32_t engineId = BASE_ENGINE_ID;
     sptr<CenterCallback> callback = nullptr;
     int32_t ret = center_->RegisterCtlCenterCallback(engineId, callback);
@@ -282,8 +304,9 @@ HWTEST_F(AVTransControlCenterTest, register_ctl_center_callback_002, TestSize.Le
  */
 HWTEST_F(AVTransControlCenterTest, register_ctl_center_callback_003, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     int32_t engineId = BASE_ENGINE_ID;
-    sptr<CenterCallback> callback = new CenterCallback();
+    sptr<CenterCallback> callback = sptr<CenterCallback>(new CenterCallback());
     int32_t ret = center_->RegisterCtlCenterCallback(engineId, callback);
     EXPECT_EQ(DH_AVT_SUCCESS, ret);
 }
@@ -296,11 +319,12 @@ HWTEST_F(AVTransControlCenterTest, register_ctl_center_callback_003, TestSize.Le
  */
 HWTEST_F(AVTransControlCenterTest, on_channel_event_001, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     AVTransEvent event;
     event.type = EventType::EVENT_CHANNEL_CLOSED;
     center_->OnChannelEvent(event);
     int32_t engineId = BASE_ENGINE_ID;
-    sptr<CenterCallback> callback = new CenterCallback();
+    sptr<CenterCallback> callback = sptr<CenterCallback>(new CenterCallback());
     int32_t ret = center_->RegisterCtlCenterCallback(engineId, callback);
     EXPECT_EQ(DH_AVT_SUCCESS, ret);
 }
@@ -313,11 +337,12 @@ HWTEST_F(AVTransControlCenterTest, on_channel_event_001, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, on_channel_event_002, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     AVTransEvent event;
     event.type = EventType::EVENT_DATA_RECEIVED;
     center_->OnChannelEvent(event);
     int32_t engineId = BASE_ENGINE_ID;
-    sptr<CenterCallback> callback = new CenterCallback();
+    sptr<CenterCallback> callback = sptr<CenterCallback>(new CenterCallback());
     int32_t ret = center_->RegisterCtlCenterCallback(engineId, callback);
     EXPECT_EQ(DH_AVT_SUCCESS, ret);
 }
@@ -330,12 +355,13 @@ HWTEST_F(AVTransControlCenterTest, on_channel_event_002, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, on_channel_event_003, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     AVTransEvent event;
     event.type = EventType::EVENT_TIME_SYNC_RESULT;
     center_->sessionName_ = AV_SYNC_RECEIVER_CONTROL_SESSION_NAME;
     center_->OnChannelEvent(event);
     int32_t engineId = BASE_ENGINE_ID;
-    sptr<CenterCallback> callback = new CenterCallback();
+    sptr<CenterCallback> callback = sptr<CenterCallback>(new CenterCallback());
     int32_t ret = center_->RegisterCtlCenterCallback(engineId, callback);
     EXPECT_EQ(DH_AVT_SUCCESS, ret);
 }
@@ -348,6 +374,7 @@ HWTEST_F(AVTransControlCenterTest, on_channel_event_003, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, on_channel_event_004, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     AVTransEvent event;
     event.type = EventType::EVENT_REMOVE_STREAM;
     center_->sessionName_ = AV_SYNC_RECEIVER_CONTROL_SESSION_NAME;
@@ -357,7 +384,7 @@ HWTEST_F(AVTransControlCenterTest, on_channel_event_004, TestSize.Level0)
     StreamData *ext = nullptr;
     center_->OnStreamReceived(data, ext);
     int32_t engineId = BASE_ENGINE_ID;
-    sptr<CenterCallback> callback = new CenterCallback();
+    sptr<CenterCallback> callback = sptr<CenterCallback>(new CenterCallback());
     int32_t ret = center_->RegisterCtlCenterCallback(engineId, callback);
     EXPECT_EQ(DH_AVT_SUCCESS, ret);
 }
@@ -370,6 +397,7 @@ HWTEST_F(AVTransControlCenterTest, on_channel_event_004, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, send_message_001, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     std::shared_ptr<AVTransMessage> message = nullptr;
     int32_t ret = center_->SendMessage(message);;
     EXPECT_EQ(ERR_DH_AVT_INVALID_PARAM, ret);
@@ -383,6 +411,7 @@ HWTEST_F(AVTransControlCenterTest, send_message_001, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, send_message_002, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     std::shared_ptr<AVTransMessage> message = std::make_shared<AVTransMessage>();
     int32_t ret = center_->SendMessage(message);;
     EXPECT_EQ(ERR_DH_AVT_INVALID_PARAM, ret);
@@ -396,11 +425,13 @@ HWTEST_F(AVTransControlCenterTest, send_message_002, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, set_param_2_engines_001, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     AVTransTag tag = AVTransTag::START_AV_SYNC;
     std::string value = "value";
     int32_t engineId = BASE_ENGINE_ID;
-    sptr<CenterCallback> callback = new CenterCallback();
+    sptr<CenterCallback> callback = sptr<CenterCallback>(new CenterCallback());
     center_->callbackMap_.insert(std::make_pair(engineId, callback));
+    center_->callbackMap_.insert(std::make_pair(engineId + 1, nullptr));
     center_->SetParam2Engines(tag, value);
     EXPECT_EQ(callback->value_, value);
 }
@@ -413,10 +444,12 @@ HWTEST_F(AVTransControlCenterTest, set_param_2_engines_001, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, set_param_2_engines_002, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     AVTransSharedMemory memory;
     memory.name = "memory";
-    sptr<CenterCallback> callback = new CenterCallback();
+    sptr<CenterCallback> callback = sptr<CenterCallback>(new CenterCallback());
     center_->callbackMap_.insert(std::make_pair(0, callback));
+    center_->callbackMap_.insert(std::make_pair(1, nullptr));
     center_->SetParam2Engines(memory);
     EXPECT_EQ(callback->memory_.name, memory.name);
 }
@@ -429,6 +462,7 @@ HWTEST_F(AVTransControlCenterTest, set_param_2_engines_002, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, handle_channel_event_001, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     AVTransEvent event;
     event.type = EventType::EVENT_CHANNEL_CLOSED;
     center_->HandleChannelEvent(event);
@@ -437,7 +471,11 @@ HWTEST_F(AVTransControlCenterTest, handle_channel_event_001, TestSize.Level0)
     event.type = EventType::EVENT_CHANNEL_OPENED;
     event.content = AV_SYNC_RECEIVER_CONTROL_SESSION_NAME;
     center_->HandleChannelEvent(event);
-
+    event.type = EventType::EVENT_CHANNEL_OPENED;
+    event.content = AV_SYNC_SENDER_CONTROL_SESSION_NAME;
+    center_->HandleChannelEvent(event);
+    event.type = EventType::EVENT_START_SUCCESS;
+    center_->HandleChannelEvent(event);
     EXPECT_NE(0, center_->connectedDevIds_.size());
 }
 
@@ -449,6 +487,7 @@ HWTEST_F(AVTransControlCenterTest, handle_channel_event_001, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, is_invalid_engineId_001, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     int32_t engineId = BASE_ENGINE_ID - 1;
     bool ret = center_->IsInvalidEngineId(engineId);
     EXPECT_EQ(true, ret);
@@ -462,6 +501,7 @@ HWTEST_F(AVTransControlCenterTest, is_invalid_engineId_001, TestSize.Level0)
  */
 HWTEST_F(AVTransControlCenterTest, is_invalid_engineId_002, TestSize.Level0)
 {
+    center_ = std::make_shared<AVTransControlCenter>();
     int32_t engineId = BASE_ENGINE_ID + 1;
     bool ret = center_->IsInvalidEngineId(engineId);
     EXPECT_EQ(true, ret);

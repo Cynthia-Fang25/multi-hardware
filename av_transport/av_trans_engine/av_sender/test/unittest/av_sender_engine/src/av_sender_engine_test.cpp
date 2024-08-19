@@ -87,6 +87,8 @@ HWTEST_F(AvSenderEngineTest, Initialize_003, testing::ext::TestSize.Level1)
     auto sender = std::make_shared<AVSenderEngine>(ownerName, peerDevId);
     sender->sessionName_ = "";
     int32_t ret = sender->Initialize();
+    sender->pipeline_ = nullptr;
+    sender->SetEnginePause(ownerName);
     sender->pipeline_ = std::make_shared<OHOS::Media::Pipeline::PipelineCore>();
     sender->SetEnginePause(ownerName);
     EXPECT_EQ(ERR_DH_AVT_INIT_FAILED, ret);
@@ -236,7 +238,7 @@ HWTEST_F(AvSenderEngineTest, SetParameter_004, testing::ext::TestSize.Level1)
     std::shared_ptr<OHOS::Media::Pipeline::PipelineCore> pipeline_ = nullptr;
     sender->pipeline_ = std::make_shared<OHOS::Media::Pipeline::PipelineCore>();
     int32_t ret = sender->SetParameter(AVTransTag::VIDEO_WIDTH, value);
-    EXPECT_EQ(ERR_DH_AVT_INVALID_PARAM, ret);
+    EXPECT_EQ(DH_AVT_SUCCESS, ret);
 }
 
 HWTEST_F(AvSenderEngineTest, SetParameter_005, testing::ext::TestSize.Level1)
@@ -679,6 +681,10 @@ HWTEST_F(AvSenderEngineTest, OnChannelEvent_004, testing::ext::TestSize.Level1)
     event.type = EventType::EVENT_CHANNEL_CLOSED;
     sender->senderCallback_ = std::make_shared<SenderEngineCallback>();
     sender->currentState_ = StateId::CH_CREATED;
+    sender->OnChannelEvent(event);
+    sender->currentState_ = StateId::IDLE;
+    sender->OnChannelEvent(event);
+    sender->currentState_ = StateId::INITIALIZED;
     sender->OnChannelEvent(event);
 
     event.type = EventType::EVENT_ADD_STREAM;

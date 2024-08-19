@@ -23,6 +23,7 @@
 #include "capability_utils.h"
 #include "constants.h"
 #include "dh_context.h"
+#include "dh_utils_tool.h"
 #include "distributed_hardware_errno.h"
 #include "distributed_hardware_log.h"
 #include "event_handler.h"
@@ -73,11 +74,10 @@ DistributedKv::Status DBAdapter::GetKvStorePtr(bool isAutoSync, DistributedKv::D
             .autoSync  = true,
         }
     };
-    if (isAutoSync) {
-        DistributedKv::SyncPolicy syncPolicyOnline {
-            .type = DistributedKv::IMMEDIATE_SYNC_ON_ONLINE
-        };
-        options.policies.emplace_back(syncPolicyOnline);
+    if (dataType == DistributedKv::DataType::TYPE_DYNAMICAL) {
+        DHLOGI("Dynamic not go to cloud.");
+        options.cloudConfig.enableCloud = false;
+        options.cloudConfig.autoSync = false;
     }
     return kvDataMgr_.GetSingleKvStore(options, appId_, storeId_, kvStoragePtr_);
 }
@@ -189,49 +189,59 @@ int32_t DBAdapter::ReInit(bool isAutoSync)
     return DH_FWK_SUCCESS;
 }
 
-void DBAdapter::TriggerDynamicQuery(const std::string &key)
+std::string DBAdapter::GetNetworkIdByKey(const std::string &key)
 {
-    DHLOGI("Trigger DynamicQuery, key: %{public}s", GetAnonyString(key).c_str());
+    if (!IsIdLengthValid(key)) {
+        return "";
+    }
+    DHLOGI("Get networkId by key: %{public}s", GetAnonyString(key).c_str());
     std::string deviceId = DHContext::GetInstance().GetDeviceIdByDBGetPrefix(key);
     if (deviceId.empty()) {
         DHLOGW("Get deviceId empty, key: %{public}s", GetAnonyString(key).c_str());
-        return;
+        return "";
     }
 
     if (deviceId == DHContext::GetInstance().GetDeviceInfo().deviceId) {
-        DHLOGD("Query local db info, no need dynamic sync");
-        return;
+        DHLOGW("Query local db info, no need sync");
+        return "";
     }
 
     std::string uuid = DHContext::GetInstance().GetUUIDByDeviceId(deviceId);
     if (uuid.empty()) {
         DHLOGW("Get uuid empty, deviceId: %{public}s", GetAnonyString(deviceId).c_str());
-        return;
+        return "";
     }
     if (!DHContext::GetInstance().IsDeviceOnline(uuid)) {
-        DHLOGW("The device not online, no need dynamic sync, uuid: %{public}s, deviceId: %{public}s",
+        DHLOGW("The device not online, no need sync, uuid: %{public}s, deviceId: %{public}s",
             GetAnonyString(uuid).c_str(), GetAnonyString(deviceId).c_str());
+        return "";
+    }
+    return DHContext::GetInstance().GetNetworkIdByUUID(uuid);
+}
+
+void DBAdapter::SyncByNotFound(const std::string &key)
+{
+    if (!IsIdLengthValid(key)) {
         return;
     }
-
-    std::string networkId = DHContext::GetInstance().GetNetworkIdByUUID(uuid);
+    std::string networkId = GetNetworkIdByKey(key);
     if (networkId.empty()) {
-        DHLOGW("The networkId emtpy, uuid: %{public}s", GetAnonyString(uuid).c_str());
+        DHLOGW("The networkId emtpy.");
         return;
     }
-
-    DHLOGI("Try Sync DYNAMIC data with remote dev, networkId: %{public}s", GetAnonyString(networkId).c_str());
-    std::function<void(DistributedKv::Status, DistributedKv::Value&&)> call =
-        [](DistributedKv::Status status, DistributedKv::Value &&value) {
-            (void)status;
-            (void)value;
-        };
-    DistributedKv::Key kvKey(key);
-    kvStoragePtr_->Get(kvKey, networkId, call);
+    DHLOGI("Try sync data by key: %{public}s, storeId: %{public}s", GetAnonyString(key).c_str(),
+        storeId_.storeId.c_str());
+    std::vector<std::string> networkIdVec;
+    networkIdVec.push_back(networkId);
+    kvStoragePtr_->Sync(networkIdVec, DistributedKv::SyncMode::PUSH_PULL);
+    return;
 }
 
 int32_t DBAdapter::GetDataByKey(const std::string &key, std::string &data)
 {
+    if (!IsIdLengthValid(key)) {
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     DHLOGI("Get data by key: %{public}s, storeId: %{public}s, dataType: %{public}d",
         GetAnonyString(key).c_str(), storeId_.storeId.c_str(), static_cast<int32_t>(this->dataType));
     std::lock_guard<std::mutex> lock(dbAdapterMutex_);
@@ -239,12 +249,19 @@ int32_t DBAdapter::GetDataByKey(const std::string &key, std::string &data)
         DHLOGE("kvStoragePtr_ is null");
         return ERR_DH_FWK_RESOURCE_KV_STORAGE_POINTER_NULL;
     }
-    if (this->dataType == DistributedKv::DataType::TYPE_DYNAMICAL) {
-        TriggerDynamicQuery(key);
-    }
     DistributedKv::Key kvKey(key);
     DistributedKv::Value kvValue;
     DistributedKv::Status status = kvStoragePtr_->Get(kvKey, kvValue);
+    if (status == DistributedKv::Status::NOT_FOUND) {
+        if (this->dataType == DistributedKv::DataType::TYPE_DYNAMICAL) {
+            SyncByNotFound(key);
+        }
+#ifdef DHARDWARE_OPEN_SOURCE
+        if (this->dataType == DistributedKv::DataType::TYPE_STATICS && this->storeId_.storeId == GLOBAL_META_INFO) {
+            SyncByNotFound(key);
+        }
+#endif
+    }
     if (status != DistributedKv::Status::SUCCESS) {
         DHLOGE("Query from db failed, key: %{public}s", GetAnonyString(key).c_str());
         return ERR_DH_FWK_RESOURCE_KV_STORAGE_OPERATION_FAIL;
@@ -262,22 +279,28 @@ int32_t DBAdapter::GetDataByKeyPrefix(const std::string &keyPrefix, std::vector<
         DHLOGE("kvStoragePtr_ is null");
         return ERR_DH_FWK_RESOURCE_KV_STORAGE_POINTER_NULL;
     }
-    if (this->dataType == DistributedKv::DataType::TYPE_DYNAMICAL) {
-        TriggerDynamicQuery(keyPrefix);
-    }
-
     // if prefix is empty, get all entries.
     DistributedKv::Key allEntryKeyPrefix(keyPrefix);
     std::vector<DistributedKv::Entry> allEntries;
     DistributedKv::Status status = kvStoragePtr_->GetEntries(allEntryKeyPrefix, allEntries);
+    if (status == DistributedKv::Status::SUCCESS && allEntries.size() == 0) {
+        if (this->dataType == DistributedKv::DataType::TYPE_DYNAMICAL) {
+            SyncByNotFound(keyPrefix);
+        }
+#ifdef DHARDWARE_OPEN_SOURCE
+        if (this->dataType == DistributedKv::DataType::TYPE_STATICS && this->storeId_.storeId == GLOBAL_META_INFO) {
+            SyncByNotFound(keyPrefix);
+        }
+#endif
+    }
     if (status != DistributedKv::Status::SUCCESS) {
         DHLOGE("Query data by keyPrefix failed, prefix: %{public}s",
             GetAnonyString(keyPrefix).c_str());
         return ERR_DH_FWK_RESOURCE_KV_STORAGE_OPERATION_FAIL;
     }
-    if (allEntries.size() == 0 || allEntries.size() > MAX_DB_RECORD_SIZE) {
-        DHLOGE("AllEntries size is invalid!");
-        return ERR_DH_FWK_PARA_INVALID;
+    if (allEntries.empty() || allEntries.size() > MAX_DB_RECORD_SIZE) {
+        DHLOGE("AllEntries is empty or too large!");
+        return ERR_DH_FWK_RESOURCE_RES_DB_DATA_INVALID;
     }
     for (const auto& item : allEntries) {
         values.push_back(item.value.ToString());
@@ -287,8 +310,7 @@ int32_t DBAdapter::GetDataByKeyPrefix(const std::string &keyPrefix, std::vector<
 
 int32_t DBAdapter::PutData(const std::string &key, const std::string &value)
 {
-    if (key.empty() || key.size() > MAX_MESSAGE_LEN || value.empty() || value.size() > MAX_MESSAGE_LEN) {
-        DHLOGI("Param is invalid!");
+    if (!IsIdLengthValid(key) || !IsMessageLengthValid(value)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
     std::lock_guard<std::mutex> lock(dbAdapterMutex_);
@@ -308,6 +330,9 @@ int32_t DBAdapter::PutData(const std::string &key, const std::string &value)
 
 int32_t DBAdapter::PutDataBatch(const std::vector<std::string> &keys, const std::vector<std::string> &values)
 {
+    if (!IsArrayLengthValid(keys) || !IsArrayLengthValid(values)) {
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     std::lock_guard<std::mutex> lock(dbAdapterMutex_);
     if (kvStoragePtr_ == nullptr) {
         DHLOGE("kvStoragePtr_ is null");
@@ -458,6 +483,9 @@ void DBAdapter::DeleteKvStore()
 
 int32_t DBAdapter::RemoveDeviceData(const std::string &deviceId)
 {
+    if (!IsIdLengthValid(deviceId)) {
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     std::lock_guard<std::mutex> lock(dbAdapterMutex_);
     if (kvStoragePtr_ == nullptr) {
         DHLOGE("kvStoragePtr_ is null");
@@ -474,6 +502,9 @@ int32_t DBAdapter::RemoveDeviceData(const std::string &deviceId)
 
 int32_t DBAdapter::RemoveDataByKey(const std::string &key)
 {
+    if (!IsIdLengthValid(key)) {
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     std::lock_guard<std::mutex> lock(dbAdapterMutex_);
     if (kvStoragePtr_ == nullptr) {
         DHLOGE("kvStoragePtr_ is null");
@@ -491,12 +522,11 @@ int32_t DBAdapter::RemoveDataByKey(const std::string &key)
 
 std::vector<DistributedKv::Entry> DBAdapter::GetEntriesByKeys(const std::vector<std::string> &keys)
 {
+    if (!IsArrayLengthValid(keys)) {
+        return {};
+    }
     DHLOGI("call");
     std::vector<DistributedKv::Entry> entries;
-    if (keys.empty()) {
-        DHLOGE("keys empty.");
-        return entries;
-    }
     {
         std::lock_guard<std::mutex> lock(dbAdapterMutex_);
         if (kvStoragePtr_ == nullptr) {
@@ -516,6 +546,19 @@ std::vector<DistributedKv::Entry> DBAdapter::GetEntriesByKeys(const std::vector<
         }
     }
     return entries;
+}
+
+bool DBAdapter::SyncDataByNetworkId(const std::string &networkId)
+{
+    DHLOGI("Try initiative sync data by networId: %{public}s", GetAnonyString(networkId).c_str());
+    std::vector<std::string> networkIdVec;
+    networkIdVec.push_back(networkId);
+    DistributedKv::Status status = kvStoragePtr_->Sync(networkIdVec, DistributedKv::SyncMode::PUSH_PULL);
+    if (status != DistributedKv::Status::SUCCESS) {
+        DHLOGE("initiative sync data failed");
+        return false;
+    }
+    return true;
 }
 } // namespace DistributedHardware
 } // namespace OHOS

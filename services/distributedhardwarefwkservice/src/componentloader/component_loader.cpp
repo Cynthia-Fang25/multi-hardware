@@ -22,6 +22,7 @@
 
 #include "config_policy_utils.h"
 
+#include "anonymous_string.h"
 #include "constants.h"
 #include "dh_context.h"
 #include "dh_utils_hitrace.h"
@@ -65,12 +66,6 @@ const std::string DEFAULT_LOC = "";
 const int32_t DEFAULT_SA_ID = -1;
 const std::string DEFAULT_VERSION = "1.0";
 
-#ifdef __LP64__
-const std::string LIB_LOAD_PATH = "/system/lib64/";
-#else
-const std::string LIB_LOAD_PATH = "/system/lib/";
-#endif
-
 std::map<std::string, DHType> g_mapDhTypeName = {
     { "UNKNOWN", DHType::UNKNOWN },
     { "CAMERA", DHType::CAMERA },
@@ -81,6 +76,14 @@ std::map<std::string, DHType> g_mapDhTypeName = {
     { "HFP", DHType::HFP },
     { "A2D", DHType::A2D },
     { "VIRMODEM_AUDIO", DHType::VIRMODEM_AUDIO },
+    { "MODEM", DHType::MODEM },
+};
+
+std::map<DHType, std::string> g_mapPartsParamName = {
+    { DHType::CAMERA, "sys.dhfwk.component.dcamera.enable" },
+    { DHType::AUDIO, "sys.dhfwk.component.daudio.enable" },
+    { DHType::SCREEN, "sys.dhfwk.component.dscreen.enable" },
+    { DHType::INPUT, "sys.dhfwk.component.dinput.enable" },
 };
 }
 
@@ -107,22 +110,22 @@ std::vector<DHType> ComponentLoader::GetAllCompTypes()
 int32_t ParseComponent(const cJSON *json, CompConfig &cfg)
 {
     if (!IsString(json, COMP_NAME)) {
-        DHLOGE("COMP_NAME is invalid");
+        DHLOGE("COMP_NAME is invalid!");
         return ERR_DH_FWK_JSON_PARSE_FAILED;
     }
     cfg.name = cJSON_GetObjectItem(json, COMP_NAME.c_str())->valuestring;
     if (!IsString(json, COMP_TYPE)) {
-        DHLOGE("COMP_TYPE is invalid");
+        DHLOGE("COMP_TYPE is invalid!");
         return ERR_DH_FWK_JSON_PARSE_FAILED;
     }
     cfg.type = g_mapDhTypeName[cJSON_GetObjectItem(json, COMP_TYPE.c_str())->valuestring];
     if (!IsString(json, COMP_HANDLER_LOC)) {
-        DHLOGE("COMP_HANDLER_LOC is invalid");
+        DHLOGE("COMP_HANDLER_LOC is invalid!");
         return ERR_DH_FWK_JSON_PARSE_FAILED;
     }
     cfg.compHandlerLoc = cJSON_GetObjectItem(json, COMP_HANDLER_LOC.c_str())->valuestring;
     if (!IsString(json, COMP_HANDLER_VERSION)) {
-        DHLOGE("COMP_HANDLER_VERSION is invalid");
+        DHLOGE("COMP_HANDLER_VERSION is invalid!");
         return ERR_DH_FWK_JSON_PARSE_FAILED;
     }
     cfg.compHandlerVersion = cJSON_GetObjectItem(json, COMP_HANDLER_VERSION.c_str())->valuestring;
@@ -132,17 +135,17 @@ int32_t ParseComponent(const cJSON *json, CompConfig &cfg)
 int32_t ParseSource(const cJSON *json, CompConfig &cfg)
 {
     if (!IsString(json, COMP_SOURCE_LOC)) {
-        DHLOGE("COMP_SOURCE_LOC is invalid");
+        DHLOGE("COMP_SOURCE_LOC is invalid!");
         return ERR_DH_FWK_JSON_PARSE_FAILED;
     }
     cfg.compSourceLoc = cJSON_GetObjectItem(json, COMP_SOURCE_LOC.c_str())->valuestring;
     if (!IsString(json, COMP_SOURCE_VERSION)) {
-        DHLOGE("COMP_SOURCE_VERSION is invalid");
+        DHLOGE("COMP_SOURCE_VERSION is invalid!");
         return ERR_DH_FWK_JSON_PARSE_FAILED;
     }
     cfg.compSourceVersion = cJSON_GetObjectItem(json, COMP_SOURCE_VERSION.c_str())->valuestring;
     if (!IsInt32(json, COMP_SOURCE_SA_ID)) {
-        DHLOGE("COMP_SOURCE_SA_ID is invalid");
+        DHLOGE("COMP_SOURCE_SA_ID is invalid!");
         return ERR_DH_FWK_JSON_PARSE_FAILED;
     }
     cfg.compSourceSaId = static_cast<int32_t>(cJSON_GetObjectItem(json, COMP_SOURCE_SA_ID.c_str())->valuedouble);
@@ -152,17 +155,17 @@ int32_t ParseSource(const cJSON *json, CompConfig &cfg)
 int32_t ParseSink(const cJSON *json, CompConfig &cfg)
 {
     if (!IsString(json, COMP_SINK_LOC)) {
-        DHLOGE("COMP_SINK_LOC is invalid");
+        DHLOGE("COMP_SINK_LOC is invalid!");
         return ERR_DH_FWK_JSON_PARSE_FAILED;
     }
     cfg.compSinkLoc = cJSON_GetObjectItem(json, COMP_SINK_LOC.c_str())->valuestring;
     if (!IsString(json, COMP_SINK_VERSION)) {
-        DHLOGE("COMP_SINK_VERSION is invalid");
+        DHLOGE("COMP_SINK_VERSION is invalid!");
         return ERR_DH_FWK_JSON_PARSE_FAILED;
     }
     cfg.compSinkVersion = cJSON_GetObjectItem(json, COMP_SINK_VERSION.c_str())->valuestring;
     if (!IsInt32(json, COMP_SINK_SA_ID)) {
-        DHLOGE("COMP_SINK_SA_ID is invalid");
+        DHLOGE("COMP_SINK_SA_ID is invalid!");
         return ERR_DH_FWK_JSON_PARSE_FAILED;
     }
     cfg.compSinkSaId = static_cast<int32_t>(cJSON_GetObjectItem(json, COMP_SINK_SA_ID.c_str())->valuedouble);
@@ -172,15 +175,15 @@ int32_t ParseSink(const cJSON *json, CompConfig &cfg)
 int32_t ParseResourceDesc(const cJSON *json, CompConfig &cfg)
 {
     if (!IsArray(json, COMP_RESOURCE_DESC)) {
-        DHLOGE("COMP_RESOURCE_DESC is invalid");
+        DHLOGE("COMP_RESOURCE_DESC is invalid!");
         return ERR_DH_FWK_JSON_PARSE_FAILED;
     }
     cJSON *resourceDescArray = cJSON_GetObjectItem(json, COMP_RESOURCE_DESC.c_str());
-    cJSON *element;
+    cJSON *element = nullptr;
     cJSON_ArrayForEach(element, resourceDescArray) {
         ResourceDesc desc;
         if (!IsString(element, COMP_SUBTYPE)) {
-            DHLOGE("COMP_SUBTYPE is invalid");
+            DHLOGE("COMP_SUBTYPE is invalid!");
             return ERR_DH_FWK_JSON_PARSE_FAILED;
         }
         desc.subtype = cJSON_GetObjectItem(element, COMP_SUBTYPE.c_str())->valuestring;
@@ -226,8 +229,27 @@ CompVersion ComponentLoader::GetCompVersionFromComConfig(const CompConfig& cCfg)
     return compVersions;
 }
 
+bool ComponentLoader::CheckComponentEnable(const CompConfig &config)
+{
+    auto item = g_mapPartsParamName.find(config.type);
+    if (item == g_mapPartsParamName.end()) {
+        DHLOGI("Crrent component is enabled by default.");
+        return true;
+    }
+    bool isEnable = false;
+    if (!GetSysPara((item->second).c_str(), isEnable)) {
+        DHLOGE("sys para: %{public}s get failed.", (item->second).c_str());
+        return false;
+    }
+    DHLOGI("Component type: %{public}u, enable flag: %{public}d.", config.type, isEnable);
+    return isEnable;
+}
+
 int32_t ComponentLoader::GetCompPathAndVersion(const std::string &jsonStr, std::map<DHType, CompConfig> &dhtypeMap)
 {
+    if (!IsJsonLengthValid(jsonStr)) {
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     cJSON *root = cJSON_Parse(jsonStr.c_str());
     if (root == NULL) {
         DHLOGE("jsonStr parse failed");
@@ -246,7 +268,7 @@ int32_t ComponentLoader::GetCompPathAndVersion(const std::string &jsonStr, std::
         cJSON_Delete(root);
         return ERR_DH_FWK_PARA_INVALID;
     }
-    cJSON *component;
+    cJSON *component = nullptr;
     cJSON_ArrayForEach(component, components) {
         CompConfig config;
         ParseCompConfigFromJson(component, config);
@@ -301,7 +323,7 @@ void ComponentLoader::ParseCompConfigFromJson(cJSON *component, CompConfig &conf
 
 void ComponentLoader::ParseResourceDescFromJson(cJSON *resourceDescs, CompConfig &config)
 {
-    cJSON *resourceDesc;
+    cJSON *resourceDesc = nullptr;
     cJSON_ArrayForEach(resourceDesc, resourceDescs) {
         bool sensitiveValue;
         cJSON *sensitive = cJSON_GetObjectItem(resourceDesc, COMP_SENSITIVE.c_str());
@@ -312,7 +334,7 @@ void ComponentLoader::ParseResourceDescFromJson(cJSON *resourceDescs, CompConfig
         }
         ResourceDesc resource;
         if (!IsString(resourceDesc, COMP_SUBTYPE)) {
-            DHLOGE("COMP_SUBTYPE is invalid");
+            DHLOGE("COMP_SUBTYPE is invalid!");
             return;
         }
         resource.subtype = cJSON_GetObjectItem(resourceDesc, COMP_SUBTYPE.c_str())->valuestring;
@@ -346,15 +368,13 @@ void ComponentLoader::StoreLocalDHVersionInDB()
 
 void *ComponentLoader::GetHandler(const std::string &soName)
 {
-    char path[PATH_MAX + 1] = {0x00};
-    if (soName.length() == 0 || (LIB_LOAD_PATH.length() + soName.length()) > PATH_MAX ||
-        realpath((LIB_LOAD_PATH + soName).c_str(), path) == nullptr) {
-        DHLOGE("File canonicalization failed");
+    if (soName.length() == 0 || soName.length() > PATH_MAX) {
+        DHLOGE("File canonicalization failed, soName: %{public}s", soName.c_str());
         return nullptr;
     }
-    void *pHandler = dlopen(path, RTLD_LAZY | RTLD_NODELETE);
+    void *pHandler = dlopen(soName.c_str(), RTLD_LAZY | RTLD_NODELETE);
     if (pHandler == nullptr) {
-        DHLOGE("%{public}s handler load failed, failed reason : %{public}s", path, dlerror());
+        DHLOGE("so: %{public}s load failed, failed reason: %{public}s", soName.c_str(), dlerror());
         HiSysEventWriteMsg(DHFWK_INIT_FAIL, OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             "dhfwk so open failed, soname : " + soName);
         return nullptr;
@@ -484,14 +504,15 @@ int32_t ComponentLoader::ParseConfig()
         DHLOGE("profilePath is null.");
         return ERR_DH_FWK_LOADER_PROFILE_PATH_IS_NULL;
     }
+
     if (strlen(profilePath) == 0 || strlen(profilePath) > PATH_MAX || realpath(profilePath, path) == nullptr) {
-        DHLOGE("File connicailization failed.");
+        std::string comProfilePath(profilePath);
+        DHLOGE("File connicailization failed, comProfilePath: %{public}s.", GetAnonyString(comProfilePath).c_str());
         return ERR_DH_FWK_LOADER_PROFILE_PATH_IS_NULL;
     }
     std::string componentProfilePath(path);
     std::string jsonStr = Readfile(componentProfilePath);
-    if (jsonStr.length() == 0 || jsonStr.size() > MAX_MESSAGE_LEN) {
-        DHLOGE("ConfigJson size is invalid!");
+    if (!IsMessageLengthValid(jsonStr)) {
         return ERR_DH_FWK_LOADER_CONFIG_JSON_INVALID;
     }
     ret = GetCompPathAndVersion(jsonStr, dhtypeMap);

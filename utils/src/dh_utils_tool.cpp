@@ -17,6 +17,7 @@
 
 #include <algorithm>
 #include <iomanip>
+#include <iostream>
 #include <random>
 #include <sstream>
 #include <string>
@@ -25,8 +26,10 @@
 #include <zlib.h>
 
 #include "openssl/sha.h"
-#include "softbus_common.h"
-#include "softbus_bus_center.h"
+#include "parameter.h"
+
+#include "device_manager.h"
+#include "dm_device_info.h"
 
 #include "constants.h"
 #include "distributed_hardware_errno.h"
@@ -78,20 +81,29 @@ std::string GetRandomID()
     return ss.str();
 }
 
-std::string GetUUIDBySoftBus(const std::string &networkId)
+std::string GetUUIDByDm(const std::string &networkId)
 {
-    if (networkId.empty()) {
+    if (!IsIdLengthValid(networkId)) {
         return "";
     }
-    char uuid[UUID_BUF_LEN] = {0};
-    auto ret = GetNodeKeyInfo(DH_FWK_PKG_NAME.c_str(), networkId.c_str(), NodeDeviceInfoKey::NODE_KEY_UUID,
-        reinterpret_cast<uint8_t *>(uuid), UUID_BUF_LEN);
-    return (ret == DH_FWK_SUCCESS) ? std::string(uuid) : "";
+    std::string uuid = "";
+    auto ret = DeviceManager::GetInstance().GetUuidByNetworkId(DH_FWK_PKG_NAME, networkId, uuid);
+    return (ret == DH_FWK_SUCCESS) ? uuid : "";
+}
+
+std::string GetUDIDByDm(const std::string &networkId)
+{
+    if (!IsIdLengthValid(networkId)) {
+        return "";
+    }
+    std::string udid = "";
+    auto ret = DeviceManager::GetInstance().GetUdidByNetworkId(DH_FWK_PKG_NAME, networkId, udid);
+    return (ret == DH_FWK_SUCCESS) ? udid : "";
 }
 
 std::string GetDeviceIdByUUID(const std::string &uuid)
 {
-    if (uuid.size() == 0 || uuid.size() > MAX_ID_LEN) {
+    if (!IsIdLengthValid(uuid)) {
         DHLOGE("uuid is invalid!");
         return "";
     }
@@ -119,30 +131,32 @@ std::string Sha256(const std::string& in)
 
 DeviceInfo GetLocalDeviceInfo()
 {
-    DeviceInfo devInfo { "", "", "", "", 0 };
-    auto info = std::make_unique<NodeBasicInfo>();
-    auto ret = GetLocalNodeDeviceInfo(DH_FWK_PKG_NAME.c_str(), info.get());
+    DeviceInfo devInfo { "", "", "", "", "", "", 0 };
+    DmDeviceInfo info;
+    auto ret = DeviceManager::GetInstance().GetLocalDeviceInfo(DH_FWK_PKG_NAME, info);
     if (ret != DH_FWK_SUCCESS) {
         DHLOGE("GetLocalNodeDeviceInfo failed, errCode = %{public}d", ret);
         return devInfo;
     }
-    devInfo.networkId = info->networkId;
-    devInfo.uuid = GetUUIDBySoftBus(info->networkId);
+    devInfo.networkId = info.networkId;
+    devInfo.uuid = GetUUIDByDm(info.networkId);
     devInfo.deviceId = GetDeviceIdByUUID(devInfo.uuid);
-    devInfo.deviceName = info->deviceName;
-    devInfo.deviceType = info->deviceTypeId;
+    devInfo.udid = GetUDIDByDm(info.networkId);
+    devInfo.udidHash = Sha256(devInfo.udid);
+    devInfo.deviceName = info.deviceName;
+    devInfo.deviceType = info.deviceTypeId;
     return devInfo;
 }
 
 std::string GetLocalNetworkId()
 {
-    auto info = std::make_unique<NodeBasicInfo>();
-    auto ret = GetLocalNodeDeviceInfo(DH_FWK_PKG_NAME.c_str(), info.get());
+    DmDeviceInfo info;
+    auto ret = DeviceManager::GetInstance().GetLocalDeviceInfo(DH_FWK_PKG_NAME, info);
     if (ret != DH_FWK_SUCCESS) {
         DHLOGE("GetLocalNodeDeviceInfo failed, errCode = %{public}d", ret);
         return "";
     }
-    return info->networkId;
+    return info.networkId;
 }
 
 bool IsUInt8(const cJSON* jsonObj, const std::string& key)
@@ -253,6 +267,79 @@ std::string Decompress(const std::string& data)
  
     inflateEnd(&strm);
     return out;
+}
+
+bool GetSysPara(const char *key, bool &value)
+{
+    if (key == nullptr) {
+        DHLOGE("GetSysPara: key is nullptr");
+        return false;
+    }
+    char paraValue[20] = {0}; // 20 for system parameter
+    auto res = GetParameter(key, "false", paraValue, sizeof(paraValue));
+    if (res <= 0) {
+        DHLOGD("GetSysPara fail, key:%{public}s res:%{public}d", key, res);
+        return false;
+    }
+    DHLOGI("GetSysPara: key:%{public}s value:%{public}s", key, paraValue);
+    std::stringstream valueStr;
+    valueStr << paraValue;
+    valueStr >> std::boolalpha >> value;
+    return true;
+}
+
+bool IsIdLengthValid(const std::string &inputID)
+{
+    if (inputID.empty() || inputID.length() > MAX_ID_LEN) {
+        DHLOGE("On parameter length error, maybe empty or beyond MAX_ID_LEN!");
+        return false;
+    }
+    return true;
+}
+
+bool IsMessageLengthValid(const std::string &inputMessage)
+{
+    if (inputMessage.empty() || inputMessage.length() > MAX_MESSAGE_LEN) {
+        DHLOGE("On parameter error, maybe empty or beyond MAX_MESSAGE_LEN!");
+        return false;
+    }
+    return true;
+}
+
+bool IsJsonLengthValid(const std::string &inputJsonStr)
+{
+    if (inputJsonStr.empty() || inputJsonStr.length() > MAX_JSON_SIZE) {
+        DHLOGE("On parameter error, maybe empty or beyond MAX_JSON_SIZE");
+        return false;
+    }
+    return true;
+}
+
+bool IsArrayLengthValid(const std::vector<std::string> &inputArray)
+{
+    if (inputArray.empty() || inputArray.size() > MAX_ARR_SIZE) {
+        DHLOGE("On parameter error, maybe empty or beyond MAX_ARR_SIZE");
+        return false;
+    }
+    return true;
+}
+
+bool IsKeySizeValid(const std::string &inputKey)
+{
+    if (inputKey.empty() || inputKey.length() > MAX_KEY_SIZE) {
+        DHLOGE("On parameter error, maybe empty or beyond MAX_KEY_SIZE");
+        return false;
+    }
+    return true;
+}
+
+bool IsHashSizeValid(const std::string &inputHashValue)
+{
+    if (inputHashValue.empty() || inputHashValue.length() > MAX_HASH_SIZE) {
+        DHLOGE("On parameter error, maybe empty or beyond MAX_HASH_SIZE");
+        return false;
+    }
+    return true;
 }
 } // namespace DistributedHardware
 } // namespace OHOS

@@ -118,6 +118,7 @@ SoftbusChannelAdapter::SoftbusChannelAdapter()
     sessListener_.OnFile = nullptr;
     sessListener_.OnQos = nullptr;
     sessListener_.OnError = nullptr;
+    sessListener_.OnNegotiate = nullptr;
 }
 
 SoftbusChannelAdapter::~SoftbusChannelAdapter()
@@ -189,7 +190,7 @@ int32_t SoftbusChannelAdapter::CreateChannelServer(const std::string& pkgName, c
     }
     QosTV qos[] = {
         {.qos = QOS_TYPE_MIN_BW,        .value = 40 * 1024 * 1024},
-        {.qos = QOS_TYPE_MAX_LATENCY,       .value = 8000},
+        {.qos = QOS_TYPE_MAX_LATENCY,       .value = 4000},
         {.qos = QOS_TYPE_MIN_LATENCY,       .value = 2000},
     };
 
@@ -275,7 +276,7 @@ int32_t SoftbusChannelAdapter::OpenSoftbusChannel(const std::string &mySessName,
 
     QosTV qos[] = {
         {.qos = QOS_TYPE_MIN_BW,        .value = 40 * 1024 * 1024},
-        {.qos = QOS_TYPE_MAX_LATENCY,       .value = 8000},
+        {.qos = QOS_TYPE_MAX_LATENCY,       .value = 4000},
         {.qos = QOS_TYPE_MIN_LATENCY,       .value = 2000},
     };
     
@@ -562,6 +563,10 @@ void SoftbusChannelAdapter::OnSoftbusTimeSyncResult(const TimeSyncResultInfo *in
     AVTRANS_LOGI("On softbus channel time sync result:%{public}" PRId32, result);
     TRUE_RETURN(result == 0, "On softbus channel time sync failed");
 
+    if (info == nullptr) {
+        AVTRANS_LOGE("info id nullptr");
+        return;
+    }
     int32_t millisecond = info->result.millisecond;
     int32_t microsecond = info->result.microsecond;
     TimeSyncAccuracy accuracy  = info->result.accuracy;

@@ -114,7 +114,7 @@ int32_t AVReceiverEngine::InitControlCenter()
     int32_t ret = dhFwkKit_->InitializeAVCenter(TransRole::AV_RECEIVER, engineId_);
     TRUE_RETURN_V_MSG_E(ret != DH_AVT_SUCCESS, ERR_DH_AVT_CTRL_CENTER_INIT_FAIL, "init av trans control center failed");
 
-    ctlCtrCallback_ = new (std::nothrow) AVTransControlCenterCallback();
+    ctlCtrCallback_ = sptr<AVTransControlCenterCallback>(new (std::nothrow) AVTransControlCenterCallback());
     TRUE_RETURN_V_MSG_E(ctlCtrCallback_ == nullptr, ERR_DH_AVT_REGISTER_CALLBACK_FAIL,
         "new control center callback failed");
 
@@ -172,6 +172,10 @@ int32_t AVReceiverEngine::PreparePipeline(const std::string &configParam)
         BuildChannelDescription(ownerName_, peerDevId_));
     TRUE_RETURN_V(ret != ErrorCode::SUCCESS, ERR_DH_AVT_SET_PARAM_FAILED);
 
+    if (pipeline_ == nullptr) {
+        AVTRANS_LOGE("pipeline is nullptr.");
+        return ERR_DH_AVT_SET_PARAM_FAILED;
+    }
     ret = pipeline_->Prepare();
     TRUE_RETURN_V(ret != ErrorCode::SUCCESS, ERR_DH_AVT_PREPARE_FAILED);
 
@@ -187,6 +191,10 @@ int32_t AVReceiverEngine::Start()
     TRUE_RETURN_V_MSG_E(isErrState, ERR_DH_AVT_START_FAILED, "current state=%{public}" PRId32 " is invalid.",
         GetCurrentState());
 
+    if (pipeline_ == nullptr) {
+        AVTRANS_LOGE("pipeline is nullptr.");
+        return ERR_DH_AVT_START_FAILED;
+    }
     ErrorCode ret = pipeline_->Start();
     TRUE_RETURN_V(ret != ErrorCode::SUCCESS, ERR_DH_AVT_START_FAILED);
     SetCurrentState(StateId::STARTED);
@@ -196,6 +204,10 @@ int32_t AVReceiverEngine::Start()
 int32_t AVReceiverEngine::Stop()
 {
     AVTRANS_LOGI("Stop enter.");
+    if (pipeline_ == nullptr) {
+        AVTRANS_LOGE("pipeline is nullptr.");
+        return ERR_DH_AVT_START_FAILED;
+    }
     ErrorCode ret = pipeline_->Stop();
     TRUE_RETURN_V(ret != ErrorCode::SUCCESS, ERR_DH_AVT_STOP_FAILED);
     SetCurrentState(StateId::STOPPED);
@@ -226,17 +238,89 @@ int32_t AVReceiverEngine::Release()
     return DH_AVT_SUCCESS;
 }
 
+void AVReceiverEngine::SetParameterInner(AVTransTag tag, const std::string &value)
+{
+    switch (tag) {
+        case AVTransTag::VIDEO_CODEC_TYPE:
+            SetVideoCodecType(value);
+            break;
+        case AVTransTag::AUDIO_CODEC_TYPE:
+            SetAudioCodecType(value);
+            break;
+        case AVTransTag::AUDIO_CHANNEL_MASK:
+            SetAudioChannelMask(value);
+            break;
+        case AVTransTag::AUDIO_SAMPLE_RATE:
+            SetAudioSampleRate(value);
+            break;
+        case AVTransTag::AUDIO_CHANNEL_LAYOUT:
+            SetAudioChannelLayout(value);
+            break;
+        case AVTransTag::AUDIO_SAMPLE_FORMAT:
+            SetAudioSampleFormat(value);
+            break;
+        case AVTransTag::AUDIO_FRAME_SIZE:
+            SetAudioFrameSize(value);
+            break;
+        case AVTransTag::TIME_SYNC_RESULT:
+            SetSyncResult(value);
+            break;
+        case AVTransTag::START_AV_SYNC:
+            SetStartAvSync(value);
+            break;
+        case AVTransTag::STOP_AV_SYNC:
+            SetStopAvSync(value);
+            break;
+        case AVTransTag::SHARED_MEMORY_FD:
+            SetSharedMemoryFd(value);
+            break;
+        case AVTransTag::ENGINE_READY:
+            SetEngineReady(value);
+            break;
+        default:
+            break;
+    }
+}
+
 int32_t AVReceiverEngine::SetParameter(AVTransTag tag, const std::string &value)
 {
     bool isFilterNull = (avInput_ == nullptr) || (avOutput_ == nullptr) || (pipeline_ == nullptr);
     TRUE_RETURN_V_MSG_E(isFilterNull, ERR_DH_AVT_SETUP_FAILED, "filter or pipeline is null, set parameter failed.");
-    auto iter = funcMap_.find(tag);
-    if (iter == funcMap_.end()) {
-        AVTRANS_LOGE("AVTransTag %{public}u is undefined.", tag);
-        return ERR_DH_AVT_INVALID_PARAM;
+    AVTRANS_LOGI("AVTransTag=%{public}u.", tag);
+    switch (tag) {
+        case AVTransTag::VIDEO_WIDTH:
+            SetVideoWidth(value);
+            break;
+        case AVTransTag::VIDEO_HEIGHT:
+            SetVideoHeight(value);
+            break;
+        case AVTransTag::VIDEO_FRAME_RATE:
+            SetVideoFrameRate(value);
+            break;
+        case AVTransTag::AUDIO_BIT_RATE:
+            SetAudioBitRate(value);
+            break;
+        case AVTransTag::VIDEO_BIT_RATE:
+            SetVideoBitRate(value);
+            break;
+        case AVTransTag::VIDEO_CODEC_TYPE:
+        case AVTransTag::AUDIO_CODEC_TYPE:
+        case AVTransTag::AUDIO_CHANNEL_MASK:
+        case AVTransTag::AUDIO_SAMPLE_RATE:
+        case AVTransTag::AUDIO_CHANNEL_LAYOUT:
+        case AVTransTag::AUDIO_SAMPLE_FORMAT:
+        case AVTransTag::AUDIO_FRAME_SIZE:
+        case AVTransTag::TIME_SYNC_RESULT:
+        case AVTransTag::START_AV_SYNC:
+        case AVTransTag::STOP_AV_SYNC:
+        case AVTransTag::SHARED_MEMORY_FD:
+        case AVTransTag::ENGINE_READY:
+            SetParameterInner(tag, value);
+            break;
+        default:
+            AVTRANS_LOGE("AVTransTag %{public}u is undefined.", tag);
+            return ERR_DH_AVT_INVALID_PARAM;
     }
-    SetParaFunc &func = iter->second;
-    (this->*func)(value);
     return DH_AVT_SUCCESS;
 }
 
@@ -263,18 +347,30 @@ void AVReceiverEngine::RegRespFunMap()
 
 void AVReceiverEngine::SetVideoWidth(const std::string &value)
 {
+    if (avInput_ == nullptr) {
+        AVTRANS_LOGE("avInput_ is nullptr.");
+        return;
+    }
     avInput_->SetParameter(static_cast<int32_t>(Plugin::Tag::VIDEO_WIDTH), std::stoi(value));
     AVTRANS_LOGI("SetParameter VIDEO_WIDTH success, video width = %{public}s", value.c_str());
 }
 
 void AVReceiverEngine::SetVideoHeight(const std::string &value)
 {
+    if (avInput_ == nullptr) {
+        AVTRANS_LOGE("avInput_ is nullptr.");
+        return;
+    }
     avInput_->SetParameter(static_cast<int32_t>(Plugin::Tag::VIDEO_HEIGHT), std::stoi(value));
     AVTRANS_LOGI("SetParameter VIDEO_HEIGHT success, video height = %{public}s", value.c_str());
 }
 
 void AVReceiverEngine::SetVideoFrameRate(const std::string &value)
 {
+    if (avInput_ == nullptr || avOutput_ == nullptr) {
+        AVTRANS_LOGE("avInput_ or avOutput_ is nullptr.");
+        return;
+    }
     avInput_->SetParameter(static_cast<int32_t>(Plugin::Tag::VIDEO_FRAME_RATE), std::stoi(value));
     avOutput_->SetParameter(static_cast<int32_t>(Plugin::Tag::VIDEO_FRAME_RATE), std::stoi(value));
     AVTRANS_LOGI("SetParameter VIDEO_FRAME_RATE success, frame rate = %{public}s", value.c_str());
@@ -282,18 +378,30 @@ void AVReceiverEngine::SetVideoFrameRate(const std::string &value)
 
 void AVReceiverEngine::SetAudioBitRate(const std::string &value)
 {
+    if (avInput_ == nullptr) {
+        AVTRANS_LOGE("avInput_ is nullptr.");
+        return;
+    }
     avInput_->SetParameter(static_cast<int32_t>(Plugin::Tag::MEDIA_BITRATE), std::stoi(value));
     AVTRANS_LOGI("SetParameter MEDIA_BITRATE success, bit rate = %{public}s", value.c_str());
 }
 
 void AVReceiverEngine::SetVideoBitRate(const std::string &value)
 {
+    if (avInput_ == nullptr) {
+        AVTRANS_LOGE("avInput_ is nullptr.");
+        return;
+    }
     avInput_->SetParameter(static_cast<int32_t>(Plugin::Tag::MEDIA_BITRATE), std::stoi(value));
     AVTRANS_LOGI("SetParameter MEDIA_BITRATE success, bit rate = %{public}s", value.c_str());
 }
 
 void AVReceiverEngine::SetVideoCodecType(const std::string &value)
 {
+    if (avInput_ == nullptr || avOutput_ == nullptr) {
+        AVTRANS_LOGE("avInput_ or avOutput_ is nullptr.");
+        return;
+    }
     if (value == MIME_VIDEO_H264) {
         std::string mime = MEDIA_MIME_VIDEO_H264;
         avInput_->SetParameter(static_cast<int32_t>(Plugin::Tag::MIME), mime);
@@ -313,6 +421,10 @@ void AVReceiverEngine::SetVideoCodecType(const std::string &value)
 
 void AVReceiverEngine::SetAudioCodecType(const std::string &value)
 {
+    if (avInput_ == nullptr || avOutput_ == nullptr) {
+        AVTRANS_LOGE("avInput_ or avOutput_ is nullptr.");
+        return;
+    }
     std::string mime = MEDIA_MIME_AUDIO_AAC;
     avInput_->SetParameter(static_cast<int32_t>(Plugin::Tag::MIME), mime);
     mime = MEDIA_MIME_AUDIO_RAW;
@@ -322,6 +434,10 @@ void AVReceiverEngine::SetAudioCodecType(const std::string &value)
 
 void AVReceiverEngine::SetAudioChannelMask(const std::string &value)
 {
+    if (avInput_ == nullptr || avOutput_ == nullptr) {
+        AVTRANS_LOGE("avInput_ or avOutput_ is nullptr.");
+        return;
+    }
     avInput_->SetParameter(static_cast<int32_t>(Plugin::Tag::AUDIO_CHANNELS), std::stoi(value));
     avOutput_->SetParameter(static_cast<int32_t>(Plugin::Tag::AUDIO_CHANNELS), std::stoi(value));
     AVTRANS_LOGI("SetParameter AUDIO_CHANNELS success, audio channels = %{public}s", value.c_str());
@@ -329,6 +445,10 @@ void AVReceiverEngine::SetAudioChannelMask(const std::string &value)
 
 void AVReceiverEngine::SetAudioSampleRate(const std::string &value)
 {
+    if (avInput_ == nullptr || avOutput_ == nullptr) {
+        AVTRANS_LOGE("avInput_ or avOutput_ is nullptr.");
+        return;
+    }
     avInput_->SetParameter(static_cast<int32_t>(Plugin::Tag::AUDIO_SAMPLE_RATE), std::stoi(value));
     avOutput_->SetParameter(static_cast<int32_t>(Plugin::Tag::AUDIO_SAMPLE_RATE), std::stoi(value));
     AVTRANS_LOGI("SetParameter AUDIO_SAMPLE_RATE success, audio sample rate = %{public}s", value.c_str());
@@ -336,6 +456,10 @@ void AVReceiverEngine::SetAudioSampleRate(const std::string &value)
 
 void AVReceiverEngine::SetAudioChannelLayout(const std::string &value)
 {
+    if (avInput_ == nullptr || avOutput_ == nullptr) {
+        AVTRANS_LOGE("avInput_ or avOutput_ is nullptr.");
+        return;
+    }
     avInput_->SetParameter(static_cast<int32_t>(Plugin::Tag::AUDIO_CHANNEL_LAYOUT), std::stoi(value));
     avOutput_->SetParameter(static_cast<int32_t>(Plugin::Tag::AUDIO_CHANNEL_LAYOUT), std::stoi(value));
     AVTRANS_LOGI("SetParameter AUDIO_CHANNEL_LAYOUT success, audio channel layout = %{public}s", value.c_str());
@@ -343,36 +467,60 @@ void AVReceiverEngine::SetAudioChannelLayout(const std::string &value)
 
 void AVReceiverEngine::SetAudioSampleFormat(const std::string &value)
 {
+    if (avInput_ == nullptr) {
+        AVTRANS_LOGE("avInput_ is nullptr.");
+        return;
+    }
     avInput_->SetParameter(static_cast<int32_t>(Plugin::Tag::AUDIO_SAMPLE_FORMAT), std::stoi(value));
     AVTRANS_LOGI("SetParameter AUDIO_SAMPLE_FORMAT success, audio sample format = %{public}s", value.c_str());
 }
 
 void AVReceiverEngine::SetAudioFrameSize(const std::string &value)
 {
+    if (avInput_ == nullptr) {
+        AVTRANS_LOGE("avInput_ is nullptr.");
+        return;
+    }
     avInput_->SetParameter(static_cast<int32_t>(Plugin::Tag::AUDIO_SAMPLE_PER_FRAME), std::stoi(value));
     AVTRANS_LOGI("SetParameter AUDIO_SAMPLE_PER_FRAME success, audio sample per frame = %{public}s", value.c_str());
 }
 
 void AVReceiverEngine::SetSyncResult(const std::string &value)
 {
+    if (avOutput_ == nullptr) {
+        AVTRANS_LOGE("avOutput_ is nullptr.");
+        return;
+    }
     avOutput_->SetParameter(static_cast<int32_t>(Plugin::Tag::USER_TIME_SYNC_RESULT), value);
     AVTRANS_LOGI("SetParameter USER_TIME_SYNC_RESULT success, time sync result = %{public}s", value.c_str());
 }
 
 void AVReceiverEngine::SetStartAvSync(const std::string &value)
 {
+    if (avOutput_ == nullptr) {
+        AVTRANS_LOGE("avOutput_ is nullptr.");
+        return;
+    }
     avOutput_->SetParameter(static_cast<int32_t>(Plugin::Tag::USER_AV_SYNC_GROUP_INFO), value);
     AVTRANS_LOGI("SetParameter START_AV_SYNC success.");
 }
 
 void AVReceiverEngine::SetStopAvSync(const std::string &value)
 {
+    if (avOutput_ == nullptr) {
+        AVTRANS_LOGE("avOutput_ is nullptr.");
+        return;
+    }
     avOutput_->SetParameter(static_cast<int32_t>(Plugin::Tag::USER_AV_SYNC_GROUP_INFO), value);
     AVTRANS_LOGI("SetParameter STOP_AV_SYNC success.");
 }
 
 void AVReceiverEngine::SetSharedMemoryFd(const std::string &value)
 {
+    if (avOutput_ == nullptr) {
+        AVTRANS_LOGE("avOutput_ is nullptr.");
+        return;
+    }
     avOutput_->SetParameter(static_cast<int32_t>(Plugin::Tag::USER_SHARED_MEMORY_FD), value);
     AVTRANS_LOGI("SetParameter USER_SHARED_MEMORY_FD success, shared memory info = %{public}s", value.c_str());
 }

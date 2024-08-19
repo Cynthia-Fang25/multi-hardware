@@ -59,11 +59,7 @@ void DHCommTool::UnInit()
 
 std::shared_ptr<DHCommTool> DHCommTool::GetInstance()
 {
-    static std::shared_ptr<DHCommTool> instance(new(std::nothrow) DHCommTool);
-    if (instance == nullptr) {
-        DHLOGE("instance is nullptr, because applying memory fail!");
-        return nullptr;
-    }
+    static std::shared_ptr<DHCommTool> instance = std::make_shared<DHCommTool>();
     return instance;
 }
 
@@ -108,6 +104,10 @@ void DHCommTool::GetAndSendLocalFullCaps(const std::string &reqNetworkId)
     capsRsp.networkId = GetLocalNetworkId();
     capsRsp.caps = resInfos;
     cJSON *root = cJSON_CreateObject();
+    if (root == nullptr) {
+        DHLOGE("Create cJSON object failed.");
+        return;
+    }
     ToJson(root, capsRsp);
     char *msg = cJSON_PrintUnformatted(root);
     if (msg == nullptr) {
@@ -197,7 +197,7 @@ void DHCommTool::DHCommToolEventHandler::ProcessFullCapsRsp(const FullCapsRsp &c
     const std::shared_ptr<DHCommTool> dhCommToolPtr)
 {
     if (capsRsp.networkId.empty() || capsRsp.caps.empty()) {
-        DHLOGE("Receive remote caps info invalid");
+        DHLOGE("Receive remote caps info invalid!");
         return;
     }
     // after receive rsp, close dsoftbus channel

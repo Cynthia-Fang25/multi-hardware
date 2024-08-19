@@ -34,6 +34,7 @@ ohos_shared_library("distributedhardwarefwksvr") {
     "${av_trans_path}/common/include",
     "${av_trans_path}/interface",
     "${innerkits_path}/include",
+    "${innerkits_path}/include/ipc",
     "${common_path}/log/include",
     "${common_path}/utils/include",
     "${utils_path}/include/log",
@@ -118,8 +119,12 @@ ohos_shared_library("distributedhardwarefwksvr") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  if (dhardware_low_latency) {
+  if (distributed_hardware_fwk_low_latency) {
     defines += [ "DHARDWARE_LOW_LATENCY" ]
+  }
+
+  if (!distributed_hardware_fwk_low_latency) {
+    defines += [ "DHARDWARE_OPEN_SOURCE" ]
   }
 
   external_deps = [

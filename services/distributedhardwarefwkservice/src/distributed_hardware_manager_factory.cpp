@@ -35,6 +35,8 @@
 #include "distributed_hardware_log.h"
 #include "distributed_hardware_manager.h"
 #include "iservice_registry.h"
+#include "device_param_mgr.h"
+#include "meta_info_manager.h"
 #include "system_ability_definition.h"
 
 namespace OHOS {
@@ -61,7 +63,8 @@ bool DistributedHardwareManagerFactory::InitLocalDevInfo()
 
     deviceList.clear();
     DeviceManager::GetInstance().GetTrustedDeviceList(DH_FWK_PKG_NAME, "", deviceList);
-    if (deviceList.size() == 0 || deviceList.size() > MAX_ONLINE_DEVICE_SIZE) {
+    if ((deviceList.size() == 0 || deviceList.size() > MAX_ONLINE_DEVICE_SIZE) &&
+        DHContext::GetInstance().GetIsomerismConnectCount() == 0) {
         DHLOGI("After InitLocalDevInfo, no device online, exit dhfwk");
         ExitDHFWK();
     }
@@ -91,6 +94,7 @@ void DistributedHardwareManagerFactory::UnInit()
     // release all the resources synchronously
     DistributedHardwareManager::GetInstance().Release();
     isInit = false;
+    flagUnInit_.store(false);
     DHTraceEnd();
     CheckExitSAOrNot();
 }
@@ -117,7 +121,8 @@ void DistributedHardwareManagerFactory::CheckExitSAOrNot()
 {
     std::vector<DmDeviceInfo> deviceList;
     DeviceManager::GetInstance().GetTrustedDeviceList(DH_FWK_PKG_NAME, "", deviceList);
-    if (deviceList.size() == 0 || deviceList.size() > MAX_ONLINE_DEVICE_SIZE) {
+    if ((deviceList.size() == 0 || deviceList.size() > MAX_ONLINE_DEVICE_SIZE) &&
+        DHContext::GetInstance().GetIsomerismConnectCount() == 0) {
         ExitDHFWK();
         return;
     }
@@ -126,12 +131,15 @@ void DistributedHardwareManagerFactory::CheckExitSAOrNot()
     Init();
     for (const auto &deviceInfo : deviceList) {
         const auto networkId = std::string(deviceInfo.networkId);
-        const auto uuid = GetUUIDBySoftBus(networkId);
+        const auto uuid = GetUUIDByDm(networkId);
+        const auto udid = GetUDIDByDm(networkId);
         DHLOGI("Send trusted device online, networkId = %{public}s, uuid = %{public}s",
             GetAnonyString(networkId).c_str(),
             GetAnonyString(uuid).c_str());
-        std::thread(&DistributedHardwareManagerFactory::SendOnLineEvent, this, networkId, uuid,
-            deviceInfo.deviceTypeId).detach();
+        uint16_t deviceType = deviceInfo.deviceTypeId;
+        std::thread([this, networkId, uuid, udid, deviceType]() {
+            this->SendOnLineEvent(networkId, uuid, udid, deviceType);
+        }).detach();
     }
 }
 
@@ -141,15 +149,19 @@ bool DistributedHardwareManagerFactory::IsInit()
 }
 
 int32_t DistributedHardwareManagerFactory::SendOnLineEvent(const std::string &networkId, const std::string &uuid,
-    uint16_t deviceType)
+    const std::string &udid, uint16_t deviceType)
 {
+    if (!IsIdLengthValid(networkId) || !IsIdLengthValid(uuid) || !IsIdLengthValid(udid)) {
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     int32_t ret = pthread_setname_np(pthread_self(), SEND_ONLINE);
     if (ret != DH_FWK_SUCCESS) {
         DHLOGE("SendOnLineEvent setname failed.");
     }
-    if (networkId.size() == 0 || networkId.size() > MAX_ID_LEN || uuid.size() == 0 || uuid.size() > MAX_ID_LEN) {
-        DHLOGE("NetworkId or uuid is invalid");
-        return ERR_DH_FWK_PARA_INVALID;
+
+    if (flagUnInit_.load()) {
+        DHLOGE("is in uniniting, can not process online event.");
+        return ERR_DH_FWK_HARDWARE_MANAGER_INIT_FAILED;
     }
 
     if (DHContext::GetInstance().IsDeviceOnline(uuid)) {
@@ -157,14 +169,18 @@ int32_t DistributedHardwareManagerFactory::SendOnLineEvent(const std::string &ne
         return ERR_DH_FWK_HARDWARE_MANAGER_DEVICE_REPEAT_ONLINE;
     }
 
-    DHContext::GetInstance().AddOnlineDevice(uuid, networkId);
+    DHContext::GetInstance().AddOnlineDevice(udid, uuid, networkId);
 
     if (!isInit && !Init()) {
         DHLOGE("distributedHardwareMgr is null");
         return ERR_DH_FWK_HARDWARE_MANAGER_INIT_FAILED;
     }
 
-    auto onlineResult = DistributedHardwareManager::GetInstance().SendOnLineEvent(networkId, uuid, deviceType);
+    if (DeviceParamMgr::GetInstance().IsDeviceE2ESync()) {
+        DHLOGI("e2e device, need initiative sync data.");
+        MetaInfoManager::GetInstance()->SyncDataByNetworkId(networkId);
+    }
+    auto onlineResult = DistributedHardwareManager::GetInstance().SendOnLineEvent(networkId, uuid, udid, deviceType);
     if (onlineResult != DH_FWK_SUCCESS) {
         DHLOGE("online failed, errCode = %{public}d", onlineResult);
         return onlineResult;
@@ -173,13 +189,11 @@ int32_t DistributedHardwareManagerFactory::SendOnLineEvent(const std::string &ne
 }
 
 int32_t DistributedHardwareManagerFactory::SendOffLineEvent(const std::string &networkId, const std::string &uuid,
-    uint16_t deviceType)
+    const std::string &udid, uint16_t deviceType)
 {
-    if (networkId.empty() || networkId.size() > MAX_ID_LEN || uuid.empty() || uuid.size() > MAX_ID_LEN) {
-        DHLOGE("NetworkId or uuid is invalid");
+    if (!IsIdLengthValid(networkId) || !IsIdLengthValid(uuid) || !IsIdLengthValid(udid)) {
         return ERR_DH_FWK_PARA_INVALID;
     }
-
     if (!isInit && !Init()) {
         DHLOGE("distributedHardwareMgr is null");
         return ERR_DH_FWK_HARDWARE_MANAGER_INIT_FAILED;
@@ -191,16 +205,15 @@ int32_t DistributedHardwareManagerFactory::SendOffLineEvent(const std::string &n
         return ERR_DH_FWK_HARDWARE_MANAGER_DEVICE_REPEAT_OFFLINE;
     }
 
-    auto offlineResult = DistributedHardwareManager::GetInstance().SendOffLineEvent(networkId, uuid, deviceType);
-    if (offlineResult != DH_FWK_SUCCESS) {
-        DHLOGE("offline failed, errCode = %{public}d", offlineResult);
-        return offlineResult;
+    if (DHContext::GetInstance().GetOnlineCount() == 1 &&
+        DHContext::GetInstance().GetIsomerismConnectCount() == 0) {
+        flagUnInit_.store(true);
+        DHLOGI("no online device, set uninit flag true");
     }
 
-    DHContext::GetInstance().RemoveOnlineDevice(uuid);
-    if (DistributedHardwareManager::GetInstance().GetOnLineCount() == 0) {
-        DHLOGI("all devices are offline, start to free the resource");
-        UnInit();
+    auto offlineResult = DistributedHardwareManager::GetInstance().SendOffLineEvent(networkId, uuid, udid, deviceType);
+    if (offlineResult != DH_FWK_SUCCESS) {
+        DHLOGE("offline failed, errCode = %{public}d", offlineResult);
     }
     return DH_FWK_SUCCESS;
 }
@@ -242,6 +255,11 @@ int32_t DistributedHardwareManagerFactory::GetComponentVersion(std::unordered_ma
 int32_t DistributedHardwareManagerFactory::Dump(const std::vector<std::string> &argsStr, std::string &result)
 {
     return DistributedHardwareManager::GetInstance().Dump(argsStr, result);
+}
+
+bool DistributedHardwareManagerFactory::GetUnInitFlag()
+{
+    return flagUnInit_.load();
 }
 } // namespace DistributedHardware
 } // namespace OHOS

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -31,21 +31,25 @@ class DistributedHardwareManagerFactory {
 public:
     bool InitLocalDevInfo();
     bool IsInit();
-    int32_t SendOnLineEvent(const std::string &networkId, const std::string &uuid, uint16_t deviceType);
-    int32_t SendOffLineEvent(const std::string &networkId, const std::string &uuid, uint16_t deviceType);
-    int32_t SendDeviceChangedEvent(const std::string &networkId, const std::string &uuid, uint16_t deviceType);
+    int32_t SendOnLineEvent(const std::string &networkId, const std::string &uuid, const std::string &udid,
+        uint16_t deviceType);
+    int32_t SendOffLineEvent(const std::string &networkId, const std::string &uuid, const std::string &udid,
+        uint16_t deviceType);
+    int32_t SendDeviceChangedEvent(const std::string &networkId, const std::string &uuid, const std::string &udid,
+        uint16_t deviceType);
     int32_t GetComponentVersion(std::unordered_map<DHType, std::string> &versionMap);
 
     int Dump(const std::vector<std::string> &argsStr, std::string &result);
-
+    void UnInit();
+    bool GetUnInitFlag();
 private:
     bool Init();
-    void UnInit();
     void CheckExitSAOrNot();
     void ExitDHFWK();
 
 private:
     std::atomic<bool> isInit = false;
+    std::atomic<bool> flagUnInit_ = false;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

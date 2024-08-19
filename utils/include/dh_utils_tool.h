@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -34,7 +34,9 @@ int64_t GetCurrentTime();
  */
 std::string GetRandomID();
 
-std::string GetUUIDBySoftBus(const std::string &networkId);
+std::string GetUUIDByDm(const std::string &networkId);
+
+std::string GetUDIDByDm(const std::string &networkId);
 
 DeviceInfo GetLocalDeviceInfo();
 
@@ -61,6 +63,20 @@ bool IsArray(const cJSON* jsonObj, const std::string& key);
 
 std::string Compress(const std::string& data);
 std::string Decompress(const std::string& data);
+
+bool GetSysPara(const char *key, bool &value);
+
+bool IsIdLengthValid(const std::string &input);
+
+bool IsMessageLengthValid(const std::string &input);
+
+bool IsJsonLengthValid(const std::string &jsonStr);
+
+bool IsArrayLengthValid(const std::vector<std::string> &array);
+
+bool IsKeySizeValid(const std::string &key);
+
+bool IsHashSizeValid(const std::string &hashValue);
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

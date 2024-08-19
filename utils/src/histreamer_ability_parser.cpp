@@ -37,6 +37,10 @@ static const std::string VIDEO_BIT_STREAM_FMT = "vd_bit_stream_fmt";
 
 void FromJson(const cJSON *jsonObject, AudioEncoderIn &audioEncoderIn)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     if (!IsString(jsonObject, MIME)) {
         DHLOGE("AudioEncoderIn MIME is invalid!\n");
         return;
@@ -51,34 +55,38 @@ void FromJson(const cJSON *jsonObject, AudioEncoderIn &audioEncoderIn)
         DHLOGE("AudioEncoderIn SAMPLE_RATE is invalid\n");
         return;
     }
-    cJSON *sampleRateItem;
+    cJSON *sampleRateItem = nullptr;
     cJSON_ArrayForEach(sampleRateItem, sampleRate) {
-    audioEncoderIn.sample_rate.push_back((uint32_t)sampleRateItem->valuedouble);
+        audioEncoderIn.sample_rate.push_back((uint32_t)sampleRateItem->valuedouble);
     }
 }
 
 void FromJson(const cJSON *jsonObject, AudioEncoderOut &audioEncoderOut)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     if (!IsString(jsonObject, MIME)) {
         DHLOGE("AudioEncoderOut MIME is invalid!");
         return;
     }
     audioEncoderOut.mime = cJSON_GetObjectItem(jsonObject, MIME.c_str())->valuestring;
     if (!IsUInt32(jsonObject, AD_MPEG_VER)) {
-        DHLOGE("AudioEncoderOut AD_MPEG_VER is invalid");
+        DHLOGE("AudioEncoderOut AD_MPEG_VER is invalid!");
         return;
     }
     audioEncoderOut.ad_mpeg_ver = (uint32_t)cJSON_GetObjectItem(jsonObject, AD_MPEG_VER.c_str())->valuedouble;
 
     if (!IsUInt8(jsonObject, AUDIO_AAC_PROFILE)) {
-        DHLOGE("AudioEncoderOut AUDIO_AAC_PROFILE is invalid");
+        DHLOGE("AudioEncoderOut AUDIO_AAC_PROFILE is invalid!");
         return;
     }
     audioEncoderOut.aac_profile =
         (AudioAacProfile)cJSON_GetObjectItem(jsonObject, AUDIO_AAC_PROFILE.c_str())->valuedouble;
 
     if (!IsUInt8(jsonObject, AUDIO_AAC_STREAM_FORMAT)) {
-        DHLOGE("AudioEncoderOut AUDIO_AAC_STREAM_FORMAT is invalid");
+        DHLOGE("AudioEncoderOut AUDIO_AAC_STREAM_FORMAT is invalid!");
         return;
     }
     audioEncoderOut.aac_stm_fmt =
@@ -87,69 +95,81 @@ void FromJson(const cJSON *jsonObject, AudioEncoderOut &audioEncoderOut)
 
 void FromJson(const cJSON *jsonObject, AudioEncoder &audioEncoder)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     if (!IsString(jsonObject, NAME)) {
-        DHLOGE("AudioEncoder NAME is invalid");
+        DHLOGE("AudioEncoder NAME is invalid!");
         return;
     }
     audioEncoder.name = cJSON_GetObjectItem(jsonObject, NAME.c_str())->valuestring;
 
     if (!IsArray(jsonObject, INS)) {
-        DHLOGE("AudioEncoder INS is invalid");
+        DHLOGE("AudioEncoder INS is invalid!");
         return;
     }
     cJSON *insJson = cJSON_GetObjectItem(jsonObject, INS.c_str());
-    cJSON *inJson;
+    cJSON *inJson = nullptr;
     cJSON_ArrayForEach(inJson, insJson) {
-    AudioEncoderIn in;
-    FromJson(inJson, in);
-    audioEncoder.ins.push_back(in);
+        AudioEncoderIn in;
+        FromJson(inJson, in);
+        audioEncoder.ins.push_back(in);
     }
 
     if (!IsArray(jsonObject, OUTS)) {
-        DHLOGE("AudioEncoder OUTS is invalid");
+        DHLOGE("AudioEncoder OUTS is invalid!");
         return;
     }
     cJSON *outsJson = cJSON_GetObjectItem(jsonObject, OUTS.c_str());
-    cJSON *outJson;
+    cJSON *outJson = nullptr;
     cJSON_ArrayForEach(outJson, outsJson) {
-    AudioEncoderOut out;
-    FromJson(outJson, out);
-    audioEncoder.outs.push_back(out);
+        AudioEncoderOut out;
+        FromJson(outJson, out);
+        audioEncoder.outs.push_back(out);
     }
 }
 
 void FromJson(const cJSON *jsonObject, AudioDecoderIn &audioDecoderIn)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     if (!IsString(jsonObject, MIME)) {
-        DHLOGE("AudioDecoderIn MIME is invalid");
+        DHLOGE("AudioDecoderIn MIME is invalid!");
         return;
     }
     audioDecoderIn.mime = cJSON_GetObjectItem(jsonObject, MIME.c_str())->valuestring;
 
     if (!IsArray(jsonObject, AUDIO_CHANNEL_LAYOUT)) {
-        DHLOGE("AudioDecoder AUDIO_CHANNEL_LAYOUT is invalid");
+        DHLOGE("AudioDecoder AUDIO_CHANNEL_LAYOUT is invalid!");
         return;
     }
     const cJSON *channelLayoutJson = cJSON_GetObjectItem(jsonObject, AUDIO_CHANNEL_LAYOUT.c_str());
-    const cJSON *layout;
+    const cJSON *layout = nullptr;
     cJSON_ArrayForEach(layout, channelLayoutJson) {
-    audioDecoderIn.channel_layout.push_back((AudioChannelLayout)layout->valuedouble);
+        audioDecoderIn.channel_layout.push_back((AudioChannelLayout)layout->valuedouble);
     }
 }
 
 void FromJson(const cJSON *jsonObject, AudioDecoderOut &audioDecoderOut)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     if (!IsString(jsonObject, MIME)) {
-        DHLOGE("AudioDecoderOut MIME is invalid");
+        DHLOGE("AudioDecoderOut MIME is invalid!");
         return;
     }
     audioDecoderOut.mime = cJSON_GetObjectItem(jsonObject, MIME.c_str())->valuestring;
     if (!IsArray(jsonObject, AUDIO_SAMPLE_FORMAT)) {
-        DHLOGE("AudioDecoderOut AUDIO_SAMPLE_FORMAT is invalid");
+        DHLOGE("AudioDecoderOut AUDIO_SAMPLE_FORMAT is invalid!");
         return;
     }
     cJSON *sampleFormatJson = cJSON_GetObjectItem(jsonObject, AUDIO_SAMPLE_FORMAT.c_str());
-    cJSON *format;
+    cJSON *format = nullptr;
     cJSON_ArrayForEach(format, sampleFormatJson) {
         audioDecoderOut.sample_fmt.push_back((AudioSampleFormat)format->valuedouble);
     }
@@ -157,29 +177,33 @@ void FromJson(const cJSON *jsonObject, AudioDecoderOut &audioDecoderOut)
 
 void FromJson(const cJSON *jsonObject, AudioDecoder &audioDecoder)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     if (!IsString(jsonObject, NAME)) {
-        DHLOGE("AudioDecoderOut MIME is invalid");
+        DHLOGE("AudioDecoderOut MIME is invalid!");
         return;
     }
     audioDecoder.name = cJSON_GetObjectItem(jsonObject, NAME.c_str())->valuestring;
 
     if (!IsArray(jsonObject, INS)) {
-        DHLOGE("AudioDecoder OUTS is invalid");
+        DHLOGE("AudioDecoder OUTS is invalid!");
         return;
     }
     const cJSON *insJson = cJSON_GetObjectItem(jsonObject, INS.c_str());
-    cJSON *inJson;
+    cJSON *inJson = nullptr;
     cJSON_ArrayForEach(inJson, insJson) {
         AudioDecoderIn in;
         FromJson(inJson, in);
         audioDecoder.ins.push_back(in);
     }
     if (!IsArray(jsonObject, OUTS)) {
-        DHLOGE("AudioDecoder OUTS is invalid");
+        DHLOGE("AudioDecoder OUTS is invalid!");
         return;
     }
     cJSON *outsJson = cJSON_GetObjectItem(jsonObject, OUTS.c_str());
-    cJSON *outJson;
+    cJSON *outJson = nullptr;
     cJSON_ArrayForEach(outJson, outsJson) {
         AudioDecoderOut out;
         FromJson(outJson, out);
@@ -189,18 +213,22 @@ void FromJson(const cJSON *jsonObject, AudioDecoder &audioDecoder)
 
 void FromJson(const cJSON *jsonObject, VideoEncoderIn &videoEncoderIn)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     if (!IsString(jsonObject, MIME)) {
-        DHLOGE("VideoEncoderIn MIME is invalid");
+        DHLOGE("VideoEncoderIn MIME is invalid!");
         return;
     }
     videoEncoderIn.mime = cJSON_GetObjectItem(jsonObject, MIME.c_str())->valuestring;
 
     if (!IsArray(jsonObject, VIDEO_PIXEL_FMT)) {
-        DHLOGE("VideoEncoderIn VIDEO_PIXEL_FMT is invalid");
+        DHLOGE("VideoEncoderIn VIDEO_PIXEL_FMT is invalid!");
         return;
     }
     cJSON *videoPixelFmt = cJSON_GetObjectItem(jsonObject, VIDEO_PIXEL_FMT.c_str());
-    cJSON *pixelFmt;
+    cJSON *pixelFmt = nullptr;
     cJSON_ArrayForEach(pixelFmt, videoPixelFmt) {
         videoEncoderIn.pixel_fmt.push_back((VideoPixelFormat)pixelFmt->valuedouble);
     }
@@ -208,8 +236,12 @@ void FromJson(const cJSON *jsonObject, VideoEncoderIn &videoEncoderIn)
 
 void FromJson(const cJSON *jsonObject, VideoEncoderOut &videoEncoderOut)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     if (!IsString(jsonObject, MIME)) {
-        DHLOGE("VideoEncoderIn MIME is invalid");
+        DHLOGE("VideoEncoderIn MIME is invalid!");
         return;
     }
     videoEncoderOut.mime = cJSON_GetObjectItem(jsonObject, MIME.c_str())->valuestring;
@@ -217,18 +249,22 @@ void FromJson(const cJSON *jsonObject, VideoEncoderOut &videoEncoderOut)
 
 void FromJson(const cJSON *jsonObject, VideoEncoder &videoEncoder)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     if (!IsString(jsonObject, NAME)) {
-        DHLOGE("VideoEncoder NAME is invalid");
+        DHLOGE("VideoEncoder NAME is invalid!");
         return;
     }
     videoEncoder.name = cJSON_GetObjectItem(jsonObject, NAME.c_str())->valuestring;
 
     if (!IsArray(jsonObject, INS)) {
-        DHLOGE("VideoEncoder INS is invalid");
+        DHLOGE("VideoEncoder INS is invalid!");
         return;
     }
     cJSON *videoEncoderInsJson = cJSON_GetObjectItem(jsonObject, INS.c_str());
-    cJSON *inJson;
+    cJSON *inJson = nullptr;
     cJSON_ArrayForEach(inJson, videoEncoderInsJson) {
         VideoEncoderIn in;
         FromJson(inJson, in);
@@ -236,11 +272,11 @@ void FromJson(const cJSON *jsonObject, VideoEncoder &videoEncoder)
     }
 
     if (!IsArray(jsonObject, OUTS)) {
-        DHLOGE("VideoEncoder OUTS is invalid");
+        DHLOGE("VideoEncoder OUTS is invalid!");
         return;
     }
     cJSON *videoEncoderOutsJson = cJSON_GetObjectItem(jsonObject, OUTS.c_str());
-    cJSON *outJson;
+    cJSON *outJson = nullptr;
     cJSON_ArrayForEach(outJson, videoEncoderOutsJson) {
         VideoEncoderOut out;
         FromJson(outJson, out);
@@ -250,18 +286,22 @@ void FromJson(const cJSON *jsonObject, VideoEncoder &videoEncoder)
 
 void FromJson(const cJSON *jsonObject, VideoDecoderIn &videoDecoderIn)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     if (!IsString(jsonObject, MIME)) {
-        DHLOGE("VideoDecoderIn MIME is invalid");
+        DHLOGE("VideoDecoderIn MIME is invalid!");
         return;
     }
     videoDecoderIn.mime = cJSON_GetObjectItem(jsonObject, MIME.c_str())->valuestring;
 
     if (!IsArray(jsonObject, VIDEO_BIT_STREAM_FMT)) {
-        DHLOGE("VideoDecoderIn VIDEO_BIT_STREAM_FMT is invalid");
+        DHLOGE("VideoDecoderIn VIDEO_BIT_STREAM_FMT is invalid!");
         return;
     }
     cJSON *videoBitStreamFmtJson = cJSON_GetObjectItem(jsonObject, VIDEO_BIT_STREAM_FMT.c_str());
-    cJSON *fmt;
+    cJSON *fmt = nullptr;
     cJSON_ArrayForEach(fmt, videoBitStreamFmtJson) {
         videoDecoderIn.vd_bit_stream_fmt.push_back((VideoBitStreamFormat)(fmt->valuedouble));
     }
@@ -269,18 +309,22 @@ void FromJson(const cJSON *jsonObject, VideoDecoderIn &videoDecoderIn)
 
 void FromJson(const cJSON *jsonObject, VideoDecoderOut &videoDecoderOut)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     if (!IsString(jsonObject, MIME)) {
-        DHLOGE("VideoDecoderOut MIME is invalid");
+        DHLOGE("VideoDecoderOut MIME is invalid!");
         return;
     }
     videoDecoderOut.mime = cJSON_GetObjectItem(jsonObject, MIME.c_str())->valuestring;
 
     if (!IsArray(jsonObject, VIDEO_BIT_STREAM_FMT)) {
-        DHLOGE("videoDecoderOut VIDEO_PIXEL_FMT is invalid");
+        DHLOGE("videoDecoderOut VIDEO_PIXEL_FMT is invalid!");
         return;
     }
     cJSON *videoPixelFmtJson = cJSON_GetObjectItem(jsonObject, VIDEO_PIXEL_FMT.c_str());
-    cJSON *fmt;
+    cJSON *fmt = nullptr;
     cJSON_ArrayForEach(fmt, videoPixelFmtJson) {
         videoDecoderOut.pixel_fmt.push_back((VideoPixelFormat)(fmt->valuedouble));
     }
@@ -288,18 +332,22 @@ void FromJson(const cJSON *jsonObject, VideoDecoderOut &videoDecoderOut)
 
 void FromJson(const cJSON *jsonObject, VideoDecoder &videoDecoder)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     if (!IsString(jsonObject, NAME)) {
-        DHLOGE("VideoDecoder NAME is invalid");
+        DHLOGE("VideoDecoder NAME is invalid!");
         return;
     }
     videoDecoder.name = cJSON_GetObjectItem(jsonObject, NAME.c_str())->valuestring;
 
     if (!IsArray(jsonObject, INS)) {
-        DHLOGE("VideoDecoder INS is invalid");
+        DHLOGE("VideoDecoder INS is invalid!");
         return;
     }
     cJSON *videoDecoderInsJson = cJSON_GetObjectItem(jsonObject, INS.c_str());
-    cJSON *inJson;
+    cJSON *inJson = nullptr;
     cJSON_ArrayForEach(inJson, videoDecoderInsJson) {
         VideoDecoderIn in;
         FromJson(inJson, in);
@@ -307,11 +355,11 @@ void FromJson(const cJSON *jsonObject, VideoDecoder &videoDecoder)
     }
 
     if (!IsArray(jsonObject, OUTS)) {
-        DHLOGE("VideoDecoder OUTS is invalid");
+        DHLOGE("VideoDecoder OUTS is invalid!");
         return;
     }
     cJSON *videoDecoderOutsJson =  cJSON_GetObjectItem(jsonObject, OUTS.c_str());
-    cJSON *outJson;
+    cJSON *outJson = nullptr;
     cJSON_ArrayForEach(outJson, videoDecoderOutsJson) {
         VideoDecoderOut out;
         FromJson(outJson, out);
@@ -322,6 +370,10 @@ void FromJson(const cJSON *jsonObject, VideoDecoder &videoDecoder)
 template <typename T>
 void FromJson(const std::string &key, const cJSON *jsonObject, std::vector<T> &objs)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     cJSON *json = cJSON_GetObjectItem(jsonObject, key.c_str());
     if (json == NULL) {
         DHLOGE("JSONObject key invalid, key: %{public}s", key.c_str());

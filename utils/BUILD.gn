@@ -44,6 +44,7 @@ ohos_shared_library("distributedhardwareutils") {
 
   sources = [
     "src/anonymous_string.cpp",
+    "src/device_param_mgr.cpp",
     "src/dh_utils_hisysevent.cpp",
     "src/dh_utils_hitrace.cpp",
     "src/dh_utils_tool.cpp",
@@ -61,10 +62,11 @@ ohos_shared_library("distributedhardwareutils") {
   external_deps = [
     "cJSON:cjson",
     "c_utils:utils",
-    "dsoftbus:softbus_client",
+    "device_manager:devicemanagersdk",
     "hilog:libhilog",
     "hisysevent:libhisysevent",
     "hitrace:hitrace_meter",
+    "init:libbegetutil",
     "openssl:libcrypto_shared",
     "safwk:system_ability_fwk",
     "zlib:shared_libz",

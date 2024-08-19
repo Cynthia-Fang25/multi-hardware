@@ -188,7 +188,7 @@ ErrorCode AVOutputFilter::FindPlugin()
     auto nameList = PluginManager::Instance().ListPlugins(PluginType::GENERIC_PLUGIN);
     for (const std::string& name : nameList) {
         auto info = PluginManager::Instance().GetPluginInfo(PluginType::GENERIC_PLUGIN, name);
-        if (info->inCaps.empty() || mime != info->inCaps[0].mime) {
+        if (info == nullptr || info->inCaps.empty() || mime != info->inCaps[0].mime) {
             continue;
         }
         if (CreatePlugin(info) == ErrorCode::SUCCESS) {
@@ -343,7 +343,7 @@ ErrorCode AVOutputFilter::SetDataCallBack()
         AVTRANS_LOGE("plugin is nullptr!");
         return ErrorCode::ERROR_INVALID_PARAMETER_VALUE;
     }
-    plugin_->SetDataCallback(std::bind(&AVOutputFilter::OnDataCallback, this, std::placeholders::_1));
+    plugin_->SetDataCallback([this](std::shared_ptr<Plugin::Buffer> buffer) { this->OnDataCallback(buffer); });
     return ErrorCode::SUCCESS;
 }
 

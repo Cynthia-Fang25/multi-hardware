@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -36,6 +36,11 @@ namespace DistributedHardware {
     constexpr int32_t MODE_ENABLE = 0;
     constexpr int32_t MODE_DISABLE = 1;
     constexpr uint32_t MAX_SWITCH_SIZE = 256;
+    constexpr uint32_t MAX_ROUND_SIZE = 1000;
+    constexpr uint32_t MAX_JSON_SIZE = 40 * 1024 * 1024;
+    constexpr uint32_t MAX_HASH_SIZE = 64;
+    constexpr uint32_t MAX_KEY_SIZE = 256;
+
     const std::string LOW_LATENCY_KEY = "identity";
     const std::u16string DHMS_STUB_INTERFACE_TOKEN = u"ohos.distributedhardware.accessToken";
     const std::string APP_ID = "dtbhardware_manager_service";
@@ -51,6 +56,7 @@ namespace DistributedHardware {
     const std::string DH_TYPE = "dh_type";
     const std::string DH_ATTRS = "dh_attrs";
     const std::string DH_SUBTYPE = "dh_subtype";
+    const std::string DEV_UDID_HASH = "udid_hash";
     const std::string DH_LOG_TITLE_TAG = "DHFWK";
     const std::string DH_VER = "dh_ver";
     const std::string COMP_VER = "comp_ver";
@@ -82,6 +88,10 @@ namespace DistributedHardware {
     const uint32_t EVENT_CAPABILITY_INFO_DB_RECOVER = 201;
     const uint32_t EVENT_DATA_SYNC_MANUAL = 301;
     const uint32_t EVENT_META_INFO_DB_RECOVER = 401;
+
+    const std::string ISOMERISM_EVENT_KEY = "isomerism_event";
+    const std::string ISOMERISM_EVENT_CONNECT_VAL = "isomerism_connect";
+    const std::string ISOMERISM_EVENT_DISCONNECT_VAL = "isomerism_disconnect";
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

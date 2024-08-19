@@ -211,7 +211,7 @@ ErrorCode AVInputFilter::FindPlugin()
     auto nameList = PluginManager::Instance().ListPlugins(PluginType::GENERIC_PLUGIN);
     for (const std::string& name : nameList) {
         auto info = PluginManager::Instance().GetPluginInfo(PluginType::GENERIC_PLUGIN, name);
-        if (info->outCaps.empty() || mime != info->outCaps[0].mime) {
+        if (info == nullptr || info->outCaps.empty() || mime != info->outCaps[0].mime) {
             continue;
         }
         if (DoNegotiate(info->outCaps) && CreatePlugin(info) == ErrorCode::SUCCESS) {
@@ -308,6 +308,10 @@ ErrorCode AVInputFilter::DoConfigure()
 ErrorCode AVInputFilter::MergeMeta(const Plugin::Meta& meta, Plugin::Meta& targetMeta)
 {
     std::lock_guard<std::mutex> lock(inputFilterMutex_);
+    if (pluginInfo_ == nullptr) {
+        AVTRANS_LOGE("pluginInfo_ is nullptr");
+        return ErrorCode::ERROR_INVALID_OPERATION;
+    }
     if (!MergeMetaWithCapability(meta, capNegWithDownstream_, targetMeta)) {
         AVTRANS_LOGE("cannot find available capability of plugin %{public}s", pluginInfo_->name.c_str());
         return ErrorCode::ERROR_INVALID_OPERATION;
@@ -582,8 +586,8 @@ ErrorCode AVInputFilter::SetDataCallBack()
         AVTRANS_LOGE("plugin is nullptr!");
         return ErrorCode::ERROR_NULL_POINTER;
     }
-    return TranslatePluginStatus(plugin_->SetDataCallback(std::bind(&AVInputFilter::OnDataCallback, this,
-        std::placeholders::_1)));
+    return TranslatePluginStatus(
+        plugin_->SetDataCallback([this](std::shared_ptr<Plugin::Buffer> buffer) { this->OnDataCallback(buffer); }));
 }
 
 void AVInputFilter::OnDataCallback(std::shared_ptr<Plugin::Buffer> buffer)

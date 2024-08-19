@@ -23,12 +23,10 @@ config("module_private_config") {
     "include",
     "${utils_path}/include",
     "${utils_path}/include/log",
-    "${utils_path}/include/eventbus",
     "${common_path}/log/include",
     "${common_path}/utils/include",
     "${services_path}/distributedhardwarefwkservice/include",
-    "${services_path}/distributedhardwarefwkservice/include/task",
-    "${services_path}/distributedhardwarefwkservice/include/utils",
+    "${services_path}/distributedhardwarefwkservice/include/componentloader",
   ]
 }
 
@@ -56,6 +54,13 @@ ohos_unittest("DistributedHardwareManagerTest") {
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"DistributedHardwareManagerTest\"",
     "LOG_DOMAIN=0xD004100",
+  ]
+
+  cflags = [
+    "-Wall",
+    "-Werror",
+    "-g3",
+    "-Dprivate=public",
   ]
 }
 

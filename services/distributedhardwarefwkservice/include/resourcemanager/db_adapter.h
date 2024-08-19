@@ -55,6 +55,7 @@ public:
     int32_t RemoveDeviceData(const std::string &deviceId);
     int32_t RemoveDataByKey(const std::string &key);
     std::vector<DistributedKv::Entry> GetEntriesByKeys(const std::vector<std::string> &keys);
+    bool SyncDataByNetworkId(const std::string &networkId);
 
 private:
     int32_t RegisterChangeListener();
@@ -66,7 +67,8 @@ private:
     // get local kv store with no sync with other devices
     DistributedKv::Status GetLocalKvStorePtr();
     bool DBDiedOpt(int32_t &times);
-    void TriggerDynamicQuery(const std::string &key);
+    void SyncByNotFound(const std::string &key);
+    std::string GetNetworkIdByKey(const std::string &key);
 
 private:
     DistributedKv::AppId appId_;

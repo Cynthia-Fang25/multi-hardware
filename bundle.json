@@ -17,7 +17,9 @@
     "syscap": [
       "SystemCapability.DistributedHardware.DistributedHardwareFWK"
     ],
-    "features": [],
+    "features": [
+      "distributed_hardware_fwk_low_latency"
+    ],
     "adapted_system_type": [
       "standard"
     ],
@@ -36,7 +38,6 @@
         "dsoftbus",
         "eventhandler",
         "hitrace",
-        "cJSON",
         "c_utils",
         "hilog",
         "cJSON",
@@ -165,7 +166,8 @@
         "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/av_trans_engine/av_receiver/test/unittest:receiver_test",
         "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/av_trans_engine/av_sender/test/unittest:sender_test",
         "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/av_trans_engine/plugin/test:plugin_test",
-        "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/av_trans_control_center/test/fuzztest:fuzztest"
+        "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/av_trans_control_center/test/fuzztest:fuzztest",
+        "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/common/test:av_common_test"
       ]
     }
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -32,6 +32,9 @@ namespace DistributedHardware {
 
 int32_t VersionInfo::FromJsonString(const std::string &jsonStr)
 {
+    if (!IsJsonLengthValid(jsonStr)) {
+        return ERR_DH_FWK_PARA_INVALID;
+    }
     cJSON *jsonObj = cJSON_Parse(jsonStr.c_str());
     if (jsonObj == NULL) {
         DHLOGE("json string parse failed");
@@ -63,12 +66,16 @@ std::string VersionInfo::ToJsonString() const
 
 void ToJson(cJSON *jsonObject, const VersionInfo &versionInfo)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     cJSON_AddStringToObject(jsonObject, DEV_ID.c_str(), versionInfo.deviceId.c_str());
     cJSON_AddStringToObject(jsonObject, DH_VER.c_str(), versionInfo.dhVersion.c_str());
 
-    cJSON *compVers = cJSON_CreateObject();
+    cJSON *compVers = cJSON_CreateArray();
     if (compVers == NULL) {
-        DHLOGE("Failed to create cJSON object.");
+        DHLOGE("Failed to create cJSON array.");
         return;
     }
     for (const auto &compVersion : versionInfo.compVersions) {
@@ -90,6 +97,10 @@ void ToJson(cJSON *jsonObject, const VersionInfo &versionInfo)
 
 void FromJson(const cJSON *jsonObject, CompVersion &compVer)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     if (IsString(jsonObject, NAME)) {
         compVer.name = cJSON_GetObjectItem(jsonObject, NAME.c_str())->valuestring;
     }
@@ -110,6 +121,10 @@ void FromJson(const cJSON *jsonObject, CompVersion &compVer)
 
 void FromJson(const cJSON *jsonObject, VersionInfo &versionInfo)
 {
+    if (jsonObject == nullptr) {
+        DHLOGE("Json pointer is nullptr!");
+        return;
+    }
     if (IsString(jsonObject, DEV_ID)) {
         versionInfo.deviceId = cJSON_GetObjectItem(jsonObject, DEV_ID.c_str())->valuestring;
     }
@@ -120,7 +135,7 @@ void FromJson(const cJSON *jsonObject, VersionInfo &versionInfo)
 
     const cJSON *compVer = cJSON_GetObjectItem(jsonObject, COMP_VER.c_str());
     if (compVer != NULL) {
-        cJSON *compVerObj;
+        cJSON *compVerObj = nullptr;
         cJSON_ArrayForEach(compVerObj, compVer) {
             CompVersion compVerValue;
             FromJson(compVerObj, compVerValue);

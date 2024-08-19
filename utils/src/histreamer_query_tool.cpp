@@ -40,11 +40,7 @@ const std::string QueryVideoDecoderFuncName = "QueryVideoDecoderAbilityStr";
 
 const uint32_t MAX_MESSAGES_LEN = 1 * 1024 * 1024;
 
-#ifdef __LP64__
-const std::string LIB_LOAD_PATH = "/system/lib64/libhistreamer_ability_querier.z.so";
-#else
-const std::string LIB_LOAD_PATH = "/system/lib/libhistreamer_ability_querier.z.so";
-#endif
+const std::string LOAD_SO = "libhistreamer_ability_querier.z.so";
 
 void HiStreamerQueryTool::Init()
 {
@@ -52,7 +48,7 @@ void HiStreamerQueryTool::Init()
         return;
     }
     DHLOGI("Start Init HiStreamer Query SO");
-    void *pHandler = dlopen(LIB_LOAD_PATH.c_str(), RTLD_LAZY | RTLD_NODELETE);
+    void *pHandler = dlopen(LOAD_SO.c_str(), RTLD_LAZY | RTLD_NODELETE);
     if (pHandler == nullptr) {
         DHLOGE("libhistreamer_ability_querier.z.so handler load failed, failed reason : %{public}s", dlerror());
         return;
@@ -63,6 +59,7 @@ void HiStreamerQueryTool::Init()
     if (queryAudioEncoderFunc == nullptr) {
         DHLOGE("get QueryAudioEncoderAbilityStr is null, failed reason : %{public}s", dlerror());
         dlclose(pHandler);
+        pHandler = nullptr;
         return;
     }
 
@@ -71,6 +68,7 @@ void HiStreamerQueryTool::Init()
     if (queryAudioDecoderFunc == nullptr) {
         DHLOGE("get QueryAudioDecoderAbilityStr is null, failed reason : %{public}s", dlerror());
         dlclose(pHandler);
+        pHandler = nullptr;
         return;
     }
 
@@ -79,6 +77,7 @@ void HiStreamerQueryTool::Init()
     if (queryVideoEncoderFunc == nullptr) {
         DHLOGE("get QueryVideoEncoderAbilityStr is null, failed reason : %{public}s", dlerror());
         dlclose(pHandler);
+        pHandler = nullptr;
         return;
     }
 
@@ -87,6 +86,7 @@ void HiStreamerQueryTool::Init()
     if (queryVideoDecoderFunc == nullptr) {
         DHLOGE("get QueryVideoDecoderAbilityStr is null, failed reason : %{public}s", dlerror());
         dlclose(pHandler);
+        pHandler = nullptr;
         return;
     }
 

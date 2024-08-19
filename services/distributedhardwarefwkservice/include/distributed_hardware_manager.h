@@ -19,6 +19,7 @@
 #include "idistributed_hardware_manager.h"
 
 #include <atomic>
+#include <mutex>
 #include "device_type.h"
 #include "single_instance.h"
 
@@ -30,9 +31,12 @@ public:
     int32_t LocalInit();
     int32_t Initialize() override;
     int32_t Release() override;
-    int32_t SendOnLineEvent(const std::string &networkId, const std::string &uuid, uint16_t deviceType) override;
-    int32_t SendOffLineEvent(const std::string &networkId, const std::string &uuid, uint16_t deviceType) override;
-    int32_t SendDeviceChangedEvent(const std::string &networkId, const std::string &uuid, uint16_t deviceType) override;
+    int32_t SendOnLineEvent(const std::string &networkId, const std::string &uuid, const std::string &udid,
+        uint16_t deviceType) override;
+    int32_t SendOffLineEvent(const std::string &networkId, const std::string &uuid, const std::string &udid,
+        uint16_t deviceType) override;
+    int32_t SendDeviceChangedEvent(const std::string &networkId, const std::string &uuid, const std::string &udid,
+        uint16_t deviceType) override;
     size_t GetOnLineCount() override;
     int32_t GetComponentVersion(std::unordered_map<DHType, std::string> &versionMap) override;
 
@@ -40,6 +44,7 @@ public:
 private:
     std::atomic<bool> isLocalInit{false};
     std::atomic<bool> isAllInit{false};
+    std::mutex dhInitMgrMutex_;
 };
 } // namespace DistributedHardware
 } // namespace OHOS
