@@ -178,21 +178,22 @@ void AccessManager::OnDeviceChanged(const DmDeviceInfo &deviceInfo)
         deviceInfo.authForm);
 
     auto networkId = std::string(deviceInfo.networkId);
-    if (networkId.size() == 0 || networkId.size() > MAX_ID_LEN) {
-        DHLOGE("NetworkId is invalid!");
+    if (!IsIdLengthValid(networkId)) {
         return;
     }
-    auto uuid = GetUUIDBySoftBus(networkId);
-    if (uuid.size() == 0 || uuid.size() > MAX_ID_LEN) {
-        DHLOGE("Uuid is invalid!");
+    auto uuid = GetUUIDByDm(networkId);
+    if (!IsIdLengthValid(uuid)) {
         return;
     }
-
+    auto udid = GetUDIDByDm(networkId);
+    if (!IsIdLengthValid(udid)) {
+        return;
+    }
     auto ret =
-        DistributedHardwareManagerFactory::GetInstance().SendDeviceChangedEvent(networkId, uuid,
+        DistributedHardwareManagerFactory::GetInstance().SendDeviceChangedEvent(networkId, uuid, udid,
             deviceInfo.deviceTypeId);
-    DHLOGI("device changed result = %{public}d, networkId = %{public}s, uuid = %{public}s", ret,
-        GetAnonyString(networkId).c_str(), GetAnonyString(uuid).c_str());
+    DHLOGI("device changed result = %{public}d, networkId = %{public}s, uuid = %{public}s, udid: %{public}s",
+        ret, GetAnonyString(networkId).c_str(), GetAnonyString(uuid).c_str(), GetAnonyString(udid).c_str());
 }
 
 void AccessManager::CheckTrustedDeviceOnline()
