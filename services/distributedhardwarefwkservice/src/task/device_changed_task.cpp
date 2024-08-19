@@ -33,8 +33,8 @@ namespace DistributedHardware {
 #undef DH_LOG_TAG
 #define DH_LOG_TAG "DeviceChangedTask"
 
-DeviceChangedTask::DeviceChangedTask(const std::string &networkId, const std::string &uuid, const std::string &dhId,
-    const DHType dhType) : Task(networkId, uuid, dhId, dhType)
+DeviceChangedTask::DeviceChangedTask(const std::string &networkId, const std::string &uuid, const std::string &udid, 
+    const std::string &dhId, const DHType dhType) : Task(networkId, uuid, udid, dhId, dhType)
 {
     SetTaskType(TaskType::DEVICE_CHANGED);
     SetTaskSteps(std::vector<TaskStep> { TaskStep::DO_DEVICE_CHANGED });
@@ -94,8 +94,9 @@ void DeviceChangedTask::HandleDeviceChanged()
 
     if (devDhInfos.empty()) {
         DHLOGW("Can not get cap info from local Capbility, try use meta info");
+        std::string udidHash = Sha256(GetUDID());
         std::vector<std::shared_ptr<MetaCapabilityInfo>> metaCapInfos;
-        MetaInfoManager::GetInstance()->GetMetaCapInfosByDeviceId(deviceId, metaCapInfos);
+        MetaInfoManager::GetInstance()->GetMetaCapInfosByUdidHash(udidHash, metaCapInfos);
         std::for_each(metaCapInfos.begin(), metaCapInfos.end(), [&](std::shared_ptr<MetaCapabilityInfo> cap) {
             devDhInfos.push_back({cap->GetDHId(), cap->GetDHType()});
         });
@@ -117,6 +118,7 @@ void DeviceChangedTask::HandleDeviceChanged()
         TaskParam taskParam = {
             .networkId = GetNetworkId(),
             .uuid = GetUUID(),
+            .udid = GetUDID(),
             .dhId = info.first,
             .dhType = info.second
         };
