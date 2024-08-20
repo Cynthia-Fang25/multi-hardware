@@ -33,7 +33,7 @@ namespace DistributedHardware {
 #undef DH_LOG_TAG
 #define DH_LOG_TAG "DeviceChangedTask"
 
-DeviceChangedTask::DeviceChangedTask(const std::string &networkId, const std::string &uuid, const std::string &udid, 
+DeviceChangedTask::DeviceChangedTask(const std::string &networkId, const std::string &uuid, const std::string &udid,
     const std::string &dhId, const DHType dhType) : Task(networkId, uuid, udid, dhId, dhType)
 {
     SetTaskType(TaskType::DEVICE_CHANGED);
@@ -70,8 +70,7 @@ void DeviceChangedTask::DoTask()
 
 void DeviceChangedTask::HandleDeviceChanged()
 {
-    DHLOGI("networkId = %{public}s, uuid = %{public}s", GetAnonyString(GetNetworkId()).c_str(),
-        GetAnonyString(GetUUID()).c_str());
+    DHLOGI("networkId = %{public}s", GetAnonyString(GetNetworkId()).c_str());
     if (!ComponentManager::GetInstance().IsIdenticalAccount(GetNetworkId())) {
         DHLOGI("not identical account");
         return;
@@ -103,8 +102,7 @@ void DeviceChangedTask::HandleDeviceChanged()
     }
 
     if (devDhInfos.empty()) {
-        DHLOGE("Can not get cap info, uuid = %{public}s, deviceId = %{public}s", GetAnonyString(GetUUID()).c_str(),
-            GetAnonyString(deviceId).c_str());
+        DHLOGE("Can not get cap info");
         return;
     }
 
