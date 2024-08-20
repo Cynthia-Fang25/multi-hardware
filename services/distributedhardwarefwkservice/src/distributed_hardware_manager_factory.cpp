@@ -225,7 +225,7 @@ int32_t DistributedHardwareManagerFactory::SendDeviceChangedEvent(const std::str
         return ERR_DH_FWK_PARA_INVALID;
     }
 
-    if (!isInit) {
+    if (!IsInit()) {
         DHLOGI("distributedHardwareMgr is null");
         return ERR_DH_FWK_HARDWARE_MANAGER_DEVICE_NOT_ONLINE;
     }
