@@ -22,6 +22,7 @@
 #include <thread>
 #include <vector>
 
+#include "ffrt.h"
 #include "iservice_registry.h"
 #include "system_ability_definition.h"
 
@@ -138,9 +139,9 @@ void DistributedHardwareManagerFactory::CheckExitSAOrNot()
             GetAnonyString(networkId).c_str(),
             GetAnonyString(uuid).c_str());
         uint16_t deviceType = deviceInfo.deviceTypeId;
-        std::thread([this, networkId, uuid, udid, deviceType]() {
+        ffrt::submit([this, networkId, uuid, udid, deviceType]() {
             this->SendOnLineEvent(networkId, uuid, udid, deviceType);
-        }).detach();
+        });
     }
 }
 
