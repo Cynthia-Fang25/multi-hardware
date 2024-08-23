@@ -94,6 +94,7 @@ ohos_shared_library("distributedhardwarefwksvr") {
     "src/resourcemanager/meta_info_manager.cpp",
     "src/resourcemanager/version_info.cpp",
     "src/resourcemanager/version_info_manager.cpp",
+    "src/task/device_changed_task.cpp",
     "src/task/disable_task.cpp",
     "src/task/enable_task.cpp",
     "src/task/offline_task.cpp",

@@ -32,6 +32,8 @@ public:
         const std::string &udid, uint16_t deviceType) = 0;
     virtual int32_t SendOffLineEvent(const std::string &networkId, const std::string &uuid,
         const std::string &udid, uint16_t deviceType) = 0;
+    virtual int32_t SendDeviceChangedEvent(const std::string &networkId, const std::string &uuid,
+        const std::string &udid, uint16_t deviceType) = 0;
     virtual size_t GetOnLineCount() = 0;
     virtual int32_t GetComponentVersion(std::unordered_map<DHType, std::string> &versionMap) = 0;
     virtual int32_t Dump(const std::vector<std::string> &argsStr, std::string &result) = 0;

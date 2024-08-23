@@ -73,6 +73,7 @@ namespace DistributedHardware {
     constexpr int32_t ERR_DH_FWK_HARDWARE_MANAGER_DEVICE_REPEAT_ONLINE = -10500;
     constexpr int32_t ERR_DH_FWK_HARDWARE_MANAGER_DEVICE_REPEAT_OFFLINE = -10501;
     constexpr int32_t ERR_DH_FWK_HARDWARE_MANAGER_INIT_FAILED = -10502;
+    constexpr int32_t ERR_DH_FWK_HARDWARE_MANAGER_DEVICE_NOT_ONLINE = -10503;
 
     /* ComponentLoader errno, range: [-10600, -10699] */
     constexpr int32_t ERR_DH_FWK_LOADER_HANDLER_IS_NULL = -10600;
