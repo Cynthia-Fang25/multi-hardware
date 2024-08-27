@@ -33,6 +33,7 @@ public:
 private:
     void DoSyncInfo();
     void CreateEnableTask();
+    void CreateMetaEnableTask();
 
     std::vector<MockDevInfo> onLineDevInfos;
 };

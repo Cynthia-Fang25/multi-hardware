@@ -33,6 +33,7 @@ private:
     void CreateDisableTask();
     /* clear off line device info */
     void ClearOffLineInfo();
+    void CreateMetaDisableTask();
 
     std::vector<MockDevInfo> offLineDevInfos;
 };

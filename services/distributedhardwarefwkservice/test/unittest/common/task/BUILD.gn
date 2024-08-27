@@ -38,6 +38,8 @@ ohos_unittest("DHTaskTest") {
   sources = [
     "src/mock_disable_task.cpp",
     "src/mock_enable_task.cpp",
+    "src/mock_meta_disable_task.cpp",
+    "src/mock_meta_enable_task.cpp",
     "src/mock_offline_task.cpp",
     "src/mock_online_task.cpp",
     "src/mock_task_factory.cpp",
@@ -56,7 +58,6 @@ ohos_unittest("DHTaskTest") {
   deps = [
     "${services_path}/distributedhardwarefwkservice:distributedhardwarefwksvr",
     "${utils_path}:distributedhardwareutils",
-    "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
