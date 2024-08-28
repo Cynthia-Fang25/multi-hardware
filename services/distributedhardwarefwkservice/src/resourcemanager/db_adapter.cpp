@@ -560,5 +560,28 @@ bool DBAdapter::SyncDataByNetworkId(const std::string &networkId)
     }
     return true;
 }
+
+bool DBAdapter::DeleteCloudDataByKey(const std::string &deviceId)
+{
+    DHLOGI("Delete cloudData start, deviceId: %{public}s", GetAnonyString(deviceId).c_str());
+    std::string udIdHash = Sha256(deviceId);
+    DistributedKv::Key allEntryKeyPrefix(udIdHash);
+    std::vector<DistributedKv::Entry> allEntries;
+    DistributedKv::Status status = kvStoragePtr_->GetEntries(allEntryKeyPrefix, allEntries);
+    if (status != DistributedKv::Status::SUCCESS) {
+        DHLOGE("GetEntries error: %{public}d", status);
+        return false;
+    }
+    std::vector<DistributedKv::Key> keys;
+    for (const auto &entry : allEntries) {
+        keys.push_back(entry.key);
+    }
+    status = kvStoragePtr_->DeleteBatch(keys);
+    if (status != DistributedKv::Status::SUCCESS) {
+        DHLOGE("Delete cloudData failed, error: %{public}d", status);
+        return false;
+    }
+    return true;
+}
 } // namespace DistributedHardware
 } // namespace OHOS

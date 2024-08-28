@@ -58,6 +58,10 @@ int32_t AccessManager::Init()
         DHLOGE("RegisterDevStateCallback failed");
         return ERR_DH_FWK_ACCESS_REGISTER_DM_FAILED;
     }
+    if (RegRemDevTrustChangeCallback() != DH_FWK_SUCCESS) {
+        DHLOGE("RegRemDevTrustChangeCallback failed");
+        return ERR_DH_FWK_ACCESS_REGISTER_DM_FAILED;
+    }
     return DH_FWK_SUCCESS;
 }
 
@@ -97,6 +101,12 @@ int32_t AccessManager::UnRegisterDevStateCallback()
 {
     return DeviceManager::GetInstance().UnRegisterDevStateCallback(DH_FWK_PKG_NAME);
 }
+
+int32_t AccessManager::RegRemDevTrustChangeCallback()
+{
+    return DeviceManager::GetInstance().RegRemDevTrustChangeCallback(DH_FWK_PKG_NAME, shared_from_this());
+}
+
 
 void AccessManager::OnRemoteDied()
 {
@@ -174,6 +184,18 @@ void AccessManager::OnDeviceChanged(const DmDeviceInfo &deviceInfo)
 {
     (void)deviceInfo;
     return;
+}
+
+void AccessManager::OnDeviceTrustChange(const std::string &deviceId, DmAuthForm authform)
+{
+    DHLOGI("Trust device: %{public}s state change, authform: %{public}d",
+        GetAnonyString(deviceId).c_str(), static_cast<int32_t>(authform));
+    if (!IsIdLengthValid(deviceId)) {
+        return;
+    }
+    if (authform == DmAuthForm::IDENTICAL_ACCOUNT) {
+        DistributedHardwareManagerFactory::GetInstance().DeleteCloudDataByKey(deviceId);
+    }
 }
 
 void AccessManager::CheckTrustedDeviceOnline()
