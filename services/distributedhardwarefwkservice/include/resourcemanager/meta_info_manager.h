@@ -51,6 +51,7 @@ public:
         std::vector<std::shared_ptr<MetaCapabilityInfo>> &metaCapInfos);
     int32_t GetMetaDataByDHType(const DHType dhType, MetaCapInfoMap &metaInfoMap);
     int32_t SyncDataByNetworkId(const std::string &networkId);
+    int32_t DeleteCloudDataByKey(const std::string &deviceId);
     /* Database data changes callback */
     virtual void OnChange(const DistributedKv::ChangeNotification &changeNotification) override;
     /* Cloud data changes callback */

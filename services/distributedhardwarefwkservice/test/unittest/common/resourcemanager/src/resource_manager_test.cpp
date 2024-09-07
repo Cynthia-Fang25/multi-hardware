@@ -1214,9 +1214,23 @@ HWTEST_F(ResourceManagerTest, SyncDataByNetworkId_001, TestSize.Level0)
     ret = MetaInfoManager::GetInstance()->SyncDataByNetworkId(networkId);
     EXPECT_EQ(DH_FWK_SUCCESS, ret);
 
-
     MetaInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;
     ret = MetaInfoManager::GetInstance()->SyncDataByNetworkId(networkId);
+    EXPECT_EQ(ERR_DH_FWK_RESOURCE_DB_ADAPTER_POINTER_NULL, ret);
+}
+
+HWTEST_F(ResourceManagerTest, DeleteCloudDataByKey_001, TestSize.Level0)
+{
+    std::string deviceId = "";
+    auto ret = MetaInfoManager::GetInstance()->DeleteCloudDataByKey(deviceId);
+    EXPECT_EQ(ERR_DH_FWK_PARA_INVALID, ret);
+
+    deviceId = "deviceId_test";
+    ret = MetaInfoManager::GetInstance()->DeleteCloudDataByKey(deviceId);
+    EXPECT_EQ(DH_FWK_SUCCESS, ret);
+
+    MetaInfoManager::GetInstance()->dbAdapterPtr_ = nullptr;
+    ret = MetaInfoManager::GetInstance()->DeleteCloudDataByKey(deviceId);
     EXPECT_EQ(ERR_DH_FWK_RESOURCE_DB_ADAPTER_POINTER_NULL, ret);
 }
 } // namespace DistributedHardware

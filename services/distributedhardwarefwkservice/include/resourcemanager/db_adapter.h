@@ -54,6 +54,7 @@ public:
     int32_t RemoveDataByKey(const std::string &key);
     std::vector<DistributedKv::Entry> GetEntriesByKeys(const std::vector<std::string> &keys);
     bool SyncDataByNetworkId(const std::string &networkId);
+    bool DeleteCloudDataByKey(const std::string &deviceId);
 
 private:
     int32_t RegisterChangeListener();

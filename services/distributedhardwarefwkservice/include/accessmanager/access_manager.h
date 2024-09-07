@@ -29,7 +29,8 @@ namespace OHOS {
 namespace DistributedHardware {
 class AccessManager : public std::enable_shared_from_this<AccessManager>,
     public DmInitCallback,
-    public DeviceStateCallback {
+    public DeviceStateCallback,
+    public DevTrustChangeCallback {
 public:
     AccessManager(const AccessManager &) = delete;
     AccessManager &operator = (const AccessManager &) = delete;
@@ -46,6 +47,7 @@ public:
     virtual void OnDeviceOffline(const DmDeviceInfo &deviceInfo) override;
     virtual void OnDeviceReady(const DmDeviceInfo &deviceInfo) override;
     virtual void OnDeviceChanged(const DmDeviceInfo &deviceInfo) override;
+    virtual void OnDeviceTrustChange(const std::string &deviceId, DmAuthForm authform) override;
     /* Send device online event which is already online */
     void CheckTrustedDeviceOnline();
     int32_t Dump(const std::vector<std::string> &argsStr, std::string &result);
@@ -55,6 +57,7 @@ private:
     int32_t UnRegisterDevStateCallback();
     int32_t InitDeviceManager();
     int32_t UnInitDeviceManager();
+    int32_t RegRemDevTrustChangeCallback();
     std::mutex accessMutex_;
 };
 } // namespace DistributedHardware

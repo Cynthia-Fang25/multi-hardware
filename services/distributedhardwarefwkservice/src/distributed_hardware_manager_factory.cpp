@@ -227,6 +227,12 @@ int32_t DistributedHardwareManagerFactory::GetComponentVersion(std::unordered_ma
     return DistributedHardwareManager::GetInstance().GetComponentVersion(versionMap);
 }
 
+int32_t DistributedHardwareManagerFactory::DeleteCloudDataByKey(const std::string &deviceId)
+{
+    DHLOGI("Deleta cloudData start");
+    return MetaInfoManager::GetInstance()->DeleteCloudDataByKey(deviceId);
+}
+
 int32_t DistributedHardwareManagerFactory::Dump(const std::vector<std::string> &argsStr, std::string &result)
 {
     return DistributedHardwareManager::GetInstance().Dump(argsStr, result);
