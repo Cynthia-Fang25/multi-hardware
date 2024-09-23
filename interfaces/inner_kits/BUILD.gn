@@ -61,6 +61,8 @@ ohos_shared_library("libdhfwk_sdk") {
     "${utils_path}:distributedhardwareutils",
   ]
 
+  innerapi_tags = ["platformsdk"]
+
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"dhfwkkit\"",

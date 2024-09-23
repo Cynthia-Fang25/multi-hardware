@@ -149,6 +149,18 @@
           }
         }
       ],
+      "inner_kits": [
+        {
+          "type": "so",
+          "name": "//foundation/distributedhardware/distributed_hardware_fwk/interfaces/inner_kits:libdhfwk_sdk",
+          "header": {
+            "header_files": [
+              "distributed_hardware_fwk_kit.h"
+            ],
+            "header_base": "//foundation/distributedhardware/distributed_hardware_fwk/interfaces/inner_kits/include"
+          }
+        }
+      ],
       "test": [
         "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/av_trans_handler/histreamer_ability_querier/test/unittest/common:histreamer_ability_querier_test",
         "//foundation/distributedhardware/distributed_hardware_fwk/av_transport/av_trans_control_center/test/unittest:AvTransControlCenterTest",
